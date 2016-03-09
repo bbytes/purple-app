@@ -13,6 +13,8 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -30,7 +32,7 @@ import com.bbytes.purple.utils.GlobalConstants;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { PurpleApplication.class, SpringSecurityConfig.class })
 @WebAppConfiguration
-public class TestMultiTenantAuthRequest {
+public class TestLoginAuthRequest {
 
 	@Autowired
 	private WebApplicationContext context;
@@ -39,22 +41,24 @@ public class TestMultiTenantAuthRequest {
 
 	@Autowired
 	private FilterChainProxy filterChainProxy;
-	
+
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private OrganizationRepository organizationRepository;
-	
+
 	@Autowired
 	private UserRoleRepository userRoleRepository;
 
 	private User adminUser1;
 
 	private Organization testOrg;
-	
+
 	private String password;
 	private String email;
+
+	private String xauthToken;
 
 	@Before
 	public void setUp() {
@@ -68,7 +72,7 @@ public class TestMultiTenantAuthRequest {
 		adminUser1 = new User("admin-1", email);
 		adminUser1.setOrganization(testOrg);
 		adminUser1.setUserRole(UserRole.ADMIN_USER_ROLE);
-		
+
 		MultiTenantDbFactory.setDatabaseNameForCurrentThread(adminUser1.getOrganization().getOrgId());
 		userRoleRepository.save(UserRole.ADMIN_USER_ROLE);
 		organizationRepository.save(testOrg);
@@ -86,20 +90,43 @@ public class TestMultiTenantAuthRequest {
 	}
 
 	@Test
-	public void testAnonymous() throws Exception {
+	public void testAnonymousAccess() throws Exception {
 		mockMvc.perform(get("/api/user/account")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
-	public void testUserAccessForAccountFailTest() throws Exception {
+	public void testLoginFailed() throws Exception {
 		mockMvc.perform(get("/auth/login").param("username", "email@test.com").param("password", "plainttext")
 				.header(GlobalConstants.HEADER_TENANT_ID, "wrong")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
-	public void testUserAccessForAccountPassTest() throws Exception {
-		mockMvc.perform(get("/auth/login").param("username", email)
-				.param("password",password).header(GlobalConstants.HEADER_TENANT_ID, adminUser1.getOrganization().getOrgId()))
+	public void testLoginSuccess() throws Exception {
+		mockMvc.perform(get("/auth/login").param("username", email).param("password", password)
+				.header(GlobalConstants.HEADER_TENANT_ID, adminUser1.getOrganization().getOrgId()))
 				.andExpect(status().isOk());
 	}
+
+	@Test
+	public void testURLAccessDenied() throws Exception {
+		mockMvc.perform(get("/app/status")).andExpect(status().isUnauthorized());
+	}
+
+	@Test
+	public void testLoginAndAccessProtectedUrl() throws Exception {
+		mockMvc.perform(get("/auth/login").param("username", email).param("password", password))
+				.andDo(new ResultHandler() {
+
+					@Override
+					public void handle(MvcResult result) throws Exception {
+						xauthToken = result.getResponse().getHeader(GlobalConstants.HEADER_AUTH_TOKEN);
+
+					}
+				});
+		
+		mockMvc.perform(get("/app/status").param("username", email).param("password", password)
+				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
+				.andExpect(status().isOk());
+	}
+
 }
