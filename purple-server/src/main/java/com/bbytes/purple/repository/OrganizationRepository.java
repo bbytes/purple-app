@@ -6,4 +6,5 @@ import com.bbytes.purple.domain.Organization;
 
 public interface OrganizationRepository extends MongoRepository<Organization, String>{
 
+	Organization findByOrgId(String orgId);
 }

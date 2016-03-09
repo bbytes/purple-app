@@ -5,5 +5,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.bbytes.purple.domain.Project;
 
 public interface ProjectRepository extends MongoRepository<Project, String>{
+	
+	Project findOneByProjectName(String projectName);
+	
 
 }

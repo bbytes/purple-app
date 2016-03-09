@@ -7,4 +7,6 @@ import com.bbytes.purple.domain.User;
 public interface UserRepository extends MongoRepository<User, String>{
 
 	User findOneByEmail(String email);
+	
+	User findOneByName(String email);
 }
