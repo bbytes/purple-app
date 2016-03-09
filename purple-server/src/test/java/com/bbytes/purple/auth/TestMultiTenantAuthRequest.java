@@ -21,7 +21,9 @@ import com.bbytes.purple.auth.jwt.SpringSecurityConfig;
 import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.repository.OrganizationRepository;
+import com.bbytes.purple.repository.UserRoleRepository;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 
@@ -43,6 +45,9 @@ public class TestMultiTenantAuthRequest {
 
 	@Autowired
 	private OrganizationRepository organizationRepository;
+	
+	@Autowired
+	private UserRoleRepository userRoleRepository;
 
 	private User adminUser1;
 
@@ -62,18 +67,20 @@ public class TestMultiTenantAuthRequest {
 		email = "admin1@test.com";
 		adminUser1 = new User("admin-1", email);
 		adminUser1.setOrganization(testOrg);
-		userService.updatePassword(password, adminUser1);
+		adminUser1.setUserRole(UserRole.ADMIN_USER_ROLE);
 		
-
 		MultiTenantDbFactory.setDatabaseNameForCurrentThread(adminUser1.getOrganization().getOrgId());
+		userRoleRepository.save(UserRole.ADMIN_USER_ROLE);
 		organizationRepository.save(testOrg);
 		userService.save(adminUser1);
+		userService.updatePassword(password, adminUser1);
 
 	}
 
 	@After
 	public void cleanUp() {
 		MultiTenantDbFactory.setDatabaseNameForCurrentThread(adminUser1.getOrganization().getOrgId());
+		userRoleRepository.deleteAll();
 		userService.deleteAll();
 		organizationRepository.deleteAll();
 	}

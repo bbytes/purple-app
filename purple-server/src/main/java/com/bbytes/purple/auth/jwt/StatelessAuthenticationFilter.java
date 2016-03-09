@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.google.common.base.Preconditions;
 
 public class StatelessAuthenticationFilter extends GenericFilterBean {
@@ -31,6 +32,9 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		// if authentication is null then token expired so send http 401 back
 		if (authentication != null) {
+			// Very important for multi tenant to work : set tenant to current db resolver after successful verification
+			MultiTenantDbFactory
+					.setDatabaseNameForCurrentThread(((MultiTenantAuthenticationToken) authentication).getTenantId());
 			((HttpServletResponse) response).setStatus(HttpServletResponse.SC_OK);
 		} else {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");

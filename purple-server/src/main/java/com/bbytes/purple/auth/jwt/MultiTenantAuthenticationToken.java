@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
-import com.bbytes.purple.utils.GlobalConstants;
+import com.bbytes.purple.domain.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MultiTenantAuthenticationToken extends AbstractAuthenticationToken {
@@ -61,7 +61,7 @@ public class MultiTenantAuthenticationToken extends AbstractAuthenticationToken 
 
 	@Override
 	public Collection<GrantedAuthority> getAuthorities() {
-		return AuthorityUtils.createAuthorityList(GlobalConstants.ROLE_NORMAL_USER);
+		return AuthorityUtils.createAuthorityList(UserRole.NORMAL_USER_ROLE.getRoleName());
 	}
 
 	

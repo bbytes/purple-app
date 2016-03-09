@@ -18,31 +18,41 @@ public class TokenAuthenticationService {
 	private String secret;
 
 	@Autowired
-	private AuthUserDetailsService userService;
-	
-	@Autowired
 	private TenantResolverService tenantResolverService;
 	
 	private TokenHandler tokenHandler;
 	
 	@PostConstruct
 	public void setupTokenHandler() {
-		tokenHandler = new TokenHandler(secret, userService);
+		tokenHandler = new TokenHandler(secret);
 	}
 
+	/**
+	 * The method is called after successful login to add the jwt token header 
+	 * @param response
+	 * @param authentication
+	 * @return
+	 */
 	public String addAuthentication(HttpServletResponse response, MultiTenantAuthenticationToken authentication) {
 		final User user = authentication.getDetails();
-		String token = tokenHandler.createTokenForUser(user);
-		response.addHeader(GlobalConstants.HEADER_AUTH_TOKEN, token);
-		return token;
+		final String userTenantId = tenantResolverService.getTenantIdForUser(user.getUsername());
+		final TokenDataHolder tokenDataHolder = new TokenDataHolder(user, userTenantId); 
+		String jwtStringToken = tokenHandler.createJWTStringTokenForUser(tokenDataHolder);
+		response.addHeader(GlobalConstants.HEADER_AUTH_TOKEN, jwtStringToken);
+		return jwtStringToken;
 	}
 
+	/**
+	 * Method called from filter to verify every request in the app for jwt auth token
+	 * @param request
+	 * @return
+	 */
 	public Authentication getAuthentication(HttpServletRequest request) {
-		final String token = request.getHeader(GlobalConstants.HEADER_AUTH_TOKEN);
-		if (token != null) {
-			final User user = tokenHandler.parseUserFromToken(token);
-			if (user != null) {
-				return new MultiTenantAuthenticationToken(tenantResolverService.getTenantIdForUser(user.getUsername()), user);
+		final String jwtStringToken = request.getHeader(GlobalConstants.HEADER_AUTH_TOKEN);
+		if (jwtStringToken != null) {
+			final TokenDataHolder tokenDataHolder = tokenHandler.parseJWTStringTokenForUser(jwtStringToken);
+			if (tokenDataHolder != null) {
+				return new MultiTenantAuthenticationToken(tokenDataHolder.getTenantId(), tokenDataHolder.getUser());
 			}
 		}
 		return null;

@@ -16,8 +16,9 @@ import lombok.Data;
 
 /**
  * User Domain Object
+ * 
  * @author akshay
- */ 
+ */
 
 @Data
 @Document
@@ -25,38 +26,38 @@ public class User {
 
 	@Id
 	private String userId;
-	
+
 	@Field("name")
 	private String name;
-	
+
 	@Field("email")
 	@Indexed
 	private String email;
-	
+
 	@Field("status")
 	private String status;
-	
+
 	@Field("password")
 	private String password;
-	
+
 	@DBRef
 	private Organization organization;
-	
-	@DBRef(lazy=true)
-	private List<Project> projects = Collections.<Project>emptyList();
-	
+
+	@DBRef(lazy = true)
+	private List<Project> projects = Collections.<Project> emptyList();
+
 	@DBRef
-	private UserRole userRole;
+	private UserRole userRole = UserRole.NORMAL_USER_ROLE;
 
 	@CreatedDate
 	private DateTime creationDate;
-	
+
 	@LastModifiedDate
 	private DateTime lastModified;
 
 	public User(String name, String email) {
 		this.name = name;
 		this.email = email;
-	}	
-	
+	}
+
 }

@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.bbytes.purple.repository.UserRepository;
-import com.bbytes.purple.utils.GlobalConstants;
 
 public class AuthUserDetailsService implements UserDetailsService {
 
@@ -23,12 +22,14 @@ public class AuthUserDetailsService implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("user not found");
 		}
-		// need to add expired , acount loced etc to mongo db user domain object
+		// need to add expired , account locked etc to mongo db user domain object
 		User userDetail = new User(user.getEmail(), user.getPassword(),
-				AuthorityUtils.createAuthorityList(GlobalConstants.ROLE_NORMAL_USER));
+				AuthorityUtils.createAuthorityList(user.getUserRole().getRoleName()));
 		detailsChecker.check(userDetail);
 		return userDetail;
 	}
+	
+	
 
 	
 }

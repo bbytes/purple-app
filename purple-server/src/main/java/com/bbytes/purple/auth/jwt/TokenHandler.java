@@ -1,33 +1,52 @@
 package com.bbytes.purple.auth.jwt;
 
 import org.joda.time.DateTime;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
+import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.StringUtils;
-import com.google.common.base.Preconditions;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public final class TokenHandler {
 
 	private final String secret;
-	private final AuthUserDetailsService userService;
 
-	public TokenHandler(String secret, AuthUserDetailsService userService) {
+	public TokenHandler(String secret) {
 		this.secret = StringUtils.checkNotBlank(secret);
-		this.userService = Preconditions.checkNotNull(userService);
 	}
 
-	public User parseUserFromToken(String token) {
-		String username = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
-		return userService.loadUserByUsername(username);
-	}
+	public String createJWTStringTokenForUser(TokenDataHolder tokenDataHolder) {
+		Claims claims = Jwts.claims().setSubject(tokenDataHolder.getUser().getUsername());
+		claims.put(GlobalConstants.HEADER_TENANT_ID, tokenDataHolder.getTenantId());
+		// user can have only one role so directly fetch it
+		String role = tokenDataHolder.getUser().getAuthorities().iterator().next().getAuthority();
+		claims.put(GlobalConstants.USER_ROLE, role);
 
-	public String createTokenForUser(User user) {
 		// expire the token after a day .
 		// Time to expire is 24 hrs from issue time
-		return Jwts.builder().setSubject(user.getUsername()).signWith(SignatureAlgorithm.HS512, secret)
+		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret)
 				.setExpiration(DateTime.now().plusDays(1).toDate()).compact();
+	}
+
+	public TokenDataHolder parseJWTStringTokenForUser(String jwtStringToken) {
+		Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwtStringToken).getBody();
+
+		String email = body.getSubject();
+		String tenantId = (String) body.get(GlobalConstants.HEADER_TENANT_ID);
+		String role = (String) body.get(GlobalConstants.USER_ROLE);
+		// need to add expired , account locked etc to
+		// mongo db user domain object
+		if (email != null && tenantId != null && !tenantId.trim().isEmpty() && role != null && !role.trim().isEmpty()) {
+			User userDetail = new User(email, "N/A", AuthorityUtils.createAuthorityList(role));
+			TokenDataHolder tokenDataHolder = new TokenDataHolder(userDetail, tenantId);
+			return tokenDataHolder;
+		}
+
+		return null;
+
 	}
 }
