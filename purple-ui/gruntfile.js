@@ -161,7 +161,7 @@ module.exports = function (grunt) {
             },
             scripts: {
                 files: ['source/**'],
-                tasks: ['clean', 'less:dev', 'concat', 'bower_concat', 'ngAnnotate:app', 'copy', 'html2js']
+                tasks: ['config:dev','clean', 'concat', 'bower_concat', 'copy', 'html2js']
             }
         },
         // grunt-open will open your browser at the project's URL
@@ -220,5 +220,5 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['config:dev','clean', 'concat', 'bower_concat', 'copy', 'html2js', 'connect', 'watch']);
 
     // Production Build
-    grunt.registerTask('prod', ['clean', 'concat', 'bower_concat', 'copy', 'html2js', 'ngAnnotate:app', 'uglify', 'cssmin', 'cachebreaker']);
+    grunt.registerTask('prod', ['config:prod','clean', 'concat', 'bower_concat', 'copy', 'html2js', 'ngAnnotate:app', 'uglify', 'cssmin', 'cachebreaker']);
 };
