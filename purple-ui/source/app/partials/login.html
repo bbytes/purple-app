@@ -1,0 +1,22 @@
+<div>
+    <toaster-container toaster-options="{'close-button': true}"></toaster-container>
+    <div class="reveal-logo"><img src="assets/img/logo.png" alt="Reveal"></div>
+    <div class="login-form">
+        <form name="loginForm" ng-submit="submitLoginForm(loginForm.$valid)" class="loginForm" novalidate>
+            <div class="group">
+                <input type="text" class="rluser" ng-model="usrName" placeholder="Username" required><span class="highlight"></span><span class="bar"></span>
+            </div>
+            <div class="group">
+                <input type="password" class="rlpass" ng-model="usrPass" placeholder="Password" required><span class="highlight"></span><span class="bar"></span>
+            </div>
+            <div class="group">
+                <button type="submit" class="button buttonBlue">Login
+                    <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div ui-view="header"></div>
+<div ui-view></div>
+<div ui-view="footer"></div>

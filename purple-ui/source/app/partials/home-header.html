@@ -1,0 +1,89 @@
+<header>
+    <toaster-container toaster-options="{'close-button': true}"></toaster-container>
+    <nav class="navbar navbar-default navbar-fixed-top" ng-controller="headerCtrl">
+        <div class="container-fluid clearfix">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header mob-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#rl-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#/home">
+                    <img class="non-mb-view" src="assets/img/logo.png" alt="Reveal">
+                </a>
+            </div>
+            <div class="wrapper">
+                <div class="nav navbar-nav navbar-right mobile-nav">
+                    
+                    <div class="btn-group dropdown viewmode-dropdown" uib-dropdown>
+                        <button id="btn-append-to-single-button" type="button" class="btn new_btns" uib-dropdown-toggle>
+                            {{ viewMode }} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="btn-append-to-single-button">
+                            <li role="menuitem" ng-repeat="mode in viewModes"><a href="javascript://" ng-click="changeViewMode(mode.name)">{{ mode.name }}</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav navbar-right pull-right">
+                        <div class="dropdown setting-icon" dropdown is-open="status.isopen">
+                            <button id="single-button" type="button" class="btn" dropdown-toggle ng-disabled="disabled">
+                                <span class="icon-settings glyphicon glyphicon-cog"></span> <span class="caret"></span><span class="glyphicon glyphicon-triangle-top"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+                                <li class="item-head menu-item-no-hover"><span class="glyphicon glyphicon-user"></span> {{ userName }} </li>
+                                <li class="divider"></li>
+                                <li class="item-head">{{'menu.lang'| translate}}</li>
+                                <li class="divider"></li>
+                                <li role="menuitem">
+                                    <a href="javascript:;" ng-click="changeLanguage('es')">
+                                        <span class="glyphicon glyphicon-ok" ng-show="currentLocale == 'es'"> </span>    
+                                        <span style="padding-left:18px;" ng-show="currentLocale != 'es'"> </span>    
+                                        {{'menu.spanish'| translate}}
+                                    </a>
+                                </li>
+                                <li role="menuitem">
+                                    <a href="javascript:;" ng-click="changeLanguage('en_US')">
+                                        <span class="glyphicon glyphicon-ok" ng-show="currentLocale == 'en_US'"> </span> 
+                                        <span style="padding-left:18px;" ng-show="currentLocale != 'en_US'"> </span>  
+                                        {{'menu.english'| translate}}
+                                    </a>
+
+                                </li>
+                                <li class="divider"></li>
+                                <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-question-sign"> </span> {{'menu.help'| translate}}</a></li>
+                                <li class="divider"></li>
+                                <li class="item-head">{{'menu.quickref'| translate}}</li>
+                                <li class="divider"></li>
+                                <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-th-large"> </span> {{'menu.dash'| translate}}</a></li>
+                                <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-stats"> </span> {{'menu.vismsn'| translate}}</a></li>
+                                <li class="divider"></li>
+                                <li role="menuitem"><a href="javascript:;" ng-click="logout()"><span class="glyphicon glyphicon-off"> </span> {{'menu.logout'| translate}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="rl-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ui-sref-active="active" reveal-module-permission="My Home"><a ui-sref="home" >{{"menu.home"| translate}}</a></li>
+                        <li ui-sref-active="active" reveal-module-permission="Plant View"><a ui-sref="plantView">{{"menu.plantview"| translate}} <span class="sr-only">(current)</span></a></li>
+                        <li ui-sref-active="active" reveal-module-permission="Compare"><a ui-sref="compare">{{"menu.compare"| translate}}</a></li>
+                        <li ui-sref-active="active" reveal-module-permission="Visual Management"><a ui-sref="measurement">{{"menu.vismsn"| translate}}</a></li>
+                        <li ng-class="{active: subMenu}" ng-if="subMenu"><a href="javascript://">{{subMenu| translate}} </a></li>
+                        <li class="dropdown icon-dropdown">
+                            <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-option-vertical" style="padding: 4px;"></span></a>
+                            <ul class="dropdown-menu">
+                                <li ui-sref-active="active" reveal-module-permission="Summary"><a ui-sref="summary" ng-click="subMenu = 'menu.sumry'">{{"menu.sumry"| translate}}</a></li>
+                                <li ui-sref-active="active"><a href="javascript://" ng-click="subMenu = 'menu.autoreg'">{{"menu.autoreg"| translate}}</a></li>
+                                <li ui-sref-active="active" reveal-module-permission="Admin Page"><a ui-sref="admin" ng-click="subMenu = 'menu.admin'">{{"menu.admin"| translate}}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+</header>
