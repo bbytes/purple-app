@@ -1,5 +1,7 @@
 package com.bbytes.purple.domain;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -30,6 +32,9 @@ public class Comment {
 	
 	@DBRef
 	private Status status;
+	
+	// embedded list 
+	private List<Reply> replies;
 	
 	@CreatedDate
 	private DateTime creationDate;
