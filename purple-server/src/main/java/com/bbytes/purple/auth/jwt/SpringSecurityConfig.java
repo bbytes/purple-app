@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.bbytes.purple.service.TenantResolverService;
+
 @Configuration
 @EnableWebSecurity
 @Order(2)
@@ -26,6 +28,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private TenantResolverService tenantResolverService;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -48,7 +53,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterAfter(new StatelessAuthenticationFilter(tokenAuthenticationService),
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(new StatelessLoginFilter("/auth/login", tokenAuthenticationService, userService,
-						authenticationManager), StatelessAuthenticationFilter.class)
+						tenantResolverService, authenticationManager), StatelessAuthenticationFilter.class)
 				.headers().cacheControl().and();
 
 	}
