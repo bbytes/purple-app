@@ -1,7 +1,5 @@
 package com.bbytes.purple.auth.jwt;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.authority.AuthorityUtils;
