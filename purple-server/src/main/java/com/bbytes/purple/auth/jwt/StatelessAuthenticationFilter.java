@@ -33,7 +33,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 		if (authentication != null) {
 			((HttpServletResponse) response).setStatus(HttpServletResponse.SC_OK);
 		} else {
-			((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 		}
 		filterChain.doFilter(request, response); // always continue
 	}
