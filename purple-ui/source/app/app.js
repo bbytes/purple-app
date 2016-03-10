@@ -56,7 +56,8 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', fun
             url: '/signup',
             views: {
                 '': {
-                    templateUrl: 'app/partials/signup.html'
+                    templateUrl: 'app/partials/signup.html',
+                     controller: 'signupCtrl',
                 }
             }
         }).state('home.myalerts', {
