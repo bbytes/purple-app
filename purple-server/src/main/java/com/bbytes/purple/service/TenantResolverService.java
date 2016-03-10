@@ -21,7 +21,7 @@ public class TenantResolverService {
 		TenantResolver tenantResolver = tenantResolverRepository.findOneByEmail(email);
 
 		if (tenantResolver == null)
-			throw new UsernameNotFoundException("Given email " + email + " not in DB");
+			throw new UsernameNotFoundException("User not found with email '" + email+"'");
 
 		// set the queried tenant id as current db
 		TenancyContextHolder.setTenant(tenantResolver.getOrgId());
