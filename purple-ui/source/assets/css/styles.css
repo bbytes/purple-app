@@ -100,7 +100,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     padding: 10px;
     width: 100%;
     margin-bottom: 15px;
-    background: url(../images/arrow.png) no-repeat 96% center #ffffff;
+    background: url(../img/arrow.png) no-repeat 96% center #ffffff;
     -webkit-appearance: none;
     font-size: 14px;
     color: #ccc;
