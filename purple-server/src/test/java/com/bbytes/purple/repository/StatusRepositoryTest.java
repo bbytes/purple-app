@@ -36,9 +36,6 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private UserRoleRepository userRoleRepository;
-	
 	Organization org1;
 	User testUser;
 	Project project1;
