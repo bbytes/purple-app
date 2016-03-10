@@ -30,7 +30,7 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', fun
         //Remove # tag from URL
         $locationProvider.html5Mode(true);
 
-        $urlRouterProvider.otherwise('/login');
+        $urlRouterProvider.otherwise('/home');
 
         $stateProvider.state('login', {
             url: '/login',
@@ -50,6 +50,13 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', fun
                 },
                 'footer@home': {
                     templateUrl: 'app/partials/home-footer.html'
+                }
+            }
+        }).state('signup', {
+            url: '/signup',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/signup.html'
                 }
             }
         }).state('home.myalerts', {
