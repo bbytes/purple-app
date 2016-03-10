@@ -16,8 +16,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.service.TenantResolverService;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -59,7 +59,7 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 		// Lookup the complete User object from the database and create an
 		// Authentication for it
 		MultiTenantAuthenticationToken authenticationToken = (MultiTenantAuthenticationToken) authentication;
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(authenticationToken.getTenantId());
+		TenancyContextHolder.setTenant(authenticationToken.getTenantId());
 		final User authenticatedUser = userDetailsService.loadUserByUsername(authentication.getName());
 		final MultiTenantAuthenticationToken userAuthentication = new MultiTenantAuthenticationToken(
 				authenticationToken.getTenantId(), authenticatedUser);

@@ -28,6 +28,7 @@ import com.bbytes.purple.repository.OrganizationRepository;
 import com.bbytes.purple.repository.UserRoleRepository;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { PurpleApplication.class, SpringSecurityConfig.class })
@@ -73,7 +74,7 @@ public class TestLoginAuthRequest {
 		adminUser1.setOrganization(testOrg);
 		adminUser1.setUserRole(UserRole.ADMIN_USER_ROLE);
 
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(adminUser1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(adminUser1.getOrganization().getOrgId());
 		userRoleRepository.save(UserRole.ADMIN_USER_ROLE);
 		organizationRepository.save(testOrg);
 		userService.save(adminUser1);
@@ -83,7 +84,7 @@ public class TestLoginAuthRequest {
 
 	@After
 	public void cleanUp() {
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(adminUser1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(adminUser1.getOrganization().getOrgId());
 		userRoleRepository.deleteAll();
 		userService.deleteAll();
 		organizationRepository.deleteAll();

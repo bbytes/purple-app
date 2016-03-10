@@ -14,17 +14,18 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
 import org.springframework.util.Assert;
 
+import com.bbytes.purple.utils.TenancyContextHolder;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
 public class MultiTenantDbFactory extends SimpleMongoDbFactory {
 
-	private final String defaultName;
 	private static final Logger logger = LoggerFactory.getLogger(MultiTenantDbFactory.class);
+	
+	private final String defaultName;
 
 	private MongoTemplate mongoTemplate;
 
-	private static final ThreadLocal<String> dbName = new ThreadLocal<String>();
 	private static final HashMap<String, Object> databaseIndexMap = new HashMap<String, Object>();
 
 	public MultiTenantDbFactory(final MongoClient mongoClient, final String defaultDatabaseName) {
@@ -32,6 +33,8 @@ public class MultiTenantDbFactory extends SimpleMongoDbFactory {
 		logger.debug("Instantiating " + MultiTenantDbFactory.class.getName() + " with default database name: "
 				+ defaultDatabaseName);
 		this.defaultName = defaultDatabaseName;
+		// avoid calling index creation for default db
+		databaseIndexMap.put(this.defaultName, new Object());
 	}
 
 	// dirty but ... what can I do?
@@ -40,26 +43,10 @@ public class MultiTenantDbFactory extends SimpleMongoDbFactory {
 		this.mongoTemplate = mongoTemplate;
 	}
 
-	public static void setDatabaseNameForCurrentThread(final String databaseName) {
-		logger.debug("Switching to database: " + databaseName);
-		dbName.set(databaseName);
-	}
-	
-	public static void setTenantManagementDatabaseNameForCurrentThread() {
-		// clearing current db in ThreadLocal will set it back to default database which is tenant management db 
-		dbName.remove();
-	}
-
-	protected static void clearDatabaseNameForCurrentThread() {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Removing database [" + dbName.get() + "]");
-		}
-		dbName.remove();
-	}
 
 	@Override
 	public DB getDb() {
-		final String tenantName = dbName.get();
+		final String tenantName = TenancyContextHolder.getTenant();
 		final String dbToUse = (tenantName != null ? tenantName : this.defaultName);
 		logger.debug("Acquiring database: " + dbToUse);
 		createIndexIfNecessaryFor(dbToUse);

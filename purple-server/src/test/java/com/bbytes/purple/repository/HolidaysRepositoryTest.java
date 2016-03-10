@@ -1,23 +1,23 @@
 package com.bbytes.purple.repository;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.bbytes.purple.PurpleApplicationTests;
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.domain.Holidays;
 import com.bbytes.purple.domain.Organization;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 /**
  * @author aditya
@@ -49,14 +49,14 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 		days.add(new Holidays("X-Mas Day", new Date(2016 - 12 - 25), abc));
 		days.add(new Holidays("Diwali", new Date(2016 - 9 - 28), abc));
 
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(days.get(0).getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
 		orgRepository.save(abc);
 		holiDaysRepository.save(days);
 	}
 
 	@After
 	public void clearDB() {
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(days.get(0).getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
 		orgRepository.delete(abc);
 		holiDaysRepository.delete(days);
 	}
@@ -66,7 +66,7 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 	 */
 	@Test
 	public void saveHolidayTest() {
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(days.get(0).getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
 		holiDaysRepository.save(days);
 	}
 
@@ -75,7 +75,7 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 	 */
 	@Test
 	public void deleteHolidayeByName() {
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(days.get(0).getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
 		Holidays holidays = holiDaysRepository.findByHolidayName("Diwali");
 		holiDaysRepository.delete(holidays);
 	}
@@ -85,7 +85,7 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 	 */
 	@Test
 	public void deleteAllHolidayTest() {
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(days.get(0).getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
 		List<Holidays> holidays = holiDaysRepository.findAll();
 		holiDaysRepository.delete(holidays);
 	}
@@ -96,7 +96,7 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 	@Test
 	public void getHolidayList() {
 
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(days.get(0).getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
 		List<Holidays> holidays = new ArrayList<Holidays>();
 		holidays = holiDaysRepository.findAll();
 		int arr = holidays.size();

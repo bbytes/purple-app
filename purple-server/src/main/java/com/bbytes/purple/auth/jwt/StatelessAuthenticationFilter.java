@@ -14,7 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
-import com.bbytes.purple.database.MultiTenantDbFactory;
+import com.bbytes.purple.utils.TenancyContextHolder;
 import com.google.common.base.Preconditions;
 
 public class StatelessAuthenticationFilter extends GenericFilterBean {
@@ -37,8 +37,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 			if (authentication != null) {
 				// Very important for multi tenant to work : set tenant to
 				// current db resolver after successful verification
-				MultiTenantDbFactory.setDatabaseNameForCurrentThread(
-						((MultiTenantAuthenticationToken) authentication).getTenantId());
+				TenancyContextHolder.setTenant(((MultiTenantAuthenticationToken) authentication).getTenantId());
 				((HttpServletResponse) response).setStatus(HttpServletResponse.SC_OK);
 				filterChain.doFilter(request, response); // always continue
 			}

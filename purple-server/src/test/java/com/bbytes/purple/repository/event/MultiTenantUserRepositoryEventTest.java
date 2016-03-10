@@ -10,13 +10,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bbytes.purple.PurpleApplicationTests;
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.repository.OrganizationRepository;
 import com.bbytes.purple.repository.UserRoleRepository;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 
 public class MultiTenantUserRepositoryEventTest extends PurpleApplicationTests{
@@ -42,7 +42,7 @@ public class MultiTenantUserRepositoryEventTest extends PurpleApplicationTests{
 	
 	@After
 	public void cleanUp() {
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(admin1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(admin1.getOrganization().getOrgId());
 		userService.deleteAll();
 		organizationRepository.deleteAll();
 		userRoleRepository.deleteAll();
@@ -50,7 +50,7 @@ public class MultiTenantUserRepositoryEventTest extends PurpleApplicationTests{
 
 	@Test
 	public void checkUserCreationDateUpdateEvent() {
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(admin1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(admin1.getOrganization().getOrgId());
 		test = organizationRepository.save(test);
 		admin1.setOrganization(test);
 		admin1.setUserRole(role);
@@ -60,7 +60,7 @@ public class MultiTenantUserRepositoryEventTest extends PurpleApplicationTests{
 	
 	@Test
 	public void checkOrgCreationDateUpdateEvent() {
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(test.getOrgId());
+		TenancyContextHolder.setTenant(test.getOrgId());
 		test = organizationRepository.save(test);
 		assertThat(test.getCreationDate(), is(notNullValue()));
 	}

@@ -2,7 +2,9 @@ package com.bbytes.purple.repository;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,8 +14,8 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bbytes.purple.PurpleApplicationTests;
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.domain.Organization;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MultiTenantOrganizationRepositoryTest extends PurpleApplicationTests{
@@ -29,31 +31,31 @@ public class MultiTenantOrganizationRepositoryTest extends PurpleApplicationTest
 		org1 = new Organization("abc", "abc-org");
 		org2 = new Organization("xyz", "xyz-org");
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(org1.getOrgId());
+		TenancyContextHolder.setTenant(org1.getOrgId());
 		organizationRepository.save(org1);
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(org2.getOrgId());
+		TenancyContextHolder.setTenant(org2.getOrgId());
 		organizationRepository.save(org2);
 	}
 	
 	@After
 	public void cleanUp()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(org1.getOrgId());
+		TenancyContextHolder.setTenant(org1.getOrgId());
 		organizationRepository.deleteAll();
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(org2.getOrgId());
+		TenancyContextHolder.setTenant(org2.getOrgId());
 		organizationRepository.deleteAll();
 	}
 	
 	@Test
 	public void saveOrgTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(org1.getOrgId());
+		TenancyContextHolder.setTenant(org1.getOrgId());
 		organizationRepository.save(org1);
 		assertThat(org1.getOrgId(), is(notNullValue()));
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(org2.getOrgId());
+		TenancyContextHolder.setTenant(org2.getOrgId());
 		organizationRepository.save(org2);
 		assertThat(org2.getOrgId(), is(notNullValue()));
 	}
@@ -61,7 +63,7 @@ public class MultiTenantOrganizationRepositoryTest extends PurpleApplicationTest
 	@Test
 	public void deleteOrgTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(org1.getOrgId());
+		TenancyContextHolder.setTenant(org1.getOrgId());
 		
 		Organization orgTest = organizationRepository.findByOrgId(org1.getOrgId());
 		organizationRepository.delete(orgTest);
@@ -72,7 +74,7 @@ public class MultiTenantOrganizationRepositoryTest extends PurpleApplicationTest
 	@Test
 	public void getOrgTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(org1.getOrgId());
+		TenancyContextHolder.setTenant(org1.getOrgId());
 		
 		Organization orgTest = organizationRepository.findByOrgId(org1.getOrgId());
 		
@@ -82,7 +84,7 @@ public class MultiTenantOrganizationRepositoryTest extends PurpleApplicationTest
 	@Test
 	public void updateOrgTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(org1.getOrgId());
+		TenancyContextHolder.setTenant(org1.getOrgId());
 		
 		Organization updatedOrg = organizationRepository.findByOrgId(org1.getOrgId());
 		updatedOrg.setOrgName("info");
