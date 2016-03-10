@@ -51,7 +51,7 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 
 		final MultiTenantAuthenticationToken loginToken = new MultiTenantAuthenticationToken(
 				request.getParameter("username").toString(), request.getParameter("password").toString(),
-				tenantResolverService.getTenantIdForUser(request.getParameter("username").toString()));
+				tenantResolverService.findTenantIdForUserEmail(request.getParameter("username").toString()));
 
 		return getAuthenticationManager().authenticate(loginToken);
 	}

@@ -25,6 +25,9 @@ public class TenantResolver {
 	@NotNull
 	@Indexed(unique = true)
 	private String email;
+	
+	@Indexed
+	private String userId;
 
 	@NotNull
 	private String orgId;

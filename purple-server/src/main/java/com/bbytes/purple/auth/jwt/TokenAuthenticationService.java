@@ -41,7 +41,7 @@ public class TokenAuthenticationService {
 	 */
 	public String addAuthentication(HttpServletResponse response, MultiTenantAuthenticationToken authentication) {
 		final User user = authentication.getDetails();
-		final String userTenantId = tenantResolverService.getTenantIdForUser(user.getUsername());
+		final String userTenantId = tenantResolverService.findTenantIdForUserEmail(user.getUsername());
 		final TokenDataHolder tokenDataHolder = new TokenDataHolder(user, userTenantId);
 		String jwtStringToken = tokenHandler.createJWTStringTokenForUser(tokenDataHolder);
 		logger.debug("Auth token for user :-  " + user.getUsername());
