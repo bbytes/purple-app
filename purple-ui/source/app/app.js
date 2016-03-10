@@ -36,7 +36,9 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', fun
             url: '/login',
             controller: 'loginCtrl',
             templateUrl: 'app/partials/login.html'
+
         }).state('home', {
+
             url: '/home',
             views: {
                 '': {
@@ -58,6 +60,7 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', fun
                 '': {
                     templateUrl: 'app/partials/signup.html'
                 }
+              
             }
         }).state('home.myalerts', {
             url: '/myalerts',
