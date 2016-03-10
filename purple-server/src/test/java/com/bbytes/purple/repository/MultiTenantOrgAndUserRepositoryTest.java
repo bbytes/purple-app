@@ -45,14 +45,13 @@ public class MultiTenantOrgAndUserRepositoryTest extends PurpleApplicationTests 
 		admin2 = new User("admin-2", "admin@abc.com");
 		admin2.setOrganization(abc);
 		admin2.setPassword("test123");
+		admin2.setUserRole(UserRole.ADMIN_USER_ROLE);
 
 		TenancyContextHolder.setTenant(admin1.getOrganization().getOrgId());
 		userService.deleteAll();
-		userRoleRepository.save(UserRole.NORMAL_USER_ROLE);
 		orgRepository.save(test);
 		TenancyContextHolder.setTenant(admin2.getOrganization().getOrgId());
 		userService.deleteAll();
-		userRoleRepository.save(UserRole.NORMAL_USER_ROLE);
 		orgRepository.save(abc);
 
 	}

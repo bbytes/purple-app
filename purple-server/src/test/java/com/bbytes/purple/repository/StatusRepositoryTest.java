@@ -18,6 +18,7 @@ import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
@@ -35,6 +36,9 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private UserRoleRepository userRoleRepository;
+	
 	Organization org1;
 	User testUser;
 	Project project1;
@@ -47,6 +51,7 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 		
 		testUser = new User("akshay", "star@gmail");
 		testUser.setOrganization(org1);
+		testUser.setUserRole(UserRole.ADMIN_USER_ROLE);
 		
 		project1 = new Project("web", "2pm");
 		project1.setOrganization(org1);

@@ -43,6 +43,10 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 	public void setUp()
 	{
 		bbytes = new Organization("bbytes", "BB-Org");
+		user1 = new User("aaa", "aa@gmail");
+		user1.setOrganization(bbytes);
+		user2 = new User("bbb", "bb@gmail");
+		user2.setOrganization(bbytes);
 		
 		proj1 = new Project("purple", "5.00 PM");
 		proj1.setOrganization(bbytes);
@@ -52,6 +56,8 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 		
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		orgRepository.save(bbytes);
+		projectRepository.save(proj1);
+		projectRepository.save(proj2);
 	}
 
 	@After
@@ -84,16 +90,13 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		List<Project> projectList = projectRepository.findAll();
 		
-		assertFalse(projectList.size() > 0);
+		assertTrue(projectList.size() > 0);
 	}
 	
 	@Test
 	public void updateProjectTest()
 	{
-		assertNull(proj1.getProjectId());
-		projectRepository.save(proj1);
-		assertNotNull(proj1.getProjectId());
-		
+		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		Project projectObj = projectRepository.findOne(proj1.getProjectId());
 		
 		assertTrue(!projectObj.getProjectName().isEmpty());
@@ -104,14 +107,13 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 		
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void deleteProjectTest()
 	{
-		if(proj1.getProjectId() == null)
-		{
-			throw new NullPointerException();
-		}
+		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		projectRepository.delete(proj1.getProjectId());
+		
+		assertNull(projectRepository.findOne(proj1.getProjectId()));
 	}
 	
 	@Test
@@ -119,14 +121,14 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 	{
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		
-		 projectRepository.save(proj1);
-		
-		 List<User> users = userRepository.findAll();
+		userRepository.save(user1);
+		userRepository.save(user2);
+		List<User> users = userRepository.findAll();
 		 
-		 proj1.setUser(users);
-		 projectRepository.save(proj1);
+		proj1.setUser(users);
+		projectRepository.save(proj1);
 		 
-		 assertTrue(proj1.getUser().size() > 0);
+		assertTrue(proj1.getUser().size() > 0);
 		 
 	}
 	

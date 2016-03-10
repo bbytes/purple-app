@@ -46,7 +46,7 @@ public class User {
 	@DBRef(lazy = true)
 	private List<Project> projects = Collections.<Project> emptyList();
 
-	@DBRef
+	// embedded
 	private UserRole userRole = UserRole.NORMAL_USER_ROLE;
 
 	@CreatedDate

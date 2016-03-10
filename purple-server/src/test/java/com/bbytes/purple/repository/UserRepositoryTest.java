@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.bbytes.purple.PurpleApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
@@ -47,6 +48,7 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 		user1 = new User("user1", "abc@gmail");
 		user1.setOrganization(sample);
 		user1.setPassword("122");
+		
 		
 		user2 = new User("user2", "test@gmail");
 		user2.setOrganization(sample);
