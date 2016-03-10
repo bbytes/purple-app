@@ -1,4 +1,4 @@
-rootApp.service('loginService', function ($rootScope, $http, $q, appConfig) {
+rootApp.service('loginService', function ($rootScope, $http, $q) {
 
     return {
         login: function (userName, Passwd) {
@@ -7,7 +7,7 @@ rootApp.service('loginService', function ($rootScope, $http, $q, appConfig) {
 
             $http({
                 method: 'POST',
-                url: appConfig.baseurl + appConfig.rootIs + '/api/auth/v1/login?username=' + userName + '&password=' + Passwd,
+                url:'/auth/login',
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -36,7 +36,7 @@ rootApp.service('loginService', function ($rootScope, $http, $q, appConfig) {
 
             $http({
                 method: 'GET',
-                url: appConfig.baseurl + appConfig.rootIs + '/api/auth/v1/logout',
+                url:  '/auth/logout',
                 cache: false
             }).success(function (response, status, headers) {
 
