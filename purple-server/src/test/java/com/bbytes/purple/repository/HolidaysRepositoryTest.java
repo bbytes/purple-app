@@ -15,7 +15,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bbytes.purple.PurpleApplicationTests;
-import com.bbytes.purple.domain.Holidays;
+import com.bbytes.purple.domain.Holiday;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
@@ -33,21 +33,21 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 	private OrganizationRepository orgRepository;
 
 	Organization abc;
-	List<Holidays> days;
-	Holidays holiDay;
+	List<Holiday> days;
+	Holiday holiDay;
 
 	@Before
 	public void setUp() {
 		abc = new Organization("abc", "ABC-Org");
 
-		days = new ArrayList<Holidays>();
-		days.add(new Holidays("Holi", new Date(15 - 02 - 2016), abc));
-		days.add(new Holidays("Mahashivratri", new Date(2016 - 03 - 07), abc));
-		days.add(new Holidays("Republic Day", new Date(2016 - 01 - 26), abc));
-		days.add(new Holidays("Valentine Day", new Date(2016 - 02 - 14), abc));
-		days.add(new Holidays("Independence Day", new Date(2016 - 8 - 15), abc));
-		days.add(new Holidays("X-Mas Day", new Date(2016 - 12 - 25), abc));
-		days.add(new Holidays("Diwali", new Date(2016 - 9 - 28), abc));
+		days = new ArrayList<Holiday>();
+		days.add(new Holiday("Holi", new Date(15 - 02 - 2016), abc));
+		days.add(new Holiday("Mahashivratri", new Date(2016 - 03 - 07), abc));
+		days.add(new Holiday("Republic Day", new Date(2016 - 01 - 26), abc));
+		days.add(new Holiday("Valentine Day", new Date(2016 - 02 - 14), abc));
+		days.add(new Holiday("Independence Day", new Date(2016 - 8 - 15), abc));
+		days.add(new Holiday("X-Mas Day", new Date(2016 - 12 - 25), abc));
+		days.add(new Holiday("Diwali", new Date(2016 - 9 - 28), abc));
 
 		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
 		orgRepository.save(abc);
@@ -76,7 +76,7 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 	@Test
 	public void deleteHolidayeByName() {
 		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
-		Holidays holidays = holiDaysRepository.findByHolidayName("Diwali");
+		Holiday holidays = holiDaysRepository.findByHolidayName("Diwali");
 		holiDaysRepository.delete(holidays);
 	}
 
@@ -86,7 +86,7 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 	@Test
 	public void deleteAllHolidayTest() {
 		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
-		List<Holidays> holidays = holiDaysRepository.findAll();
+		List<Holiday> holidays = holiDaysRepository.findAll();
 		holiDaysRepository.delete(holidays);
 	}
 
@@ -97,7 +97,7 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 	public void getHolidayList() {
 
 		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
-		List<Holidays> holidays = new ArrayList<Holidays>();
+		List<Holiday> holidays = new ArrayList<Holiday>();
 		holidays = holiDaysRepository.findAll();
 		int arr = holidays.size();
 
@@ -107,7 +107,7 @@ public class HolidaysRepositoryTest extends PurpleApplicationTests {
 	@Test
 	public void updateHoliday() {
 
-		List<Holidays> holidays = holiDaysRepository.findAll();
+		List<Holiday> holidays = holiDaysRepository.findAll();
 		holiDay = holidays.get(0);
 		holiDay.setHolidayDate(new Date(2016 - 05 - 11));
 		holiDaysRepository.save(holiDay);

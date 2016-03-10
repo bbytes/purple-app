@@ -39,7 +39,7 @@ public class MutliTenantAuthenticationProvider implements AuthenticationProvider
 		UserDetails userFromDB = userDetailsService.loadUserByUsername(username);
 		
 		if(userFromDB==null)
-			throw new UsernameNotFoundException("User email not in DB : " + username);
+			throw new UsernameNotFoundException("User not found with email '" + username+"'");
 		
 		if (!passwordHashService.passwordMatches(password, userFromDB.getPassword())) {
 			throw new BadCredentialsException("Login Failed. Bad credentials");

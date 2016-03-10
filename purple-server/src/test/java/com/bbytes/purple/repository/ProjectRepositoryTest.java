@@ -53,6 +53,10 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 		proj2.setOrganization(bbytes);
 		
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
+		orgRepository.deleteAll();
+		projectRepository.deleteAll();
+		userRepository.deleteAll();
+		
 		orgRepository.save(bbytes);
 		projectRepository.save(proj1);
 		projectRepository.save(proj2);
@@ -64,10 +68,12 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		projectRepository.deleteAll();
 		orgRepository.deleteAll();
+		userRepository.deleteAll();
 		
 		TenancyContextHolder.setTenant(proj2.getOrganization().getOrgId());
 		projectRepository.deleteAll();
 		orgRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 	
 	@Test

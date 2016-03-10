@@ -62,6 +62,9 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 		status2.setUser(testUser); 
 		
 		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
+		orgRepository.deleteAll();
+		userService.deleteAll();
+		
 		orgRepository.save(org1);
 		userService.save(testUser);
 		projectRepository.save(project1);

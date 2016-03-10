@@ -24,7 +24,6 @@ import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.repository.OrganizationRepository;
-import com.bbytes.purple.repository.UserRoleRepository;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
@@ -47,9 +46,6 @@ public class TestLoginAuthRequest {
 
 	@Autowired
 	private OrganizationRepository organizationRepository;
-
-	@Autowired
-	private UserRoleRepository userRoleRepository;
 
 	private User adminUser1;
 
@@ -74,7 +70,6 @@ public class TestLoginAuthRequest {
 		adminUser1.setUserRole(UserRole.ADMIN_USER_ROLE);
 
 		TenancyContextHolder.setTenant(adminUser1.getOrganization().getOrgId());
-		userRoleRepository.save(UserRole.ADMIN_USER_ROLE);
 		organizationRepository.save(testOrg);
 		userService.save(adminUser1);
 		userService.updatePassword(password, adminUser1);
@@ -84,7 +79,6 @@ public class TestLoginAuthRequest {
 	@After
 	public void cleanUp() {
 		TenancyContextHolder.setTenant(adminUser1.getOrganization().getOrgId());
-		userRoleRepository.deleteAll();
 		userService.deleteAll();
 		organizationRepository.deleteAll();
 	}
