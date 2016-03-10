@@ -20,29 +20,28 @@ import com.mongodb.ServerAddress;
 @Configuration
 @EnableMongoRepositories(basePackages = "com.bbytes.purple")
 @EnableMongoAuditing
-public class MongoDatabaseConfig extends AbstractMongoConfiguration{
+public class MongoDatabaseConfig extends AbstractMongoConfiguration {
 
 	@Value("${spring.data.mongodb.host}")
 	private String host;
-	
+
 	@Value("${spring.data.mongodb.port}")
 	private Integer port;
-	
+
 	@Value("${spring.data.mongodb.database}")
 	private String database;
-	
+
 	@Value("${spring.data.mongodb.username}")
 	private String username;
-	
+
 	@Value("${spring.data.mongodb.password}")
 	private String password;
-	
+
 	@Override
 	protected String getMappingBasePackage() {
-	    return "com.bbytes.purple.domain";
-	} 
-	
-	
+		return "com.bbytes.purple.domain";
+	}
+
 	@Bean
 	public ValidatingMongoEventListener validatingMongoEventListener() {
 		return new ValidatingMongoEventListener(validator());
@@ -52,26 +51,29 @@ public class MongoDatabaseConfig extends AbstractMongoConfiguration{
 	public LocalValidatorFactoryBean validator() {
 		return new LocalValidatorFactoryBean();
 	}
-	
+
 	@Override
 	protected String getDatabaseName() {
 		return database;
 	}
-	
+
 	@Override
 	@Bean
 	public Mongo mongo() throws Exception {
-		return new MongoClient(Collections.singletonList(new ServerAddress(host,port)));
+		return new MongoClient(Collections.singletonList(new ServerAddress(host, port)));
 	}
 
 	@Bean
-	public MongoDbFactory mongoDbFactory() throws Exception {
-		return new MultiTenantDbFactory(new MongoClient(Collections.singletonList(new ServerAddress(host, port))),
-				database);
+	public MultiTenantDbFactory mongoDbFactory(final Mongo mongo) throws Exception {
+		return new MultiTenantDbFactory((MongoClient) mongo, database);
 	}
 
 	@Bean
-	public MongoTemplate mongoTemplate() throws Exception {
-		return new MongoTemplate(mongoDbFactory());
+	public MongoTemplate mongoTemplate(final Mongo mongo) throws Exception {
+		MultiTenantDbFactory mongoDbFactory = mongoDbFactory(mongo);
+		MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory);
+		mongoDbFactory.setMongoTemplate(mongoTemplate);
+		return mongoTemplate;
 	}
+
 }

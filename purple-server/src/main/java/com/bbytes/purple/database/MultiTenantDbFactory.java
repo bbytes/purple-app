@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexResolver;
@@ -16,6 +17,7 @@ import org.springframework.util.Assert;
 
 import com.bbytes.purple.utils.TenancyContextHolder;
 import com.mongodb.DB;
+import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 public class MultiTenantDbFactory extends SimpleMongoDbFactory {
@@ -33,8 +35,6 @@ public class MultiTenantDbFactory extends SimpleMongoDbFactory {
 		logger.debug("Instantiating " + MultiTenantDbFactory.class.getName() + " with default database name: "
 				+ defaultDatabaseName);
 		this.defaultName = defaultDatabaseName;
-		// avoid calling index creation for default db
-		databaseIndexMap.put(this.defaultName, new Object());
 	}
 
 	// dirty but ... what can I do?
@@ -42,7 +42,6 @@ public class MultiTenantDbFactory extends SimpleMongoDbFactory {
 		Assert.isNull(this.mongoTemplate, "You can set MongoTemplate just once");
 		this.mongoTemplate = mongoTemplate;
 	}
-
 
 	@Override
 	public DB getDb() {
