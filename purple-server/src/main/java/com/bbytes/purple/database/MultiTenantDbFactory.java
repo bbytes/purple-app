@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexResolver;
@@ -17,7 +16,6 @@ import org.springframework.util.Assert;
 
 import com.bbytes.purple.utils.TenancyContextHolder;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 public class MultiTenantDbFactory extends SimpleMongoDbFactory {

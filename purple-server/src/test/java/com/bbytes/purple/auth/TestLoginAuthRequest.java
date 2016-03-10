@@ -20,7 +20,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.bbytes.purple.PurpleApplication;
 import com.bbytes.purple.auth.jwt.SpringSecurityConfig;
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
