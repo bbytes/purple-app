@@ -2,6 +2,7 @@ package com.bbytes.purple.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Organization;
@@ -9,10 +10,15 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService extends AbstractService<User, String>{
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	public UserService(UserRepository userRepository) {
+		super(userRepository);
+	}
 
 	@Autowired
 	private PasswordHashService passwordHashService;

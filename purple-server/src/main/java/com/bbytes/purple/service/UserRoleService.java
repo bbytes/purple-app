@@ -7,11 +7,16 @@ import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.repository.UserRoleRepository;
 
 @Service
-public class UserRoleService {
+public class UserRoleService extends AbstractService<UserRole, String>{
 
 	@Autowired
 	private UserRoleRepository userRoleRepository;
 	
+	@Autowired
+	public UserRoleService(UserRoleRepository userRoleRepository) {
+		super(userRoleRepository);
+	}
+
 	public UserRole getRoleById(String roleId)
 	{
 		return userRoleRepository.findOne(roleId);
