@@ -28,11 +28,11 @@ public class Status {
 	@Field("worked_on")
 	private String workedOn;
 	
-	@Field("hours")
-	private int hours;
-	
 	@Field("blockers")
 	private String blockers;
+	
+	@Field("hours")
+	private int hours;
 	
 	@Field("date_time")
 	private DateTime dateTime;

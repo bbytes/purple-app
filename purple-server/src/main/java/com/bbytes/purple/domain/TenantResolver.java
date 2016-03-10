@@ -18,14 +18,14 @@ import lombok.Data;
 @Data
 @Document
 public class TenantResolver {
-	
+
 	@Id
 	private String id;
-	
+
 	@NotNull
-	@Indexed
+	@Indexed(unique = true)
 	private String email;
-	
+
 	@NotNull
 	private String orgId;
 

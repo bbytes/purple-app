@@ -31,7 +31,7 @@ public class User {
 	private String name;
 
 	@Field("email")
-	@Indexed
+	@Indexed(unique = true)
 	private String email;
 
 	@Field("status")
