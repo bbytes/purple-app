@@ -2,7 +2,9 @@ package com.bbytes.purple.repository;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -14,11 +16,10 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bbytes.purple.PurpleApplicationTests;
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
-import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserRepositoryTest  extends PurpleApplicationTests {
@@ -55,15 +56,15 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 		user3.setOrganization(test);
 		user3.setPassword("3333");
 
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		orgRepository.save(sample);
 		userService.save(user1);
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user2.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user2.getOrganization().getOrgId());
 		orgRepository.save(sample);
 		userService.save(user2);
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user3.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user3.getOrganization().getOrgId());
 		orgRepository.save(test);
 		userService.save(user3);
 	}
@@ -71,15 +72,15 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 	@After
 	public void cleanUp()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		userService.deleteAll();
 		orgRepository.deleteAll();
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user2.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user2.getOrganization().getOrgId());
 		userService.deleteAll();
 		orgRepository.deleteAll();
 
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user3.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user3.getOrganization().getOrgId());
 		userService.deleteAll();
 		orgRepository.deleteAll();
 		
@@ -89,15 +90,15 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 	public void saveUsersTest()
 	{
 
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		userService.save(user1);
 		assertNotNull(user1.getUserId());
 
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user2.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user2.getOrganization().getOrgId());
 		userService.save(user2);
 		assertNotNull(user2.getUserId());
 
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user3.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user3.getOrganization().getOrgId());
 		userService.save(user3);
 		assertNotNull(user3.getUserId());
 		
@@ -107,7 +108,7 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 	@Test
 	public void deleteUserTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user2.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user2.getOrganization().getOrgId());
 		
 		User user = userService.getUserByEmail("test@gmail");
 		userService.delete(user);
@@ -118,7 +119,7 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 	@Test
 	public void getUserListTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		
 		List<User> userList = userRepository.findAll();
 		
@@ -128,7 +129,7 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 	@Test
 	public void updateUserTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user3.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user3.getOrganization().getOrgId());
 		
 		assertNotNull(user3.getUserId());
 		

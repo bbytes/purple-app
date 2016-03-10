@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.service.PasswordHashService;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 public class MutliTenantAuthenticationProvider implements AuthenticationProvider {
 
@@ -34,7 +34,7 @@ public class MutliTenantAuthenticationProvider implements AuthenticationProvider
 		if(password==null)
 			throw new BadCredentialsException("Login request missing password");
 
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(token.getTenantId());
+		TenancyContextHolder.setTenant(token.getTenantId());
 		
 		UserDetails userFromDB = userDetailsService.loadUserByUsername(username);
 		

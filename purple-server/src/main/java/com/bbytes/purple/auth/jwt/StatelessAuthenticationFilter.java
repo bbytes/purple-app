@@ -9,11 +9,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
-import com.bbytes.purple.database.MultiTenantDbFactory;
+import com.bbytes.purple.utils.TenancyContextHolder;
 import com.google.common.base.Preconditions;
 
 public class StatelessAuthenticationFilter extends GenericFilterBean {
@@ -28,17 +29,25 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
 
-		Authentication authentication = tokenAuthenticationService.getAuthentication((HttpServletRequest) request);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		// if authentication is null then token expired so send http 401 back
-		if (authentication != null) {
-			// Very important for multi tenant to work : set tenant to current db resolver after successful verification
-			MultiTenantDbFactory
-					.setDatabaseNameForCurrentThread(((MultiTenantAuthenticationToken) authentication).getTenantId());
-			((HttpServletResponse) response).setStatus(HttpServletResponse.SC_OK);
-		} else {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+		try {
+			Authentication authentication = tokenAuthenticationService.getAuthentication((HttpServletRequest) request);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			// if authentication is null then token expired so send http 401
+			// back
+			if (authentication != null) {
+				// Very important for multi tenant to work : set tenant to
+				// current db resolver after successful verification
+				TenancyContextHolder.setTenant(((MultiTenantAuthenticationToken) authentication).getTenantId());
+				((HttpServletResponse) response).setStatus(HttpServletResponse.SC_OK);
+				filterChain.doFilter(request, response); // always continue
+			}
+		} catch (AuthenticationServiceException authenticationException) {
+			SecurityContextHolder.clearContext();
+			((HttpServletResponse) response).setContentType("application/json");
+			((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			((HttpServletResponse) response).getOutputStream()
+					.println("{ \"error\" : \"" + authenticationException.getMessage() + "\" }");
 		}
-		filterChain.doFilter(request, response); // always continue
+
 	}
 }

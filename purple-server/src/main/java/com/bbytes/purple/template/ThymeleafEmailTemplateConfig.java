@@ -1,11 +1,11 @@
-package com.bbytes.purple.config;
+package com.bbytes.purple.template;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 
 @Configuration
-public class ThymeleafEmailTemplateConfiguration {
+public class ThymeleafEmailTemplateConfig {
 
 	@Bean
 	public SpringResourceTemplateResolver emailTemplateResolver() {

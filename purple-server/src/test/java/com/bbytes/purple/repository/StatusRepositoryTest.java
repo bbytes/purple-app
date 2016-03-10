@@ -1,26 +1,25 @@
 package com.bbytes.purple.repository;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bbytes.purple.PurpleApplicationTests;
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 public class StatusRepositoryTest extends PurpleApplicationTests{
 
@@ -60,7 +59,7 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 		status2.setProject(project1);
 		status2.setUser(testUser); 
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(testUser.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
 		orgRepository.save(org1);
 		userService.save(testUser);
 		projectRepository.save(project1);
@@ -72,7 +71,7 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 	@After
 	public void cleanUp()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(testUser.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
 		orgRepository.deleteAll();
 		projectRepository.deleteAll();
 		userService.deleteAll();
@@ -82,7 +81,7 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 	@Test
 	public void saveStatusTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(testUser.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
 		
 		statusRepository.save(status1);
 		assertNotNull(status1.getStatusId());
@@ -94,7 +93,7 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 	@Test
 	public void getAllStatus()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(testUser.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
 		
 		List<Status> statusList = statusRepository.findAll();
 		
@@ -104,7 +103,7 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 	@Test
 	public void deleteStatusTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(testUser.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
 		Status status = statusRepository.findOne(status1.getStatusId());
 		statusRepository.delete(status);
 		
@@ -115,7 +114,7 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 	@Test
 	public void updateStatusTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(testUser.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
 		
 		assertNotNull(status1.getStatusId());
 		

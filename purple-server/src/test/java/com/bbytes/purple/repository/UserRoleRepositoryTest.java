@@ -17,12 +17,12 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bbytes.purple.PurpleApplicationTests;
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Permission;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserRoleRepositoryTest  extends PurpleApplicationTests{
@@ -51,7 +51,7 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 		user1.setUserRole(admin);
 		
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		organizationRepository.save(org1);
 		userRoleRepository.save(admin);
 		userService.save(user1);
@@ -61,7 +61,7 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 	@After
 	public void cleanUp()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		
 		userRoleRepository.deleteAll();
 		userService.deleteAll();
@@ -71,7 +71,7 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 	@Test
 	public void saveUserRoleTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		userRoleRepository.save(admin);
 		
 		assertThat(org1.getOrgId(), is(notNullValue()));
@@ -80,7 +80,7 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 	@Test
 	public void deleteUserRoleTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		
 		UserRole role = userRoleRepository.findOne(admin.getRoleId());
 		
@@ -94,7 +94,7 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 	@Test
 	public void updateUserRoleTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		
 		UserRole role = userRoleRepository.findOne(admin.getRoleId());
 		role.setRoleName("superuser");
@@ -107,7 +107,7 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 	@Test
 	public void getAllRolesTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		
 		List<UserRole> rolesList = userRoleRepository.findAll();
 		
@@ -117,7 +117,7 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 	@Test
 	public void setPermissionToRoleTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(user1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		
 		List<Permission> list = new ArrayList<Permission>();
 		list.add(new Permission("read"));

@@ -18,10 +18,10 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bbytes.purple.PurpleApplicationTests;
-import com.bbytes.purple.database.MultiTenantDbFactory;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ProjectRepositoryTest extends PurpleApplicationTests {
@@ -50,18 +50,18 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 		proj2 = new Project("reveal", "6.00 pm");
 		proj2.setOrganization(bbytes);
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(proj1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		orgRepository.save(bbytes);
 	}
 
 	@After
 	public void cleanUp()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(proj1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		projectRepository.deleteAll();
 		orgRepository.deleteAll();
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(proj2.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(proj2.getOrganization().getOrgId());
 		projectRepository.deleteAll();
 		orgRepository.deleteAll();
 	}
@@ -69,10 +69,10 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 	@Test
 	public void saveProjectTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(proj1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		projectRepository.save(proj1);
 		
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(proj2.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(proj2.getOrganization().getOrgId());
 		projectRepository.save(proj2);
 	
 		assertThat(proj1.getProjectId(), is(notNullValue()));
@@ -81,7 +81,7 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 	@Test
 	public void findAllProjectTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(proj1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		List<Project> projectList = projectRepository.findAll();
 		
 		assertFalse(projectList.size() > 0);
@@ -117,7 +117,7 @@ public class ProjectRepositoryTest extends PurpleApplicationTests {
 	@Test
 	public void saveUsersinProjectTest()
 	{
-		MultiTenantDbFactory.setDatabaseNameForCurrentThread(proj1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		
 		 projectRepository.save(proj1);
 		
