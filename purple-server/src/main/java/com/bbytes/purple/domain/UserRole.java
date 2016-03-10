@@ -14,13 +14,8 @@ import lombok.Data;
  */
 
 @Data
-@Document
 public class UserRole {
 	
-	@Id
-	private String roleId;
-	
-	@Field("role_name")
 	private String roleName;
 	
 	// embedded list 

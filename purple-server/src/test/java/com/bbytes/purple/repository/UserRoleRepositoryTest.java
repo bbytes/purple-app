@@ -48,12 +48,11 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 		org1 = new Organization("bb", "bb-company");
 		user1 = new User("hitman", "hitman@gmail");
 		user1.setOrganization(org1);
-		user1.setUserRole(admin);
+		user1.setUserRole(UserRole.ADMIN_USER_ROLE);
 		
 		
 		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		organizationRepository.save(org1);
-		userRoleRepository.save(admin);
 		userService.save(user1);
 		
 	}
@@ -72,23 +71,9 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 	public void saveUserRoleTest()
 	{
 		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
-		userRoleRepository.save(admin);
+		userService.save(user1);
 		
-		assertThat(org1.getOrgId(), is(notNullValue()));
-	}
-	
-	@Test
-	public void deleteUserRoleTest()
-	{
-		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
-		
-		UserRole role = userRoleRepository.findOne(admin.getRoleId());
-		
-		userRoleRepository.delete(role);
-		assertFalse(userRoleRepository.exists(admin.getRoleId()));
-		User deleteuserRole = userService.getUserById(user1.getUserId());
-		userService.save(deleteuserRole);
-		assertNull(deleteuserRole.getUserRole());
+		assertThat(user1.getUserRole().getRoleName(), is(notNullValue()));
 	}
 	
 	@Test
@@ -96,22 +81,22 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 	{
 		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		
-		UserRole role = userRoleRepository.findOne(admin.getRoleId());
-		role.setRoleName("superuser");
+		User updateUser = userService.getUserById(user1.getUserId());
+		updateUser.setUserRole(new UserRole("superUser"));
 		
-		userRoleRepository.save(role);
-		assertThat(userRoleRepository.findOne(admin.getRoleId()).getRoleName(), is("superuser"));
+		userService.save(updateUser);
+		assertThat(userService.findOne(user1.getUserId()).getUserRole().getRoleName(), is("superUser"));
 		
 	}
 	
 	@Test
-	public void getAllRolesTest()
+	public void getRoleTest()
 	{
 		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		
-		List<UserRole> rolesList = userRoleRepository.findAll();
+		User role = userService.findOne(user1.getUserId());
 		
-		assertThat(rolesList.size(), is(1));
+		assertThat(role.getUserRole(), is(notNullValue()));
 	}
 	
 	@Test
@@ -123,9 +108,9 @@ public class UserRoleRepositoryTest  extends PurpleApplicationTests{
 		list.add(new Permission("read"));
 		list.add(new Permission("write"));
 		
-		admin.setPermissions(list);
-		userRoleRepository.save(admin);
+		user1.getUserRole().setPermissions(list);
+		userService.save(user1);
 		
-		assertThat(userRoleRepository.findOne(admin.getRoleId()).getPermissions(), is(notNullValue()));
+		assertThat(userService.findOne(user1.getUserId()).getUserRole().getPermissions(), is(notNullValue()));
 	}
 }
