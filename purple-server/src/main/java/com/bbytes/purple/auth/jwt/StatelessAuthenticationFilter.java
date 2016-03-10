@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.TenancyContextHolder;
 import com.google.common.base.Preconditions;
 
@@ -43,10 +44,10 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 			}
 		} catch (AuthenticationServiceException authenticationException) {
 			SecurityContextHolder.clearContext();
+			String erroMsg = ErrorHandler.resolveAuthError(authenticationException);
 			((HttpServletResponse) response).setContentType("application/json");
 			((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			((HttpServletResponse) response).getOutputStream()
-					.println("{ \"error\" : \"" + authenticationException.getMessage() + "\" }");
+			((HttpServletResponse) response).getOutputStream().println(erroMsg);
 		}
 
 	}
