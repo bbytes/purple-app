@@ -9,27 +9,18 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bbytes.purple.PurpleApplicationTests;
+import com.bbytes.purple.PurpleBaseApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
-import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MultiTenantOrgAndUserRepositoryTest extends PurpleApplicationTests {
+public class MultiTenantOrgAndUserRepositoryTest extends PurpleBaseApplicationTests {
 
-	@Autowired
-	private UserService userService;
 
-	@Autowired
-	private OrganizationRepository orgRepository;
-
-	@Autowired
-	private UserRoleRepository userRoleRepository;
 
 	User admin1, admin2;
 	Organization test, abc;
@@ -49,10 +40,10 @@ public class MultiTenantOrgAndUserRepositoryTest extends PurpleApplicationTests 
 
 		TenancyContextHolder.setTenant(admin1.getOrganization().getOrgId());
 		userService.deleteAll();
-		orgRepository.save(test);
+		organizationRepository.save(test);
 		TenancyContextHolder.setTenant(admin2.getOrganization().getOrgId());
 		userService.deleteAll();
-		orgRepository.save(abc);
+		organizationRepository.save(abc);
 
 	}
 
@@ -61,12 +52,10 @@ public class MultiTenantOrgAndUserRepositoryTest extends PurpleApplicationTests 
 
 		TenancyContextHolder.setTenant(admin1.getOrganization().getOrgId());
 		userService.deleteAll();
-		userRoleRepository.deleteAll();
-		orgRepository.deleteAll();
+		organizationRepository.deleteAll();
 		TenancyContextHolder.setTenant(admin2.getOrganization().getOrgId());
 		userService.deleteAll();
-		userRoleRepository.deleteAll();
-		orgRepository.deleteAll();
+		organizationRepository.deleteAll();
 		
 		clearTestCaseMongoDatabases();
 	}
@@ -75,9 +64,9 @@ public class MultiTenantOrgAndUserRepositoryTest extends PurpleApplicationTests 
 	public void saveOrgsTest() {
 		Organization newOrg = new Organization("neworg", "New-Org");
 		TenancyContextHolder.setTenant(newOrg.getOrgId());
-		orgRepository.save(newOrg);
+		organizationRepository.save(newOrg);
 		assertThat(test.getOrgId(), is(notNullValue()));
-		orgRepository.deleteAll();
+		organizationRepository.deleteAll();
 	}
 
 	@Test

@@ -13,26 +13,15 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bbytes.purple.PurpleApplicationTests;
+import com.bbytes.purple.PurpleBaseApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
-import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UserRepositoryTest  extends PurpleApplicationTests {
+public class UserRepositoryTest  extends PurpleBaseApplicationTests {
 
-	
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private OrganizationRepository orgRepository;
-	
-	@Autowired
-	private UserRepository userRepository;
 	
 	Organization sample, test;
 	
@@ -58,15 +47,15 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 		user3.setPassword("3333");
 
 		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
-		orgRepository.save(sample);
+		organizationRepository.save(sample);
 		userService.save(user1);
 		
 		TenancyContextHolder.setTenant(user2.getOrganization().getOrgId());
-		orgRepository.save(sample);
+		organizationRepository.save(sample);
 		userService.save(user2);
 		
 		TenancyContextHolder.setTenant(user3.getOrganization().getOrgId());
-		orgRepository.save(test);
+		organizationRepository.save(test);
 		userService.save(user3);
 	}
 	
@@ -75,15 +64,15 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 	{
 		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
 		userService.deleteAll();
-		orgRepository.deleteAll();
+		organizationRepository.deleteAll();
 		
 		TenancyContextHolder.setTenant(user2.getOrganization().getOrgId());
 		userService.deleteAll();
-		orgRepository.deleteAll();
+		organizationRepository.deleteAll();
 
 		TenancyContextHolder.setTenant(user3.getOrganization().getOrgId());
 		userService.deleteAll();
-		orgRepository.deleteAll();
+		organizationRepository.deleteAll();
 		
 	}
 	
@@ -121,9 +110,7 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 	public void getUserListTest()
 	{
 		TenancyContextHolder.setTenant(user1.getOrganization().getOrgId());
-		
 		List<User> userList = userRepository.findAll();
-		
 		assertThat(userList.size(), is(2));
 	}
 	
@@ -131,12 +118,9 @@ public class UserRepositoryTest  extends PurpleApplicationTests {
 	public void updateUserTest()
 	{
 		TenancyContextHolder.setTenant(user3.getOrganization().getOrgId());
-		
 		assertNotNull(user3.getUserId());
-		
 		User updateUser = userRepository.findOne(user3.getUserId());
 		updateUser.setEmail("akshay@gmail");
-		
 		userService.save(updateUser);
 		assertEquals("akshay@gmail", updateUser.getEmail());
 	}

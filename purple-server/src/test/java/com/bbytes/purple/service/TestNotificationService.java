@@ -10,14 +10,11 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bbytes.purple.PurpleApplicationTests;
+import com.bbytes.purple.PurpleBaseApplicationTests;
 
-public class TestNotificationService extends PurpleApplicationTests {
+public class TestNotificationService extends PurpleBaseApplicationTests {
 
-	@Autowired
-	private NotificationService notificationService;
 
 	@Test
 	@Ignore

@@ -10,16 +10,14 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bbytes.purple.PurpleApplicationTests;
+import com.bbytes.purple.PurpleBaseApplicationTests;
 import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Reply;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
-import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
 /**
@@ -28,25 +26,7 @@ import com.bbytes.purple.utils.TenancyContextHolder;
  */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class CommentRepositoryTest extends PurpleApplicationTests {
-
-	@Autowired
-	OrganizationRepository organizationRepository;
-
-	@Autowired
-	UserRepository userRepository;
-
-	@Autowired
-	private TenantResolverService tenantResolverService;
-
-	@Autowired
-	StatusRepository statusRepository;
-
-	@Autowired
-	ProjectRepository projectRepository;
-
-	@Autowired
-	CommentRepository commentRepository;
+public class CommentRepositoryTest extends PurpleBaseApplicationTests {
 
 	Organization abc;
 	User user;
@@ -74,8 +54,6 @@ public class CommentRepositoryTest extends PurpleApplicationTests {
 		status.setUser(user);
 		status.setProject(project);
 		statusRepository.save(status);
-
-		tenantResolverService.deleteTenantResolverForUserEmail(user.getEmail());
 
 		comment = new Comment("hyyy i did purple", user, status);
 		commentRepository.save(comment);
