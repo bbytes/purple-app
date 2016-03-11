@@ -8,7 +8,7 @@ import lombok.Data;
  * @author akshay
  */
 @Data
-public class SignupDTO {
+public class SignUpRequestDTO {
 
 	private String orgName;
 

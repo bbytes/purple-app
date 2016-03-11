@@ -19,6 +19,8 @@ public class ErrorHandler {
 	public static final String USER_NOT_FOUND = "user_not_found";
 
 	public static final String PASSWORD_INCORRECT = "bad_credentials";
+	
+	public static final String SIGN_UP_FAILED = "sign_up_failed";
 
 	public static String resolveAuthError(AuthenticationException authEx) {
 		try {
