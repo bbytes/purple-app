@@ -19,6 +19,7 @@ import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
+import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
@@ -29,6 +30,9 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 	
 	@Autowired
 	private ProjectRepository projectRepository;
+	
+	@Autowired
+	private TenantResolverService tenantResolverService;
 	
 	@Autowired 
 	private OrganizationRepository orgRepository;
@@ -60,6 +64,8 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 		status2 = new Status("t2", "t1", 4, new DateTime());
 		status2.setProject(project1);
 		status2.setUser(testUser); 
+		
+		tenantResolverService.deleteTenantResolverForUserEmail(testUser.getEmail());
 		
 		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
 		orgRepository.deleteAll();
