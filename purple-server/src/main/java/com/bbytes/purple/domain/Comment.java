@@ -30,7 +30,7 @@ public class Comment {
 	@DBRef
 	private User user;
 	
-	@DBRef
+	@DBRef(lazy=true)
 	private Status status;
 	
 	// embedded list 

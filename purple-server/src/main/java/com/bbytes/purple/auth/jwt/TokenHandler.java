@@ -21,7 +21,25 @@ public final class TokenHandler {
 		this.secret = StringUtils.checkNotBlank(secret);
 	}
 
+	/**
+	 * Create a jwt token for the given user that is valid for next 24 hrs
+	 * 
+	 * @param tokenDataHolder
+	 * @return
+	 */
 	public String createJWTStringTokenForUser(TokenDataHolder tokenDataHolder) {
+		return createJWTStringTokenForUser(tokenDataHolder, 24);
+	}
+
+	/**
+	 * Create a jwt token for the given user that is valid for next
+	 * tokenValidityInHrs hrs
+	 * 
+	 * @param tokenDataHolder
+	 * @param tokenValidityInHrs
+	 * @return
+	 */
+	public String createJWTStringTokenForUser(TokenDataHolder tokenDataHolder, Integer tokenValidityInHrs) {
 		Claims claims = Jwts.claims().setSubject(tokenDataHolder.getUser().getUsername());
 		claims.put(GlobalConstants.HEADER_TENANT_ID, tokenDataHolder.getTenantId());
 		// user can have only one role so directly fetch it
@@ -30,10 +48,17 @@ public final class TokenHandler {
 
 		// expire the token after a day .
 		// Time to expire is 24 hrs from issue time
-		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret)
-				.setExpiration(DateTime.now().plusDays(1).toDate()).compact();
+		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS256, secret)
+				.setExpiration(DateTime.now().plusHours(tokenValidityInHrs).toDate()).compact();
 	}
 
+	/**
+	 * Parse the jst token and extract the token data ie user and tenant id
+	 * 
+	 * @param jwtStringToken
+	 * @return
+	 * @throws AuthenticationServiceException
+	 */
 	public TokenDataHolder parseJWTStringTokenForUser(String jwtStringToken) throws AuthenticationServiceException {
 		try {
 			Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwtStringToken).getBody();

@@ -1,10 +1,13 @@
 package com.bbytes.purple.domain;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -22,7 +25,7 @@ public class Organization {
 	@Id
 	private String id;
 	
-	@Indexed
+	@Indexed(unique = true)
 	@Field("org_id")
 	private String orgId;
 	
@@ -34,6 +37,9 @@ public class Organization {
 	
 	@Field("time_preference")
 	private String timePreference;
+	
+	@DBRef(lazy=true)
+	private List<Holiday> holidays;
 	
 	@CreatedDate
 	private DateTime creationDate;

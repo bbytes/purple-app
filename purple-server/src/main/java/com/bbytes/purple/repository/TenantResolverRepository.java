@@ -7,5 +7,7 @@ import com.bbytes.purple.domain.TenantResolver;
 public interface TenantResolverRepository extends MongoRepository<TenantResolver, String>{
 	
 	TenantResolver findOneByEmail(String email);
+	
+	TenantResolver findOneByUserId(String userId);
 
 }
