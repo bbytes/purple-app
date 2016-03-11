@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.bbytes.purple.utils.ErrorHandler;
@@ -21,7 +23,11 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 
 	private final TokenAuthenticationProvider tokenAuthenticationService;
 
-	public StatelessAuthenticationFilter(TokenAuthenticationProvider tokenAuthenticationService) {
+	private RequestMatcher skipAuthenticationRequestMatcher;
+
+	public StatelessAuthenticationFilter(String urlMappingToIgnore,
+			TokenAuthenticationProvider tokenAuthenticationService) {
+		skipAuthenticationRequestMatcher = new AntPathRequestMatcher(urlMappingToIgnore);
 		this.tokenAuthenticationService = Preconditions.checkNotNull(tokenAuthenticationService);
 	}
 
@@ -29,6 +35,10 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
 
+		if (skipAuthenticationRequestMatcher.matches((HttpServletRequest) request))
+			filterChain.doFilter(request, response); // skip auth and continue
+
+		// if the url is not part of url pattern to skip then we check auth
 		try {
 			MultiTenantAuthenticationToken authentication = (MultiTenantAuthenticationToken) tokenAuthenticationService
 					.getAuthentication((HttpServletRequest) request, (HttpServletResponse) response);
