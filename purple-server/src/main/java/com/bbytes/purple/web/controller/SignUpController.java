@@ -32,7 +32,7 @@ public class SignUpController {
 	public final Logger logger = LoggerFactory.getLogger(SignUpController.class);
 
 	@RequestMapping(value = "/auth/signup", method = RequestMethod.POST)
-	public RestResponse signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) throws PurpleException {
+	public RestResponse signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
 
 		final String SIGN_UP_SUCCESS_MSG = "Successfully signed up";
 		final String SIGN_UP_ERROR_MSG = "Sign up failed";
