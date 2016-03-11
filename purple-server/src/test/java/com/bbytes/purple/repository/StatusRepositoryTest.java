@@ -36,9 +36,6 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private UserRoleRepository userRoleRepository;
-	
 	Organization org1;
 	User testUser;
 	Project project1;
@@ -65,6 +62,9 @@ public class StatusRepositoryTest extends PurpleApplicationTests{
 		status2.setUser(testUser); 
 		
 		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
+		orgRepository.deleteAll();
+		userService.deleteAll();
+		
 		orgRepository.save(org1);
 		userService.save(testUser);
 		projectRepository.save(project1);

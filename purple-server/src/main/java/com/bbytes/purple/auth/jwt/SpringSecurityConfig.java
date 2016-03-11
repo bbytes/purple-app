@@ -24,7 +24,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthUserDetailsService userService;
 
 	@Autowired
-	private TokenAuthenticationService tokenAuthenticationService;
+	private TokenAuthenticationProvider tokenAuthenticationProvider;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -50,9 +50,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				// Custom Token based authentication based on the header
 				// previously given to the client
-				.addFilterAfter(new StatelessAuthenticationFilter(tokenAuthenticationService),
+				.addFilterAfter(new StatelessAuthenticationFilter(tokenAuthenticationProvider),
 						UsernamePasswordAuthenticationFilter.class)
-				.addFilterBefore(new StatelessLoginFilter("/auth/login", tokenAuthenticationService, userService,
+				.addFilterBefore(new StatelessLoginFilter("/auth/login", tokenAuthenticationProvider, userService,
 						tenantResolverService, authenticationManager), StatelessAuthenticationFilter.class)
 				.headers().cacheControl().and();
 
@@ -83,8 +83,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public TokenAuthenticationService tokenAuthenticationService() {
-		this.tokenAuthenticationService = new TokenAuthenticationService();
-		return tokenAuthenticationService;
+	public TokenAuthenticationProvider tokenAuthenticationProvider() {
+		this.tokenAuthenticationProvider = new TokenAuthenticationProvider();
+		return tokenAuthenticationProvider;
 	}
 }

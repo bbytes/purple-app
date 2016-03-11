@@ -12,7 +12,7 @@ import com.bbytes.purple.repository.UserRepository;
 public class AuthUserDetailsService implements UserDetailsService {
 
 	private final AccountStatusUserDetailsChecker detailsChecker = new AccountStatusUserDetailsChecker();
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -20,16 +20,18 @@ public class AuthUserDetailsService implements UserDetailsService {
 	public final User loadUserByUsername(String username) throws UsernameNotFoundException {
 		final com.bbytes.purple.domain.User user = userRepository.findOneByEmail(username);
 		if (user == null) {
-			throw new UsernameNotFoundException("user not found");
+			throw new UsernameNotFoundException("User not found with email '" + username + "'");
 		}
-		// need to add expired , account locked etc to mongo db user domain object
-		User userDetail = new User(user.getEmail(), user.getPassword(),
-				AuthorityUtils.createAuthorityList(user.getUserRole().getRoleName()));
-		detailsChecker.check(userDetail);
-		return userDetail;
+		try {
+			// need to add expired , account locked etc to mongo db user domain
+			// object
+			User userDetail = new User(user.getEmail(), user.getPassword(),
+					AuthorityUtils.createAuthorityList(user.getUserRole().getRoleName()));
+			detailsChecker.check(userDetail);
+			return userDetail;
+		} catch (Exception ex) {
+			throw new UsernameNotFoundException(ex.getMessage());
+		}
 	}
-	
-	
 
-	
 }

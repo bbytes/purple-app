@@ -10,18 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.TenancyContextHolder;
 import com.google.common.base.Preconditions;
 
 public class StatelessAuthenticationFilter extends GenericFilterBean {
 
-	private final TokenAuthenticationService tokenAuthenticationService;
+	private final TokenAuthenticationProvider tokenAuthenticationService;
 
-	public StatelessAuthenticationFilter(TokenAuthenticationService tokenAuthenticationService) {
+	public StatelessAuthenticationFilter(TokenAuthenticationProvider tokenAuthenticationService) {
 		this.tokenAuthenticationService = Preconditions.checkNotNull(tokenAuthenticationService);
 	}
 
@@ -30,7 +30,8 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 
 		try {
-			Authentication authentication = tokenAuthenticationService.getAuthentication((HttpServletRequest) request);
+			MultiTenantAuthenticationToken authentication = (MultiTenantAuthenticationToken) tokenAuthenticationService
+					.getAuthentication((HttpServletRequest) request, (HttpServletResponse) response);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			// if authentication is null then token expired so send http 401
 			// back
@@ -43,10 +44,10 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 			}
 		} catch (AuthenticationServiceException authenticationException) {
 			SecurityContextHolder.clearContext();
+			String erroMsg = ErrorHandler.resolveAuthError(authenticationException);
 			((HttpServletResponse) response).setContentType("application/json");
 			((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			((HttpServletResponse) response).getOutputStream()
-					.println("{ \"error\" : \"" + authenticationException.getMessage() + "\" }");
+			((HttpServletResponse) response).getOutputStream().println(erroMsg);
 		}
 
 	}

@@ -7,5 +7,7 @@ public class GlobalConstants {
 	public static final String USER_ROLE = "role";
 
 	public static final String HEADER_AUTH_TOKEN = "X-AUTH-TOKEN";
+	
+	public static final String URL_AUTH_TOKEN = "token";
 
 }

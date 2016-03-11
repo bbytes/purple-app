@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Data
 @Document
-public class Holidays {
+public class Holiday {
 
 	@Id
 	private String holidayId;
@@ -30,7 +30,7 @@ public class Holidays {
 	@DBRef(lazy=true)
 	private Organization organization;
 
-	public Holidays(String holidayName, Date holidayDate, Organization organization) {
+	public Holiday(String holidayName, Date holidayDate, Organization organization) {
 		
 		this.holidayName = holidayName;
 		this.holidayDate = holidayDate;

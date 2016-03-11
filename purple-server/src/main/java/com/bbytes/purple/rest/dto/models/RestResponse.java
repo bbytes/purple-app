@@ -35,6 +35,12 @@ public class RestResponse implements Serializable {
 		this.reason = reason;
 	}
 	
+	/**
+	 * Failure response with data
+	 * @param success
+	 * @param data
+	 * @param reason
+	 */
 	public RestResponse(boolean success, Object data, String reason) {
 		this.success = success;
 		this.data = data;

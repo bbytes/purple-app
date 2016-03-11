@@ -2,7 +2,6 @@ package com.bbytes.purple.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Organization;
@@ -10,19 +9,18 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.repository.UserRepository;
 
 @Service
-public class UserService extends AbstractService<User, String>{
+public class UserService extends AbstractService<User, String> {
 
 	@Autowired
+	private PasswordHashService passwordHashService;
+
 	private UserRepository userRepository;
 
 	@Autowired
 	public UserService(UserRepository userRepository) {
 		super(userRepository);
+		this.userRepository = userRepository;
 	}
-
-	@Autowired
-	private PasswordHashService passwordHashService;
-
 
 	public User getUserById(String id) {
 		return userRepository.findOne(id);
@@ -36,10 +34,6 @@ public class UserService extends AbstractService<User, String>{
 		return userRepository.findAll(new Sort("email"));
 	}
 
-	public User save(User user) {
-		return userRepository.save(user);
-	}
-
 	public void delete(User user) {
 		userRepository.delete(user);
 	}
@@ -50,9 +44,9 @@ public class UserService extends AbstractService<User, String>{
 
 	public User create(String email, String name, Organization org) {
 		return null;
-//		User user = new User(name, email);
-//		user.setTenantId(tenant.getTenantId());
-//		return userRepository.save(user);
+		// User user = new User(name, email);
+		// user.setTenantId(tenant.getTenantId());
+		// return userRepository.save(user);
 	}
 
 	public boolean updatePassword(String password, String userEmail) {

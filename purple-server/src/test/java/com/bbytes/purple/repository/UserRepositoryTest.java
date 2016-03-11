@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.bbytes.purple.PurpleApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
-import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
