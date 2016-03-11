@@ -15,7 +15,6 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
 import com.bbytes.purple.service.RegistrationService;
-import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -27,7 +26,7 @@ import com.bbytes.purple.utils.SuccessHandler;
 public class SignUpController {
 
 	@Autowired
-	private RegistrationService regService;
+	private RegistrationService registrationService;
 
 	public final Logger logger = LoggerFactory.getLogger(SignUpController.class);
 
@@ -35,8 +34,7 @@ public class SignUpController {
 	public RestResponse signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
 
 		final String SIGN_UP_SUCCESS_MSG = "Successfully signed up";
-		final String SIGN_UP_ERROR_MSG = "Sign up failed";
-
+	
 		RestResponse signUpResponse;
 		// we assume the angular layer will do empty/null org name , user email etc
 		// validation 
@@ -52,16 +50,16 @@ public class SignUpController {
 			user.setUserRole(UserRole.ADMIN_USER_ROLE);
 			user.setOrganization(organization);
 
-			regService.signUp(organization, user);
+			registrationService.signUp(organization, user);
 
 			signUpResponse = new RestResponse(RestResponse.SUCCESS, SIGN_UP_SUCCESS_MSG,
 					SuccessHandler.SIGN_UP_SUCCESS);
 
 			return signUpResponse;
 
-		} catch (Exception e) {
+		} catch (PurpleException e) {
 			logger.error(e.getMessage(), e);
-			signUpResponse = new RestResponse(RestResponse.FAILED, SIGN_UP_ERROR_MSG, ErrorHandler.SIGN_UP_FAILED);
+			signUpResponse = new RestResponse(RestResponse.FAILED, e.getMessage(), e.getErrConstant());
 			return signUpResponse;
 		}
 	}

@@ -8,6 +8,8 @@ public interface TenantResolverRepository extends MongoRepository<TenantResolver
 	
 	TenantResolver findOneByEmail(String email);
 	
+	TenantResolver findOneByOrgId(String email);
+	
 	TenantResolver findOneByUserId(String userId);
 
 }

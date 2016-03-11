@@ -137,6 +137,34 @@ public class TenantResolverService {
 		return tenantResolver;
 	}
 
+	public boolean emailExist(String email) {
+		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
+
+		// go to default management db
+		TenancyContextHolder.setDefaultTenant();
+		TenantResolver tenantResolver = tenantResolverRepository.findOneByEmail(email);
+		if (tenantResolver != null)
+			return true;
+
+		// set the given tenant id as current db
+		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
+		return false;
+	}
+	
+	public boolean organizationExist(String orgId) {
+		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
+
+		// go to default management db
+		TenancyContextHolder.setDefaultTenant();
+		TenantResolver tenantResolver = tenantResolverRepository.findOneByOrgId(orgId);
+		if (tenantResolver != null)
+			return true;
+
+		// set the given tenant id as current db
+		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
+		return false;
+	}
+
 	public TenantResolver findOneByUserId(String userId) {
 		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
 
