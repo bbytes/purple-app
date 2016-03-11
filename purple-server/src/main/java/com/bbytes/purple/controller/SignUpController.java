@@ -12,8 +12,10 @@ import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
+import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignupDTO;
 import com.bbytes.purple.service.RegistrationService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Sign-up controller
@@ -27,12 +29,13 @@ public class SignUpController {
 	@Autowired
 	private RegistrationService regService;
 
+	public final Logger logger = LoggerFactory.getLogger(SignUpController.class);
+	public final static String SUCCESS = "Successfully sign-up";
+
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String signUp(@RequestBody SignupDTO dto) throws PurpleException {
 
-		final Logger logger = LoggerFactory.getLogger(SignUpController.class);
-		final String SUCCESS = "Successfully sign-up";
-
+		RestResponse successResponse;
 		String orgId = dto.getOrgName().replace("\\s", "").trim();
 
 		try {
@@ -47,7 +50,10 @@ public class SignUpController {
 
 			regService.signUp(organization, user);
 
-			return SUCCESS;
+			successResponse = new RestResponse(true, SignUpController.SUCCESS);
+			ObjectMapper objectMapper = new ObjectMapper();
+
+			return objectMapper.writeValueAsString(successResponse);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
