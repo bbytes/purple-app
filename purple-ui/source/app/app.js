@@ -5,9 +5,15 @@ var rootApp = angular.module('rootApp',
             'ui.bootstrap',
             'ngAnimate',
             'templates-main',
-            'toaster'
+            'toaster',
+            'angular-growl'
         ]);
 
+rootApp.config(['growlProvider', function (growlProvider) {
+    //cfpLoadingBarProvider.includeSpinner = false;
+      growlProvider.globalTimeToLive(5000);
+      
+    }]);
 // Defining global variables 
 rootApp.run(['$rootScope', '$state', function ($rootScope, $state) {
 
