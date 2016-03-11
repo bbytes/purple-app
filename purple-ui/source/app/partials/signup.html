@@ -17,7 +17,7 @@
 							</select>
 							<h5>Email</h5>
 							<input type="text" name="email" ng-model="email" required/>
-							<span class="label label-danger" ng-show="!signupForm.email.$error.required && submitted && signupForm.email.$invalid">Email is invalid</span>
+							<span class="label label-danger" ng-show="signupForm.email.$invalid &&!signupForm.email.$error.required">Email is invalid</span>
 							
 							<h5>Password</h5>
 							<input type="password" name="password"  ng-model="password"  ng-minlength="8" ng-maxlength="12"  required/>
@@ -27,7 +27,7 @@
 							<input type="password" name="confirmpassword"  ng-model="confirmpassword"ng-minlength="8" ng-maxlength="12"  required/>
 							 <span class="label label-danger" ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.minlength">use atleast 8 characters</span>
                                   <span class="label label-danger" ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Retype password.</span>
-                                  <span class="label label-danger" ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty)>Password mismatch
+                                 <span class="label label-danger" ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (password != confirmpassword)">Password mismatch
                                   </span>
 		                      
 							<input class="send submit" type="submit"  ng-click="submitSignUp(signupForm.$valid)" value="SIGN ME UP" />    
