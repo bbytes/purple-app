@@ -7,6 +7,12 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.bbytes.purple.utils.GlobalConstants;
 
+/**
+ * This CORSInterceptor is called only in dev profile mode
+ * 
+ * @author Thanneer
+ *
+ */
 public class CORSInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
