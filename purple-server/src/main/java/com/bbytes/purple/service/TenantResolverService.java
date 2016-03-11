@@ -92,7 +92,7 @@ public class TenantResolverService {
 
 	}
 
-	public TenantResolver deleteTenantResolverForUserId(String userId) {
+	public void deleteTenantResolverForUserId(String userId) {
 		if (userId == null)
 			throw new IllegalArgumentException("User id cannot be null");
 
@@ -102,26 +102,35 @@ public class TenantResolverService {
 		TenancyContextHolder.setDefaultTenant();
 
 		TenantResolver tenantResolver = tenantResolverRepository.findOneByUserId(userId);
-		if (tenantResolver == null)
-			throw new IllegalArgumentException("User id cannot be null");
-
 		tenantResolverRepository.delete(tenantResolver);
 
 		// set the given tenant id as current db
 		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
+	}
 
-		return tenantResolver;
+	public void deleteTenantResolverForUserEmail(String email) {
+		if (email == null)
+			throw new IllegalArgumentException("User email cannot be null");
+		
+		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
+		
+		// go to default management db
+		TenancyContextHolder.setDefaultTenant();
+		TenantResolver tenantResolver = tenantResolverRepository.findOneByEmail(email);
+		tenantResolverRepository.delete(tenantResolver);
+		
+		// set the given tenant id as current db
+		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
 
 	}
 
 	public TenantResolver findOneByEmail(String email) {
 		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
-
+		
 		// go to default management db
 		TenancyContextHolder.setDefaultTenant();
-
 		TenantResolver tenantResolver = tenantResolverRepository.findOneByEmail(email);
-
+		
 		// set the given tenant id as current db
 		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
 		return tenantResolver;

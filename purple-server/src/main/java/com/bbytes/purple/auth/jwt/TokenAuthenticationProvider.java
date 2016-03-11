@@ -15,15 +15,18 @@ import org.springframework.security.core.userdetails.User;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.utils.GlobalConstants;
 
-public class TokenAuthenticationService {
+public class TokenAuthenticationProvider {
 
-	private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationService.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationProvider.class);
+
 	@Value("${token.handler.secret}")
 	private String secret;
 
 	@Autowired
 	private TenantResolverService tenantResolverService;
+
+	@Autowired
+	private AuthUserDetailsService authUserDetailsService;
 
 	private TokenHandler tokenHandler;
 
@@ -57,8 +60,16 @@ public class TokenAuthenticationService {
 	 * @param request
 	 * @return
 	 */
-	public Authentication getAuthentication(HttpServletRequest request) throws AuthenticationServiceException {
-		final String jwtStringToken = request.getHeader(GlobalConstants.HEADER_AUTH_TOKEN);
+	public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationServiceException {
+		String jwtStringToken = request.getHeader(GlobalConstants.HEADER_AUTH_TOKEN);
+		
+		// if direct access without login based on url access token : Use case email embedded link to ui 
+		if (jwtStringToken == null) {
+			jwtStringToken = request.getParameter(GlobalConstants.URL_AUTH_TOKEN);
+			if (jwtStringToken != null)
+				response.addHeader(GlobalConstants.HEADER_AUTH_TOKEN, jwtStringToken);
+		}
 
 		if (jwtStringToken != null) {
 			final TokenDataHolder tokenDataHolder = tokenHandler.parseJWTStringTokenForUser(jwtStringToken);
@@ -68,5 +79,12 @@ public class TokenAuthenticationService {
 		}
 
 		throw new AuthenticationServiceException("Auth token header missing");
+	}
+
+	public String getAuthTokenForUser(String email, Integer tokenValidityInHrs) {
+		User user = authUserDetailsService.loadUserByUsername(email);
+		final String userTenantId = tenantResolverService.findTenantIdForUserEmail(email);
+		final TokenDataHolder tokenDataHolder = new TokenDataHolder(user, userTenantId);
+		return tokenHandler.createJWTStringTokenForUser(tokenDataHolder);
 	}
 }

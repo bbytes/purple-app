@@ -24,11 +24,11 @@ import com.bbytes.purple.utils.TenancyContextHolder;
 public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 		implements AuthenticationFailureHandler {
 
-	private final TokenAuthenticationService tokenAuthenticationService;
+	private final TokenAuthenticationProvider tokenAuthenticationService;
 	private final AuthUserDetailsService userDetailsService;
 	private final TenantResolverService tenantResolverService;
 
-	protected StatelessLoginFilter(String urlMapping, TokenAuthenticationService tokenAuthenticationService,
+	protected StatelessLoginFilter(String urlMapping, TokenAuthenticationProvider tokenAuthenticationService,
 			AuthUserDetailsService userDetailsService, TenantResolverService tenantResolverService,
 			AuthenticationManager authManager) {
 		super(new AntPathRequestMatcher(urlMapping));
