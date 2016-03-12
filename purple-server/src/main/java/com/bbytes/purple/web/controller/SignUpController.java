@@ -15,7 +15,6 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
 import com.bbytes.purple.service.RegistrationService;
-import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -32,38 +31,28 @@ public class SignUpController {
 	public final Logger logger = LoggerFactory.getLogger(SignUpController.class);
 
 	@RequestMapping(value = "/auth/signup", method = RequestMethod.POST)
-	public RestResponse signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
+	public RestResponse signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) throws PurpleException {
 
 		final String SIGN_UP_SUCCESS_MSG = "Successfully signed up";
-
-		RestResponse signUpResponse;
 		// we assume the angular layer will do empty/null org name , user email
-		// etc
-		// validation
+		// etc.. validation
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
 
-		try {
-			Organization organization = new Organization(orgId, signUpRequestDTO.getOrgName().trim());
-			organization.setBusinessArea(signUpRequestDTO.getBusinessArea());
+		Organization organization = new Organization(orgId, signUpRequestDTO.getOrgName().trim());
+		organization.setBusinessArea(signUpRequestDTO.getBusinessArea());
 
-			User user = new User(orgId, signUpRequestDTO.getEmail());
-			user.setEmail(signUpRequestDTO.getEmail());
-			user.setPassword(signUpRequestDTO.getPassword());
-			user.setUserRole(UserRole.ADMIN_USER_ROLE);
-			user.setOrganization(organization);
+		User user = new User(orgId, signUpRequestDTO.getEmail());
+		user.setEmail(signUpRequestDTO.getEmail());
+		user.setPassword(signUpRequestDTO.getPassword());
+		user.setUserRole(UserRole.ADMIN_USER_ROLE);
+		user.setOrganization(organization);
 
-			registrationService.signUp(organization, user);
+		registrationService.signUp(organization, user);
 
-			signUpResponse = new RestResponse(RestResponse.SUCCESS, SIGN_UP_SUCCESS_MSG,
-					SuccessHandler.SIGN_UP_SUCCESS);
+		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, SIGN_UP_SUCCESS_MSG,
+				SuccessHandler.SIGN_UP_SUCCESS);
 
-			return signUpResponse;
-
-		} catch (PurpleException e) {
-			logger.error(e.getMessage(), e);
-			signUpResponse = new RestResponse(RestResponse.FAILED, e.getMessage(), e.getErrConstant());
-			return signUpResponse;
-		}
+		return signUpResponse;
 
 	}
 }

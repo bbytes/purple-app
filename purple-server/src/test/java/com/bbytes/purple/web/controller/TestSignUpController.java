@@ -44,7 +44,7 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestDTO);
 
 		mockMvc.perform(post("/auth/signup").contentType(APPLICATION_JSON_UTF8).content(requestJson))
-				.andExpect(status().isOk()).andDo(print())
+				.andExpect(status().is5xxServerError()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":false")));
 	}
 
