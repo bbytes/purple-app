@@ -17,27 +17,27 @@ public class RegistrationService {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private TenantResolverService tenantResolverService;
 
 	public void signUp(Organization org, User user) throws PurpleException {
 
-		try {
-			TenancyContextHolder.setTenant(org.getOrgId());
-			
-			if (org != null && user != null) {
-				if (orgService.exists(org.getOrgId()) || tenantResolverService.organizationExist(org.getOrgId()))
-					throw new PurpleException("Error while sign up", ErrorHandler.ORG_NOT_UNIQUE);
-				
-				if (userService.exists(user.getEmail()) || tenantResolverService.emailExist(user.getEmail()))
-					throw new PurpleException("Error while sign up", ErrorHandler.USER_NOT_FOUND);
+		TenancyContextHolder.setTenant(org.getOrgId());
 
+		if (org != null && user != null) {
+			if (orgService.orgIdExist(org.getOrgId()) || tenantResolverService.organizationExist(org.getOrgId()))
+				throw new PurpleException("Error while sign up", ErrorHandler.ORG_NOT_UNIQUE);
+
+			if (userService.userEmailExist(user.getEmail()) || tenantResolverService.emailExist(user.getEmail()))
+				throw new PurpleException("Error while sign up", ErrorHandler.USER_NOT_FOUND);
+			try {
 				orgService.save(org);
 				userService.save(user);
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.SIGN_UP_FAILED);
 			}
-		} catch (Exception e) {
-			throw new PurpleException("Error while sign up", ErrorHandler.SIGN_UP_FAILED, e);
+
 		}
 	}
 

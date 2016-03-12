@@ -15,6 +15,7 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
 import com.bbytes.purple.service.RegistrationService;
+import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -34,14 +35,15 @@ public class SignUpController {
 	public RestResponse signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
 
 		final String SIGN_UP_SUCCESS_MSG = "Successfully signed up";
-	
+
 		RestResponse signUpResponse;
-		// we assume the angular layer will do empty/null org name , user email etc
-		// validation 
-		String orgId = signUpRequestDTO.getOrgName().replace("\\s", "").trim();
+		// we assume the angular layer will do empty/null org name , user email
+		// etc
+		// validation
+		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
 
 		try {
-			Organization organization = new Organization(orgId, signUpRequestDTO.getOrgName());
+			Organization organization = new Organization(orgId, signUpRequestDTO.getOrgName().trim());
 			organization.setBusinessArea(signUpRequestDTO.getBusinessArea());
 
 			User user = new User(orgId, signUpRequestDTO.getEmail());
@@ -62,5 +64,6 @@ public class SignUpController {
 			signUpResponse = new RestResponse(RestResponse.FAILED, e.getMessage(), e.getErrConstant());
 			return signUpResponse;
 		}
+
 	}
 }
