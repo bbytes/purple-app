@@ -8,7 +8,7 @@ module.exports = function (grunt) {
             options: {
               variables: {
                 'buildPath': 'builds/dev',
-                'jarPath': '../purple-server/target/purple-server-1.0.0-SNAPSHOT.jar'
+                'jarrPath': '../purple-server/target/purple-server-1.0.0-SNAPSHOT.jar'
               }
             }
           },
@@ -22,7 +22,7 @@ module.exports = function (grunt) {
         },
         shell: {
           startApiServer: {
-            command: 'Start java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \ -jar <%= grunt.config.get("jarPath") %>'
+            command: 'Start java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \ -jar <%= grunt.config.get("jarrPath") %>'
           }
         },
         concat: {

@@ -9,7 +9,6 @@
     "angular-ui-router": "^0.2.18",
     "bootstrap": "^3.3.6",
     "AngularJS-Toaster": "^1.2.0",
-    "angular-growl": "^0.4.0"
   },
   "devDependencies": {}
 }
