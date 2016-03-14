@@ -6,21 +6,19 @@
 					<div id="first_step">
 						<div class="form">
 							<h5>Company Name</h5>
-							<input type="text" name="compnayname"  ng-model="compnayname" capitalize required/>
+							<input type="text" name="compnayname"  ng-model="user.orgName" capitalize required/>
 							<h5>Business Area</h5>
-							<select id="country" name="country">
-							<option  value="" Placeholder="Please select">Please select</option>
-							
-								<option  value="Services">Services</option>
-								<option value="Product Development">Product Development</option>
-								
+							<select id="businessArea" name="businessArea" ng-model="user.businessArea">
+							<option  value="" >---Please select---</option>
+								<option  value="Services" >Services</option>
+								<option value="Products" >Products</option>
 							</select>
 							<h5>Email</h5>
-							<input type="text" name="email" ng-model="email" required/>
+							<input type="text" name="email" ng-model="user.email" required/>
 							<span class="label label-danger" ng-show="signupForm.email.$invalid &&!signupForm.email.$error.required">Email is invalid</span>
 							
 							<h5>Password</h5>
-							<input type="password" name="password"  ng-model="password"  ng-minlength="8" ng-maxlength="12"  required/>
+							<input type="password" name="password"  ng-model="user.password"  ng-minlength="8" ng-maxlength="12"  required/>
 							 <span class="label label-danger" ng-show="signupForm.password.$dirty && signupForm.password.$error.minlength">use atleast 8 characters</span>
                                   <span class="label label-danger" ng-show="signupForm.password.$dirty && signupForm.password.$error.required">Password required.</span>
 							<h5>Repeat Password</h5>
@@ -41,3 +39,4 @@
 				</form><br />
 				<center><p>BY SIGNING UP YOU AGREE TO T & C</p></center>
 			</div>
+			

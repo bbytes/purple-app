@@ -1,4 +1,5 @@
-rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupService,growl,appNotifyService) {
+rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupService,appNotifyService) {
+  appNotifyService.error('this is test');
 console.log("message");
     $scope.submitSignUp = function (isValid) {
    console.log("message");
@@ -9,16 +10,22 @@ console.log("message");
             return false;
         }
 
-
-       signupService.submitSignUp().then(function(response){
-
-
-        // Calling Signup service
         
 
-        }), function (error) {
+        signupService.submitSignUp($scope.user).then(function (response) {
+         if (response.success == true) {
+                
+                
+                $state.go('home');
+                
+            } else {
+                //Login failed. Showing error notification
+                appNotifyService.error(response.data, 'Registration Failed something wrong.');
+            }
+
+        }, function (error) {
             //Login failed. Showing error notification
-            //appNotifyService.error(error.msg, 'Login Failed.');
-        }
-   }
+            appNotifyService.error(error.msg, 'Login Failed.');
+        });
+    };
 });

@@ -6,8 +6,8 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
             var deferred = $q.defer();
 
             $http({
-                method: 'POST',
-                url:'/auth/login',
+                method: 'GET',
+                url:$rootScope.baseUrl+'auth/login?username=' + userName + '&password=' + Passwd,
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -15,6 +15,7 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
 
                 this.userName = userName;
 
+          
                 var result = {};
 
                 result.data = response.data;

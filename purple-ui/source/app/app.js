@@ -5,19 +5,13 @@ var rootApp = angular.module('rootApp',
             'ui.bootstrap',
             'ngAnimate',
             'templates-main',
-            'toaster',
-            'angular-growl'
+            'toaster'
         ]);
 
-rootApp.config(['growlProvider', function (growlProvider) {
-    //cfpLoadingBarProvider.includeSpinner = false;
-      growlProvider.globalTimeToLive(5000);
-      
-    }]);
 // Defining global variables 
 rootApp.run(['$rootScope', '$state', function ($rootScope, $state) {
 
-        $rootScope.baseUrl = '';
+        $rootScope.baseUrl = 'http://localhost:9999/';
         $rootScope.apiUrl = '';
 
         $rootScope.currentState = '';
@@ -31,7 +25,7 @@ rootApp.run(['$rootScope', '$state', function ($rootScope, $state) {
     }]);
 
 // Angular ui-router route definitions 
-rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
+rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider,$httpProvider) {
 
         //Remove # tag from URL
         $locationProvider.html5Mode(true);
@@ -62,13 +56,8 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', fun
             }
         }).state('signup', {
             url: '/signup',
-            views: {
-                '': {
-                    templateUrl: 'app/partials/signup.html',
-                     controller: 'signupCtrl',
-                }
-              
-            }
+            templateUrl: 'app/partials/signup.html',
+            controller: 'signupCtrl'            
         }).state('home.myalerts', {
             url: '/myalerts',
             templateUrl: 'app/partials/home-myalerts.html',
@@ -96,4 +85,6 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', fun
             templateUrl: 'app/partials/admin-users.html',
             controller: 'adminUsersCtrl'
         });
+
+        $httpProvider.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 }]);
