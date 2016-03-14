@@ -55,6 +55,8 @@ public class SignUpController {
 
 		registrationService.signUp(organization, user);
 
+		logger.debug("User with email  '" +  user.getEmail() + "' signed up successfully");
+		
 		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, SIGN_UP_SUCCESS_MSG,
 				SuccessHandler.SIGN_UP_SUCCESS);
 
