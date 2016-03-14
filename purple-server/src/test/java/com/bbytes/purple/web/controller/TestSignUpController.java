@@ -20,7 +20,7 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 
 	@Test
 	public void testSignUpFailed() throws Exception {
-		mockMvc.perform(post("/auth/signup")).andExpect(status().is4xxClientError()).andDo(print());
+		mockMvc.perform(post("/auth/signup")).andExpect(status().is5xxServerError()).andDo(print());
 	}
 
 	@Test
