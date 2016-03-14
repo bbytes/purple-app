@@ -12,8 +12,7 @@ var rootApp = angular.module('rootApp',
 rootApp.run(['$rootScope', '$state', function ($rootScope, $state) {
 
         $rootScope.baseUrl = 'http://localhost:9999/';
-        $rootScope.apiUrl = '';
-
+     
         $rootScope.currentState = '';
 
         $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {

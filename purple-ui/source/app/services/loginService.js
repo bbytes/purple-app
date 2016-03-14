@@ -1,6 +1,7 @@
 rootApp.service('loginService', function ($rootScope, $http, $q) {
 
     return {
+            console.log("message alterd");
         login: function (userName, Passwd) {
 
             var deferred = $q.defer();

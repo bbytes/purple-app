@@ -1,5 +1,6 @@
 rootApp.service('signupService', function ($rootScope, $http, $q) {
 	 return {
+	 	console.log("message");
         submitSignUp: function (user) {
 
             var deferred = $q.defer();
