@@ -22,7 +22,7 @@ module.exports = function (grunt) {
         },
         shell: {
           startApiServer: {
-            command: 'Start java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \ -jar <%= grunt.config.get("jarrPath") %>'
+            command: 'Start java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8001,suspend=n \ -jar <%= grunt.config.get("jarrPath") %>'
           }
         },
         concat: {
