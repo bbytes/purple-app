@@ -25,11 +25,17 @@ import com.bbytes.purple.utils.SuccessHandler;
 @RestController
 public class SignUpController {
 
+	private static final Logger logger = LoggerFactory.getLogger(SignUpController.class);
+
 	@Autowired
 	private RegistrationService registrationService;
 
-	public final Logger logger = LoggerFactory.getLogger(SignUpController.class);
-
+	/**
+	 * The Sign up method is used to register organization and user
+	 * @param signUpRequestDTO
+	 * @return
+	 * @throws PurpleException
+	 */
 	@RequestMapping(value = "/auth/signup", method = RequestMethod.POST)
 	public RestResponse signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) throws PurpleException {
 
