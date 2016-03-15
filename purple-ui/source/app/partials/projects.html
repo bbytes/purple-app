@@ -1,0 +1,263 @@
+ <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="wrapper">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="../../assets/img/logo.png" alt=""> <span class="logo-text">online <b>standup</b></span>
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="#"><img src="../../assets/img/ic_compose.svg"></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="../../assets/img/ic_timeline.svg"></a>
+                    </li>
+                     <li>
+                        <a href="#"><img src="../../assets/img/ic_menu.svg"></a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+   <div class="bottom-nav">
+    <div class="wrapper">
+     <div class="current-page">
+      <h5><a href="/status">users</a></h5>
+      <h5><a href="#"  class="current-active">projects</a></h5>
+      <h5><a href="/settings">settings</a></h5>
+     </div>
+     </div>
+   </div>
+
+  <!-- /.main -->
+<div class="col-md-offset-2 col-md-8">
+    <div class="main-title">
+       <h4>create project</h4>
+    </div>
+
+<div class="create-project">
+ <div class="row">
+  <div class="col-md-7">
+    <div class="form-group">
+      <label for="comment" class="settings">PROJECT NAME</label>
+      <input type="text" class="form-control">
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="form-group">
+      <label for="comment" class="settings">TIME PREFERENCE</label>
+      <div class="row">
+       <div class="col-md-6">
+        <select class="form-control turnintodropdown" id="sel1">
+           <option>5 : 00</option>
+           <option>2 : 00</option>
+           <option>3 : 00</option>
+           <option>4 : 00</option>
+        </select>
+       </div>
+       <div class="col-md-6">
+         <select class="form-control turnintodropdown" id="sel1">
+           <option>AM</option>
+           <option>PM</option>
+        </select>
+       </div>
+
+       </div>
+    </div>
+    </div>
+  </div>
+</div>
+ 
+  <div class="main-subtitle">
+       <h4>users</h4>
+    </div>
+ <div class="row">
+   <div class="col-md-4">
+     <img class="round" width="40" height="40" avatar="Username">
+      <div class="user-label">
+         <h4>username</h4>
+         <p>username@gmail.com</p>
+      </div>
+   </div>
+
+   <div class="col-md-4">
+      <img class="round" width="40" height="40" avatar="Username">
+      <div class="user-label">
+         <h4>username</h4>
+         <p>username@gmail.com</p>
+      </div>
+   </div>
+
+   <div class="col-md-4">
+      <img class="round" width="40" height="40" avatar="+">
+      <div class="user-label">
+         <h4><a href="#" data-toggle="modal" data-target="#myModal">Add Users</a></h4>
+      </div>
+   </div>
+   
+
+ </div>
+  <button type="button" class="btn btn-default create">create project</button>
+
+<div class="col-md-12">
+ <div class="row">
+   <div class="main-title">
+       <h4>projects <span class="list-member">12 project 20 Members</span></h4>
+    </div>
+ <div class="project-table">
+   <table>
+      <tr>
+        <td class="table-user">Projectxyz <br /><span class="u-number">12 Users</span></td>
+        <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
+        <td><a href="#" data-toggle="modal" data-target="#myModal1"><img src="../../assets/img/user.png"> View Member List</a></td>
+        <td style="float:right;"><img src="../../assets/img/edit.png"> <img src="../../assets/img/delete.png"></td>
+      </tr>
+
+     <tr>
+        <td class="table-user">Projectxyz <br /><span class="u-number">12 Users</span></td>
+        <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
+        <td><img src="../../assets/img/user.png"> View Member List</td>
+        <td style="float:right;"><img src="../../assets/img/edit.png"> <img src="../../assets/img/delete.png"></td>
+      </tr>
+
+       <tr>
+        <td class="table-user">Projectxyz <br /><span class="u-number">12 Users</span></td>
+        <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
+        <td><img src="../../assets/img/user.png"> View Member List</td>
+        <td style="float:right;"><img src="../../assets/img/edit.png"> <img src="../../assets/img/delete.png"></td>
+      </tr>
+
+       <tr>
+        <td class="table-user">Projectxyz <br /><span class="u-number">12 Users</span></td>
+        <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
+        <td><img src="../../assets/img/user.png"> View Member List</td>
+        <td style="float:right;"><img src="../../assets/img/edit.png"> <img src="../../assets/img/delete.png"></td>
+      </tr>
+
+   </table>
+ </div>
+ </div>
+ </div>
+
+</div>
+
+<!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <table width="100%">
+              <tr>
+                <td> 
+                <img class="round" width="40" height="40" avatar="Username">
+                <div class="user-label">
+                <h4>username</h4>
+                <p>username@gmail.com</p>
+                </div>
+             </td>
+                <td>
+                 
+                </td>
+              </tr>
+
+            <tr>
+                <td> 
+                <img class="round" width="40" height="40" avatar="E">
+                <div class="user-label">
+                <h4>username</h4>
+                <p>username@gmail.com</p>
+                </div>
+             </td>
+                <td>
+                 
+                </td>
+              </tr>
+
+            </table>
+            
+
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+
+<!-- Modal -->
+  <div class="modal fade" id="myModal1" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <table width="100%">
+              <tr>
+                <td> 
+                <img class="round" width="40" height="40" avatar="Username">
+                <div class="user-label">
+                <h4>username</h4>
+                <p>username@gmail.com</p>
+                </div>
+             </td>
+                <td>
+                 
+                </td>
+              </tr>
+
+            <tr>
+                <td> 
+                <img class="round" width="40" height="40" avatar="E">
+                <div class="user-label">
+                <h4>username</h4>
+                <p>username@gmail.com</p>
+                </div>
+             </td>
+                <td>
+                 
+                </td>
+              </tr>
+
+            </table>
+            
+
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
