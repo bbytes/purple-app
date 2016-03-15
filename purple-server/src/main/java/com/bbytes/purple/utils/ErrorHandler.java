@@ -17,6 +17,8 @@ public class ErrorHandler {
 	public static final String AUTH_FAILURE = "authentication_failure";
 
 	public static final String USER_NOT_FOUND = "user_not_found";
+	
+	public static final String ADD_USER_FAILED = "add_user_failed";
 
 	public static final String PASSWORD_INCORRECT = "bad_credentials";
 	

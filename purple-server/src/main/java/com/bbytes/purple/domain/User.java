@@ -39,6 +39,9 @@ public class User {
 
 	@Field("password")
 	private String password;
+	
+	@Field("account_initialise")
+	private boolean accountInitialise;
 
 	@DBRef
 	private Organization organization;
@@ -59,5 +62,6 @@ public class User {
 		this.name = name;
 		this.email = email;
 	}
-
+	public static String PENDING = "Pending";
+	public static String JOINED = "Joined";
 }
