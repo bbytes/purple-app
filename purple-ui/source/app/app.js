@@ -55,9 +55,118 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$ht
             }
         }).state('signup', {
             url: '/signup',
-            templateUrl: 'app/partials/signup.html',
-            controller: 'signupCtrl'            
-        }).state('home.myalerts', {
+            views: {
+                '': {
+                    templateUrl: 'app/partials/signup.html',
+                     controller: 'signupCtrl',
+                }
+              
+            }
+        }).state('home-page', {
+            url: '/home-page',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/home-page.html',
+                     controller: 'home-pageCtrl',
+                 },
+                'header@home': {
+                    templateUrl: 'app/partials/home-header.html'
+                },
+                'main@home': {
+                    templateUrl: 'app/partials/home-main.html'
+                },
+                'footer@home': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            }
+        }).state('status', {
+            url: '/status',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/status.html',
+                     controller: 'statusCtrl',
+                 },
+                'header@home': {
+                    templateUrl: 'app/partials/home-header.html'
+                },
+                'main@home': {
+                    templateUrl: 'app/partials/home-main.html'
+                },
+                'footer@home': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            }
+        }).state('projects', {
+            url: '/projects',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/projects.html',
+                     controller: 'projectsCtrl',
+                 },
+                'header@home': {
+                    templateUrl: 'app/partials/home-header.html'
+                },
+                'main@home': {
+                    templateUrl: 'app/partials/home-main.html'
+                },
+                'footer@home': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            }
+        }).state('settings', {
+            url: '/settings',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/settings.html',
+                     controller: 'settingsCtrl',
+                 },
+                'header@home': {
+                    templateUrl: 'app/partials/home-header.html'
+                },
+                'main@home': {
+                    templateUrl: 'app/partials/home-main.html'
+                },
+                'footer@home': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            }
+        }).state('settings-user', {
+            url: '/settings-user',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/settings-user.html',
+                     controller: 'settings-userCtrl',
+                 },
+                'header@home': {
+                    templateUrl: 'app/partials/home-header.html'
+                },
+                'main@home': {
+                    templateUrl: 'app/partials/home-main.html'
+                },
+                'footer@home': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            }
+        }).state('user-mgr', {
+            url: '/user-mgr',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/user-mgr.html',
+                     controller: 'user-mgrCtrl',
+                 },
+                'header@home': {
+                    templateUrl: 'app/partials/home-header.html'
+                },
+                'main@home': {
+                    templateUrl: 'app/partials/home-main.html'
+                },
+                'footer@home': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            }
+        })
+
+        .state('home.myalerts', {
             url: '/myalerts',
             templateUrl: 'app/partials/home-myalerts.html',
             controller: 'myAlertsCtrl'
