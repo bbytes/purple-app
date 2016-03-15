@@ -48,7 +48,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 	@Test
 	public void testAddUsersFailed() throws Exception {
-		mockMvc.perform(post("/admin/users/adduser")).andExpect(status().is4xxClientError()).andDo(print());
+		mockMvc.perform(post("/api/v1/admin/user/add")).andExpect(status().is4xxClientError()).andDo(print());
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
 
-		mockMvc.perform(post("/admin/users/adduser").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
@@ -84,7 +84,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestUserDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(post("/admin/users/adduser").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8).content(requestJson))
+		mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8).content(requestJson))
 				.andExpect(status().is5xxServerError()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":false")));
 	}
@@ -105,7 +105,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestUserDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(post("/admin/users/adduser").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8).content(requestJson))
+		mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8).content(requestJson))
 				.andExpect(status().is5xxServerError()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":false")));
 	}

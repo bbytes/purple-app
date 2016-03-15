@@ -37,7 +37,7 @@ public class AdminController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/admin/users/adduser", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/v1/admin/user/add", method = RequestMethod.POST)
 	public RestResponse addUsers(@RequestBody UserDTO userDTO) throws PurpleException {
 
 		Organization org = organizationService.findByOrgId(TenancyContextHolder.getTenant());
