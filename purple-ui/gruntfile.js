@@ -7,8 +7,7 @@ module.exports = function (grunt) {
           dev: {
             options: {
               variables: {
-                'buildPath': 'builds/dev',
-                'jarrPath': '../purple-server/target/purple-server-1.0.0-SNAPSHOT.jar'
+                'buildPath': 'builds/dev'
               }
             }
           },
@@ -18,11 +17,6 @@ module.exports = function (grunt) {
                 'buildPath': 'builds/prod'
               }
             }
-          }
-        },
-        shell: {
-          startApiServer: {
-            command: 'Start java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8001,suspend=n \ -jar <%= grunt.config.get("jarrPath") %>'
           }
         },
         concat: {
@@ -186,10 +180,10 @@ module.exports = function (grunt) {
         html2js: {
             options: {
                 base: 'source',
-               // htmlmin: {
-                   // removeComments: true,
-                   // collapseWhitespace: true
-                //}
+                htmlmin: {
+                    removeComments: true,
+                    collapseWhitespace: true
+                }
             },
             main: {
                 src: ['source/app/**/*.html'],
@@ -208,11 +202,22 @@ module.exports = function (grunt) {
         }
     });
 
-    // Load all npm tasks
-    require('load-grunt-tasks')(grunt);
+    grunt.loadNpmTasks('grunt-config');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-open');
+    grunt.loadNpmTasks('grunt-bower-concat');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-ng-annotate');
+    grunt.loadNpmTasks('grunt-html2js');
+    grunt.loadNpmTasks('grunt-cache-breaker');
 
     // Dev build
-    grunt.registerTask('default', ['config:dev','shell:startApiServer','clean', 'concat', 'bower_concat', 'copy', 'html2js', 'connect', 'watch']);
+    grunt.registerTask('default', ['config:dev','clean', 'concat', 'bower_concat', 'copy', 'html2js', 'connect', 'watch']);
 
     // Production Build
     grunt.registerTask('prod', ['config:prod','clean', 'concat', 'bower_concat', 'copy', 'html2js', 'ngAnnotate:app', 'uglify', 'cssmin', 'cachebreaker']);

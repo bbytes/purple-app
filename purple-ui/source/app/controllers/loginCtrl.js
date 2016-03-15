@@ -1,4 +1,4 @@
-rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginService,appNotifyService) {
+rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginService) {
 
     $scope.submitLoginForm = function (isValid) {
    console.log("message");

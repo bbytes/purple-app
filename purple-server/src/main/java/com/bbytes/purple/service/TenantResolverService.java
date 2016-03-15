@@ -1,7 +1,6 @@
 package com.bbytes.purple.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -112,14 +111,14 @@ public class TenantResolverService {
 	public void deleteTenantResolverForUserEmail(String email) {
 		if (email == null)
 			throw new IllegalArgumentException("User email cannot be null");
-
+		
 		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
-
+		
 		// go to default management db
 		TenancyContextHolder.setDefaultTenant();
 		TenantResolver tenantResolver = tenantResolverRepository.findOneByEmail(email);
 		tenantResolverRepository.delete(tenantResolver);
-
+		
 		// set the given tenant id as current db
 		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
 
@@ -127,42 +126,14 @@ public class TenantResolverService {
 
 	public TenantResolver findOneByEmail(String email) {
 		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
-
+		
 		// go to default management db
 		TenancyContextHolder.setDefaultTenant();
 		TenantResolver tenantResolver = tenantResolverRepository.findOneByEmail(email);
-
+		
 		// set the given tenant id as current db
 		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
 		return tenantResolver;
-	}
-
-	public boolean emailExist(String email) {
-		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
-
-		// go to default management db
-		TenancyContextHolder.setDefaultTenant();
-		TenantResolver tenantResolver = tenantResolverRepository.findOneByEmail(email);
-		if (tenantResolver != null)
-			return true;
-
-		// set the given tenant id as current db
-		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
-		return false;
-	}
-	
-	public boolean organizationExist(String orgId) {
-		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
-
-		// go to default management db
-		TenancyContextHolder.setDefaultTenant();
-		TenantResolver tenantResolver = tenantResolverRepository.findOneByOrgId(orgId);
-		if (tenantResolver != null)
-			return true;
-
-		// set the given tenant id as current db
-		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
-		return false;
 	}
 
 	public TenantResolver findOneByUserId(String userId) {
@@ -175,22 +146,6 @@ public class TenantResolverService {
 		// set the given tenant id as current db
 		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
 		return tenantResolver;
-	}
-
-	/**
-	 * Should not be exposed in prod so making it part of dev profile
-	 */
-	@Profile("dev")
-	public void deleteAll() {
-		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
-
-		// go to default management db
-		TenancyContextHolder.setDefaultTenant();
-		tenantResolverRepository.deleteAll();
-
-		// set the given tenant id as current db
-		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
-
 	}
 
 }

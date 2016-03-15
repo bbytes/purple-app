@@ -12,8 +12,9 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bbytes.purple.PurpleBaseApplicationTests;
+import com.bbytes.purple.PurpleApplicationTests;
 import com.bbytes.purple.domain.Holiday;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.utils.TenancyContextHolder;
@@ -23,9 +24,13 @@ import com.bbytes.purple.utils.TenancyContextHolder;
  *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class HolidaysRepositoryTest extends PurpleBaseApplicationTests {
+public class HolidaysRepositoryTest extends PurpleApplicationTests {
 
+	@Autowired
+	private HolidaysRepository holiDaysRepository;
 
+	@Autowired
+	private OrganizationRepository orgRepository;
 
 	Organization abc;
 	List<Holiday> days;
@@ -45,14 +50,14 @@ public class HolidaysRepositoryTest extends PurpleBaseApplicationTests {
 		days.add(new Holiday("Diwali", new Date(2016 - 9 - 28), abc));
 
 		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
-		organizationRepository.save(abc);
+		orgRepository.save(abc);
 		holiDaysRepository.save(days);
 	}
 
 	@After
 	public void clearDB() {
 		TenancyContextHolder.setTenant(days.get(0).getOrganization().getOrgId());
-		organizationRepository.delete(abc);
+		orgRepository.delete(abc);
 		holiDaysRepository.delete(days);
 	}
 

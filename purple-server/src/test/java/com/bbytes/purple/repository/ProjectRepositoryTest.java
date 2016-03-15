@@ -13,110 +13,127 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bbytes.purple.PurpleBaseApplicationTests;
+import com.bbytes.purple.PurpleApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class ProjectRepositoryTest extends PurpleBaseApplicationTests {
-
+public class ProjectRepositoryTest extends PurpleApplicationTests {
+	
+	@Autowired
+	private OrganizationRepository orgRepository;
+	
+	@Autowired
+	private ProjectRepository projectRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
 	Organization bbytes;
 	Project proj1, proj2;
 	User user1, user2;
-
+	
 	@Before
-	public void setUp() {
+	public void setUp()
+	{
 		bbytes = new Organization("bbytes", "BB-Org");
 		user1 = new User("aaa", "aa@gmail");
 		user1.setOrganization(bbytes);
 		user2 = new User("bbb", "bb@gmail");
 		user2.setOrganization(bbytes);
-
+		
 		proj1 = new Project("purple", "5.00 PM");
 		proj1.setOrganization(bbytes);
 
 		proj2 = new Project("reveal", "6.00 pm");
 		proj2.setOrganization(bbytes);
-
+		
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
-		organizationRepository.deleteAll();
+		orgRepository.deleteAll();
 		projectRepository.deleteAll();
 		userRepository.deleteAll();
-
-		organizationRepository.save(bbytes);
+		
+		orgRepository.save(bbytes);
 		projectRepository.save(proj1);
 		projectRepository.save(proj2);
 	}
 
 	@After
-	public void cleanUp() {
+	public void cleanUp()
+	{
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		projectRepository.deleteAll();
-		organizationRepository.deleteAll();
+		orgRepository.deleteAll();
 		userRepository.deleteAll();
-
+		
 		TenancyContextHolder.setTenant(proj2.getOrganization().getOrgId());
 		projectRepository.deleteAll();
-		organizationRepository.deleteAll();
+		orgRepository.deleteAll();
 		userRepository.deleteAll();
 	}
-
+	
 	@Test
-	public void saveProjectTest() {
+	public void saveProjectTest()
+	{
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		projectRepository.save(proj1);
-
+		
 		TenancyContextHolder.setTenant(proj2.getOrganization().getOrgId());
 		projectRepository.save(proj2);
-
+	
 		assertThat(proj1.getProjectId(), is(notNullValue()));
 	}
-
+	
 	@Test
-	public void findAllProjectTest() {
+	public void findAllProjectTest()
+	{
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		List<Project> projectList = projectRepository.findAll();
-
+		
 		assertTrue(projectList.size() > 0);
 	}
-
+	
 	@Test
-	public void updateProjectTest() {
+	public void updateProjectTest()
+	{
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		Project projectObj = projectRepository.findOne(proj1.getProjectId());
-
+		
 		assertTrue(!projectObj.getProjectName().isEmpty());
 		projectObj.setProjectName("hello");
 		projectRepository.save(projectObj);
-
-		assertThat(projectObj.getProjectName(), is("hello"));
-
+		
+		assertThat(projectObj.getProjectName(),is("hello"));
+		
 	}
-
+	
 	@Test
-	public void deleteProjectTest() {
+	public void deleteProjectTest()
+	{
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
 		projectRepository.delete(proj1.getProjectId());
-
+		
 		assertNull(projectRepository.findOne(proj1.getProjectId()));
 	}
-
+	
 	@Test
-	public void saveUsersinProjectTest() {
+	public void saveUsersinProjectTest()
+	{
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());
-
+		
 		userRepository.save(user1);
 		userRepository.save(user2);
 		List<User> users = userRepository.findAll();
-
+		 
 		proj1.setUser(users);
 		projectRepository.save(proj1);
-
+		 
 		assertTrue(proj1.getUser().size() > 0);
-
+		 
 	}
-
+	
 }

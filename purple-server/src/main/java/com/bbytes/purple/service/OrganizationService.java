@@ -17,12 +17,7 @@ public class OrganizationService extends AbstractService<Organization, String> {
 		this.organizationRepository = organizationRepository;
 	}
 
-	public Organization findByOrgId(String orgId) {
+	public Organization getOrgById(String orgId) {
 		return organizationRepository.findByOrgId(orgId);
-	}
-
-	public boolean orgIdExist(String orgId) {
-		boolean state = organizationRepository.findByOrgId(orgId) == null ? false : true;
-		return state;
 	}
 }

@@ -3,18 +3,20 @@ package com.bbytes.purple.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.thymeleaf.context.Context;
 
-import com.bbytes.purple.PurpleBaseApplicationTests;
+import com.bbytes.purple.PurpleApplicationTests;
 
-public class TestNotificationService extends PurpleBaseApplicationTests {
+public class TestNotificationService extends PurpleApplicationTests {
 
+	@Autowired
+	private NotificationService notificationService;
 
 	@Test
 	@Ignore
@@ -31,17 +33,17 @@ public class TestNotificationService extends PurpleBaseApplicationTests {
 		List<String> toEmailList = new ArrayList<>();
 		toEmailList.add("tm@beyondbytes.co.in");
 		String subject = "HTML EMAIL - Test subject - purple app";
-		Map<String,Object> ctx = new HashMap<>();
-		ctx.put("name", "Thanneer");
-		ctx.put("subscriptionDate", new Date());
-		ctx.put("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
+		Context ctx = new Context();
+		ctx.setVariable("name", "Thanneer");
+		ctx.setVariable("subscriptionDate", new Date());
+		ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
 
-		Assert.assertTrue(notificationService.sendTemplateEmail(toEmailList, subject, "email-text-only.html", ctx));
+		Assert.assertTrue(notificationService.sendTemplateEmail(toEmailList, subject, "email-simple", ctx));
 	}
 
 	@Test
 	public void testSlackMessaging() {
-		String message = "Test sample message from purple app";
+		String message = "Test sample email body for purple app";
 		Assert.assertTrue(
 				notificationService.sendSlackMessage("xoxp-3105667121-3107455865-8187187190-11282c", message));
 	}

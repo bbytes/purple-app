@@ -11,15 +11,18 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bbytes.purple.PurpleBaseApplicationTests;
+import com.bbytes.purple.PurpleApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MultiTenantOrganizationRepositoryTest extends PurpleBaseApplicationTests{
+public class MultiTenantOrganizationRepositoryTest extends PurpleApplicationTests{
 	
-
+	@Autowired
+	private OrganizationRepository organizationRepository;
+	
 	Organization org1, org2;
 	
 	@Before

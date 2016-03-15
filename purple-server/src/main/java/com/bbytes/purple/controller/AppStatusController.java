@@ -1,4 +1,4 @@
-package com.bbytes.purple.web.controller;
+package com.bbytes.purple.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

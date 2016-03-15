@@ -5,8 +5,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bbytes.purple.PurpleBaseApplicationTests;
+import com.bbytes.purple.PurpleApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
@@ -14,7 +15,20 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
-public class TestStatusService extends PurpleBaseApplicationTests {
+
+public class TestStatusService extends PurpleApplicationTests {
+
+	@Autowired
+	private StatusService statusService;
+
+	@Autowired
+	private OrganizationService organizationService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private ProjectService projectService;
 
 	Organization org1;
 	User testUser;
@@ -25,7 +39,6 @@ public class TestStatusService extends PurpleBaseApplicationTests {
 	public void init() {
 		org1 = new Organization("google", "google-org");
 
-	
 		testUser = new User("akshay", "star@gmail");
 		testUser.setOrganization(org1);
 		testUser.setUserRole(UserRole.ADMIN_USER_ROLE);
@@ -46,9 +59,9 @@ public class TestStatusService extends PurpleBaseApplicationTests {
 		organizationService.deleteAll();
 		userService.deleteAll();
 		projectService.deleteAll();
-
+		
 	}
-
+	
 	@Test
 	public void testSave() {
 
