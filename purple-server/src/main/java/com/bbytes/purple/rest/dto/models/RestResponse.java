@@ -8,6 +8,8 @@ public class RestResponse implements Serializable {
 
 	public static final String TOTAL_SIZE = "tsize";
 	public static final String GRID_DATA = "gridData";
+	public static final Boolean SUCCESS = true;
+	public static final Boolean FAILED = false;
 	
 	private boolean success = false;
 	

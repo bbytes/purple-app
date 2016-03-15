@@ -6,3 +6,4 @@ nbproject
 /target/
 /*.classpath
 /*.project
+/*.log

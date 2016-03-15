@@ -18,21 +18,18 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.bbytes.purple.PurpleApplication;
+import com.bbytes.purple.PurpleBaseApplicationTests;
 import com.bbytes.purple.auth.jwt.SpringSecurityConfig;
-import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
-import com.bbytes.purple.repository.OrganizationRepository;
-import com.bbytes.purple.service.TenantResolverService;
-import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { PurpleApplication.class, SpringSecurityConfig.class })
 @WebAppConfiguration
-public class TestNoLoginRequiredAuthRequest {
+public class TestNoLoginRequiredAuthRequest extends PurpleBaseApplicationTests {
 
 	@Autowired
 	private WebApplicationContext context;
@@ -41,18 +38,6 @@ public class TestNoLoginRequiredAuthRequest {
 
 	@Autowired
 	private FilterChainProxy filterChainProxy;
-
-	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private OrganizationRepository organizationRepository;
-
-	@Autowired
-	private TokenAuthenticationProvider tokenAuthenticationProvider;
-	
-	@Autowired
-	private TenantResolverService tenantResolverService;
 
 	private User adminUser1;
 
@@ -75,9 +60,8 @@ public class TestNoLoginRequiredAuthRequest {
 		adminUser1 = new User("admin-1", email);
 		adminUser1.setOrganization(testOrg);
 		adminUser1.setUserRole(UserRole.ADMIN_USER_ROLE);
-		
+
 		TenancyContextHolder.setTenant(adminUser1.getOrganization().getOrgId());
-		tenantResolverService.deleteTenantResolverForUserEmail(email);
 		userService.deleteAll();
 		organizationRepository.deleteAll();
 
@@ -104,8 +88,9 @@ public class TestNoLoginRequiredAuthRequest {
 	public void testLoginAndAccessProtectedUrl() throws Exception {
 		xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser1.getEmail(), 1);
 
-		mockMvc.perform(get("/app/status").param(GlobalConstants.URL_AUTH_TOKEN, xauthToken))
-				.andExpect(status().isOk()).andExpect(header().string(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken));;
+		mockMvc.perform(get("/app/status").param(GlobalConstants.URL_AUTH_TOKEN, xauthToken)).andExpect(status().isOk())
+				.andExpect(header().string(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken));
+		;
 	}
 
 }

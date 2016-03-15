@@ -1,11 +1,13 @@
 package com.bbytes.purple.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.bbytes.purple.utils.StringUtils;
 
@@ -31,7 +32,7 @@ public class NotificationService {
 	private JavaMailSender javaMailSender;
 
 	@Autowired
-	private TemplateEngine templateEngine;
+	private VelocityEngine templateEngine;
 
 	@Value("${spring.mail.from}")
 	private String fromEmail;
@@ -72,8 +73,8 @@ public class NotificationService {
 		return true;
 	}
 
-	public boolean sendTemplateEmail(List<String> toEmailList, String subject, String emailTemplateName, Context ctx) {
-		String emailHTMLContent = templateEngine.process(emailTemplateName, ctx);
+	public boolean sendTemplateEmail(List<String> toEmailList, String subject, String emailTemplateName, Map<String, Object> templateVariableMap) {
+		String emailHTMLContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine,emailTemplateName, "UTF-8", templateVariableMap);
 		return sendEmail(toEmailList, subject, emailHTMLContent,true);
 	}
 

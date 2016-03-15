@@ -6,22 +6,24 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
             var deferred = $q.defer();
 
             $http({
-                method: 'POST',
-                url:'/auth/login',
+                method: 'GET',
+                url:$rootScope.baseUrl+'auth/login?username=' + userName + '&password=' + Passwd,
+                //params:{'username': userName,'password': Passwd},
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).success(function (response, status, headers, config) {
 
-                this.userName = userName;
+               /* this.userName = userName;
 
+          
                 var result = {};
 
                 result.data = response.data;
                 result.headers = headers();
-                result.success = response.success;
+                result.success = response.success;*/
 
-                deferred.resolve(result);
+                deferred.resolve(response);
             }).error(function () {
                 // Something went wrong.
                 deferred.reject({'success': false, 'msg': 'Oops! Something went wrong. Please try again later.'});

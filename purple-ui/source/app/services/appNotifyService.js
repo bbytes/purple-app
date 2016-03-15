@@ -1,9 +1,9 @@
-rootApp.service('appNotifyService', function (toaster, $filter) {
+rootApp.service('appNotifyService', function (toaster) {
 
     this.error = function (msg, title, stayFor, clear) {
 
         // 0 to make it sticky
-        stayFor = stayFor || 5000;
+        stayFor = stayFor || 3000;
         title = title || '';
         clear = clear || false;
 
@@ -11,14 +11,15 @@ rootApp.service('appNotifyService', function (toaster, $filter) {
             toaster.clear();
         }
 
-        toaster.pop('error', title, $filter('translate')(msg), stayFor);
+        console.log('here');
+        toaster.pop('error', title, msg, stayFor);
 
     };
 
     this.info = function (msg, title, stayFor, clear) {
 
         // 0 to make it sticky
-        stayFor = stayFor || 5000;
+        stayFor = stayFor || 3000;
         title = title || '';
         clear = clear || false;
 
@@ -26,14 +27,14 @@ rootApp.service('appNotifyService', function (toaster, $filter) {
             toaster.clear();
         }
 
-        toaster.pop('info', title, $filter('translate')(msg), stayFor);
+        toaster.pop('info', title, msg, stayFor);
 
     };
 
     this.success = function (msg, title, stayFor, clear) {
 
         // 0 to make it sticky
-        stayFor = stayFor || 5000;
+        stayFor = stayFor || 4000;
         title = title || '';
         clear = clear || false;
 
@@ -41,14 +42,14 @@ rootApp.service('appNotifyService', function (toaster, $filter) {
             toaster.clear();
         }
 
-        toaster.pop('success', title, $filter('translate')(msg), stayFor);
+        toaster.pop('success', title, msg, stayFor);
 
     };
 
     this.warning = function (msg, title, stayFor, clear) {
 
         // 0 to make it sticky
-        stayFor = stayFor || 5000;
+        stayFor = stayFor || 3000;
         title = title || '';
         clear = clear || false;
 
@@ -56,6 +57,6 @@ rootApp.service('appNotifyService', function (toaster, $filter) {
             toaster.clear();
         }
 
-        toaster.pop('warning', title, $filter('translate')(msg), stayFor);
+        toaster.pop('warning', title, msg, stayFor);
     };
 });

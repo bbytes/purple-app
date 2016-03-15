@@ -14,7 +14,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.TenantResolverService;
+import com.bbytes.purple.web.config.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -32,11 +34,22 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private TenantResolverService tenantResolverService;
 
+	@Autowired
+	private SpringProfileService springProfileService;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling().and()
-				.servletApi().and().authorizeRequests()
+		// CSRF Disabled and it is ok. Plz read the explanation from
+		// stackoverflow
+		/*
+		 * Note : "If we go down the cookies way, you really need to do CSRF to
+		 * avoid cross site requests. That is something we can forget when using
+		 * JWT as you will see." (JWT = Json Web Token, a Token based
+		 * authentication for stateless apps)
+		 */
+		http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.exceptionHandling().and().servletApi().and().authorizeRequests()
 
 				// Allow anonymous resource requests
 				.antMatchers("/").permitAll().antMatchers("/favicon.ico").permitAll().antMatchers("/**/*.html")
@@ -50,11 +63,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				// Custom Token based authentication based on the header
 				// previously given to the client
-				.addFilterAfter(new StatelessAuthenticationFilter(tokenAuthenticationProvider),
+
+				.addFilterAfter(new StatelessAuthenticationFilter("/auth/**", tokenAuthenticationProvider),
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(new StatelessLoginFilter("/auth/login", tokenAuthenticationProvider, userService,
 						tenantResolverService, authenticationManager), StatelessAuthenticationFilter.class)
 				.headers().cacheControl().and();
+
+		// add cors only in dev mode
+		if (springProfileService.isDevMode()) {
+			http.addFilterBefore(new CorsFilter(), StatelessLoginFilter.class);
+		}
 
 	}
 

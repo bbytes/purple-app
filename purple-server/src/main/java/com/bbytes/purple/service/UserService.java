@@ -22,6 +22,11 @@ public class UserService extends AbstractService<User, String> {
 		this.userRepository = userRepository;
 	}
 
+	public boolean userEmailExist(String email) {
+		boolean state = userRepository.findOneByEmail(email) == null ? false : true;
+		return state;
+	}
+	
 	public User getUserById(String id) {
 		return userRepository.findOne(id);
 	}

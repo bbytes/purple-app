@@ -11,9 +11,8 @@ var rootApp = angular.module('rootApp',
 // Defining global variables 
 rootApp.run(['$rootScope', '$state', function ($rootScope, $state) {
 
-        $rootScope.baseUrl = '';
-        $rootScope.apiUrl = '';
-
+        $rootScope.baseUrl = 'http://localhost:9999/';
+     
         $rootScope.currentState = '';
 
         $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
@@ -25,7 +24,7 @@ rootApp.run(['$rootScope', '$state', function ($rootScope, $state) {
     }]);
 
 // Angular ui-router route definitions 
-rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
+rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider,$httpProvider) {
 
         //Remove # tag from URL
         $locationProvider.html5Mode(true);
@@ -194,4 +193,6 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', fun
             templateUrl: 'app/partials/admin-users.html',
             controller: 'adminUsersCtrl'
         });
+
+        $httpProvider.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 }]);
