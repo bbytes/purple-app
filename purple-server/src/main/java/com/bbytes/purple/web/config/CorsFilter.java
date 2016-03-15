@@ -8,7 +8,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Profile;
@@ -25,7 +24,6 @@ public class CorsFilter implements Filter {
 
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletResponse response = (HttpServletResponse) res;
-		HttpServletRequest request = (HttpServletRequest) req;
 			
 		String accessControlAllowHeaders = GlobalConstants.HEADER_AUTH_TOKEN + "," + GlobalConstants.HEADER_TENANT_ID
 				+ "," + "Origin, X-Requested-With, Content-Type, Accept";
@@ -35,10 +33,6 @@ public class CorsFilter implements Filter {
 		response.addHeader("Access-Control-Allow-Headers", accessControlAllowHeaders);
 		response.addHeader("Access-Control-Expose-Headers", accessControlAllowHeaders);
 		response.addHeader("Access-Control-Max-Age", "3600");
-		if (request.getMethod() != "OPTIONS") {
-			chain.doFilter(req, res);
-		} else {
-		}
 	}
 
 	@Override
