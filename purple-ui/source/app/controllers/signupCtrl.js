@@ -1,8 +1,8 @@
 rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupService,appNotifyService) {
-  appNotifyService.error('this is test');
+  
 
     $scope.submitSignUp = function (isValid) {
-   console.log("message");
+
         // Validating login form
         if (!isValid) {
              console.log("message");
