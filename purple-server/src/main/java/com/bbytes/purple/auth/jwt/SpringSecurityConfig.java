@@ -14,9 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.TenantResolverService;
-import com.bbytes.purple.web.config.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,9 +31,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private TenantResolverService tenantResolverService;
-
-	@Autowired
-	private SpringProfileService springProfileService;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -69,11 +64,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(new StatelessLoginFilter("/auth/login", tokenAuthenticationProvider, userService,
 						tenantResolverService, authenticationManager), StatelessAuthenticationFilter.class)
 				.headers().cacheControl().and();
-
-		// add cors only in dev mode
-		if (springProfileService.isDevMode()) {
-			http.addFilterBefore(new CorsFilter(), StatelessLoginFilter.class);
-		}
 
 	}
 

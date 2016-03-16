@@ -48,10 +48,16 @@ public class UserService extends AbstractService<User, String> {
 	}
 
 	public User create(String email, String name, Organization org) {
-		return null;
-		// User user = new User(name, email);
-		// user.setTenantId(tenant.getTenantId());
-		// return userRepository.save(user);
+		 User user = new User(name, email);
+		 user.setOrganization(org);
+		 return userRepository.save(user);
+	}
+	
+	public User create(String email, String name,String password, Organization org) {
+		 User user = new User(name, email);
+		 user.setOrganization(org);
+		 user.setPassword(passwordHashService.encodePassword(password));
+		 return userRepository.save(user);
 	}
 
 	public boolean updatePassword(String password, String userEmail) {

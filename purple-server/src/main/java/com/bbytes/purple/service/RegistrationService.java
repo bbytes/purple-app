@@ -30,10 +30,10 @@ public class RegistrationService {
 				throw new PurpleException("Error while sign up", ErrorHandler.ORG_NOT_UNIQUE);
 
 			if (userService.userEmailExist(user.getEmail()) || tenantResolverService.emailExist(user.getEmail()))
-				throw new PurpleException("Error while sign up", ErrorHandler.USER_NOT_FOUND);
+				throw new PurpleException("Error while sign up", ErrorHandler.EMAIL_NOT_UNIQUE);
 			try {
 				orgService.save(org);
-				userService.save(user);
+				userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.SIGN_UP_FAILED);
 			}
