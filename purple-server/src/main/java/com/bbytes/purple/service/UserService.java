@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.repository.UserRepository;
 
 @Service
@@ -57,6 +58,7 @@ public class UserService extends AbstractService<User, String> {
 		 User user = new User(name, email);
 		 user.setOrganization(org);
 		 user.setPassword(passwordHashService.encodePassword(password));
+		 user.setUserRole(UserRole.ADMIN_USER_ROLE);
 		 return userRepository.save(user);
 	}
 
