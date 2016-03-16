@@ -14,16 +14,16 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
                 }
             }).success(function (response, status, headers, config) {
 
-               /* this.userName = userName;
+                this.userName = userName;
 
           
                 var result = {};
 
                 result.data = response.data;
                 result.headers = headers();
-                result.success = response.success;*/
+                result.success = response.success;
 
-                deferred.resolve(response);
+                deferred.resolve(result);
             }).error(function () {
                 // Something went wrong.
                 deferred.reject({'success': false, 'msg': 'Oops! Something went wrong. Please try again later.'});

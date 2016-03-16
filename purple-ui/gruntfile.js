@@ -212,7 +212,7 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     // Dev build
-    grunt.registerTask('default', ['config:dev','shell:startApiServer','clean', 'concat', 'bower_concat', 'copy', 'html2js', 'connect', 'watch']);
+    grunt.registerTask('default', ['config:dev','clean', 'concat', 'bower_concat', 'copy', 'html2js', 'connect', 'watch']);
 
     // Production Build
     grunt.registerTask('prod', ['config:prod','clean', 'concat', 'bower_concat', 'copy', 'html2js', 'ngAnnotate:app', 'uglify', 'cssmin', 'cachebreaker']);
