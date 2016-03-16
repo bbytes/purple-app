@@ -20,8 +20,8 @@
         <!-- Styles -->
         <link rel="stylesheet" type="text/css" href="assets/css/_bower.css" />
         <link rel="stylesheet" type="text/css" href="assets/css/styles.css" />
-        <link rel="stylesheet" type="text/css" href="assets/css/calenda.css" />
-
+        <link rel="stylesheet" type="text/css" href="assets/css/calendar.css" />
+        
         <!-- fonts -->
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
         <!--radio button-->  
@@ -44,6 +44,9 @@
         <script src="app/filters/filters.js"></script>
         <script src="app/directives/directives.js"></script>
         <script src="app/partials/partials.js"></script>
+        <script src="app/bootstrap.min.js"></script>
+        <script src="app/sidebar_menu.js"></script>
+        <script src="app/jquery-1.11.2.min.js"></script>
         <!-- jquery -->
        
     
@@ -52,7 +55,8 @@
     <script src="app/index.js"></script>
    
     </head>
-    <body id="main">
+    <body>    
+        <toaster-container></toaster-container>
         <div ui-view></div>
 
   <!---radio button -->
@@ -61,6 +65,5 @@
     <script src="app/main.js"></script>
     <!-- calendar-->
     <script src="app/calendar.js"></script>
-    
     </body>
 </html>
