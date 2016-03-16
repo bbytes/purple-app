@@ -721,7 +721,6 @@ a{
     text-decoration: none !important;
 }
 
-
 /*side bar*/
  #wrapper {
     padding-left: 0;
@@ -970,6 +969,7 @@ a{
     right: 16px;
     z-index: 10;
 }
+
 .dropdown-menu > li > a:hover {
      background: #7665a0;
      color:#fff; 

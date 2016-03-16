@@ -16,7 +16,7 @@ rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupSer
          if (response.success == true) {
                 
                 
-                $state.go('home');
+                $state.go('user-mgr');
                 
             } else {
                 //Login failed. Showing error notification

@@ -10,33 +10,33 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
 
         // Calling login service
         loginService.login($scope.username, $scope.password).then(function (response) {
-         if (response.headers["x-auth-token"]) {
+        	 if (response.headers["x-auth-token"]) {
                 
-                $rootScope.loggedStatus = true;
+               $rootScope.loggedStatus = true;
                 $rootScope.loggedIn = $scope.username;
-                $rootScope.userName = response.data.name;
+               // $rootScope.userName = response.data.name;
                 $rootScope.authToken = response.headers["x-auth-token"];
-                $rootScope.permissions = response.data.permissions;
+               // $rootScope.permissions = response.data.permissions;
 
                 var userInfo = {
                     accessToken: response.headers["x-auth-token"],
                     id: $rootScope.loggedIn,
                     name: $rootScope.userName,
-                    userRoles: response.data.userRoles,
-                    permissions: response.data.permissions,
+                   // userRoles: response.data.userRoles,
+                   // permissions: response.data.permissions,
                     viewMode:$rootScope.viewMode
                 };
                 
-                $sessionStorage.userInfo = userInfo;
+              //  $sessionStorage.userInfo = userInfo;
 
                 // Login successful, set user locale and Redirect to home page
-                if(response.data.locale){
+             /*   if(response.data.locale){
                     appLocaleService.setLocale(response.data.locale);
                 }
-
+*/
                 $rootScope.showWelcomeMessage = true;
                 
-                $state.go('home');
+                $state.go('status');
                 
             } else {
                 //Login failed. Showing error notification

@@ -62,6 +62,14 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$ht
                 }
               
             }
+        }).state('logout', {
+            url: '/logout',
+            views: {
+                '': {
+                     controller: 'loginCtrl'
+                }
+              
+            }
         }).state('home-page', {
             url: '/home-page',
             views: {
@@ -152,7 +160,7 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$ht
             views: {
                 '': {
                     templateUrl: 'app/partials/user-mgr.html',
-                     controller: 'user-mgrCtrl',
+                     controller: 'adminCtrl',
                  },
                 'header@home': {
                     templateUrl: 'app/partials/home-header.html'
@@ -194,5 +202,5 @@ rootApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$ht
             controller: 'adminUsersCtrl'
         });
 
-        $httpProvider.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+       // $httpProvider.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 }]);

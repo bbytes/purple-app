@@ -50,7 +50,6 @@ public class SignUpController {
 		User user = new User(orgId, signUpRequestDTO.getEmail());
 		user.setEmail(signUpRequestDTO.getEmail());
 		user.setPassword(signUpRequestDTO.getPassword());
-		user.setUserRole(UserRole.ADMIN_USER_ROLE);
 		user.setOrganization(organization);
 
 		registrationService.signUp(organization, user);

@@ -33,8 +33,8 @@
    <div class="bottom-nav">
     <div class="wrapper">
      <div class="current-page">
-      <h5><a href="/status">users</a></h5>
-      <h5><a href="#/"  class="current-active">projects</a></h5>
+      <h5><a href="#" class="current-active">users</a></h5>
+      <h5><a href="#/"  >projects</a></h5>
       <h5><a href="/settings">settings</a></h5>
      </div>
      </div>
@@ -47,25 +47,30 @@
     </div>
 
 <div class="create-project">
+ <form  name="Form"  novalidate>
  <div class="row">
   <div class="col-md-6">
+   
     <div class="form-group">
       <label for="comment" class="settings">EMAIL</label>
-      <input type="text" class="form-control">
+      <input type="text" ng-model="user.email" class="form-control">
     </div>
   </div>
 
   <div class="col-md-6">
     <div class="form-group">
       <label for="comment" class="settings">USERNAME</label>
-      <input type="text" class="form-control">
+      <input type="text" ng-model="user.username" class="form-control">
     </div>
     </div>
   </div>
+    <button type="button" class="btn btn-default create" ng-click="invite(Form.$valid)">send invite</button>
+    </form>
 </div>
  
 
-  <button type="button" class="btn btn-default create">send invite</button>
+
+  
 
 <div class="col-md-12">
  <div class="row">
