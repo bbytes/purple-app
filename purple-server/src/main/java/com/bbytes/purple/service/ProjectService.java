@@ -24,4 +24,14 @@ public class ProjectService extends AbstractService<Project, String> {
 	public Project findByProjectName(String name) {
 		return projectRepository.findOne(name);
 	}
+
+	public boolean projectNameExist(String name) {
+		boolean state = projectRepository.findOneByProjectName(name) == null ? false : true;
+		return state;
+	}
+
+	public boolean projectIdExist(String projectId) {
+		boolean state = projectRepository.findOne(projectId) == null ? false : true;
+		return state;
+	}
 }
