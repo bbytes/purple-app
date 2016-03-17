@@ -4,6 +4,8 @@ public class SuccessHandler {
 
 	public static final String SIGN_UP_SUCCESS = "sign_up_success";
 
+	public static final String RESET_PASSWORD = "reset_password";
+
 	public static final String ADD_USER_SUCCESS = "add_users_success";
 
 	public static final String DELETE_USER_SUCCESS = "delete_user_success";
