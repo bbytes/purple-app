@@ -20,6 +20,8 @@ public class ErrorHandler {
 
 	public static final String PROJECT_NOT_FOUND = "project_not_found";
 
+	public static final String STATUS_NOT_FOUND = "status_not_found";
+
 	public static final String ADD_USER_FAILED = "add_user_failed";
 
 	public static final String DELETE_USER_FAILED = "delete_user_failed";
@@ -33,6 +35,14 @@ public class ErrorHandler {
 	public static final String GET_PROJECT_FAILED = "get_project_failed";
 
 	public static final String UPDATE_PROJECT_FAILED = "update_project_failed";
+
+	public static final String ADD_STATUS_FAILED = "add_status_failed";
+
+	public static final String DELETE_STATUS_FAILED = "delete_status_failed";
+
+	public static final String GET_STATUS_FAILED = "get_status_failed";
+
+	public static final String UPDATE_STATUS_FAILED = "update_status_failed";
 
 	public static final String PASSWORD_INCORRECT = "bad_credentials";
 
