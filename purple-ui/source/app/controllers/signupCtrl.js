@@ -1,6 +1,7 @@
 rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupService,appNotifyService) {
   
-
+    $rootScope.bodyClass = 'body-standalone';
+    
     $scope.submitSignUp = function (isValid) {
 
         // Validating login form

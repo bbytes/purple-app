@@ -1,5 +1,7 @@
 rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginService,appNotifyService) {
 
+    $rootScope.bodyClass = 'body-standalone';
+    
     $scope.submitLoginForm = function (isValid) {
    console.log("message");
         // Validating login form

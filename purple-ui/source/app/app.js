@@ -14,6 +14,7 @@ rootApp.run(['$rootScope', '$state', function ($rootScope, $state) {
         $rootScope.baseUrl = 'http://localhost:9999/';
      
         $rootScope.currentState = '';
+        $rootScope.bodyClass = '';
 
         $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
             $rootScope.currentState = to.name;
