@@ -21,6 +21,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+/**
+ * Test cases for Admin Controller
+ * 
+ * @author akshay
+ *
+ */
 public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 	Organization org;
@@ -73,7 +79,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 	@Test
 	public void testAddUserDueToSameEmail() throws Exception {
-		
+
 		UserDTO requestUserDTO = new UserDTO();
 		requestUserDTO.setUserName("user1");
 		requestUserDTO.setEmail("test@gmail.com");
@@ -84,17 +90,17 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestUserDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8).content(requestJson))
-				.andExpect(status().is5xxServerError()).andDo(print())
-				.andExpect(content().string(containsString("{\"success\":false")));
+		mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is5xxServerError())
+				.andDo(print()).andExpect(content().string(containsString("{\"success\":false")));
 	}
-	
+
 	@Test
 	public void testAddUserFailed() throws Exception {
-		
+
 		TenancyContextHolder.setTenant(org.getOrgId());
 		organizationRepository.deleteAll();
-		
+
 		UserDTO requestUserDTO = new UserDTO();
 		requestUserDTO.setUserName("user1");
 		requestUserDTO.setEmail("aaa@gmail.com");
@@ -105,8 +111,8 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestUserDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8).content(requestJson))
-				.andExpect(status().is5xxServerError()).andDo(print())
-				.andExpect(content().string(containsString("{\"success\":false")));
+		mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is5xxServerError())
+				.andDo(print()).andExpect(content().string(containsString("{\"success\":false")));
 	}
 }

@@ -19,6 +19,12 @@ import com.bbytes.purple.service.SettingService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.SuccessHandler;
 
+/**
+ * Setting Controller
+ * 
+ * @author akshay
+ *
+ */
 @RestController
 public class SettingController {
 
@@ -30,6 +36,15 @@ public class SettingController {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * The reset password method is used to reset password for admin as well as
+	 * user
+	 * 
+	 * @param passwordDTO
+	 * @param request
+	 * @return
+	 * @throws PurpleException
+	 */
 	@RequestMapping(value = "/api/v1/user/setting/password", method = RequestMethod.POST)
 	public RestResponse resetPassword(@RequestBody PasswordDTO passwordDTO, HttpServletRequest request)
 			throws PurpleException {
@@ -44,8 +59,16 @@ public class SettingController {
 		return userReponse;
 	}
 
+	/**
+	 * The update timezone method is used to update timezone for users
+	 * 
+	 * @param timeZone
+	 * @param request
+	 * @return
+	 * @throws PurpleException
+	 */
 	@RequestMapping(value = "/api/v1/admin/setting/timezone", method = RequestMethod.POST)
-	public RestResponse resetPassword(@RequestParam String timeZone, HttpServletRequest request)
+	public RestResponse updateTimeZone(@RequestParam String timeZone, HttpServletRequest request)
 			throws PurpleException {
 
 		User user = userService.getRequestUser(request);

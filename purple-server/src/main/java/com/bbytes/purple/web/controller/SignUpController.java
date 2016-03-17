@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
-import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;

@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 import lombok.Data;
 
+/**
+ * Password DTO Object
+ * 
+ * @author akshay
+ *
+ */
 @Data
 public class PasswordDTO implements Serializable {
 

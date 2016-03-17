@@ -2,8 +2,6 @@ package com.bbytes.purple.web.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,12 @@ import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.utils.SuccessHandler;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
+/**
+ * Admin Controller
+ * 
+ * @author akshay
+ *
+ */
 @RestController
 public class AdminController {
 

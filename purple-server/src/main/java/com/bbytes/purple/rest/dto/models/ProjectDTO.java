@@ -7,15 +7,21 @@ import com.bbytes.purple.domain.User;
 
 import lombok.Data;
 
+/**
+ * Project DTO Object
+ * 
+ * @author akshay
+ *
+ */
 @Data
-public class ProjectDTO implements Serializable{
+public class ProjectDTO implements Serializable {
 
 	private static final long serialVersionUID = -4283248621429252655L;
-	
+
 	private String projectName;
-	
+
 	private String timePreference;
-	
+
 	private List<User> users;
 
 }

@@ -16,6 +16,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+/**
+ * Test Cases for Sign up controller
+ * 
+ * @author akshay
+ *
+ */
 public class TestSignUpController extends PurpleWebBaseApplicationTests {
 
 	@Test
@@ -25,17 +31,17 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 
 	@Test
 	public void testSignUpFailedDueToDuplicateName() throws Exception {
-		
+
 		String orgName = "testOrgSignUp";
 		TenancyContextHolder.setTenant(orgName);
 		organizationService.deleteAll();
-	
+
 		SignUpRequestDTO requestDTO = new SignUpRequestDTO();
 		requestDTO.setBusinessArea("IT");
 		requestDTO.setEmail("test@anc.com");
 		requestDTO.setPassword("Test123");
 		requestDTO.setOrgName(orgName);
-		
+
 		organizationService.save(new Organization(orgName, orgName));
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -48,7 +54,6 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":false")));
 	}
 
-	
 	@Test
 	public void testSignUpPasses() throws Exception {
 
