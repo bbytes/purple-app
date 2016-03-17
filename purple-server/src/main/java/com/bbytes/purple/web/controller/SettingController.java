@@ -28,7 +28,7 @@ import com.bbytes.purple.utils.SuccessHandler;
 @RestController
 public class SettingController {
 
-	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SettingController.class);
 
 	@Autowired
 	private SettingService settingService;
