@@ -80,13 +80,4 @@ public class UserService extends AbstractService<User, String> {
 
 		return false;
 	}
-
-	public User getRequestUser(HttpServletRequest request) {
-		if (request == null || request.getHeader(GlobalConstants.USER_EMAIL) == null)
-			return null;
-
-		String email = request.getHeader(GlobalConstants.USER_EMAIL);
-		User user = userRepository.findOneByEmail(email);
-		return user;
-	}
 }
