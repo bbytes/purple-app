@@ -1,7 +1,5 @@
 package com.bbytes.purple.web.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +44,10 @@ public class SettingController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/user/setting/password", method = RequestMethod.POST)
-	public RestResponse resetPassword(@RequestBody PasswordDTO passwordDTO, HttpServletRequest request)
-			throws PurpleException {
+	public RestResponse resetPassword(@RequestBody PasswordDTO passwordDTO) throws PurpleException {
 
 		// we assume angular side will take care for password validation
-		User user = userService.getRequestUser(request);
+		User user = userService.getLoggedinUser();
 		settingService.resetPassword(passwordDTO, user);
 
 		logger.debug("User with email  '" + user.getEmail() + "' is reset password successfully");
@@ -68,10 +65,9 @@ public class SettingController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/admin/setting/timezone", method = RequestMethod.POST)
-	public RestResponse updateTimeZone(@RequestParam String timeZone, HttpServletRequest request)
-			throws PurpleException {
+	public RestResponse updateTimeZone(@RequestParam String timeZone) throws PurpleException {
 
-		User user = userService.getRequestUser(request);
+		User user = userService.getLoggedinUser();
 		settingService.updateTimeZone(timeZone, user);
 
 		logger.debug(timeZone + " is updated successfully");

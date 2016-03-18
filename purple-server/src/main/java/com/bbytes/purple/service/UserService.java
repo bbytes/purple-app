@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Organization;
@@ -79,5 +80,16 @@ public class UserService extends AbstractService<User, String> {
 		}
 
 		return false;
+	}
+
+	/**
+	 * This method will return current logged in User from the JWT Token
+	 * 
+	 * @return
+	 */
+	public User getLoggedinUser() {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = getUserByEmail(email);
+		return user;
 	}
 }
