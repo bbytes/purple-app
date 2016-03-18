@@ -3,6 +3,7 @@ package com.bbytes.purple.web.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +32,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 	Organization org;
-	User adminUser;
+	User adminUser, normalUser, normalUser1;
 
 	@Before
 	public void setUp() {
@@ -163,4 +164,32 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 				xauthToken)).andExpect(status().is5xxServerError()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":false")));
 	}
+
+	// Test cases for get all users
+
+	@Test
+	public void testGetAllUsersFailed() throws Exception {
+
+		mockMvc.perform(get("/api/v1/admin/user")).andExpect(status().is4xxClientError()).andDo(print());
+
+	}
+
+	@Test
+	public void testGetAllUserPasses() throws Exception {
+
+		normalUser = new User("normal-user", "normal@gmail.com");
+		normalUser.setOrganization(org);
+		userService.save(normalUser);
+
+		normalUser1 = new User("normal-user2", "normal2@gmail.com");
+		normalUser1.setOrganization(org);
+		userService.save(normalUser1);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/admin/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
+
 }
