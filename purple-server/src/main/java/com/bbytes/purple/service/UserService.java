@@ -88,7 +88,7 @@ public class UserService extends AbstractService<User, String> {
 	 * @return
 	 */
 	public User getLoggedinUser() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		final String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = getUserByEmail(email);
 		return user;
 	}

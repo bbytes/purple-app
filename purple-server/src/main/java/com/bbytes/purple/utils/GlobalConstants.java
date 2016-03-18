@@ -10,5 +10,4 @@ public class GlobalConstants {
 	
 	public static final String URL_AUTH_TOKEN = "token";
 
-	public static final String USER_EMAIL = "email";
 }
