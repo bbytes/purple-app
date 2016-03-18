@@ -21,6 +21,8 @@ public class ErrorHandler {
 	public static final String PROJECT_NOT_FOUND = "project_not_found";
 
 	public static final String STATUS_NOT_FOUND = "status_not_found";
+	
+	public static final String COMMENT_NOT_FOUND = "comment_not_found";
 
 	public static final String ADD_USER_FAILED = "add_user_failed";
 
@@ -53,6 +55,10 @@ public class ErrorHandler {
 	public static final String EMAIL_NOT_UNIQUE = "email_not_unique";
 
 	public static final String SERVER_ERROR = "server_error";
+	
+	public static final String ADD_COMMENT_FAILED= "add_comment_failed";
+	
+	public static final String UPDATE_COMMENT_FAILED= "update_comment_failed";
 
 	public static String resolveAuthError(AuthenticationException authEx) {
 		try {

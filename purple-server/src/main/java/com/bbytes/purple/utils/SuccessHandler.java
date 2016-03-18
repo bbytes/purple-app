@@ -25,4 +25,13 @@ public class SuccessHandler {
 	public static final String DELETE_STATUS_SUCCESS = "delete_status_success";
 
 	public static final String UPDATE_STATUS_SUCCESS = "update_status_success";
+	
+	public static final String ADD_COMMENT_SUCCESS="add_comment_success";
+	
+	public static final String DELETE_COMMENT_SUCCESS="delete_comment_success";
+	
+	public static final String READ_COMMENT_SUCCESS="read_comment_success";
+	
+	public static final String UPDATE_COMMENT_SUCCESS="update_comment_success";
+
 }
