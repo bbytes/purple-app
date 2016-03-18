@@ -40,12 +40,12 @@ public class AdminService {
 
 	public void deleteUser(String email) throws PurpleException {
 
-		if (email != null && !email.isEmpty()) {
-			if (userService.userEmailExist(email) || tenantResolverService.emailExist(email))
+		if (!email.equals("null")) {
+			if (!userService.userEmailExist(email))
 				throw new PurpleException("Error while deleting user", ErrorHandler.USER_NOT_FOUND);
 			try {
-				User user = userService.getUserByEmail(email);
-				userService.delete(user);
+				User deleteuser = userService.getUserByEmail(email);
+				userService.delete(deleteuser);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_USER_FAILED);
 			}

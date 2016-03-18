@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
@@ -29,8 +30,12 @@ public class SignUpController {
 	@Autowired
 	private RegistrationService registrationService;
 
+	@Autowired
+	protected TokenAuthenticationProvider tokenAuthenticationProvider;
+
 	/**
 	 * The Sign up method is used to register organization and user
+	 * 
 	 * @param signUpRequestDTO
 	 * @return
 	 * @throws PurpleException
@@ -38,7 +43,7 @@ public class SignUpController {
 	@RequestMapping(value = "/auth/signup", method = RequestMethod.POST)
 	public RestResponse signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) throws PurpleException {
 
-		final String SIGN_UP_SUCCESS_MSG = "Successfully signed up";
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(signUpRequestDTO.getEmail(), 1);
 		// we assume the angular layer will do empty/null org name , user email
 		// etc.. validation
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
@@ -53,9 +58,9 @@ public class SignUpController {
 
 		registrationService.signUp(organization, user);
 
-		logger.debug("User with email  '" +  user.getEmail() + "' signed up successfully");
-		
-		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, SIGN_UP_SUCCESS_MSG,
+		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
+
+		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, xauthToken,
 				SuccessHandler.SIGN_UP_SUCCESS);
 
 		return signUpResponse;

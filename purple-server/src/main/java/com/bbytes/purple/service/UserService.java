@@ -1,7 +1,5 @@
 package com.bbytes.purple.service;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,8 +9,6 @@ import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.repository.UserRepository;
-import com.bbytes.purple.utils.GlobalConstants;
-import com.bbytes.purple.utils.TenancyContextHolder;
 
 @Service
 public class UserService extends AbstractService<User, String> {
@@ -83,7 +79,18 @@ public class UserService extends AbstractService<User, String> {
 	}
 
 	/**
-	 * This method will return current logged in User from the JWT Token
+	 * This method will return current logged in User's email address from the
+	 * JWT Token
+	 * 
+	 * @return
+	 */
+	public String getLoggedUserEmail() {
+		final String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		return email;
+	}
+
+	/**
+	 * This method will return current logged in User Object from the JWT Token
 	 * 
 	 * @return
 	 */

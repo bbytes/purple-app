@@ -70,7 +70,7 @@ public class AdminController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/user/delete/{email}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/v1/admin/user/delete/{email:.+}", method = RequestMethod.DELETE)
 	public RestResponse deleteUser(@PathVariable("email") String email) throws PurpleException {
 
 		final String DELETE_USER_SUCCESS_MSG = "Successfully deleted user";

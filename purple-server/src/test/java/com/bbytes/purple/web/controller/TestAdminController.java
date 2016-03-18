@@ -2,6 +2,7 @@ package com.bbytes.purple.web.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,6 +52,8 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		userService.save(adminUser);
 		userService.updatePassword("test123", adminUser);
 	}
+
+	// Test cases for add users
 
 	@Test
 	public void testAddUsersFailed() throws Exception {
@@ -114,5 +117,50 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is5xxServerError())
 				.andDo(print()).andExpect(content().string(containsString("{\"success\":false")));
+	}
+
+	// Test cases for delete user
+
+	@Test
+	public void testDeleteUsersFailed() throws Exception {
+
+		String email = "abc@gmail";
+		mockMvc.perform(post("/api/v1/admin/user/delete/{email}", email)).andExpect(status().is4xxClientError())
+				.andDo(print());
+
+	}
+
+	@Test
+	public void testDeleteUserPasses() throws Exception {
+
+		String email = "test@gmail.com";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(delete("/api/v1/admin/user/delete/{email:.+}", email).header(GlobalConstants.HEADER_AUTH_TOKEN,
+				xauthToken)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
+
+	@Test
+	public void testDeleteUserFailed() throws Exception {
+
+		String email = "abb@gmail.com";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(delete("/api/v1/admin/user/delete/{email:.+}", email).header(GlobalConstants.HEADER_AUTH_TOKEN,
+				xauthToken)).andExpect(status().is5xxServerError()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":false")));
+	}
+
+	@Test
+	public void testDeleteNullUser() throws Exception {
+
+		String email = "null";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(delete("/api/v1/admin/user/delete/{email:.+}", email).header(GlobalConstants.HEADER_AUTH_TOKEN,
+				xauthToken)).andExpect(status().is5xxServerError()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":false")));
 	}
 }
