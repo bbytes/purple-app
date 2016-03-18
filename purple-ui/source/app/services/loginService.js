@@ -38,7 +38,7 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
 
             $http({
                 method: 'GET',
-                url:  '/auth/logout',
+                url:  $rootScope.baseUrl+'auth/logout',
                 cache: false
             }).success(function (response, status, headers) {
 
