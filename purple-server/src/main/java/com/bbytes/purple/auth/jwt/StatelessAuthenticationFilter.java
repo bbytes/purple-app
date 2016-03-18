@@ -39,7 +39,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
 			filterChain.doFilter(request, response); // skip auth and continue
 			return;
 		}
-		
+
 		// if the url is not part of url pattern to skip then we check auth
 		try {
 			MultiTenantAuthenticationToken authentication = (MultiTenantAuthenticationToken) tokenAuthenticationService
