@@ -1,4 +1,4 @@
-rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginService,appNotifyService) {
+rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginService,appNotifyService,$sessionStorage,$window) {
 
     $rootScope.bodyClass = 'body-standalone';
     
@@ -13,23 +13,23 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
         // Calling login service
         loginService.login($scope.username, $scope.password).then(function (response) {
         	 if (response.headers["x-auth-token"]) {
-                
+        	$window.sessionStorage.token = response.headers["x-auth-token"];
                $rootScope.loggedStatus = true;
                 $rootScope.loggedIn = $scope.username;
-               // $rootScope.userName = response.data.name;
+              // $rootScope.userName = response.data.name;
                 $rootScope.authToken = response.headers["x-auth-token"];
                // $rootScope.permissions = response.data.permissions;
 
                 var userInfo = {
-                    accessToken: response.headers["x-auth-token"],
+                    authToken: response.headers["x-auth-token"],
                     id: $rootScope.loggedIn,
-                    name: $rootScope.userName,
+                    //name: $rootScope.userName,
                    // userRoles: response.data.userRoles,
                    // permissions: response.data.permissions,
-                    viewMode:$rootScope.viewMode
+                   // viewMode:$rootScope.viewMode
                 };
                 
-              //  $sessionStorage.userInfo = userInfo;
+              $sessionStorage.userInfo = userInfo;
 
                 // Login successful, set user locale and Redirect to home page
              /*   if(response.data.locale){
@@ -38,9 +38,11 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
 */
                 $rootScope.showWelcomeMessage = true;
                 
-                $state.go('status');
+                $state.go('user-mgr');
                 
             } else {
+            	  // Erase the token if the user fails to log in
+            	 delete $window.sessionStorage.token;
                 //Login failed. Showing error notification
                 appNotifyService.error(response.data, 'Login Failed.');
             }
@@ -50,4 +52,12 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
             appNotifyService.error(error.msg, 'Login Failed.');
         });
     };
+    
+    $scope.logout = function() {
+    	loginService.logout().then(function (response) {
+			
+				$location.path("login");
+			
+		});
+	};
 });
