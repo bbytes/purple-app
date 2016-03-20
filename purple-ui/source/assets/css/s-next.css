@@ -107,24 +107,7 @@ body.hold-transition .main-header .logo {
     margin-left: auto;
     padding: 15px;
 }
-
-/* H1 - H6 font */
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-    font-family: 微软雅黑, 宋体, 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
+fon
 /* General Links */
 
 a {
@@ -148,7 +131,7 @@ a:focus {
 
 .page-header > small {
     display: block;
-    margin-top: 5px;
+    margin-top: 5px;fon
     color: #666;
 }
 
@@ -229,7 +212,6 @@ a:focus {
 }
 
 .main-header .sidebar-toggle {
-    font-family: fontAwesome, 微软雅黑, 宋体, 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     float: left;
     padding: 15px;
     background-color: transparent;
@@ -273,7 +255,6 @@ a:focus {
 }
 
 .main-header .logo {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 20px;
     font-weight: 300;
     line-height: 50px;
