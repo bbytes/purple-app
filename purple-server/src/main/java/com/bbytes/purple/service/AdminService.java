@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.utils.ErrorHandler;
 
@@ -57,7 +58,7 @@ public class AdminService {
 
 		List<User> users = new ArrayList<User>();
 		try {
-			users = userService.findAll();
+			users = userService.getUserByRoleName(UserRole.NORMAL_USER_ROLE);
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
 		}

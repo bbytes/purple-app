@@ -1,5 +1,7 @@
 package com.bbytes.purple.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +33,10 @@ public class UserService extends AbstractService<User, String> {
 
 	public User getUserById(String id) {
 		return userRepository.findOne(id);
+	}
+
+	public List<User> getUserByRoleName(UserRole role) {
+		return userRepository.findByUserRole(role);
 	}
 
 	public User getUserByEmail(String email) {

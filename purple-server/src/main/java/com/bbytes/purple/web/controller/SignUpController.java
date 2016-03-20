@@ -43,7 +43,6 @@ public class SignUpController {
 	@RequestMapping(value = "/auth/signup", method = RequestMethod.POST)
 	public RestResponse signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) throws PurpleException {
 
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(signUpRequestDTO.getEmail(), 1);
 		// we assume the angular layer will do empty/null org name , user email
 		// etc.. validation
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
@@ -57,7 +56,8 @@ public class SignUpController {
 		user.setOrganization(organization);
 
 		registrationService.signUp(organization, user);
-
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(signUpRequestDTO.getEmail(), 1);
+		
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 
 		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, xauthToken,
