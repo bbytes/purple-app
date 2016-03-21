@@ -12,12 +12,16 @@ import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.StatusRepository;
+import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.utils.ErrorHandler;
 
 @Service
 public class StatusService extends AbstractService<Status, String> {
 
 	private StatusRepository statusRepository;
+
+	@Autowired
+	private ProjectService projectService;
 
 	@Autowired
 	public StatusService(StatusRepository statusRepository) {
@@ -47,31 +51,38 @@ public class StatusService extends AbstractService<Status, String> {
 		return state;
 	}
 
-	public Status create(Status status) throws PurpleException {
+	public Status create(StatusDTO status, User user) throws PurpleException {
 		Status savedStatus = null;
-		if (status != null) {
-			if (status.getProject().getProjectId() == null && status.getProject().getProjectId().isEmpty())
-				throw new PurpleException("Error while adding status", ErrorHandler.STATUS_NOT_FOUND);
+		if (status != null && status.getProjectId() != null && !status.getProjectId().isEmpty()) {
+			if (!projectService.projectIdExist(status.getProjectId()))
+				throw new PurpleException("Error while adding status", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
-				savedStatus = statusRepository.save(status);
+				Status addStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(),
+						new DateTime());
+				Project project = projectService.findByProjectId(status.getProjectId());
+				addStatus.setProject(project);
+				addStatus.setUser(user);
+				savedStatus = statusRepository.save(addStatus);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_STATUS_FAILED);
 			}
-		}
+		} else
+			throw new PurpleException("Can not add status with empty project", ErrorHandler.PROJECT_NOT_FOUND);
 		return savedStatus;
 	}
 
 	public Status getStatus(String statusid) throws PurpleException {
 		Status getStatus = null;
-		if (statusid != null && !statusid.isEmpty()) {
-			if (!statusRepository.findOne(statusid).equals(statusid))
+		if (!statusid.equals("null")) {
+			if (!statusIdExist(statusid))
 				throw new PurpleException("Error while getting status", ErrorHandler.STATUS_NOT_FOUND);
 			try {
 				getStatus = statusRepository.findOne(statusid);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
 			}
-		}
+		} else
+			throw new PurpleException("Can not find with empty status", ErrorHandler.STATUS_NOT_FOUND);
 		return getStatus;
 	}
 
@@ -87,8 +98,8 @@ public class StatusService extends AbstractService<Status, String> {
 	}
 
 	public void deleteStatus(String statusid) throws PurpleException {
-		if (statusid != null && !statusid.isEmpty()) {
-			if (!statusRepository.findOne(statusid).equals(statusid))
+		if (!statusid.equals("null")) {
+			if (!statusIdExist(statusid))
 				throw new PurpleException("Error while deleting status", ErrorHandler.STATUS_NOT_FOUND);
 			try {
 				Status status = statusRepository.findOne(statusid);
@@ -100,15 +111,14 @@ public class StatusService extends AbstractService<Status, String> {
 			throw new PurpleException("Can not delete empty status", ErrorHandler.STATUS_NOT_FOUND);
 	}
 
-	public Status updateStatus(String statusid, Status status) throws PurpleException {
+	public Status updateStatus(String statusId, StatusDTO status, User user) throws PurpleException {
 
 		Status updatedStatus = null;
-		if (statusid != null && !statusid.isEmpty() && status != null) {
-			if (statusIdExist(statusid))
-				throw new PurpleException("Error while updating status", ErrorHandler.STATUS_NOT_FOUND);
+		if (!statusId.equals("null")) {
+			if (!statusIdExist(statusId))
+				throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
-				Status updateStatus = statusRepository.findOne(statusid);
-				updateStatus.setProject(status.getProject());
+				Status updateStatus = getStatusbyId(statusId);
 				updateStatus.setWorkedOn(status.getWorkedOn());
 				updateStatus.setWorkingOn(status.getWorkingOn());
 				updateStatus.setBlockers(status.getBlockers());
@@ -116,7 +126,9 @@ public class StatusService extends AbstractService<Status, String> {
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_PROJECT_FAILED);
 			}
-		}
+		} else
+			throw new PurpleException("Can not find empty project", ErrorHandler.PROJECT_NOT_FOUND);
 		return updatedStatus;
+
 	}
 }

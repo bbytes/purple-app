@@ -2,7 +2,6 @@ package com.bbytes.purple.web.controller;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.domain.Status;
+import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.service.StatusService;
+import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -33,6 +34,9 @@ public class StatusController {
 	@Autowired
 	private StatusService statusService;
 
+	@Autowired
+	private UserService userService;
+
 	/**
 	 * The add status method is used to save the status for project
 	 * 
@@ -43,17 +47,12 @@ public class StatusController {
 	@RequestMapping(value = "/api/v1/status/add", method = RequestMethod.POST)
 	public RestResponse addStatus(@RequestBody StatusDTO statusDTO) throws PurpleException {
 
-		// add Spring context holder to get user email by this you can get user
-		// details
-		// User user = userService.getRequestUser(request);
-		Status addStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
-				new DateTime());
-		addStatus.setProject(statusDTO.getProject());
-		// addStatus.setUser(user);
+		// We will get current logged in user
+		User user = userService.getLoggedinUser();
 
-		Status status = statusService.create(addStatus);
+		Status status = statusService.create(statusDTO, user);
 
-		logger.debug("Status for project  '" + statusDTO.getProject().getProjectName() + "' is added successfully");
+		logger.debug("Status for project  '" + status.getProject().getProjectName() + "' is added successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, status, SuccessHandler.ADD_STATUS_SUCCESS);
 
 		return statusReponse;
@@ -126,15 +125,12 @@ public class StatusController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/status/update/{statusid}", method = RequestMethod.PUT)
-	public RestResponse updateStatus(@PathVariable("statusid") String statusId, StatusDTO statusDTO)
+	public RestResponse updateStatus(@PathVariable("statusid") String statusId, @RequestBody StatusDTO statusDTO)
 			throws PurpleException {
-		Status updateStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
-				new DateTime());
-		updateStatus.setProject(statusDTO.getProject());
-		// updateStatus.setUser(projectDTO.getUsers()); // once secuirty context
-		// holder get implemented
 
-		Status status = statusService.updateStatus(statusId, updateStatus);
+		User user = userService.getLoggedinUser();
+
+		Status status = statusService.updateStatus(statusId, statusDTO, user);
 
 		logger.debug("Projects are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, status,
