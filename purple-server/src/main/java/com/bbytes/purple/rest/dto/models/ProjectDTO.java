@@ -1,9 +1,8 @@
 package com.bbytes.purple.rest.dto.models;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
-
-import com.bbytes.purple.domain.User;
 
 import lombok.Data;
 
@@ -22,6 +21,6 @@ public class ProjectDTO implements Serializable {
 
 	private String timePreference;
 
-	private List<User> users;
+	private List<String> users = Collections.<String> emptyList();
 
 }

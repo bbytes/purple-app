@@ -83,8 +83,8 @@ public class AdminService {
 
 	public void deleteProject(String projectId) throws PurpleException {
 
-		if (projectId != null && !projectId.isEmpty()) {
-			if (projectService.projectIdExist(projectId))
+		if (!projectId.equals("null")) {
+			if (!projectService.projectIdExist(projectId))
 				throw new PurpleException("Error while deleting project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				Project project = projectService.findByProjectId(projectId);
@@ -98,21 +98,33 @@ public class AdminService {
 
 	public List<Project> getAllProjects() throws PurpleException {
 
-		List<Project> Projects = new ArrayList<Project>();
+		List<Project> allProjects = new ArrayList<Project>();
 		try {
-			Projects = projectService.findAll();
+			allProjects = projectService.findAll();
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
 		}
+		return allProjects;
+	}
 
-		return Projects;
+	public Project getProject(String projectId) throws PurpleException {
+
+		Project project = null;
+		try {
+			project = projectService.findByProjectId(projectId);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
+		}
+		if (project == null)
+			throw new PurpleException("Error while getting project", ErrorHandler.PROJECT_NOT_FOUND);
+		return project;
 	}
 
 	public Project updateProject(String projectId, Project project) throws PurpleException {
 
 		Project updatedProject = null;
-		if (projectId != null && !projectId.isEmpty() && project != null) {
-			if (projectService.projectIdExist(projectId) || projectService.projectNameExist(project.getProjectName()))
+		if (!projectId.equals("null") && project != null) {
+			if (!projectService.projectIdExist(projectId) || projectService.projectNameExist(project.getProjectName()))
 				throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				Project updateProject = projectService.findByProjectId(projectId);
@@ -123,7 +135,8 @@ public class AdminService {
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_PROJECT_FAILED);
 			}
-		}
+		} else
+			throw new PurpleException("Can not find empty project", ErrorHandler.PROJECT_NOT_FOUND);
 		return updatedProject;
 	}
 }

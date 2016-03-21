@@ -1,5 +1,6 @@
 package com.bbytes.purple.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.OrganizationService;
+import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.SuccessHandler;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
@@ -39,6 +41,9 @@ public class AdminController {
 
 	@Autowired
 	private OrganizationService organizationService;
+
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * The add user method is used to add users into tenant
@@ -110,11 +115,15 @@ public class AdminController {
 	@RequestMapping(value = "/api/v1/admin/project/create", method = RequestMethod.POST)
 	public RestResponse createProject(@RequestBody ProjectDTO projectDTO) throws PurpleException {
 
+		// we assume angular layer will do empty checks for project
 		Organization org = organizationService.findByOrgId(TenancyContextHolder.getTenant());
 		Project addProject = new Project(projectDTO.getProjectName(), projectDTO.getTimePreference());
 		addProject.setOrganization(org);
-		addProject.setUser(projectDTO.getUsers());
-
+		List<User> usersTobeAdded = new ArrayList<User>();
+		for (String i : projectDTO.getUsers()) {
+			usersTobeAdded.add(userService.getUserByEmail(i));
+		}
+		addProject.setUser(usersTobeAdded);
 		Project project = adminService.createProject(addProject);
 
 		logger.debug("User with email  '" + projectDTO.getProjectName() + "' are added successfully");
@@ -140,7 +149,7 @@ public class AdminController {
 
 		logger.debug("Project with Id  '" + projectId + "' are deleted successfully");
 		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, DELETE_PROJECT_SUCCESS_MSG,
-				SuccessHandler.DELETE_USER_SUCCESS);
+				SuccessHandler.DELETE_PROJECT_SUCCESS);
 
 		return projectReponse;
 	}
@@ -157,7 +166,20 @@ public class AdminController {
 		List<Project> projects = adminService.getAllProjects();
 
 		logger.debug("Projects are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projects, SuccessHandler.GET_USER_SUCCESS);
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projects,
+				SuccessHandler.GET_PROJECT_SUCCESS);
+
+		return projectReponse;
+	}
+
+	@RequestMapping(value = "/api/v1/admin/project/{projectid}", method = RequestMethod.GET)
+	public RestResponse getProject(@PathVariable("projectid") String projectId) throws PurpleException {
+
+		Project project = adminService.getProject(projectId);
+
+		logger.debug("Projects are fetched successfully");
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, project,
+				SuccessHandler.GET_PROJECT_SUCCESS);
 
 		return projectReponse;
 	}
@@ -174,15 +196,21 @@ public class AdminController {
 	public RestResponse updateProject(@PathVariable("projectid") String projectId, @RequestBody ProjectDTO projectDTO)
 			throws PurpleException {
 
+		// we assume angular layer will do null checks for project object
 		Organization org = organizationService.findByOrgId(TenancyContextHolder.getTenant());
 		Project updateProject = new Project(projectDTO.getProjectName(), projectDTO.getTimePreference());
 		updateProject.setOrganization(org);
-		updateProject.setUser(projectDTO.getUsers());
+		List<User> usersTobeAdded = new ArrayList<User>();
+		for (String i : projectDTO.getUsers()) {
+			usersTobeAdded.add(userService.getUserByEmail(i));
+		}
+		updateProject.setUser(usersTobeAdded);
 
 		Project projects = adminService.updateProject(projectId, updateProject);
 
-		logger.debug("Projects are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projects, SuccessHandler.GET_USER_SUCCESS);
+		logger.debug("Projects are updated successfully");
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projects,
+				SuccessHandler.UPDATE_PROJECT_SUCCESS);
 
 		return projectReponse;
 	}
