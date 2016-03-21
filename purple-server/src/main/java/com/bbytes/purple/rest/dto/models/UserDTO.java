@@ -1,6 +1,7 @@
 package com.bbytes.purple.rest.dto.models;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.Data;
 
@@ -18,4 +19,9 @@ public class UserDTO implements Serializable {
 	private String email;
 
 	private String userName;
+	
+	private String status;
+	
+	private BaseDTO userRole;
+	
 }

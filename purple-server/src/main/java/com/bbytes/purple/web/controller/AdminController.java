@@ -2,6 +2,7 @@ package com.bbytes.purple.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.AdminService;
+import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.SuccessHandler;
@@ -44,6 +46,9 @@ public class AdminController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
 	/**
 	 * The add user method is used to add users into tenant
@@ -98,9 +103,9 @@ public class AdminController {
 	public RestResponse getUsers() throws PurpleException {
 
 		List<User> users = adminService.getAllUsers();
-
+		Map<String, Object> usersMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndUserStatusCount(users);
 		logger.debug("Users are fetched successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, users, SuccessHandler.GET_PROJECT_SUCCESS);
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, usersMap, SuccessHandler.GET_PROJECT_SUCCESS);
 
 		return userReponse;
 	}
