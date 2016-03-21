@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -17,13 +18,24 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.rest.dto.models.UserDTO;
+import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.TenantResolverService;
+import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.TenancyContextHolder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 		implements AuthenticationFailureHandler {
 
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private DataModelToDTOConversionService dataModelToDTOConversionService;
+	
 	private final TokenAuthenticationProvider tokenAuthenticationService;
 	private final AuthUserDetailsService userDetailsService;
 	private final TenantResolverService tenantResolverService;
@@ -73,7 +85,14 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 
 		// Add the authentication to the Security context
 		SecurityContextHolder.getContext().setAuthentication(userAuthentication);
-		((HttpServletResponse) response).getWriter().append("");
+		
+		/*	Writing user information to response after successful authentication  */
+		com.bbytes.purple.domain.User user = userService.getUserByEmail(authenticatedUser.getUsername());
+		UserDTO userDTO = dataModelToDTOConversionService.convertUser(user);
+		RestResponse authStatus = new RestResponse(true, userDTO);
+		ObjectMapper mapper = new ObjectMapper();
+		String responseObject = mapper.writeValueAsString(authStatus);
+		((HttpServletResponse) response).getWriter().append(responseObject);
 
 	}
 
