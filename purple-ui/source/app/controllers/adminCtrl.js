@@ -4,21 +4,21 @@
 rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminService,appNotifyService) {
 
     $scope.invite = function (isValid) {
-   console.log("message");
-        // Validating login form
+    	
         if (!isValid) {
-           console.log('Please enter username and password', 'Invalid inputs');
+        	appNotifyService.error('Please enter email and username', 'Invalid inputs');
             return false;
         }
-
+        // Validating  form
+    	if($scope.admin == null){
+    		appNotifyService.error('Please enter email or username ', 'Not entered inputs');
+    	}
+    
+        else{
         // Calling login service
         adminService.inviteUser($scope.admin).then(function (response) {
         	 if (response.success) {
-                
-            
-                
-                $state.go('user-mgr');
-                
+        		 $scope.loadUsers();
             } else {
                 //Login failed. Showing error notification
                 appNotifyService.error(response.data, 'Invite unsuccesfull.');
@@ -28,5 +28,24 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
             //Login failed. Showing error notification
             appNotifyService.error(error.msg, 'Invite unsuccesfull.');
         });
+        }
     };
+    
+    $scope.loadUsers = function(){
+    	adminService.getAllusers().then(function (response) {
+            if (response.success) {
+            	if (response) {
+					$scope.userscount = response.data.length;
+				}
+            	$scope.joinedCount = response.data.joined_count ;
+            	$scope.pendingCount = response.data.pending_count;
+                $scope.allusers   =  response.data.gridData;
+            }
+        });
+    }
+    
+    $scope.initUser = function() {
+        $scope.loadUsers();
+    };
+    
 });

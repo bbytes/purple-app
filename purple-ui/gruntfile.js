@@ -37,7 +37,14 @@ module.exports = function(grunt) {
 						dest : '<%= grunt.config.get("buildPath") %>/assets/js/scripts.js'
 					},
 					jsLib : {
-						src : [ 'source/assets/js/lib/*.js' ],
+						src : [ 'source/assets/js/lib/highlight.js',
+								'source/assets/js/lib/bootstrap-switch.js',
+								'source/assets/js/lib/main.js',
+								'source/assets/js/lib/calendar.js',
+								'source/assets/js/lib/velocity.min.js',
+								'source/assets/js/lib/s-next.js',
+								'source/assets/js/lib/index.js'
+						],
 						dest : '<%= grunt.config.get("buildPath") %>/assets/js/_lib.js'
 					},
 					css : {

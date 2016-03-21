@@ -33,9 +33,9 @@
    <div class="bottom-nav">
     <div class="wrapper">
      <div class="current-page">
-      <h5><a href="#" class="current-active">users</a></h5>
-      <h5><a href="#/"  >projects</a></h5>
-      <h5><a href="/settings">settings</a></h5>
+      <h5><a href="user-mgr" class="current-active">users</a></h5>
+      <h5><a href="projects"  >projects</a></h5>
+      <h5><a href="settings">settings</a></h5>
      </div>
      </div>
    </div>
@@ -53,24 +53,29 @@
   </div>
 
 <div class="create-project">
- <form  name="Form"  novalidate>
+ <form  name="myForm">
  <div class="row">
   <div class="col-md-6">
    
     <div class="form-group">
       <label for="comment" class="settings">EMAIL</label>
-      <input type="text" ng-model="admin.email" class="form-control">
+      <input type="email" name="email" ng-model="admin.email" class="form-control" required>
+        <span style="color:red" ng-show="myForm.email.$dirty && myForm.email.$invalid">
+  <span ng-show="myForm.email.$error.required">Email is required.</span>
+  <span ng-show="myForm.email.$error.email">Invalid email address.</span>
+  </span>
     </div>
   </div>
 
   <div class="col-md-6">
     <div class="form-group">
       <label for="comment" class="settings">USERNAME</label>
-      <input type="text" ng-model="admin.userName" class="form-control">
+      <input type="text" ng-model="admin.userName"  name="myName" class="form-control" required>
+      <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">The name is required.</span>
     </div>
     </div>
   </div>
-    <button type="button" class="btn btn-default create" ng-click="invite(Form.$valid)">send invite</button>
+    <button type="button" class="btn btn-default create" ng-click="invite(myForm.$valid)">send invite</button>
     </form>
 </div>
  
@@ -81,90 +86,32 @@
 <div class="col-md-12">
  <div class="row">
    <div class="main-title">
-       <h4>user activity <span class="list-member">12 Joined 1 Pending</span></h4>
+       <h4>user activity <span class="list-member">{{joinedCount}} Joined {{pendingCount}} Pending</span></h4>
     </div>
- <div class="project-table">
-   <table>
+ <div class="project-table" ng-init="initUser()">
+   <table ng-repeat="user in allusers">
        <tr>
          <td class="table-user">
              <img class="round" width="40" height="40" avatar="Username">
              <div class="user-label">
-             <h4>username</h4>
-             <p>username@gmail.com</p>
+             <h4>{{user.userName}}</h4>
+             <p>{{user.email}}</p>
              </div>
         </td>
         <td>
-          <img src="../../assets/img/pending.png"> Pending
+          <img src="../../assets/img/pending.png"> {{user.status}}
         </td>
         <td>
            <select class="form-control turnintodropdown" id="sel1">
-           <option>REASSIGN ROLE</option>
+           <option>{{user.userRole.value}}</option>
            </select>
         </td>
           <td style="float:right;">
-             <img src="../../assets/img/delete.png">
+             <div ng-click="deleteUser(user.email)"><img src="../../assets/img/delete.png"></div>
           </td>
       </tr>
 
-        <tr>
-           <td class="table-user"> 
-             <img class="round" width="40" height="40" avatar="Username">
-             <div class="user-label">
-             <h4>username</h4>
-             <p>username@gmail.com</p>
-             </div>
-           </td>
-        <td>
-           <img src="../../assets/img/join.png"> Joined
-        </td>
-        <td>
-           <select class="form-control turnintodropdown" id="sel1">
-           <option>REASSIGN ROLE</option>
-        </td>
-        <td style="float:right;">
-          <img src="../../assets/img/delete.png">
-       </td>
-      </tr>
-
-       <tr>
-           <td class="table-user"> 
-             <img class="round" width="40" height="40" avatar="Username">
-             <div class="user-label">
-             <h4>username</h4>
-             <p>username@gmail.com</p>
-             </div>
-           </td>
-        <td>
-           <img src="../../assets/img/join.png"> Joined
-        </td>
-        <td>
-           <select class="form-control turnintodropdown" id="sel1">
-           <option>REASSIGN ROLE</option>
-        </td>
-        <td style="float:right;">
-          <img src="../../assets/img/delete.png">
-       </td>
-      </tr>
-
-       <tr>
-           <td class="table-user"> 
-             <img class="round" width="40" height="40" avatar="Username">
-             <div class="user-label">
-             <h4>username</h4>
-             <p>username@gmail.com</p>
-             </div>
-           </td>
-        <td>
-           <img src="../../assets/img/join.png"> Joined
-        </td>
-        <td>
-           <select class="form-control turnintodropdown" id="sel1">
-           <option>REASSIGN ROLE</option>
-        </td>
-        <td style="float:right;">
-          <img src="../../assets/img/delete.png">
-       </td>
-      </tr>
+        
 
    </table>
  </div>
