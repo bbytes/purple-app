@@ -12,10 +12,8 @@ import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
-
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.utils.SuccessHandler;
-
 
 @RestController
 public class CommentController {

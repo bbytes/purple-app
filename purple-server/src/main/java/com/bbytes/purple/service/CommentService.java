@@ -2,7 +2,6 @@ package com.bbytes.purple.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.CommentRepository;
