@@ -28,7 +28,7 @@ public class ProjectService extends AbstractService<Project, String> {
 	}
 
 	public Project findByProjectName(String name) {
-		return projectRepository.findOne(name);
+		return projectRepository.findOneByProjectName(name);
 	}
 
 	public boolean projectNameExist(String name) {
@@ -44,48 +44,57 @@ public class ProjectService extends AbstractService<Project, String> {
 	public Project addUsers(String projectId, List<User> users) throws PurpleException {
 
 		Project project = null;
-		if (projectId != null && !projectId.isEmpty() && users != null && !users.isEmpty()) {
-			if (projectIdExist(projectId))
+		if (!projectId.equals("null") && users != null && !users.isEmpty()) {
+			if (!projectIdExist(projectId))
 				throw new PurpleException("Error while adding users in project", ErrorHandler.ADD_USER_FAILED);
 			try {
 				Project getproject = findByProjectId(projectId);
 				getproject.setUser(users);
 				project = projectRepository.save(getproject);
 			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
+				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_USER_FAILED);
 			}
-		}
+		} else if (users.isEmpty() && users != null)
+			throw new PurpleException("Can not add null users", ErrorHandler.ADD_USER_FAILED);
 		return project;
 	}
 
-	public Project deleteUsers(String projectId, List<User> users) throws PurpleException {
+	public Project deleteUsers(String projectId, List<String> toBeRemoved) throws PurpleException {
 
 		Project project = null;
-		if (projectId != null && !projectId.isEmpty() && users != null && !users.isEmpty()) {
-			if (projectIdExist(projectId))
+		if (!projectId.equals("null") && toBeRemoved != null) {
+			if (!projectIdExist(projectId))
 				throw new PurpleException("Error while deleting users from project", ErrorHandler.DELETE_USER_FAILED);
-			for (int i = 0; i < users.size(); i++) {
-				if (users.get(i).getUserId() != findByProjectId(projectId).getUser().get(i).getUserId())
-					throw new PurpleException("Error while deleting users from project",
-							ErrorHandler.DELETE_USER_FAILED);
-			}
-			try {
-				Project usersProject = findByProjectId(projectId);
-				List<User> temp = usersProject.getUser();
-				List<User> toBeRemoved = new ArrayList<User>();
-				for (User i : users) {
-					for (User j : users) {
-						if (i.getUserId().toString().equals(j.getUserId()))
-							toBeRemoved.add(i);
-					}
-					temp.removeAll(toBeRemoved);
-				}
-				usersProject.setUser(temp);
-				project = projectRepository.save(usersProject);
-			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
-			}
 		}
+		try {
+			Project userProject = findByProjectId(projectId);
+			List<User> existUsers = userProject.getUser();
+			List<User> temp = new ArrayList<User>();
+			for (User user : existUsers) {
+				if (toBeRemoved.contains(user.getEmail()))
+					temp.add(user);
+			}
+			existUsers.removeAll(temp);
+			userProject.setUser(existUsers);
+			project = projectRepository.save(userProject);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
+		}
+
 		return project;
+	}
+
+	public List<User> getAllUsers(String projectId) throws PurpleException {
+
+		List<User> users = new ArrayList<User>();
+		if (!projectId.equals("null")) {
+			try {
+				users = findByProjectId(projectId).getUser();
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
+			}
+		} else
+			throw new PurpleException("Error while getting users", ErrorHandler.GET_USER_FAILED);
+		return users;
 	}
 }

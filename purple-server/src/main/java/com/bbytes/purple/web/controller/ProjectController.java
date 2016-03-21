@@ -1,5 +1,6 @@
 package com.bbytes.purple.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.ProjectService;
+import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -33,6 +36,9 @@ public class ProjectController {
 	@Autowired
 	private ProjectService projectService;
 
+	@Autowired
+	private UserService userService;
+
 	/**
 	 * The addUserToProject method is used to add the list of users into project
 	 * 
@@ -41,14 +47,20 @@ public class ProjectController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/project//{projectid}/adduser", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/v1/project/{projectid}/adduser", method = RequestMethod.POST)
 	public RestResponse addUsersToProject(@PathVariable("projectid") String projectId,
 			@RequestBody ProjectDTO projectDTO) throws PurpleException {
 
-		List<User> users = projectDTO.getUsers();
-		Project project = projectService.addUsers(projectId, users);
+		List<User> usersTobeAdded = new ArrayList<User>();
+		for (String i : projectDTO.getUsers()) {
+			if (!userService.userEmailExist(i))
+				throw new PurpleException("Error while adding users", ErrorHandler.ADD_USER_FAILED);
+			usersTobeAdded.add(userService.getUserByEmail(i));
+		}
 
-		logger.debug(users.size() + "' users are added successfully");
+		Project project = projectService.addUsers(projectId, usersTobeAdded);
+
+		logger.debug(usersTobeAdded.size() + "' users are added successfully");
 		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, project,
 				SuccessHandler.ADD_PROJECT_SUCCESS);
 
@@ -64,16 +76,34 @@ public class ProjectController {
 	 * @throws PurpleException
 	 */
 
-	@RequestMapping(value = "/api/v1/project//{projectid}/deleteuser", method = RequestMethod.DELETE)
-	public RestResponse deleteUsers(@PathVariable("projectid") String projectId, @RequestBody ProjectDTO projectDTO)
+	@RequestMapping(value = "/api/v1/project/{projectid}/deleteuser", method = RequestMethod.DELETE)
+	public RestResponse deleteUsers(@PathVariable("projectid") String projectId, @RequestBody List<String> emailList)
 			throws PurpleException {
 
-		List<User> users = projectDTO.getUsers();
-		Project project = projectService.deleteUsers(projectId, users);
+		Project project = projectService.deleteUsers(projectId, emailList);
 
-		logger.debug(users.size() + "' users are deleted successfully");
+		logger.debug(project.getUser().size() + "' users are deleted successfully");
 		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, project,
 				SuccessHandler.DELETE_STATUS_SUCCESS);
+
+		return projectReponse;
+	}
+
+	/**
+	 * The getUsersOfProject method is used to get all users associated with
+	 * project
+	 * 
+	 * @param projectId
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/project/{projectid}/users", method = RequestMethod.GET)
+	public RestResponse getUsersOfProject(@PathVariable("projectid") String projectId) throws PurpleException {
+
+		List<User> users = projectService.getAllUsers(projectId);
+
+		logger.debug(users.size() + "' users are fetched successfully");
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, users, SuccessHandler.GET_USER_SUCCESS);
 
 		return projectReponse;
 	}

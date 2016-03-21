@@ -17,8 +17,10 @@ public class SuccessHandler {
 	public static final String DELETE_PROJECT_SUCCESS = "delete_project_success";
 
 	public static final String GET_PROJECT_SUCCESS = "get_projects_success";
-	
+
 	public static final String GET_REPLY_SUCCESS = "get_reply_success";
+	
+	public static final String UPDATE_PROJECT_SUCCESS = "update_projects_success";
 
 	public static final String ADD_STATUS_SUCCESS = "add_status_success";
 
