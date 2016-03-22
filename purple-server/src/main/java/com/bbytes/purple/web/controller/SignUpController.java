@@ -1,8 +1,15 @@
 package com.bbytes.purple.web.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +21,10 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.RegistrationService;
+import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -33,6 +43,15 @@ public class SignUpController {
 	@Autowired
 	protected TokenAuthenticationProvider tokenAuthenticationProvider;
 
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private NotificationService notificationService;
+
+	@Value("${base.url}")
+	private String baseUrl;
+
 	/**
 	 * The Sign up method is used to register organization and user
 	 * 
@@ -45,6 +64,8 @@ public class SignUpController {
 
 		// we assume the angular layer will do empty/null org name , user email
 		// etc.. validation
+		final String SIGN_UP_SUCCESS_MSG = "Activation link is successfully sent to your register email address";
+
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
 
 		Organization organization = new Organization(orgId, signUpRequestDTO.getOrgName().trim());
@@ -54,16 +75,40 @@ public class SignUpController {
 		user.setEmail(signUpRequestDTO.getEmail());
 		user.setPassword(signUpRequestDTO.getPassword());
 		user.setOrganization(organization);
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(user.getEmail());
 
 		registrationService.signUp(organization, user);
+
 		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(signUpRequestDTO.getEmail(), 1);
-		
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, user.getName());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
+		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.URL + xauthToken);
+		notificationService.sendTemplateEmail(emailList, GlobalConstants.EMAIL_SUBJECT, GlobalConstants.EMAIL_TEMPLATE,
+				emailBody);
+
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 
-		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, xauthToken,
+		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, SIGN_UP_SUCCESS_MSG,
 				SuccessHandler.SIGN_UP_SUCCESS);
 
 		return signUpResponse;
 
+	}
+
+	@RequestMapping(value = "/api/v1/admin/activateAccount", method = RequestMethod.GET)
+	public RestResponse accountActivation() throws PurpleException {
+
+		final String ACTIVE_SUCCESS_MSG = "Account is activated successfully";
+
+		User user = userService.getLoggedinUser();
+		registrationService.activateAccount(user);
+		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
+
+		RestResponse activeResponse = new RestResponse(RestResponse.SUCCESS, ACTIVE_SUCCESS_MSG,
+				SuccessHandler.SIGN_UP_SUCCESS);
+		return activeResponse;
 	}
 }
