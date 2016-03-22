@@ -335,9 +335,22 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 	@Test
 	public void testGetAllProjectsPasses() throws Exception {
+		
+		User user1 = new User("akshay", "akshay@gmail.com");
+		user1.setOrganization(org);
+		userService.save(user1);
 
+		User user2 = new User("sample", "sample@gmail.com");
+		user2.setOrganization(org);
+		userService.save(user2);
+
+		List<User> userList = new ArrayList<User>();
+		userList.add(user1);
+		userList.add(user2);
+		
 		Project project1 = new Project("purple", "4pm");
 		project1.setOrganization(org);
+		project1.setUser(userList);
 		projectService.save(project1);
 
 		Project project2 = new Project("reveal", "4pm");
