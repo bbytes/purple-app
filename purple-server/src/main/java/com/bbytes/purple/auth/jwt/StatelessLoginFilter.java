@@ -30,20 +30,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 		implements AuthenticationFailureHandler {
 
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private DataModelToDTOConversionService dataModelToDTOConversionService;
-	
+	private final UserService userService;
+	private final DataModelToDTOConversionService dataModelToDTOConversionService;
 	private final TokenAuthenticationProvider tokenAuthenticationService;
 	private final AuthUserDetailsService userDetailsService;
 	private final TenantResolverService tenantResolverService;
 
-	protected StatelessLoginFilter(String urlMapping, TokenAuthenticationProvider tokenAuthenticationService,
-			AuthUserDetailsService userDetailsService, TenantResolverService tenantResolverService,
-			AuthenticationManager authManager) {
+	protected StatelessLoginFilter(String urlMapping, UserService userService,
+			DataModelToDTOConversionService dataModelToDTOConversionService,
+			TokenAuthenticationProvider tokenAuthenticationService, AuthUserDetailsService userDetailsService,
+			TenantResolverService tenantResolverService, AuthenticationManager authManager) {
 		super(new AntPathRequestMatcher(urlMapping));
+		this.userService = userService;
+		this.dataModelToDTOConversionService = dataModelToDTOConversionService;
 		this.userDetailsService = userDetailsService;
 		this.tokenAuthenticationService = tokenAuthenticationService;
 		this.tenantResolverService = tenantResolverService;

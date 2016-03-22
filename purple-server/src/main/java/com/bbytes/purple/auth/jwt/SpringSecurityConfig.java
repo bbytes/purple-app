@@ -14,14 +14,22 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.TenantResolverService;
+import com.bbytes.purple.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 @Order(2)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private AuthUserDetailsService userService;
+	private AuthUserDetailsService userDetailsService;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
 	@Autowired
 	private TokenAuthenticationProvider tokenAuthenticationProvider;
@@ -61,7 +69,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.addFilterAfter(new StatelessAuthenticationFilter("/auth/**", tokenAuthenticationProvider),
 						UsernamePasswordAuthenticationFilter.class)
-				.addFilterBefore(new StatelessLoginFilter("/auth/login", tokenAuthenticationProvider, userService,
+				.addFilterBefore(new StatelessLoginFilter("/auth/login", userService, dataModelToDTOConversionService, tokenAuthenticationProvider, userDetailsService,
 						tenantResolverService, authenticationManager), StatelessAuthenticationFilter.class)
 				.headers().cacheControl().and();
 
@@ -87,8 +95,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	@Override
 	public AuthUserDetailsService userDetailsService() {
-		this.userService = new AuthUserDetailsService();
-		return userService;
+		this.userDetailsService = new AuthUserDetailsService();
+		return userDetailsService;
 	}
 
 	@Bean
