@@ -41,4 +41,16 @@ public class RegistrationService {
 		}
 	}
 
+	public void activateAccount(User activeUser) throws PurpleException {
+
+		if (activeUser != null) {
+			try {
+			activeUser.setAccountInitialise(true);
+			activeUser.setStatus(User.JOINED);
+			userService.save(activeUser);
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.AUTH_FAILURE);
+			}
+	}
+	}
 }

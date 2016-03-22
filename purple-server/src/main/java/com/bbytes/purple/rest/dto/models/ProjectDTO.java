@@ -16,6 +16,8 @@ import lombok.Data;
 public class ProjectDTO implements Serializable {
 
 	private static final long serialVersionUID = -4283248621429252655L;
+	
+	private String projectId;
 
 	private String projectName;
 
@@ -23,4 +25,5 @@ public class ProjectDTO implements Serializable {
 
 	private List<String> users = Collections.<String> emptyList();
 
+	private long usersCount = 0;
 }

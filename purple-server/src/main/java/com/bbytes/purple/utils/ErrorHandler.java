@@ -18,10 +18,12 @@ public class ErrorHandler {
 
 	public static final String USER_NOT_FOUND = "user_not_found";
 
+	public static final String PASSWORD_MISMATCH = "password_mistach";
+
 	public static final String PROJECT_NOT_FOUND = "project_not_found";
 
 	public static final String STATUS_NOT_FOUND = "status_not_found";
-	
+
 	public static final String COMMENT_NOT_FOUND = "comment_not_found";
 
 	public static final String ADD_USER_FAILED = "add_user_failed";
@@ -43,8 +45,8 @@ public class ErrorHandler {
 	public static final String DELETE_STATUS_FAILED = "delete_status_failed";
 
 	public static final String GET_STATUS_FAILED = "get_status_failed";
-	
-	public static final String GET_COMMENT_FAILED="get_comment_failed";
+
+	public static final String GET_COMMENT_FAILED = "get_comment_failed";
 
 	public static final String UPDATE_STATUS_FAILED = "update_status_failed";
 
@@ -57,14 +59,13 @@ public class ErrorHandler {
 	public static final String EMAIL_NOT_UNIQUE = "email_not_unique";
 
 	public static final String SERVER_ERROR = "server_error";
-	
-	public static final String ADD_COMMENT_FAILED= "add_comment_failed";
-	
-	public static final String ADD_REPLY_FAILED= "add_reply_failed";
-	
-	public static final String UPDATE_COMMENT_FAILED= "update_comment_failed";
-	
-	
+
+	public static final String ADD_COMMENT_FAILED = "add_comment_failed";
+
+	public static final String ADD_REPLY_FAILED = "add_reply_failed";
+
+	public static final String UPDATE_COMMENT_FAILED = "update_comment_failed";
+
 	public static String resolveAuthError(AuthenticationException authEx) {
 		try {
 			RestResponse errorResponse;

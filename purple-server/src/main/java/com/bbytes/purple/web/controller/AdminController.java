@@ -46,7 +46,7 @@ public class AdminController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
@@ -66,9 +66,9 @@ public class AdminController {
 		addUser.setStatus(User.PENDING);
 
 		User user = adminService.addUsers(addUser);
-
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 		logger.debug("User with email  '" + userDTO.getEmail() + "' are added successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, user, SuccessHandler.ADD_USER_SUCCESS);
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.ADD_USER_SUCCESS);
 
 		return userReponse;
 	}
@@ -103,7 +103,8 @@ public class AdminController {
 	public RestResponse getUsers() throws PurpleException {
 
 		List<User> users = adminService.getAllUsers();
-		Map<String, Object> usersMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndUserStatusCount(users);
+		Map<String, Object> usersMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndUserStatusCount(users);
 		logger.debug("Users are fetched successfully");
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, usersMap, SuccessHandler.GET_PROJECT_SUCCESS);
 
@@ -169,9 +170,10 @@ public class AdminController {
 	public RestResponse getAllProject() throws PurpleException {
 
 		List<Project> projects = adminService.getAllProjects();
-
+		Map<String, Object> projectsMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndProjectCount(projects);
 		logger.debug("Projects are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projects,
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectsMap,
 				SuccessHandler.GET_PROJECT_SUCCESS);
 
 		return projectReponse;

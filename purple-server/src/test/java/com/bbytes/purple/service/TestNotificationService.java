@@ -1,7 +1,6 @@
 package com.bbytes.purple.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +33,7 @@ public class TestNotificationService extends PurpleBaseApplicationTests {
 		Map<String,Object> ctx = new HashMap<>();
 		ctx.put("name", "Thanneer");
 		ctx.put("subscriptionDate", new Date());
-		ctx.put("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
+		ctx.put("activationLink", "google.com");
 
 		Assert.assertTrue(notificationService.sendTemplateEmail(toEmailList, subject, "email-text-only.html", ctx));
 	}
