@@ -21,6 +21,8 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
+import com.bbytes.purple.rest.dto.models.UserDTO;
+import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.RegistrationService;
 import com.bbytes.purple.service.UserService;
@@ -48,6 +50,9 @@ public class SignUpController {
 
 	@Autowired
 	private NotificationService notificationService;
+
+	@Autowired
+	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -101,13 +106,12 @@ public class SignUpController {
 	@RequestMapping(value = "/api/v1/admin/activateAccount", method = RequestMethod.GET)
 	public RestResponse accountActivation() throws PurpleException {
 
-		final String ACTIVE_SUCCESS_MSG = "Account is activated successfully";
-
 		User user = userService.getLoggedinUser();
-		registrationService.activateAccount(user);
+		User activeUser = registrationService.activateAccount(user);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(activeUser);
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 
-		RestResponse activeResponse = new RestResponse(RestResponse.SUCCESS, ACTIVE_SUCCESS_MSG,
+		RestResponse activeResponse = new RestResponse(RestResponse.SUCCESS, responseDTO,
 				SuccessHandler.SIGN_UP_SUCCESS);
 		return activeResponse;
 	}
