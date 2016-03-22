@@ -17,9 +17,6 @@ public class SettingService {
 	private UserService userService;
 
 	@Autowired
-	private TenantResolverService tenantResolverService;
-
-	@Autowired
 	private OrganizationService organizationService;
 
 	@Autowired
@@ -28,11 +25,10 @@ public class SettingService {
 	public void resetPassword(PasswordDTO passwordDTO, User user) throws PurpleException {
 
 		if (user != null && passwordDTO != null) {
-			if (userService.userEmailExist(user.getEmail()) || tenantResolverService.emailExist(user.getEmail()))
+			if (!userService.userEmailExist(user.getEmail()))
 				throw new PurpleException("Error while resetting password", ErrorHandler.USER_NOT_FOUND);
-			if (passwordHashService.passwordMatches(passwordHashService.encodePassword(passwordDTO.getOldPassword()),
-					user.getPassword()))
-				throw new PurpleException("Error while resetting password", ErrorHandler.USER_NOT_FOUND);
+			if (!passwordHashService.passwordMatches(passwordDTO.getOldPassword(), user.getPassword()))
+				throw new PurpleException("Error while resetting password", ErrorHandler.PASSWORD_MISMATCH);
 			try {
 				user.setPassword(passwordHashService.encodePassword(passwordDTO.getNewPassword()));
 				userService.save(user);
@@ -43,9 +39,8 @@ public class SettingService {
 	}
 
 	public void updateTimeZone(String timeZone, User user) throws PurpleException {
-
 		if (user != null && timeZone != null && !timeZone.isEmpty()) {
-			if (userService.userEmailExist(user.getEmail()) || tenantResolverService.emailExist(user.getEmail()))
+			if (!userService.userEmailExist(user.getEmail()))
 				throw new PurpleException("Error while resetting password", ErrorHandler.USER_NOT_FOUND);
 			try {
 				Organization organization = organizationService.findByOrgId(TenancyContextHolder.getTenant());
