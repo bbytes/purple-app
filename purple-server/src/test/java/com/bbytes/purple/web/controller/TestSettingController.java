@@ -70,7 +70,7 @@ public class TestSettingController extends PurpleWebBaseApplicationTests {
 	 public void testResetPassword_password_fail() throws Exception {
 	  
 	  PasswordDTO pwdDTO = new PasswordDTO();
-	  pwdDTO.setOldPassword("test");
+	  pwdDTO.setOldPassword("test1");
 	  pwdDTO.setNewPassword("test1235");
 
 	  ObjectMapper mapper = new ObjectMapper();

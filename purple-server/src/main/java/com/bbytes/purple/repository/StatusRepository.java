@@ -1,5 +1,7 @@
 package com.bbytes.purple.repository;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -13,7 +15,7 @@ public interface StatusRepository extends MongoRepository<Status, String>{
 	
 	Status findByProject(Project project);
 	
-	Status findByUser(User user);
+	List<Status> findByUser(User user);
 	
 
 }

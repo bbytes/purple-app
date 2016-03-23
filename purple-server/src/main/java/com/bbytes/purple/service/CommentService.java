@@ -30,7 +30,7 @@ public class CommentService extends AbstractService<Comment, String> {
 		this.commentRepository = commentRepository;
 	}
 
-	public Comment getCommentbyId(String commentId) {
+	public Comment findByCommentId(String commentId) {
 		return commentRepository.findOne(commentId);
 	}
 
