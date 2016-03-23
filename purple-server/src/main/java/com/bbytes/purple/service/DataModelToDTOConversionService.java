@@ -74,6 +74,7 @@ public class DataModelToDTOConversionService {
 		statusDTO.setUserName(status.getUser().getName());
 		statusDTO.setWorkedOn(status.getWorkedOn());
 		statusDTO.setWorkingOn(status.getWorkingOn());
+		statusDTO.setHours(status.getHours());
 		statusDTO.setBlockers(status.getBlockers());
 		return statusDTO;
 	}

@@ -270,7 +270,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		status.setUser(normalUser);
 		statusService.save(status);
 
-		Status status1 = new Status("test", "test", 3, new DateTime());
+		Status status1 = new Status("test1", "test1", 4, new DateTime());
 		status1.setProject(project);
 		status1.setUser(adminUser);
 		statusService.save(status1);
