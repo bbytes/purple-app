@@ -77,7 +77,7 @@ public class CommentService extends AbstractService<Comment, String> {
 			if (!commentIdExist(commentId))
 				throw new PurpleException("Error while update comment", ErrorHandler.COMMENT_NOT_FOUND);
 			try {
-				updateComment = getCommentbyId(commentId);
+				updateComment = findByCommentId(commentId);
 				updateComment.setCommentDesc(comment.getCommentDesc());
 				commentRepository.save(updateComment);
 			} catch (Throwable e) {
