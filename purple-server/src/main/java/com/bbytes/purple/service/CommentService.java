@@ -11,6 +11,12 @@ import com.bbytes.purple.repository.CommentRepository;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.utils.ErrorHandler;
 
+/**
+ * @author aditya
+ *
+ */
+
+
 @Service
 public class CommentService extends AbstractService<Comment, String> {
 
@@ -23,6 +29,10 @@ public class CommentService extends AbstractService<Comment, String> {
 	public CommentService(CommentRepository commentRepository) {
 		super(commentRepository);
 		this.commentRepository = commentRepository;
+	}
+
+	public Comment getCommentbyId(String commentId) {
+		return commentRepository.findOne(commentId);
 	}
 
 	public boolean commentIdExist(String commentId) {
@@ -54,6 +64,7 @@ public class CommentService extends AbstractService<Comment, String> {
 			try {
 				Comment comment = commentRepository.findOne(commentId);
 				commentRepository.delete(comment);
+
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.GET_COMMENT_FAILED);
 			}
@@ -61,4 +72,35 @@ public class CommentService extends AbstractService<Comment, String> {
 			throw new PurpleException("Can not delete empty comment", ErrorHandler.COMMENT_NOT_FOUND);
 	}
 
+	public Comment updateComment(String commentId, CommentDTO comment) throws PurpleException {
+		Comment updateComment = null;
+		if (!commentId.equals(null)) {
+			if (!commentIdExist(commentId))
+				throw new PurpleException("Error while update comment", ErrorHandler.COMMENT_NOT_FOUND);
+			try {
+				updateComment = getCommentbyId(commentId);
+				updateComment.setCommentDesc(comment.getCommentDesc());
+				commentRepository.save(updateComment);
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_COMMENT_FAILED);
+			}
+		}
+		return updateComment;
+	}
+
+	public Comment getComment(String commentId) throws PurpleException {
+		Comment getComments = null;
+		if (!commentId.equals(null)) {
+			if (!commentIdExist(commentId))
+				throw new PurpleException("Error while update comment", ErrorHandler.COMMENT_NOT_FOUND);
+
+			try {
+				getComments = commentRepository.findOne(commentId);
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.GET_COMMENT_FAILED);
+			}
+
+		}
+		return getComments;
+	}
 }

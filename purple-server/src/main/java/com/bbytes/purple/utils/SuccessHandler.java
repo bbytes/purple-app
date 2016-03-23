@@ -20,6 +20,8 @@ public class SuccessHandler {
 
 	public static final String GET_REPLY_SUCCESS = "get_reply_success";
 	
+	public static final String GET_COMMENT_SUCCESS = "get_comment_success";
+	
 	public static final String UPDATE_PROJECT_SUCCESS = "update_projects_success";
 
 	public static final String ADD_STATUS_SUCCESS = "add_status_success";
