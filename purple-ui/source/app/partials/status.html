@@ -28,10 +28,10 @@
                          <span class="caret"></span></a>
 
                          <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu">
-                             <li><a href="#"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
-                             <li><a href="#"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
-                             <li><a href="#"><img src="../../assets/img/set.png"> SETTINGS</a></li>
-                             <li ng-controller="loginCtrl"><a href="#"><img src="../../assets/img/set.png"> Logout</a></li>
+                             <li><a href="user-mgr"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
+                             <li><a href="projects"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
+                             <li><a href="settings"><img src="../../assets/img/set.png"> SETTINGS</a></li>
+                             <li><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><img src="../../assets/img/set.png"> Logout</a></li>
 
                            
                          </ul>
@@ -52,10 +52,10 @@
    </div>
 
   <!-- /.main -->
-<div class="col-md-8">
-  <div class="wrapper">
+<div class="col-md-8" ng-controller="projectCtrl" ng-init="initStatus()">
+  <div class="wrapper" ng-repeat="status in allstatus">
    <div class="top-header">
-     <span class="project"><span class="hash"># </span> PROJECTXYZ</span> <span class="username"><span class="hash">@ </span> USERNAME</span>
+     <span class="project"><span class="hash"># </span>{{status.projectName}}</span> <span class="username"><span class="hash">@ </span> {{status.userName}}</span>
    </div>
 
    <ul class="timeline">
@@ -68,22 +68,22 @@
         </div>
         <div class="timeline-panel">
             <div class="timeline-heading">
-                <h4><span class="hash"># </span> PROJECTNAME <span class="hash">@ </span> NAME</h4>
+                <h4><span class="hash"># </span> {{status.projectName}} <span class="hash">@ </span> {{status.projectName}}</h4>
                 <p>5 Hrs</p>
             </div>
             <div class="timeline-body worked-on">
                <h3>worked on</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.workedOn}}</p>
             </div>
 
              <div class="timeline-body working-on">
                <h3>working on</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.workingOn}}</p>
             </div>
 
              <div class="timeline-body blocker-on">
                <h3>blockers</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.blockers}}</p>
             </div>
 
         </div>
@@ -95,22 +95,22 @@
         </div>
         <div class="timeline-panel">
             <div class="timeline-heading">
-                <h4><span class="hash"># </span> PROJECTNAME <span class="hash">@ </span> NAME</h4>
+                <h4><span class="hash"># </span> PROJECTNAME <span class="hash">@ </span> {{status.userName}}</h4>
                 <p>5 Hrs</p>
             </div>
             <div class="timeline-body worked-on">
                <h3>worked on</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.workedOn}}</p>
             </div>
 
              <div class="timeline-body working-on">
                <h3>working on</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.workingOn}}</p>
             </div>
 
              <div class="timeline-body blocker-on">
                <h3>blockers</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.blockers}}</p>
             </div>
 
         </div>
@@ -121,18 +121,19 @@
   
   </div>
 </div>
+<form name="myForm">
+<div class="col-md-4 side" >
 
-<div class="col-md-4 side">
  <div class="row">
- <div class="col-md-9">
+ <div class="col-md-9"   ng-controller="projectCtrl" ng-init="initProjects()"  >
   <div class="form-sidebar">
       <div class="form-group">
-         <select class="form-control" id="sel1">
-           <option>PROJECTS</option>
-           <option>PROJECTS2</option>
-           <option>3</option>
-           <option>4</option>
+         <select class="form-control"  name = "project" ng-model="$parent.status.projectId" required>
+        <option ng-repeat="project in allprojects" value="{{project.projectId}}">{{project.projectName}} </option>
+    
+    
         </select>
+         <span style="color:red" ng-show="myForm.project.$error.required">Select project</span>
        </div>
      </div>
   </div>
@@ -140,12 +141,13 @@
   <div class="col-md-3">
      <div class="form-sidebar">
        <div class="form-group">
-         <select class="form-control turnintodropdown" id="sel1">
+         <select class="form-control turnintodropdown" name="time" ng-model="status.time" id="sel1" required>
            <option>HRS</option>
            <option>2</option>
            <option>3</option>
            <option>4</option>
         </select>
+          
        </div>
       </div>
      </div>
@@ -153,18 +155,21 @@
      
      <div class="form-group">
       <label for="comment">WORKED ON</label>
-       <textarea class="form-control" rows="5" id="comment"></textarea>
+       <textarea class="form-control" rows="5" name="myName" id="comment" ng-model="status.workedOn" required></textarea>
+       <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">This field is required.</span>
        </div>
      
      <div class="form-group">
       <label for="comment">WORKING ON</label>
-       <textarea class="form-control" rows="5" id="comment"></textarea>
+       <textarea class="form-control" rows="5" name ="nextName" id="comment" ng-model="status.workingOn" required></textarea>
+         <span style="color:red" ng-show="myForm.nextName.$touched && myForm.nextName.$invalid">This field is required.</span>
        </div>
        
        <div class="form-group">
       <label for="comment">BLOCKERS</label>
-       <textarea class="form-control" rows="5" id="comment"></textarea>
+       <textarea class="form-control" rows="5" id="comment" ng-model="status.blockers" required></textarea>
        </div>
-   <button type="button" class="btn btn-default submit">submit</button>
+   <button type="button" class="btn btn-default submit" ng-controller="projectCtrl" ng-click="submitStatus(status)">submit</button>
      </div>
-  </div>
+     </form>
+
