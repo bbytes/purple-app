@@ -21,8 +21,18 @@
                     <li>
                         <a href="#"><img src="../../assets/img/ic_timeline.svg"></a>
                     </li>
-                     <li>
-                        <a href="#"><img src="../../assets/img/ic_menu.svg"></a>
+                    <li class="dropdown">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><img src="../../assets/img/ic_menu.svg">
+                         <span class="caret"></span></a>
+
+                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu">
+                             <li><a href="user-mgr"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
+                             <li><a href="projects"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
+                             <li><a href="settings"><img src="../../assets/img/set.png"> SETTINGS</a></li>
+                             <li ><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><img src="../../assets/img/set.png"> Logout</a></li>
+
+                           
+                         </ul>
                     </li>
                 </ul>
             </div>
@@ -33,9 +43,9 @@
    <div class="bottom-nav">
     <div class="wrapper">
      <div class="current-page">
-      <h5><a href="/status">users</a></h5>
-      <h5><a href="#"  class="current-active">projects</a></h5>
-      <h5><a href="/settings">settings</a></h5>
+      <h5><a href="user-mgr">users</a></h5>
+      <h5><a href="projects"  class="current-active">projects</a></h5>
+      <h5><a href="settings">settings</a></h5>
      </div>
      </div>
    </div>
@@ -46,12 +56,15 @@
        <h4>create project</h4>
     </div>
 
-<div class="create-project">
+<div class="create-project" >
+ <form  name="myForm">
  <div class="row">
   <div class="col-md-7">
     <div class="form-group">
       <label for="comment" class="settings">PROJECT NAME</label>
-      <input type="text" class="form-control">
+      <input type="text" name= "myName" ng-model="project.projectName" class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
+      <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">The name is required.</span>
+      
     </div>
   </div>
 
@@ -60,7 +73,7 @@
       <label for="comment" class="settings">TIME PREFERENCE</label>
       <div class="row">
        <div class="col-md-6">
-        <select class="form-control turnintodropdown" id="sel1">
+        <select class="form-control turnintodropdown" ng-model="project.timePreference" id="sel1" required>
            <option>5 : 00</option>
            <option>2 : 00</option>
            <option>3 : 00</option>
@@ -78,72 +91,45 @@
     </div>
     </div>
   </div>
+  </form>
 </div>
  
   <div class="main-subtitle">
        <h4>users</h4>
     </div>
- <div class="row">
+ <div class="row" ng-repeat="user in newList" >
    <div class="col-md-4">
      <img class="round" width="40" height="40" avatar="Username">
       <div class="user-label">
-         <h4>username</h4>
-         <p>username@gmail.com</p>
+         <h4>{{user.userName}}</h4>
+         <p>{{user.email}}</p>
       </div>
    </div>
 
-   <div class="col-md-4">
-      <img class="round" width="40" height="40" avatar="Username">
-      <div class="user-label">
-         <h4>username</h4>
-         <p>username@gmail.com</p>
-      </div>
-   </div>
-
+</div>
    <div class="col-md-4">
       <img class="round" width="40" height="40" avatar="+">
-      <div class="user-label">
-         <h4><a href="#" data-toggle="modal" data-target="#myModal">Add Users</a></h4>
+      <div class="user-label" ng-init="initUser()">
+         <h4><a href="#" ng-click="getAllUseresInModal()">Add Users</a></h4>
       </div>
    </div>
    
 
- </div>
-  <button type="button" class="btn btn-default create">create project</button>
+ 
+  <button type="button" class="btn btn-default create" ng-click="createProject(project)">create project</button>
 
 <div class="col-md-12">
  <div class="row">
    <div class="main-title">
-       <h4>projects <span class="list-member">12 project 20 Members</span></h4>
+       <h4>projects <span class="list-member">{{projectCount}} project</span></h4>
     </div>
- <div class="project-table">
-   <table>
+ <div class="project-table" ng-init="initProjects()">
+   <table ng-repeat="project in allprojects">
       <tr>
-        <td class="table-user">Projectxyz <br /><span class="u-number">12 Users</span></td>
+        <td class="table-user">{{project.projectName}} <br /><span class="u-number">{{project.usersCount}} Users</span></td>
         <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
-        <td><a href="#" data-toggle="modal" data-target="#myModal1"><img src="../../assets/img/user.png"> View Member List</a></td>
-        <td style="float:right;"><img src="../../assets/img/edit.png"> <img src="../../assets/img/delete.png"></td>
-      </tr>
-
-     <tr>
-        <td class="table-user">Projectxyz <br /><span class="u-number">12 Users</span></td>
-        <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
-       <td><a href="#" data-toggle="modal" data-target="#myModal1"><img src="../../assets/img/user.png"> View Member List</a></td>
-        <td style="float:right;"><img src="../../assets/img/edit.png"> <img src="../../assets/img/delete.png"></td>
-      </tr>
-
-       <tr>
-        <td class="table-user">Projectxyz <br /><span class="u-number">12 Users</span></td>
-        <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
-        <td><a href="#" data-toggle="modal" data-target="#myModal1"><img src="../../assets/img/user.png"> View Member List</a></td>
-        <td style="float:right;"><img src="../../assets/img/edit.png"> <img src="../../assets/img/delete.png"></td>
-      </tr>
-
-       <tr>
-        <td class="table-user">Projectxyz <br /><span class="u-number">12 Users</span></td>
-        <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
-        <td><a href="#" data-toggle="modal" data-target="#myModal1"><img src="../../assets/img/user.png"> View Member List</a></td>
-        <td style="float:right;"><img src="../../assets/img/edit.png"> <img src="../../assets/img/delete.png"></td>
+        <td><a href="#"  ng-click="viewMembers(project.users)"><img src="../../assets/img/user.png"> View Member List</a></td>
+        <td style="float:right;"><img src="../../assets/img/edit.png"><a href="#"  ng-click="deleteProject(project.projectId)"> <img src="../../assets/img/delete.png"></a></td>
       </tr>
 
    </table>
@@ -154,7 +140,7 @@
 </div>
 
 <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
+  <div class="modal fade" id="myModal" role="dialog" >
     <div class="modal-dialog">
     
       <!-- Modal content-->
@@ -163,72 +149,22 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body"  ng-repeat="user in membersList">
             <table width="100%">
               <tr>
                 <td class="add-user-table"> 
                 <img class="round" width="40" height="40" avatar="Username">
                 <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
+                <h4>{{user.name}}</h4>
+                <p>{{user.email}}</p>
                 </div>
              </td>
                 <td class="add-user">
-                   <input id="switch-create-destroy" type="checkbox" checked data-switch-no-init>
+                   <input id="switch-create-destroy" type="checkbox"  data-switch-no-init>
                 </td>
               </tr>
 
-            <tr>
-                <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="E">
-                <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
-                </div>
-             </td>
-                <td>
-                 <input id="switch-create-destroy" type="checkbox"  data-switch-no-init>
-                </td>
-              </tr>
-
-              <tr>
-                <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="P">
-                <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
-                </div>
-             </td>
-                <td>
-                 <input id="switch-create-destroy" type="checkbox"  data-switch-no-init>
-                </td>
-              </tr>
-
-              <tr>
-                <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="L">
-                <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
-                </div>
-             </td>
-                <td>
-                 <input id="switch-create-destroy" type="checkbox"  data-switch-no-init>
-                </td>
-              </tr>
-
-              <tr>
-                <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="s">
-                <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
-                </div>
-             </td>
-                <td>
-                 <input id="switch-create-destroy" type="checkbox"  data-switch-no-init>
-                </td>
-              </tr>
+          
 
             </table>
             
