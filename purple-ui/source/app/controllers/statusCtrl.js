@@ -1,7 +1,7 @@
 /**
  * 
  */
-rootApp.controller('statusCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window) {
+rootApp.controller('statusCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window,$location) {
 
     $scope.submitStatus = function () {
     	

@@ -26,7 +26,9 @@ rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupSer
                       // viewMode:$rootScope.viewMode
                    };
                    
+                   
                  $sessionStorage.userInfo = userInfo;*/
+        	 appNotifyService.success('Activation link has been sent your registered mail.');
                 $state.go('login');
                 
             } else {
