@@ -46,6 +46,7 @@ public class DataModelToDTOConversionService {
 
 	public UserDTO convertUser(User user) {
 		UserDTO userDTO = new UserDTO();
+		userDTO.setId(user.getUserId());
 		userDTO.setEmail(user.getEmail());
 		userDTO.setUserName(user.getName());
 		userDTO.setStatus(user.getStatus());

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.User;
 
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.StringUtils;
+import com.bbytes.purple.utils.TokenUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -33,7 +34,7 @@ public final class TokenHandler {
 
 	/**
 	 * Create a jwt token for the given user that is valid for next
-	 * tokenValidityInHrs hrs
+	 * tokenValidityInHrs hrs. Base 64 encoded token is returned
 	 * 
 	 * @param tokenDataHolder
 	 * @param tokenValidityInHrs
@@ -48,8 +49,10 @@ public final class TokenHandler {
 
 		// expire the token after a day .
 		// Time to expire is 24 hrs from issue time
-		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS256, secret)
+		String token = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS256, secret)
 				.setExpiration(DateTime.now().plusHours(tokenValidityInHrs).toDate()).compact();
+
+		return TokenUtils.encode(token);
 	}
 
 	/**
@@ -60,8 +63,10 @@ public final class TokenHandler {
 	 * @throws AuthenticationServiceException
 	 */
 	public TokenDataHolder parseJWTStringTokenForUser(String jwtStringToken) throws AuthenticationServiceException {
+		
 		try {
-			Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwtStringToken).getBody();
+			String token= TokenUtils.decode(jwtStringToken);
+			Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 
 			String email = body.getSubject();
 			String tenantId = (String) body.get(GlobalConstants.HEADER_TENANT_ID);
