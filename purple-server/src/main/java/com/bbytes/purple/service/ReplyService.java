@@ -1,0 +1,81 @@
+package com.bbytes.purple.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bbytes.purple.domain.Comment;
+import com.bbytes.purple.domain.Reply;
+import com.bbytes.purple.domain.User;
+import com.bbytes.purple.exception.PurpleException;
+import com.bbytes.purple.repository.ReplyRepository;
+import com.bbytes.purple.rest.dto.models.ReplyDTO;
+import com.bbytes.purple.utils.ErrorHandler;
+
+@Service
+public class ReplyService extends AbstractService<Reply, String> {
+
+	private ReplyRepository replyRepository;
+
+	@Autowired
+	private CommentService commentService;
+
+	@Autowired
+	public ReplyService(ReplyRepository replyRepository) {
+		super(replyRepository);
+		this.replyRepository = replyRepository;
+	}
+
+	public Reply getReplybyId(String replyId) {
+		return replyRepository.findOne(replyId);
+	}
+
+	public Comment postReply(String commentId, ReplyDTO replyDTO, User user) throws PurpleException {
+		Comment comment = null;
+		List<Reply> replyList = new ArrayList<Reply>();
+		if (!commentId.equalsIgnoreCase("null") && replyDTO.getReplyDesc() != null) {
+			if (!commentService.commentIdExist(commentId))
+				throw new PurpleException("Error while posting reply", ErrorHandler.COMMENT_NOT_FOUND);
+			try {
+				comment = commentService.findByCommentId(commentId);
+				// replyList = comment.getReplies();
+				Reply reply = new Reply(replyDTO.getReplyDesc());
+				reply.setUser(user);
+				replyList.add(reply);
+				comment.setReplies(replyList);
+				comment = commentService.save(comment);
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_REPLY_FAILED);
+			}
+		} else
+			throw new PurpleException("Can not add reply with empty comment", ErrorHandler.COMMENT_NOT_FOUND);
+		return comment;
+	}
+
+	public Comment deleteReply(String commentId, String replyId, User user) throws PurpleException {
+		Comment comment = null;
+		List<Reply> replyList = new ArrayList<Reply>();
+		if (!commentId.equalsIgnoreCase("null") && !replyId.equalsIgnoreCase("null")) {
+			if (!commentService.commentIdExist(commentId))
+				throw new PurpleException("Error while deleting reply", ErrorHandler.COMMENT_NOT_FOUND);
+			try {
+				comment = commentService.findByCommentId(commentId);
+				replyList = comment.getReplies();
+				List<Reply> tobeRemoved = new ArrayList<Reply>();
+				for (Reply reply : replyList) {
+					if (reply.getReplyId().toString().equals(replyId))
+						tobeRemoved.add(reply);
+				}
+				replyList.removeAll(tobeRemoved);
+				comment.setReplies(replyList);
+				comment = commentService.save(comment);
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_REPLY_FAILED);
+			}
+		} else
+			throw new PurpleException("Can not add reply with empty comment", ErrorHandler.COMMENT_NOT_FOUND);
+		return comment;
+	}
+}

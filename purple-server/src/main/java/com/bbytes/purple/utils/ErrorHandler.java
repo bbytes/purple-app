@@ -26,6 +26,8 @@ public class ErrorHandler {
 
 	public static final String COMMENT_NOT_FOUND = "comment_not_found";
 
+	public static final String REPLY_NOT_FOUND = "reply_not_found";
+
 	public static final String ADD_USER_FAILED = "add_user_failed";
 
 	public static final String DELETE_USER_FAILED = "delete_user_failed";
@@ -63,6 +65,8 @@ public class ErrorHandler {
 	public static final String ADD_COMMENT_FAILED = "add_comment_failed";
 
 	public static final String ADD_REPLY_FAILED = "add_reply_failed";
+
+	public static final String DELETE_REPLY_FAILED = "delete_reply_failed";
 
 	public static final String UPDATE_COMMENT_FAILED = "update_comment_failed";
 

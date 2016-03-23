@@ -25,6 +25,10 @@ public class CommentService extends AbstractService<Comment, String> {
 		this.commentRepository = commentRepository;
 	}
 
+	public Comment findByCommentId(String commentId) {
+		return commentRepository.findOne(commentId);
+	}
+
 	public boolean commentIdExist(String commentId) {
 		boolean isExist = commentRepository.findOne(commentId) == null ? false : true;
 		return isExist;
