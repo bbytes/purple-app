@@ -15,7 +15,13 @@ public class StatusDTO implements Serializable {
 
 	private static final long serialVersionUID = 8499276346409176127L;
 
+	private String statusId;
+
 	private String projectId;
+
+	private String projectName;
+
+	private String userName;
 
 	private int hours;
 

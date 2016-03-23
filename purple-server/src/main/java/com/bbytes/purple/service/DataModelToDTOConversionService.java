@@ -8,10 +8,12 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
+import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 
 @Service
@@ -60,8 +62,20 @@ public class DataModelToDTOConversionService {
 		projectDTO.setProjectId(project.getProjectId());
 		projectDTO.setProjectName(project.getProjectName());
 		projectDTO.setTimePreference(project.getTimePreference());
+		projectDTO.setUserList(project.getUser());
 		projectDTO.setUsersCount(project.getUser().size());
 		return projectDTO;
+	}
+
+	public StatusDTO convertStatus(Status status) {
+		StatusDTO statusDTO = new StatusDTO();
+		statusDTO.setStatusId(status.getStatusId());
+		statusDTO.setProjectName(status.getProject().getProjectName());
+		statusDTO.setUserName(status.getUser().getName());
+		statusDTO.setWorkedOn(status.getWorkedOn());
+		statusDTO.setWorkingOn(status.getWorkingOn());
+		statusDTO.setBlockers(status.getBlockers());
+		return statusDTO;
 	}
 
 	public Map<String, Object> getResponseMapWithGridDataAndUserStatusCount(List<User> users) {
@@ -103,6 +117,16 @@ public class DataModelToDTOConversionService {
 		Map<String, Object> responseData = new LinkedHashMap<String, Object>();
 		responseData.put(PROJECT_COUNT, projectCount);
 		responseData.put(RestResponse.GRID_DATA, gridData);
+		return responseData;
+	}
+
+	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses) {
+		List<StatusDTO> statusDTOList = new ArrayList<>();
+		for (Status status : statusses) {
+			statusDTOList.add(convertStatus(status));
+		}
+		Map<String, Object> responseData = new LinkedHashMap<String, Object>();
+		responseData.put(RestResponse.GRID_DATA, statusDTOList);
 		return responseData;
 	}
 

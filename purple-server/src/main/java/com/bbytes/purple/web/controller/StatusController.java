@@ -1,6 +1,7 @@
 package com.bbytes.purple.web.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
+import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.SuccessHandler;
@@ -36,6 +38,9 @@ public class StatusController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
 	/**
 	 * The add status method is used to save the status for project
@@ -88,9 +93,9 @@ public class StatusController {
 		// We will get current logged in user
 		User user = userService.getLoggedinUser();
 		List<Status> statusList = statusService.getAllStatus(user);
-
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
 		logger.debug("All status are fetched successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusList,
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
 				SuccessHandler.GET_STATUS_SUCCESS);
 
 		return statusReponse;
