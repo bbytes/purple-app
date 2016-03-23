@@ -85,7 +85,9 @@ public class StatusController {
 	@RequestMapping(value = "/api/v1/status", method = RequestMethod.GET)
 	public RestResponse getAllStatus() throws PurpleException {
 
-		List<Status> statusList = statusService.getAllStatus();
+		// We will get current logged in user
+		User user = userService.getLoggedinUser();
+		List<Status> statusList = statusService.getAllStatus(user);
 
 		logger.debug("All status are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusList,

@@ -272,7 +272,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 
 		Status status1 = new Status("test", "test", 3, new DateTime());
 		status1.setProject(project);
-		status1.setUser(normalUser);
+		status1.setUser(adminUser);
 		statusService.save(status1);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);

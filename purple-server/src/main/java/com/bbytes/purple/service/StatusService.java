@@ -37,7 +37,7 @@ public class StatusService extends AbstractService<Status, String> {
 		return statusRepository.findByProject(project);
 	}
 
-	public Status getStatusByUser(User user) {
+	public List<Status> getStatusByUser(User user) {
 		return statusRepository.findByUser(user);
 	}
 
@@ -86,10 +86,10 @@ public class StatusService extends AbstractService<Status, String> {
 		return getStatus;
 	}
 
-	public List<Status> getAllStatus() throws PurpleException {
+	public List<Status> getAllStatus(User user) throws PurpleException {
 		List<Status> statuses = new ArrayList<Status>();
 		try {
-			statuses = statusRepository.findAll();
+			statuses = statusRepository.findByUser(user);
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
 		}
