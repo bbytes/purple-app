@@ -29,7 +29,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                    // viewMode:$rootScope.viewMode
                 };
                 
-              $sessionStorage.userInfo = userInfo;
+            //  $sessionStorage.userInfo = userInfo;
 
                 // Login successful, set user locale and Redirect to home page
              /*   if(response.data.locale){
@@ -38,7 +38,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
 */
                 $rootScope.showWelcomeMessage = true;
                 
-                $state.go('user-mgr');
+                $state.go('status');
                 
             } else {
             	  // Erase the token if the user fails to log in
@@ -54,6 +54,8 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
     };
     
     $scope.logout = function() {
+    	 delete $window.sessionStorage.token;
+    	  //$sessionStorage.remove('userInfo');
     	loginService.logout().then(function (response) {
 			
 				$location.path("login");

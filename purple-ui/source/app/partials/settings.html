@@ -21,8 +21,18 @@
                     <li>
                         <a href="#"><img src="../../assets/img/ic_timeline.svg"></a>
                     </li>
-                     <li>
-                        <a href="#"><img src="../../assets/img/ic_menu.svg"></a>
+                    <li class="dropdown">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><img src="../../assets/img/ic_menu.svg">
+                         <span class="caret"></span></a>
+
+                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu">
+                             <li><a href="user-mgr"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
+                             <li><a href="projects"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
+                             <li><a href="settings"><img src="../../assets/img/set.png"> SETTINGS</a></li>
+                             <li><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><img src="../../assets/img/set.png"> Logout</a></li>
+
+                           
+                         </ul>
                     </li>
                 </ul>
             </div>
@@ -33,9 +43,9 @@
    <div class="bottom-nav">
     <div class="wrapper">
      <div class="current-page">
-      <h5><a href="#">users</a></h5>
-      <h5><a href="/projects">projects</a></h5>
-      <h5><a href="/settings" class="current-active">settings</a></h5>
+      <h5><a href="user-mgr">users</a></h5>
+      <h5><a href="projects">projects</a></h5>
+      <h5><a href="settings" class="current-active">settings</a></h5>
      </div>
      </div>
    </div>
@@ -100,12 +110,13 @@
        <h4>reset password</h4>
     </div>
    
-   <div class="row"> 
+   <div class="row">
+   <form name="signupForm"> 
    <div class="col-md-8">
      <div class="row">
        <div class="col-md-6">
         <label  class="settings">CURRENT PASSWORD</label>
-      <input type="password" class="form-control" name="password" id="password" ng-model="password" value="" />
+      <input type="password" class="form-control" name="oldPassword"  ng-model="user.oldPassword" required/>
        </div>
         <div class="col-md-6">
        </div>
@@ -114,17 +125,24 @@
       <div class="row">
       <div class="col-md-6">
           <label  class="settings">NEW PASSWORD</label>
-          <input type="password" class="form-control" name="password" id="password" ng-model="password" value="" />
+          <input type="password" class="form-control" name="newpassword"  ng-model="user.newPassword" required/>
+           <span class="label label-danger" ng-show="signupForm.newpassword.$dirty && signupForm.newpassword.$error.minlength">use atleast 8 characters</span>
+                                  <span class="label label-danger" ng-show="signupForm.newpassword.$dirty && signupForm.newpassword.$error.required">Password required.</span>
        </div>
         <div class="col-md-6">
           <label  class="settings">REPEAT NEW PASSWORD</label>
-          <input type="password" class="form-control" name="password" id="password" ng-model="password" value="" />
+          <input type="password" class="form-control" name="confirmPassword" ng-model="confirmPassword"  required/>
+          <span class="label label-danger" ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.minlength">use atleast 8 characters</span>
+                                  <span class="label label-danger" ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Retype password.</span>
+                                 <span class="label label-danger" ng-show="(signupForm.newpassword.$dirty && signupForm.confirmPassword.$dirty) && (newpassword != confirmpassword)">Password mismatch
+                                  </span>
        </div>
       
      </div>
-       <button type="button" class="btn btn-default create" style="float:left; width:35%;">save</button>
+       <button type="button" class="btn btn-default create" style="float:left; width:35%;" ng-click="updatePassword(user,confirmPassword)">save</button>
    <div class="col-md-4">
    </div>
  </div>
+ </form>
 
  </div>

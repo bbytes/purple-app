@@ -21,8 +21,19 @@
                     <li>
                         <a href="#"><img src="../../assets/img/ic_timeline.svg"></a>
                     </li>
-                     <li>
-                        <a href="#"><img src="../../assets/img/ic_menu.svg"></a>
+                    
+                     <li class="dropdown">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><img src="../../assets/img/ic_menu.svg">
+                         <span class="caret"></span></a>
+
+                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu">
+                             <li><a href="user-mgr"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
+                             <li><a href="projects"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
+                             <li><a href="settings"><img src="../../assets/img/set.png"> SETTINGS</a></li>
+                             <li><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><img src="../../assets/img/set.png"> Logout</a></li>
+
+                           
+                         </ul>
                     </li>
                 </ul>
             </div>
@@ -70,7 +81,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <label for="comment" class="settings">USERNAME</label>
-      <input type="text" ng-model="admin.userName"  name="myName" class="form-control" required>
+      <input type="text" ng-model="admin.userName"  name="myName" class="form-control"  ng-pattern="/[a-zA-Z0-9^ ]/" required>
       <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">The name is required.</span>
     </div>
     </div>

@@ -205,10 +205,12 @@ rootApp.config([
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				}
-			}).state('admin.users', {
-				url : '/users',
-				templateUrl : 'app/partials/admin-users.html',
-				controller : 'adminUsersCtrl'
+			}).state('activate', {
+				url : '/activateAccount?token',
+				templateUrl : 'app/partials/activateAccount.html',
+				controller : 'activateAccountCtrl'
+			}).state('accountactivate', {
+				controller : 'activateAccountCtrl'
 			});
 
 			// $httpProvider.defaults.headers.common['Access-Control-Allow-Origin']

@@ -1,17 +1,20 @@
 /**
  * 
  */
+/**
+ * 
+ */
 
-rootApp.service('adminService', function($rootScope, $http, $q, $window) {
+rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 
-	this.inviteUser = function(admin) {
+	this.createProject = function(project) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/admin/user/add',
-			data : admin,
+			url : $rootScope.baseUrl + '/api/v1/admin/project/create',
+			data : project,
 			headers : {
 				'Content-Type' : 'application/json',
 
@@ -32,13 +35,13 @@ rootApp.service('adminService', function($rootScope, $http, $q, $window) {
 
 	};
 
-	this.getAllusers = function() {
+	this.getAllprojects = function() {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + 'api/v1/admin/user',
+			url : $rootScope.baseUrl + '/api/v1/admin/project',
 			headers : {
 				'Content-Type' : 'application/json'
 			}
@@ -54,13 +57,13 @@ rootApp.service('adminService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 	};
 	
-	this.deleteUser = function(email) {
+	this.deleteProject = function(id) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method :'DELETE',
-			url : $rootScope.baseUrl + '/api/v1/admin/user/delete/' +email,
+			url : $rootScope.baseUrl + '/api/v1/admin/project/delete/' +id,
 			//data : admin,
 			headers : {
 				'Content-Type' : 'application/json',

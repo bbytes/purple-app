@@ -1,17 +1,20 @@
 /**
  * 
  */
+/**
+ * 
+ */
 
-rootApp.service('adminService', function($rootScope, $http, $q, $window) {
+rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 
-	this.inviteUser = function(admin) {
+	this.submitStatus = function(status) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/admin/user/add',
-			data : admin,
+			url : $rootScope.baseUrl + 'api/v1/status/add',
+			data : status,
 			headers : {
 				'Content-Type' : 'application/json',
 
@@ -81,5 +84,28 @@ rootApp.service('adminService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 
 	};
+	
+	this.getAllStatus = function() {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + '/api/v1/status',
+			headers : {
+				'Content-Type' : 'application/json'
+			}
+		}).success(function(response, status, headers, config) {
+			deferred.resolve(response);
+		}).error(function() {
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+	};
+	
 
 });
