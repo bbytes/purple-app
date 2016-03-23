@@ -30,11 +30,11 @@ public class MongoDatabaseConfig extends AbstractMongoConfiguration {
 	@Value("${spring.data.mongodb.database}")
 	private String database;
 
-	@Value("${spring.data.mongodb.username}")
-	private String username;
-
-	@Value("${spring.data.mongodb.password}")
-	private String password;
+//	@Value("${spring.data.mongodb.username}")
+//	private String username;
+//
+//	@Value("${spring.data.mongodb.password}")
+//	private String password;
 
 	@Override
 	protected String getMappingBasePackage() {

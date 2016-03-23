@@ -54,7 +54,7 @@ public class TestLoginAuthRequest extends PurpleBaseApplicationTests {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).dispatchOptions(true).addFilters(filterChainProxy)
 				.build();
 
-		testOrg = new Organization("test", "Test-Org");
+		testOrg = new Organization("test123", "Test-Org");
 
 		password = "test123";
 		email = "admin1@test.com";
@@ -71,7 +71,7 @@ public class TestLoginAuthRequest extends PurpleBaseApplicationTests {
 
 	@After
 	public void cleanUp() {
-		TenancyContextHolder.setTenant(adminUser1.getOrganization().getOrgId());
+		TenancyContextHolder.setTenant(testOrg.getOrgId());
 		userService.deleteAll();
 		organizationRepository.deleteAll();
 	}
