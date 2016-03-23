@@ -16,7 +16,6 @@ import com.bbytes.purple.utils.ErrorHandler;
  *
  */
 
-
 @Service
 public class CommentService extends AbstractService<Comment, String> {
 
