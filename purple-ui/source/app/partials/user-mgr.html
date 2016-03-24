@@ -103,7 +103,10 @@
    <table ng-repeat="user in allusers">
        <tr>
          <td class="table-user">
-             <img class="round" width="40" height="40" avatar="Username">
+		     <small>
+               <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
+             </small>
+        
              <div class="user-label">
              <h4>{{user.userName}}</h4>
              <p>{{user.email}}</p>

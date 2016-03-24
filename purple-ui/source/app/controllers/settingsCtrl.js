@@ -38,5 +38,21 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
     }
     };
     
-    
+	$("[name='my-checkbox']").bootstrapSwitch();
+	
+	//calendar
+    $scope.uiConfig = {
+      calendar:{
+        //height: 350,
+        editable: false,
+        header:{
+          left: 'prev',
+          center: 'title',
+          right: 'next'
+        },
+        dayClick: $scope.alertEventOnClick,
+        eventDrop: $scope.alertOnDrop,
+        eventResize: $scope.alertOnResize
+      }
+    };    
 });

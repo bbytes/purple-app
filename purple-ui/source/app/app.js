@@ -1,7 +1,7 @@
 // Define Angular Module with dependencies 
 var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
 		'ngAnimate', 'templates-main', 'toaster', 'ngStorage', 'angular-md5',
-		'angular-hmac-sha512','angularModalService']);
+		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar']);
 
 // Defining global variables
 rootApp.run([
@@ -101,7 +101,7 @@ rootApp.config([
 				views : {
 					'' : {
 						templateUrl : 'app/partials/status.html',
-						//controller : 'statusCtrl',
+						controller : 'statusCtrl',
 					},
 					'header@home' : {
 						templateUrl : 'app/partials/home-header.html'

@@ -99,7 +99,9 @@
     </div>
  <div class="row" ng-repeat="user in newList" >
    <div class="col-md-4">
-     <img class="round" width="40" height="40" avatar="Username">
+      <small>
+               <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
+             </small>
       <div class="user-label">
          <h4>{{user.userName}}</h4>
          <p>{{user.email}}</p>
@@ -108,7 +110,9 @@
 
 </div>
    <div class="col-md-4">
-      <img class="round" width="40" height="40" avatar="+">
+             <small>
+               <ng-letter-avatar data="+" shape="round"></ng-letter-avatar>
+             </small>
       <div class="user-label" ng-init="initUser()">
          <h4><a href="#" ng-click="getAllUseresInModal()">Add Users</a></h4>
       </div>
@@ -153,7 +157,9 @@
             <table width="100%">
               <tr>
                 <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="Username">
+                 <small>
+               <ng-letter-avatar data="sanjay" shape="round"></ng-letter-avatar>
+             </small>
                 <div class="user-label">
                 <h4>{{user.name}}</h4>
                 <p>{{user.email}}</p>
@@ -197,7 +203,9 @@
              <table width="100%">
               <tr>
                 <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="Username">
+                 <small>
+                   <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
+                </small>
                 <div class="user-label">
                 <h4>username</h4>
                 <p>username@gmail.com</p>

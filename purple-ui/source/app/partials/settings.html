@@ -60,11 +60,11 @@
    <div class="row">
      <div class="col-md-3">
         <label class="settings">CAPTURE HOURS</label>
-        <input id="switch-onText" type="checkbox" checked data-on-text="Yes">
+        <input type="checkbox" name="my-checkbox" checked>
          <br /><br /><br /><br />
 
          <label  class="settings">WEEKENDS NOTIFICATIONS</label>
-        <input id="switch-onText" type="checkbox" checked data-on-text="Yes">
+        <input type="checkbox" name="my-checkbox">
         <br /><br /><br /><br />
 
        <label  class="settings">STATUS ENABLE FOR</label>
@@ -98,7 +98,7 @@
                <a href="#" class="tag">Mon, 14 Mar 2016 <span><img src="../../assets/img/cross.png"></span></a>
               
             </td>
-            <td> <div id="my-calendar"></td>
+            <td>  <div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div></td>
           </tr>
        </table>
      </div>

@@ -6,7 +6,9 @@
  <table width="100%" ng-repeat="user in allusers">
               <tr>
                 <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="Username">
+                <small>
+               <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
+             </small>
                 <div class="user-label">
                 <h4>{{user.userName}}</h4>
                 <p>{{user.email}}</p>
@@ -27,10 +29,6 @@
 
         </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
-        </div>
-
-<div class="modal-footer">
-    <button class="btn" ng-click="ok()">Ok</button>
+   <div class="modal-footer">
+    <button class="btn save-close" ng-click="ok()"  ng-click="cancel()">SAVE & CLOSE</button>
 </div>

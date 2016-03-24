@@ -597,12 +597,12 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
 }
 .user-label h4{
     font-size: 13.4px;
-    margin-left: 50px;
+    margin-left: 60px;
     font-weight: bold;
 }
 .user-label p{
     font-size: 11px;
-    margin-left: 50px;
+    margin-left: 60px;
     margin-top: -10px;
     color: #b2b2b2;
 }
@@ -656,6 +656,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
 }
 .create-settings td{
     padding:10px;
+	width:52%;
 
 }
 
@@ -1084,3 +1085,47 @@ hr{
 .add-user-table{
     padding:10px;
 }
+small img{
+	float:left;
+}
+
+.modal-content {
+    border: 0;
+    border-radius: 0;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, .125);
+    width: 64% !important;
+    margin: 0px auto !important;;
+}
+.save-close{
+	width:100% !important;
+	background: #7c6991;
+	color:#fff;
+	font-weight:400;
+	letter-spacing:2px;
+}
+.modal-footer{
+	padding:0px !important;
+}
+
+/*calandar*/
+.fc-basic-view .fc-body .fc-row {
+    min-height: 0em !important;
+    height:2em !important;
+}
+.fc-scroller {
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
+}
+.fc-ltr .fc-basic-view .fc-day-number {
+    text-align: center !important;
+}
+.fc-unthemed th, .fc-unthemed td, .fc-unthemed thead, .fc-unthemed tbody, .fc-unthemed .fc-divider, .fc-unthemed .fc-row, .fc-unthemed .fc-popover{
+    border-color:transparent !important;
+}
+.fc-center h2{
+    font-size: 14px;
+    font-weight: bold;
+}
+.fc-today{
+    background: :red !important;
+ }
