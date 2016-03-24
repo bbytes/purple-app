@@ -2,7 +2,7 @@
  * 
  */
 rootApp.controller('statusCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window,$location) {
-
+	 $rootScope.bodyClass = 'body-standalone1';
     $scope.submitStatus = function () {
     	
        /* if (!isValid) {

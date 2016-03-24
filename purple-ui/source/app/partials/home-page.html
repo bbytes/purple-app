@@ -17,13 +17,23 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#"><img src="../../assets/img/ic_compose.svg"></a>
+                        <a href="status"><img src="../../assets/img/ic_compose.svg"></a>
                     </li>
                     <li class="active">
-                        <a href="#"><img src="../../assets/img/ic_timeline.svg"></a>
+                        <a href="home-page"><img src="../../assets/img/ic_timeline.svg"></a>
                     </li>
-                     <li>
-                        <a href="#"><img src="../../assets/img/ic_menu.svg"></a>
+                    <li class="dropdown">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><img src="../../assets/img/ic_menu.svg">
+                         <span class="caret"></span></a>
+
+                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu">
+                             <li><a href="user-mgr"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
+                             <li><a href="projects"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
+                             <li><a href="settings"><img src="../../assets/img/set.png"> SETTINGS</a></li>
+                             <li><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><img src="../../assets/img/set.png"> Logout</a></li>
+
+                           
+                         </ul>
                     </li>
                 </ul>
             </div>
@@ -44,7 +54,7 @@
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar left-side">
         <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
+        <section class="sidebar" >
            
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
@@ -57,9 +67,9 @@
                     </a>
                   </li>
 
-                   <li class="treeview">
+                <!--    <li class="treeview">
                     <a href="#">
-                        <span># Projectname</span>
+                        <span># {{}}</span>
                     </a>
                   </li>
 
@@ -67,19 +77,15 @@
                     <a href="#">
                         <span># Project</span>
                     </a>
-                  </li>
+                  </li>--> 
 
-                <li class="treeview">
+                <li class="treeview" >
                     <a href="#" class="project-pro">
                        <span class="projectx">#Projectx</span>
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
-                    <ul class="treeview-menu">
-                      <li><a href="#">#Projectxyz</a></li>
-                        <li><a href="#">#Project</a></li>
-                        <li><a href="#">#Projectname</a></li>
-                        <li><a href="#">#Project</a></li>
-                        <li><a href="#">#Projectabc</a></li>
+                    <ul class="treeview-menu" ng-repeat="status in allstatus">
+                      <li><a href="#">{{status.projectName}}</a></li>
                     </ul>
                 </li>
 
@@ -88,12 +94,9 @@
                         <i class="fa fa-user"></i> <span>USERS</span>
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
-                    <ul class="treeview-menu">
-                        <li><a href="#">#Projectxyz</a></li>
-                        <li><a href="#">#Project</a></li>
-                        <li><a href="#">#Projectname</a></li>
-                        <li><a href="#">#Project</a></li>
-                        <li><a href="#">#Projectabc</a></li>
+                    <ul class="treeview-menu" ng-repeat="status in allstatus">
+                        <li><a href="#">{{status.userName}}</a></li>
+                   
                     </ul>
                 </li>
             </ul>
@@ -151,8 +154,8 @@
         <!-- /#sidebar-wrapper -->
 
 
-    <div id="page-content-wrapper">
-     <div class="container-fluid">
+    <div id="page-content-wrapper"  ng-init="initStatus()">
+     <div class="container-fluid" ng-repeat="status in allstatus">
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
          <!-- Main content -->
@@ -161,7 +164,7 @@
          <!-- Page Content -->
                 <div class="wrapper">
    <div class="top-header">
-     <span class="project"><span class="hash"># </span> PROJECTXYZ</span> <span class="username"><span class="hash">@ </span> USERNAME</span>
+     <span class="project"><span class="hash"># </span>{{status.projectName}}</span> <span class="username"><span class="hash">@ </span>  {{status.userName}}</span>
    </div>
 
    <ul class="timeline">
@@ -181,22 +184,22 @@
           </div>
 
             <div class="timeline-heading">
-                <h4><span class="hash"># </span> PROJECTNAME <span class="hash">@ </span> NAME</h4>
-                <p>5 Hrs</p>
+                <h4><span class="hash"># </span> {{status.projectName}} <span class="hash">@ </span> {{status.userName}}</h4>
+                <p>{{status.hours}}</p>
             </div>
             <div class="timeline-body worked-on">
                <h3>worked on</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.workedOn}}</p>
             </div>
 
              <div class="timeline-body working-on">
                <h3>working on</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.workingOn}}</p>
             </div>
 
              <div class="timeline-body blocker-on">
                <h3>blockers</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.blockers}}</p>
             </div>
 
         </div>
@@ -211,26 +214,26 @@
           <div class="edit">
           <a data-target="#menu-toggle" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle"><img src="../../assets/img/comment.svg"></a>
           <a href="#" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a>
-          <a href="#" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
+          <a href="#" ng-click="deleteStatus(status.statusId)"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
           </div>
 
             <div class="timeline-heading">
-                <h4><span class="hash"># </span> PROJECTNAME <span class="hash">@ </span> NAME</h4>
-                <p>5 Hrs</p>
+                <h4><span class="hash"># </span>  {{status.projectName}}  <span class="hash">@ </span> {{status.userName}}</h4>
+                <p>{{status.hours}}</p>
             </div>
             <div class="timeline-body worked-on">
                <h3>worked on</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.workedOn}}</p>
             </div>
 
              <div class="timeline-body working-on">
                <h3>working on</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.workingOn}}</p>
             </div>
 
              <div class="timeline-body blocker-on">
                <h3>blockers</h3>
-                <p>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                <p>{{status.blockers}}</p>
             </div>
 
         </div>

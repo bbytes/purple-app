@@ -2,8 +2,8 @@
  * 
  */
 rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,adminService, $uibModal,statusService,$window) {
-
-    $scope.createProject = function () {
+	 $rootScope.bodyClass = 'body-standalone1';
+    $scope.createProject = function (project) {
     	
        
         // Validating  form
@@ -19,17 +19,20 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
         	projectService.createProject($scope.project).then(function (response) {
         	 if (response.success) {
         		 $scope.loadUsers();
+        		 $scope.clearProjectText(project)
             } else {
                 //Login failed. Showing error notification
                 appNotifyService.error(response.data, 'Invite unsuccesfull.');
             }
 
         }, function (error) {
-            //Login failed. Showing error notification
+            //Login failed. Showing error notificationvar
             appNotifyService.error(error.msg, 'Invite unsuccesfull.');
         });
         
     };
+    
+    
     
     $scope.loadUsers = function(){
     	projectService.getAllprojects().then(function (response) {
@@ -44,12 +47,18 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
             }
         });
     }
+    $scope.clearProjectText = function(project){
+    	
+    	project.projectName = '';
+    	project.timePreference = '';
+    	project.users = '';
+    }
     
     $scope.initProjects = function() {
         $scope.loadUsers();
     };
     
-  
+    
     
     
     $scope.getAllUseresInModal = function(){
@@ -63,7 +72,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
             resolve: {
                 options: function () {
                     return {
-                        "title": 'All Users',
+                        "title": 'Add Users',
                         	"data":$scope.allusers
                     };
                 }
@@ -96,9 +105,9 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
         });
     }
  
-    $scope.viewMembers = function(users){
-		console.log(users);
-		$scope.membersList=users;
+    $scope.viewMembers = function(userList){
+		console.log(userList);
+		$scope.membersList=userList;
 		$("#myModal").modal('show');
 	
 	}
