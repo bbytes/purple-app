@@ -2,7 +2,8 @@
  * 
  */
 rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminService,appNotifyService,$window) {
-
+	
+	 $rootScope.bodyClass = 'body-standalone1';
     $scope.invite = function (isValid) {
     	
         if (!isValid) {

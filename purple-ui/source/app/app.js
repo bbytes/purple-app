@@ -84,7 +84,7 @@ rootApp.config([
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home-page.html',
-						controller : 'home-pageCtrl',
+						controller : 'homepageCtrl',
 					},
 					'header@home' : {
 						templateUrl : 'app/partials/home-header.html'
