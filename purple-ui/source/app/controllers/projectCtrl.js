@@ -131,9 +131,11 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
     	//All functions related to status have to write in statusCtrl time being written here
         if(workedOn !=null && workingOn !=null && time !=null && projectId !=null ){
         statusService.submitStatus($scope.status).then(function (response) {
-         	 if (response.success = true) {
+         	 if (response.success) {
+         		 
          		$scope.usersstatusLoad();
-         		$scope.clearStatustext(status);
+         		$window.location.reload()
+         		
              } else {
                  //Login failed. Showing error notification
                  appNotifyService.error(response.data, 'Invite unsuccesfull.');
@@ -160,12 +162,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
          });
      }
      
-     $scope.clearStatustext = function(status){
-     	
-    	 status.blockers = '';
-    	 status.workedOn = '';
-    	 status.workingOn = '';
-     }
+   
      
      $scope.initStatus = function() {
          $scope.usersstatusLoad();
