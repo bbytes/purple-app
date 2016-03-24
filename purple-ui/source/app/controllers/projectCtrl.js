@@ -19,7 +19,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
         	projectService.createProject($scope.project).then(function (response) {
         	 if (response.success) {
         		 $scope.loadUsers();
-        		 $scope.clearProjectText(project)
+        		 $scope.clearProjectText(project);
             } else {
                 //Login failed. Showing error notification
                 appNotifyService.error(response.data, 'Invite unsuccesfull.');
@@ -51,7 +51,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
     	
     	project.projectName = '';
     	project.timePreference = '';
-    	project.users = '';
+    	project.users.length = 0;
     }
     
     $scope.initProjects = function() {
@@ -133,6 +133,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
         statusService.submitStatus($scope.status).then(function (response) {
          	 if (response.success = true) {
          		$scope.usersstatusLoad();
+         		$scope.clearStatustext(status);
              } else {
                  //Login failed. Showing error notification
                  appNotifyService.error(response.data, 'Invite unsuccesfull.');
@@ -157,6 +158,13 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
                  $scope.allstatus   =  response.data.gridData;
              }
          });
+     }
+     
+     $scope.clearStatustext = function(status){
+     	
+    	 status.blockers = '';
+    	 status.workedOn = '';
+    	 status.workingOn = '';
      }
      
      $scope.initStatus = function() {
