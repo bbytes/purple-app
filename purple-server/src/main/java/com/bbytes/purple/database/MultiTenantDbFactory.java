@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
 import org.springframework.util.Assert;
 
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.utils.TenancyContextHolder;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -43,6 +44,11 @@ public class MultiTenantDbFactory extends SimpleMongoDbFactory {
 
 	@Override
 	public DB getDb() {
+		if (!SpringProfileService.runningSaasMode()) {
+			// always return default db if app running in enterprise mode
+			return super.getDb(this.defaultName); 
+		}
+		// it will come to this block only if app running in saas mode
 		final String tenantName = TenancyContextHolder.getTenant();
 		final String dbToUse = (tenantName != null ? tenantName : this.defaultName);
 		logger.debug("Acquiring database: " + dbToUse);
