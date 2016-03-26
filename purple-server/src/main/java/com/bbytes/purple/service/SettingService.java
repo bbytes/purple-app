@@ -43,7 +43,7 @@ public class SettingService {
 			if (!userService.userEmailExist(user.getEmail()))
 				throw new PurpleException("Error while resetting password", ErrorHandler.USER_NOT_FOUND);
 			try {
-				Organization organization = organizationService.findByOrgId(TenancyContextHolder.getTenant());
+				Organization organization = user.getOrganization();
 				organization.setTimePreference(timeZone);
 				organizationService.save(organization);
 			} catch (Throwable e) {

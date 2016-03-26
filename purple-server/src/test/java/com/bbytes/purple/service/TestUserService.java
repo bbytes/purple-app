@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 
-import com.bbytes.purple.PurpleApplicationTests;
+import com.bbytes.purple.PurpleBaseApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
@@ -14,7 +14,7 @@ import com.bbytes.purple.utils.TenancyContextHolder;
 
 import io.jsonwebtoken.lang.Assert;
 
-public class TestUserService extends PurpleApplicationTests {
+public class TestUserService extends PurpleBaseApplicationTests {
 
 	@Autowired
 	private OrganizationService organizationService;
@@ -97,13 +97,23 @@ public class TestUserService extends PurpleApplicationTests {
 
 	@Test
 	public void testDelete() throws InterruptedException {
-		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
-		userService.deleteAll();
-		Assert.isNull(tenantResolverService.findOneByEmail(testUser.getEmail()));
-		userService.save(testUser);
-		Assert.notNull(tenantResolverService.findOneByEmail(testUser.getEmail()));
-		userService.delete(testUser);
-		Assert.isNull(tenantResolverService.findOneByEmail(testUser.getEmail()));
+		if(springProfileService.isSaasMode()){
+			TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
+			userService.deleteAll();
+			Assert.isNull(tenantResolverService.findOneByEmail(testUser.getEmail()));
+			userService.save(testUser);
+			Assert.notNull(tenantResolverService.findOneByEmail(testUser.getEmail()));
+			userService.delete(testUser);
+			Assert.isNull(tenantResolverService.findOneByEmail(testUser.getEmail()));	
+		}else{
+			TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
+			userService.deleteAll();
+			Assert.isNull(tenantResolverService.findOneByEmail(testUser.getEmail()));
+			userService.save(testUser);
+			Assert.isNull(tenantResolverService.findOneByEmail(testUser.getEmail()));
+			
+		}
+		
 	}
 
 }

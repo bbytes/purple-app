@@ -23,6 +23,7 @@ import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.OrganizationService;
+import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.SuccessHandler;
 import com.bbytes.purple.utils.TenancyContextHolder;
@@ -50,6 +51,7 @@ public class AdminController {
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
+
 	/**
 	 * The add user method is used to add users into tenant
 	 * 
@@ -60,7 +62,7 @@ public class AdminController {
 	@RequestMapping(value = "/api/v1/admin/user/add", method = RequestMethod.POST)
 	public RestResponse addUser(@RequestBody UserDTO userDTO) throws PurpleException {
 
-		Organization org = organizationService.findByOrgId(TenancyContextHolder.getTenant());
+		Organization org = userService.getLoggedinUser().getOrganization();
 		User addUser = new User(userDTO.getUserName(), userDTO.getEmail());
 		addUser.setOrganization(org);
 		addUser.setStatus(User.PENDING);
@@ -122,7 +124,7 @@ public class AdminController {
 	public RestResponse createProject(@RequestBody ProjectDTO projectDTO) throws PurpleException {
 
 		// we assume angular layer will do empty checks for project
-		Organization org = organizationService.findByOrgId(TenancyContextHolder.getTenant());
+		Organization org = userService.getLoggedinUser().getOrganization();
 		Project addProject = new Project(projectDTO.getProjectName(), projectDTO.getTimePreference());
 		addProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();
@@ -204,7 +206,7 @@ public class AdminController {
 			throws PurpleException {
 
 		// we assume angular layer will do null checks for project object
-		Organization org = organizationService.findByOrgId(TenancyContextHolder.getTenant());
+		Organization org = userService.getLoggedinUser().getOrganization();
 		Project updateProject = new Project(projectDTO.getProjectName(), projectDTO.getTimePreference());
 		updateProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();

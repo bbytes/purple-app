@@ -13,7 +13,7 @@ import com.bbytes.purple.database.TestMongoDatabaseConfig;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { PurpleApplication.class, TestMongoDatabaseConfig.class })
 @WebAppConfiguration
-@ActiveProfiles("test")
+@ActiveProfiles({"test","saas"})
 public class PurpleApplicationTests {
 
 	

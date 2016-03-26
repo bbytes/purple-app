@@ -18,8 +18,11 @@ public final class TokenHandler {
 
 	private final String secret;
 
-	public TokenHandler(String secret) {
+	private final boolean saasMode;
+
+	public TokenHandler(String secret, boolean saasMode) {
 		this.secret = StringUtils.checkNotBlank(secret);
+		this.saasMode = saasMode;
 	}
 
 	/**
@@ -63,9 +66,9 @@ public final class TokenHandler {
 	 * @throws AuthenticationServiceException
 	 */
 	public TokenDataHolder parseJWTStringTokenForUser(String jwtStringToken) throws AuthenticationServiceException {
-		
+
 		try {
-			String token= TokenUtils.decode(jwtStringToken);
+			String token = TokenUtils.decode(jwtStringToken);
 			Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 
 			String email = body.getSubject();
@@ -73,14 +76,20 @@ public final class TokenHandler {
 			String role = (String) body.get(GlobalConstants.USER_ROLE);
 			// need to add expired , account locked etc to
 			// mongo db user domain object
-			if (email != null && tenantId != null && !tenantId.trim().isEmpty() && role != null
-					&& !role.trim().isEmpty()) {
+			if (email != null && role != null && !role.trim().isEmpty()) {
+
+				// if saas mode then auth token should have tenant info
+				if (saasMode) {
+					if (tenantId == null || tenantId.trim().isEmpty())
+						throw new JwtException("Auth Token not valid, missing key values");
+				}
+
 				User userDetail = new User(email, "N/A", AuthorityUtils.createAuthorityList(role));
 				TokenDataHolder tokenDataHolder = new TokenDataHolder(userDetail, tenantId);
 				return tokenDataHolder;
-			} else {
-				throw new JwtException("Auth Token not valid, missing key values");
 			}
+
+			throw new JwtException("Auth Token not valid, missing key values");
 
 		} catch (Exception e) {
 			throw new AuthenticationServiceException("Auth Token not valid or expired or tampered");

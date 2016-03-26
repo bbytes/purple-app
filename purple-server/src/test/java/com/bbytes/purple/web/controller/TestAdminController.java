@@ -23,6 +23,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -109,22 +110,27 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testAddUserFailed() throws Exception {
 
-		TenancyContextHolder.setTenant(org.getOrgId());
+		TenancyContextHolder.setTenant(adminUser.getOrganization().getOrgId());
 		organizationRepository.deleteAll();
 
-		UserDTO requestUserDTO = new UserDTO();
-		requestUserDTO.setUserName("user1");
-		requestUserDTO.setEmail("aaa@gmail.com");
 
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-		String requestJson = ow.writeValueAsString(requestUserDTO);
+		if (springProfileService.isSaasMode()) {
+			
+			UserDTO requestUserDTO = new UserDTO();
+			requestUserDTO.setUserName("user1");
+			requestUserDTO.setEmail("aaa@gmail.com");
 
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
-				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is5xxServerError())
-				.andDo(print()).andExpect(content().string(containsString("{\"success\":false")));
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+			ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+			String requestJson = ow.writeValueAsString(requestUserDTO);
+			
+			String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+			mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+					.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is5xxServerError())
+					.andDo(print()).andExpect(content().string(containsString("{\"success\":false")));
+		}
+
 	}
 
 	// Test cases for delete user
@@ -335,7 +341,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 	@Test
 	public void testGetAllProjectsPasses() throws Exception {
-		
+
 		User user1 = new User("akshay", "akshay@gmail.com");
 		user1.setOrganization(org);
 		userService.save(user1);
@@ -347,7 +353,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		List<User> userList = new ArrayList<User>();
 		userList.add(user1);
 		userList.add(user2);
-		
+
 		Project project1 = new Project("purple", "4pm");
 		project1.setOrganization(org);
 		project1.setUser(userList);

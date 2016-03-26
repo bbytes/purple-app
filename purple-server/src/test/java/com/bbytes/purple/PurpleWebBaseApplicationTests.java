@@ -30,6 +30,7 @@ import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
@@ -95,6 +96,9 @@ public class PurpleWebBaseApplicationTests extends PurpleApplicationTests {
 
 	@Autowired
 	private TenantResolverService tenantResolverService;
+	
+	@Autowired
+	protected SpringProfileService springProfileService;
 
 	public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 

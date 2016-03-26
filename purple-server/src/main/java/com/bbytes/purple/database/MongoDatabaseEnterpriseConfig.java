@@ -5,9 +5,11 @@ import java.util.Collections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -19,22 +21,23 @@ import com.mongodb.ServerAddress;
 @Configuration
 @EnableMongoRepositories(basePackages = "com.bbytes.purple")
 @EnableMongoAuditing
-public class MongoDatabaseConfig extends AbstractMongoConfiguration {
+@Profile({"enterprise","!test"})
+public class MongoDatabaseEnterpriseConfig extends AbstractMongoConfiguration {
 
 	@Value("${spring.data.mongodb.host}")
-	private String host;
+	protected String host;
 
 	@Value("${spring.data.mongodb.port}")
-	private Integer port;
+	protected Integer port;
 
 	@Value("${spring.data.mongodb.database}")
-	private String database;
+	protected String database;
 
 //	@Value("${spring.data.mongodb.username}")
-//	private String username;
+//	protected String username;
 //
 //	@Value("${spring.data.mongodb.password}")
-//	private String password;
+//	protected String password;
 
 	@Override
 	protected String getMappingBasePackage() {
@@ -63,15 +66,14 @@ public class MongoDatabaseConfig extends AbstractMongoConfiguration {
 	}
 
 	@Bean
-	public MultiTenantDbFactory mongoDbFactory(final Mongo mongo) throws Exception {
-		return new MultiTenantDbFactory((MongoClient) mongo, database);
+	public SimpleMongoDbFactory mongoDbFactory(final Mongo mongo) throws Exception {
+		return new SimpleMongoDbFactory((MongoClient) mongo, database);
 	}
 
 	@Bean
 	public MongoTemplate mongoTemplate(final Mongo mongo) throws Exception {
-		MultiTenantDbFactory mongoDbFactory = mongoDbFactory(mongo);
+		SimpleMongoDbFactory mongoDbFactory = mongoDbFactory(mongo);
 		MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory);
-		mongoDbFactory.setMongoTemplate(mongoTemplate);
 		return mongoTemplate;
 	}
 

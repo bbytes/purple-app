@@ -11,11 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.util.Base64Utils;
 
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.utils.GlobalConstants;
-import com.bbytes.purple.utils.TokenUtils;
 
 public class TokenAuthenticationProvider {
 
@@ -29,12 +28,15 @@ public class TokenAuthenticationProvider {
 
 	@Autowired
 	private AuthUserDetailsService authUserDetailsService;
+	
+	@Autowired
+	private SpringProfileService springProfileService;
 
 	private TokenHandler tokenHandler;
 
 	@PostConstruct
 	public void setupTokenHandler() {
-		tokenHandler = new TokenHandler(secret);
+		tokenHandler = new TokenHandler(secret,springProfileService.isSaasMode());
 	}
 
 	/**

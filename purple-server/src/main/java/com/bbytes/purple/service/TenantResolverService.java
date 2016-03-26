@@ -14,9 +14,14 @@ import com.bbytes.purple.utils.TenancyContextHolder;
 public class TenantResolverService {
 
 	@Autowired
+	private SpringProfileService springProfileService;
+
+	@Autowired
 	private TenantResolverRepository tenantResolverRepository;
 
 	public String findTenantIdForUserEmail(String email) {
+		if (springProfileService.isEnterpriseMode())
+			return null;
 
 		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
 
@@ -150,7 +155,7 @@ public class TenantResolverService {
 		TenancyContextHolder.setTenant(tenantIdToBeSetBackToContext);
 		return false;
 	}
-	
+
 	public boolean organizationExist(String orgId) {
 		String tenantIdToBeSetBackToContext = TenancyContextHolder.getTenant();
 

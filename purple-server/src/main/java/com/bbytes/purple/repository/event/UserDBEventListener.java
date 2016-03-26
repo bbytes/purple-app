@@ -1,6 +1,7 @@
 package com.bbytes.purple.repository.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.AfterDeleteEvent;
@@ -19,6 +20,7 @@ import com.mongodb.DBObject;
  * 
  */
 @Component
+@Profile("saas")
 public class UserDBEventListener extends AbstractMongoEventListener<User> {
 
 	@Autowired

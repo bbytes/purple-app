@@ -16,6 +16,7 @@ import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
@@ -64,6 +65,9 @@ public class PurpleBaseApplicationTests extends PurpleApplicationTests {
 	
 	@Autowired
 	private TenantResolverService tenantResolverService;
+	
+	@Autowired
+	protected SpringProfileService springProfileService;
 
 
 	@Before
