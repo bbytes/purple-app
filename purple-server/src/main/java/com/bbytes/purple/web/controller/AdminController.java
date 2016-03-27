@@ -22,11 +22,8 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.OrganizationService;
-import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.SuccessHandler;
-import com.bbytes.purple.utils.TenancyContextHolder;
 
 /**
  * Admin Controller
@@ -41,9 +38,6 @@ public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
-
-	@Autowired
-	private OrganizationService organizationService;
 
 	@Autowired
 	private UserService userService;

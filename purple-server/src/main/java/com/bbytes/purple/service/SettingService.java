@@ -8,7 +8,6 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.PasswordDTO;
 import com.bbytes.purple.utils.ErrorHandler;
-import com.bbytes.purple.utils.TenancyContextHolder;
 
 @Service
 public class SettingService {
