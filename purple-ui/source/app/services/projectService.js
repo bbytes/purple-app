@@ -41,7 +41,7 @@ rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + '/api/v1/admin/project',
+			url : $rootScope.baseUrl + 'api/v1/admin/project',
 			headers : {
 				'Content-Type' : 'application/json'
 			}
