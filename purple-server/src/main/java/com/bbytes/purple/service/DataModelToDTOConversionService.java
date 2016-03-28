@@ -1,5 +1,6 @@
 package com.bbytes.purple.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
+import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class DataModelToDTOConversionService {
@@ -68,6 +70,9 @@ public class DataModelToDTOConversionService {
 	}
 
 	public StatusDTO convertStatus(Status status) {
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_TIME_FORMAT);
+
 		StatusDTO statusDTO = new StatusDTO();
 		statusDTO.setStatusId(status.getStatusId());
 		statusDTO.setProjectName(status.getProject().getProjectName());
@@ -76,6 +81,7 @@ public class DataModelToDTOConversionService {
 		statusDTO.setWorkingOn(status.getWorkingOn());
 		statusDTO.setHours(status.getHours());
 		statusDTO.setBlockers(status.getBlockers());
+		statusDTO.setDateTime(simpleDateFormat.format(status.getDateTime()).toString());
 		return statusDTO;
 	}
 

@@ -1,5 +1,7 @@
 package com.bbytes.purple.domain;
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -12,12 +14,13 @@ import lombok.Data;
 
 /**
  * Status Domain Object
+ * 
  * @author akshay
  */
 
 @Data
 @Document
-public class Status {
+public class Status implements Comparable<Status> {
 	
 	@Id
 	private String statusId;
@@ -35,7 +38,7 @@ public class Status {
 	private int hours;
 	
 	@Field("date_time")
-	private DateTime dateTime;
+	private Date dateTime;
 	
 	@DBRef
 	private Project project;
@@ -49,12 +52,17 @@ public class Status {
 	@LastModifiedDate
 	private DateTime lastModified;
 
-	public Status(String workingOn, String workedOn, int hours, DateTime dateTime) {
+	public Status(String workingOn, String workedOn, int hours, Date dateTime) {
 
 		this.workingOn = workingOn;
 		this.workedOn = workedOn;
 		this.hours = hours;
 		this.dateTime = dateTime;
-	}	
-	
+	}
+
+	@Override
+	public int compareTo(Status status) {
+		return getDateTime().compareTo(status.getDateTime());
+	}
+
 }

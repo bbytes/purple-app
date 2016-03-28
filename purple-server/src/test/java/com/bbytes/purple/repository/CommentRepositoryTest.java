@@ -1,9 +1,9 @@
 package com.bbytes.purple.repository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -50,7 +50,7 @@ public class CommentRepositoryTest extends PurpleBaseApplicationTests {
 		project = new Project("purple-app", "5:00 PM");
 		projectRepository.save(project);
 
-		status = new Status("purple", "revil", 2, new DateTime());
+		status = new Status("purple", "revil", 2, new Date());
 		status.setUser(user);
 		status.setProject(project);
 		statusRepository.save(status);

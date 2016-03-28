@@ -5,9 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,11 +38,11 @@ public class StatusRepositoryTest extends PurpleBaseApplicationTests {
 		project1 = new Project("web", "2pm");
 		project1.setOrganization(org1);
 
-		status1 = new Status("testcase2", "testcase1", 8, new DateTime());
+		status1 = new Status("testcase2", "testcase1", 8, new Date());
 		status1.setProject(project1);
 		status1.setUser(testUser);
 
-		status2 = new Status("t2", "t1", 4, new DateTime());
+		status2 = new Status("t2", "t1", 4, new Date());
 		status2.setProject(project1);
 		status2.setUser(testUser);
 

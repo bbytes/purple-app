@@ -1,15 +1,16 @@
 package com.bbytes.purple.web.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.joda.time.DateTime;
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -200,7 +201,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		userService.save(normalUser);
 		userService.updatePassword("test123", normalUser);
 
-		Status status = new Status("test", "test", 3, new DateTime());
+		Status status = new Status("test", "test", 3, new Date());
 		status.setProject(project);
 		status.setUser(normalUser);
 		status = statusService.save(status);
@@ -265,14 +266,15 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		userService.save(normalUser);
 		userService.updatePassword("test123", normalUser);
 
-		Status status = new Status("test", "test", 3, new DateTime());
+		Status status = new Status("test", "test", 3, new Date());
+		status.setBlockers("111");
 		status.setProject(project);
 		status.setUser(normalUser);
-		statusService.save(status);
+		status = statusService.save(status);
 
-		Status status1 = new Status("test1", "test1", 4, new DateTime());
+		Status status1 = new Status("hello", "hello", 4, new Date());
 		status1.setProject(project);
-		status1.setUser(adminUser);
+		status1.setUser(normalUser);
 		statusService.save(status1);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
@@ -300,12 +302,12 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		userService.save(normalUser);
 		userService.updatePassword("test123", normalUser);
 
-		Status status = new Status("test", "test", 3, new DateTime());
+		Status status = new Status("test", "test", 3, new Date());
 		status.setProject(project);
 		status.setUser(normalUser);
 		status = statusService.save(status);
 
-		Status status1 = new Status("test1", "test1", 3, new DateTime());
+		Status status1 = new Status("test1", "test1", 3, new Date());
 		status1.setProject(project);
 		status1.setUser(normalUser);
 		status1 = statusService.save(status1);
@@ -371,7 +373,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		userService.save(normalUser);
 		userService.updatePassword("test123", normalUser);
 
-		Status status = new Status("test", "test", 3, new DateTime());
+		Status status = new Status("test", "test", 3, new Date());
 		status.setProject(project);
 		status.setUser(normalUser);
 		status = statusService.save(status);

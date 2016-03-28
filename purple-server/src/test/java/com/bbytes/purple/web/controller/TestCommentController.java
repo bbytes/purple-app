@@ -9,11 +9,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.joda.time.DateTime;
+import java.util.Date;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import com.bbytes.purple.PurpleWebBaseApplicationTests;
 import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Organization;
@@ -49,7 +51,7 @@ public class TestCommentController extends PurpleWebBaseApplicationTests {
 		org = new Organization("Accenture", "Accenture IT Services");
 		project = new Project("purple", "4pm");
 		project.setOrganization(org);
-		status = new Status("purple", "reveal", 40, new DateTime());
+		status = new Status("purple", "reveal", 40, new Date());
 		status.setUser(user);
 
 		TenancyContextHolder.setTenant(org.getOrgId());

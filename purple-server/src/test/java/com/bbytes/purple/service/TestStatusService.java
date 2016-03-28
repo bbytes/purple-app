@@ -1,6 +1,7 @@
 package com.bbytes.purple.service;
 
-import org.joda.time.DateTime;
+import java.util.Date;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -53,7 +54,7 @@ public class TestStatusService extends PurpleBaseApplicationTests {
 	public void testSave() {
 
 		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());
-		status1 = new Status("testcase2", "testcase1", 8, new DateTime());
+		status1 = new Status("testcase2", "testcase1", 8, new Date());
 		status1.setProject(project1);
 		status1.setUser(testUser);
 

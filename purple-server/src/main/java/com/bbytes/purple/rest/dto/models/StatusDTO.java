@@ -30,5 +30,7 @@ public class StatusDTO implements Serializable {
 	private String workingOn;
 
 	private String blockers;
+	
+	private String dateTime;
 
 }

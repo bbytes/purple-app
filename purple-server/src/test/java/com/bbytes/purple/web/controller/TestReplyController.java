@@ -1,16 +1,16 @@
 package com.bbytes.purple.web.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -60,7 +60,7 @@ public class TestReplyController extends PurpleWebBaseApplicationTests {
 		project = new Project("purple", "4pm");
 		project.setOrganization(org);
 
-		status1 = new Status("Test1", "Test2", 3, new DateTime());
+		status1 = new Status("Test1", "Test2", 3, new Date());
 		status1.setProject(project);
 		status1.setUser(normalUser);
 
