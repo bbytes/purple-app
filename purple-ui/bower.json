@@ -18,7 +18,10 @@
     "fullcalendar": "^2.6.1",
     "ng-letter-avatar": "ngletteravatar#^4.0.1",
     "angular-ui-calendar": "^1.0.1",
-    "angular-bootstrap-switch": "^0.5.0"
+    "angular-bootstrap-switch": "^0.5.0",
+    "ez-timepicker": "^0.0.2",
+    "jt.timepicker": "timepicker#^1.8.11",
+    "angular-strap": "^2.3.7"
   },
   "devDependencies": {}
 }

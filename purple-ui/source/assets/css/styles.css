@@ -586,7 +586,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
      margin-bottom: 20px;
 }
 .create-project{
-    width:60%;
+    width:100%;
 }
 
 
@@ -603,7 +603,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
 .user-label p{
     font-size: 11px;
     margin-left: 60px;
-    margin-top: -10px;
+    margin-top: 0px;
     color: #b2b2b2;
 }
 .create{
@@ -1129,3 +1129,19 @@ small img{
 .fc-today{
     background: :red !important;
  }
+ .alert {
+    border-radius: 0px !important;
+    border: 1px solid #ccc;
+}
+.add-user-icon{
+	height: 45px;
+    width: 45px;
+    background: #528663;
+    text-align: center;
+    padding: 0px;
+    float: left;
+    border-radius: 50%;
+    font-size: 28px;
+    color: #fff;
+	margin-top: 12px;
+}

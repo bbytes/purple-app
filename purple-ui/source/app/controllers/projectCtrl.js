@@ -175,5 +175,40 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
      	}
      });
      }
+	 
+	 $scope.show = true;
+     $scope.closeAlert = function() {
+     $scope.show = false;
+   };
+
+    $scope.alert = {type: 'alert-info'};
     
+	 {
+  $scope.time = new Date(1970, 0, 1, 10, 30, 40);
+  $scope.selectedTimeAsNumber = 10 * 36e5 + 30 * 6e4 + 40 * 1e3;
+  $scope.selectedTimeAsString = '10:00';
+  $scope.sharedDate = new Date(new Date().setMinutes(0, 0));
+}
+
+
+
+ {
+      return {
+        restrict: 'E',
+        replace:true,
+        template: '<div class="loading"><img src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif" width="20" height="20" />LOADING...</div>',
+        link: function (scope, element, attr) {
+              scope.$watch('loading', function (val) {
+                  if (val)
+                      $(element).show();
+                  else
+                      $(element).hide();
+              });
+        }
+      }
+  }
+
+  
 });
+
+

@@ -59,7 +59,7 @@
 <div class="create-project" >
  <form  name="myForm">
  <div class="row">
-  <div class="col-md-7">
+  <div class="col-md-5">
     <div class="form-group">
       <label for="comment" class="settings">PROJECT NAME</label>
       <input type="text" name= "myName" ng-model="project.projectName" class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
@@ -68,58 +68,55 @@
     </div>
   </div>
 
-  <div class="col-md-5">
+  <div class="col-md-4">
     <div class="form-group">
       <label for="comment" class="settings">TIME PREFERENCE</label>
       <div class="row">
-       <div class="col-md-6">
-        <select class="form-control turnintodropdown" ng-model="project.timePreference" id="sel1" required>
-           <option>5 : 00</option>
-           <option>2 : 00</option>
-           <option>3 : 00</option>
-           <option>4 : 00</option>
-        </select>
-       </div>
-       <div class="col-md-6">
-         <select class="form-control turnintodropdown" id="sel1">
-           <option>AM</option>
-           <option>PM</option>
-        </select>
-       </div>
+	  
+	  <input type="text" size="8" class="form-control" ng-model="project.timePreference" data-time-format="h:mm:ss a" data-autoclose="1" placeholder="Time" bs-timepicker required>
+	  
+      
 
        </div>
     </div>
     </div>
+	
+	<div class="col-md-3">
+             <small>
+               <div class="add-user-icon">+</div>
+             </small>
+      <div class="user-label" ng-init="initUser()">
+         <h4 style="margin-top:22px;"><a href="#" ng-click="getAllUseresInModal()">Add Users</a></h4>
+      </div>
+   </div>
+	
   </div>
   </form>
 </div>
+
  
+ <div class="col-md-12">
+ <div class="row">
   <div class="main-subtitle">
        <h4>users</h4>
     </div>
- <div class="row" ng-repeat="user in newList" >
-   <div class="col-md-4">
-      <small>
-               <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
-             </small>
+
+   <div class="col-md-6" ng-repeat="user in newList">
+   <uib-alert type="{{alert.type}}" close="closeAlert()" ng-if="show">
+        <small>
+          <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
+       </small>
       <div class="user-label">
          <h4>{{user.userName}}</h4>
          <p>{{user.email}}</p>
       </div>
+	  </uib-alert>
+	   <div style="margin-bottom:30px;"></div>
    </div>
-
-</div>
-   <div class="col-md-4">
-             <small>
-               <ng-letter-avatar data="+" shape="round"></ng-letter-avatar>
-             </small>
-      <div class="user-label" ng-init="initUser()">
-         <h4><a href="#" ng-click="getAllUseresInModal()">Add Users</a></h4>
-      </div>
-   </div>
+  
    
-
- 
+</div>
+</div>
   <button type="button" class="btn btn-default create" ng-click="createProject(project)">create project</button>
 
 <div class="col-md-12">
