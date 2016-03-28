@@ -121,7 +121,7 @@
            </select>
         </td>
           <td style="float:right;">
-             <div ng-click="deleteUser(user.email)"><img src="../../assets/img/delete.png"></div>
+             <div ng-click="deleteUser(user.email, $index)" ng-confirm-click="Are you sure want to delete??"><img src="../../assets/img/delete.png"></div>
           </td>
       </tr>
 
