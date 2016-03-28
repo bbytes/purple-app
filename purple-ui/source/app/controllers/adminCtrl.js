@@ -49,12 +49,15 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
         $scope.loadUsers();
     };
     
-    $scope.deleteUser =function(email){
+    $scope.deleteUser =function(email, $index){
     	adminService.deleteUser(email).then(function (response) {
     		if (response.success) {
     			//$route.reload();
-    			$window.location.reload();
+    			//$window.location.reload();
+    			appNotifyService.success( 'User has been deleted.');
+    			
     	}
+    		$scope.allusers.splice($index, 1);
     });
     }
     

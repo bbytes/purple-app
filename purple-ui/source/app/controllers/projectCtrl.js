@@ -129,7 +129,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
          
          // Calling login service
     	//All functions related to status have to write in statusCtrl time being written here
-        if(workedOn !=null && workingOn !=null && time !=null && projectId !=null ){
+       
         statusService.submitStatus($scope.status).then(function (response) {
          	 if (response.success) {
          		 
@@ -145,10 +145,8 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
              //Login failed. Showing error notification
              appNotifyService.error(error.msg, 'Invite unsuccesfull.');
          });
-        }
-        else{
-        	appNotifyService.error( 'Enter Required fields.');
-        }
+        
+      
          
      };
     
@@ -167,12 +165,12 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
      $scope.initStatus = function() {
          $scope.usersstatusLoad();
      };
-     $scope.deleteProject =function(id){
+     $scope.deleteProject =function(id,$index){
     	 projectService.deleteProject(id).then(function (response) {
-     		if (response.success) {
-     			//$route.reload();
-     			$window.location.reload();
+     		if (response.success =true) {
+     			appNotifyService.success( 'Project has been deleted.');
      	}
+     		$scope.allprojects.splice($index, 1);
      });
      }
     

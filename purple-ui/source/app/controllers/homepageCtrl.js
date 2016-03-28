@@ -16,12 +16,13 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
      };
      
      
-     $scope.deleteStatus =function(id){
+     $scope.deleteStatus =function(id,$index){
+    	
 		  statusService.deleteStatus(id).then(function (response) {
 	    		if (response.success =true) {
-	    			//$route.reload();
-	    			$window.location.reload();
+	    		appNotifyService.success( 'Status has been deleted.');
 	    	}
+	    $scope.allstatus.splice($index, 1);
 	    });
 	    }
      
