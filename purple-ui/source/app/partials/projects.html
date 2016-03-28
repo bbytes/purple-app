@@ -130,7 +130,7 @@
         <td class="table-user">{{project.projectName}} <br /><span class="u-number">{{project.usersCount}} Users</span></td>
         <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
         <td><a href="#"  ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png"> View Member List</a></td>
-        <td style="float:right;"><img src="../../assets/img/edit.png"><a href="#"  ng-click="deleteProject(project.projectId)"> <img src="../../assets/img/delete.png"></a></td>
+        <td style="float:right;"><img src="../../assets/img/edit.png"><a href="#"  ng-click="deleteProject(project.projectId,$index)" ng-confirm-click="Are you sure want to delete??"> <img src="../../assets/img/delete.png"></a></td>
       </tr>
 
    </table>

@@ -3,7 +3,6 @@ package com.bbytes.purple.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.PasswordDTO;
@@ -14,9 +13,6 @@ public class SettingService {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private OrganizationService organizationService;
 
 	@Autowired
 	private PasswordHashService passwordHashService;
@@ -42,9 +38,8 @@ public class SettingService {
 			if (!userService.userEmailExist(user.getEmail()))
 				throw new PurpleException("Error while resetting password", ErrorHandler.USER_NOT_FOUND);
 			try {
-				Organization organization = user.getOrganization();
-				organization.setTimePreference(timeZone);
-				organizationService.save(organization);
+				user.setTimeZone(timeZone);
+				userService.save(user);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.PASSWORD_INCORRECT);
 			}

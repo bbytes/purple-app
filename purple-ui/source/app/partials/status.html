@@ -96,7 +96,7 @@
         <div class="timeline-panel">
             <div class="timeline-heading">
                 <h4><span class="hash"> <span class="hash">@ </span> {{status.projectName}}</h4>
-                <p>5 Hrs</p>
+                <p>{{status.hours}}</p>
             </div>
             <div class="timeline-body worked-on">
                <h3>worked on</h3>
@@ -141,7 +141,7 @@
   <div class="col-md-3">
      <div class="form-sidebar">
        <div class="form-group">
-         <select class="form-control turnintodropdown" name="time" ng-model="status.time" id="sel1" required>
+         <select class="form-control turnintodropdown" name="time" ng-model="$parent.status.hours" id="sel1" required>
            <option>HRS</option>
            <option>1</option>
            <option>1.5</option>

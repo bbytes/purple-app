@@ -1,6 +1,12 @@
 package com.bbytes.purple.service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -58,10 +64,11 @@ public class StatusService extends AbstractService<Status, String> {
 				throw new PurpleException("Error while adding status", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				Status addStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(),
-						new DateTime());
+						new Date());
 				Project project = projectService.findByProjectId(status.getProjectId());
 				addStatus.setProject(project);
 				addStatus.setUser(user);
+				addStatus.setBlockers(status.getBlockers());
 				savedStatus = statusRepository.save(addStatus);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_STATUS_FAILED);
@@ -90,6 +97,8 @@ public class StatusService extends AbstractService<Status, String> {
 		List<Status> statuses = new ArrayList<Status>();
 		try {
 			statuses = statusRepository.findByUser(user);
+			Collections.sort(statuses,Collections.reverseOrder());
+			
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
 		}
@@ -131,4 +140,6 @@ public class StatusService extends AbstractService<Status, String> {
 		return updatedStatus;
 
 	}
+	
+	
 }

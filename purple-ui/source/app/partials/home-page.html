@@ -180,7 +180,7 @@
              <div class="edit-left-side">
              <a data-target="#menu-toggle1" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle1"><img src="../../assets/img/comment.svg"></a>
              <a href="#" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a>
-             <a href="#" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
+             <a href="#" ng-click="deleteStatus(status.statusId,$index)" ng-confirm-click="Are you sure want to delete??" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
           </div>
 
             <div class="timeline-heading">
@@ -214,7 +214,7 @@
           <div class="edit">
           <a data-target="#menu-toggle" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle"><img src="../../assets/img/comment.svg"></a>
           <a href="#" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a>
-          <a href="#" ng-click="deleteStatus(status.statusId)"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
+          <a href="#" ng-click="deleteStatus(status.statusId)" ng-confirm-click="Are you sure want to delete??"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
           </div>
 
             <div class="timeline-heading">

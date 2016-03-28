@@ -93,7 +93,7 @@ public class TestSettingController extends PurpleWebBaseApplicationTests {
 	public void testUpdateTimeZone_pass() throws Exception {
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
 		mockMvc.perform(post("/api/v1/admin/setting/timezone").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
-				.param("timeZone", "12-03-2015")).andExpect(status().is2xxSuccessful()).andDo(print());
+				.param("timeZone", "UTC")).andExpect(status().is2xxSuccessful()).andDo(print());
 	}
 
 	@Test

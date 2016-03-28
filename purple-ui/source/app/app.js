@@ -7,7 +7,8 @@ var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
 rootApp.run([
 		'$rootScope',
 		'$state',
-		function($rootScope, $state) {
+		'appAuthenticationService',
+		function($rootScope, $state,appAuthenticationService) {
 
 			$rootScope.bodyClass = '';
         $rootScope.baseUrl = 'http://localhost:9999/';
@@ -15,14 +16,32 @@ rootApp.run([
 			$rootScope.loggedStatus = false;
 			$rootScope.authToken = '';
 			$rootScope.currentState = '';
-			  $rootScope.authrization = '';
+			$rootScope.authrization = '';
 
-			$rootScope.$on('$stateChangeSuccess', function(ev, to, toParams,
-					from, fromParams) {
-				$rootScope.currentState = to.name;
-				console.log('Previous state:' + from.name);
-				console.log('Current state:' + to.name);
-			});
+			  $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
+
+		            if (to.data && to.data.authorization !== '') {
+		                if (!appAuthenticationService.isAuthenticated()) {
+		                    $state.go(to.data.redirectTo);
+		                }
+		            }
+
+		            $rootScope.currentState = to.name;
+		            $rootScope.previouState = from.name;
+
+		            console.log('Previous state:' + from.name);
+		            console.log('Current state:' + to.name);
+		        });
+			  
+			  $rootScope.$on('$stateChangeStart', function (evt, to, params,from) {
+		            $rootScope.$state = $state;
+		            $rootScope.previouState = from.name;
+		            $rootScope.subMenu = '';
+		            if (to.redirectTo) {
+		                evt.preventDefault();
+		                $state.go(to.redirectTo, params);
+		            }
+		        });
 
 		} ]);
 
@@ -78,6 +97,7 @@ rootApp.config([
 					}
 
 				}
+			
 			}).state('home-page', {
 				url : '/home-page',
 				views : {
@@ -111,7 +131,11 @@ rootApp.config([
 					'footer@home' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
-				}
+				},
+				 data: {
+		                authorization: 'My Status',
+		                redirectTo: 'login'
+		            }
 			}).state('projects', {
 				url : '/projects',
 				views : {
@@ -128,7 +152,11 @@ rootApp.config([
 					'footer@home' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
-				}
+				},
+				data: {
+	                authorization: 'My Projects',
+	                redirectTo: 'login'
+	            }
 			}).state('settings', {
 				url : '/settings',
 				views : {
@@ -145,7 +173,11 @@ rootApp.config([
 					'footer@home' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
-				}
+				},
+				 data: {
+		                authorization: 'My Settings',
+		                redirectTo: 'login'
+		            }
 			}).state('settings-user', {
 				url : '/settings-user',
 				views : {
@@ -179,10 +211,12 @@ rootApp.config([
 					'footer@home' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
-				}
-			})
-
-			.state('home.myalerts', {
+				},
+				 data: {
+		                authorization: 'User Manager',
+		                redirectTo: 'login'
+		            }
+			}).state('home.myalerts', {
 				url : '/myalerts',
 				templateUrl : 'app/partials/home-myalerts.html',
 				controller : 'myAlertsCtrl'

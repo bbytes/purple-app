@@ -22,4 +22,6 @@ public class GlobalConstants {
 	
 	public static final String URL = "/activateAccount?token=";
 
+	public static final String DATE_TIME_FORMAT = "MMM d, yyyy, h:mm a";
+
 }

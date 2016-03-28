@@ -42,6 +42,9 @@ public class User {
 	
 	@Field("account_initialise")
 	private boolean accountInitialise;
+	
+	@Field("time_zone")
+	private String timeZone;
 
 	@DBRef
 	private Organization organization;
