@@ -60,13 +60,18 @@
 
    <ul class="timeline">
      <div class="date-time">
-        <p>March 10, 2016, 4:00 PM</p>
+        <p>{{status.dateTime}}</p>
      </div>
     <li>
         <div class="timeline-badge">
           <a><i class="fa fa-circle" id=""></i></a>
         </div>
         <div class="timeline-panel">
+          <div class="edit">
+          <a href="#" ng-click="editStatus(status.statusId)"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a>
+          <a href="#" ng-click="deleteStatus(status.statusId,$index)" ng-confirm-click="Are you sure want to delete??"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
+          </div>
+        
             <div class="timeline-heading">
                 <h4><span class="hash"> <span class="hash">@ </span> {{status.projectName}}</h4>
                 <p>{{status.hours}}</p>
@@ -94,6 +99,11 @@
           <a><i class="fa fa-circle" id=""></i></a>
         </div>
         <div class="timeline-panel">
+          <div class="edit">
+       
+          <a href="#" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a>
+          <a href="#" ng-click="deleteStatus(status.statusId,$index)" ng-confirm-click="Are you sure want to delete??"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
+          </div>
             <div class="timeline-heading">
                 <h4><span class="hash"> <span class="hash">@ </span> {{status.projectName}}</h4>
                 <p>{{status.hours}}</p>

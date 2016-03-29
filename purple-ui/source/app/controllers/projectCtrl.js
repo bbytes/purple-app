@@ -93,7 +93,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
     
     $scope.initUser = function(){
     	adminService.getAllusers().then(function (response) {
-            if (response.success) {
+            if (response.success =true) {
             	if (response) {
 					$scope.userscount = response.data.length;
 				}
@@ -112,7 +112,19 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
 	
 	}
     
-    
+    $scope.editProject = function(id){
+		console.log(id);
+		
+		projectService.getProjectWithId(id).then(function (response) {
+			if (response.success =true) {
+				$scope.singleProjectData=response.data.gridData;
+				$("#myModalEdit").modal('show');
+			
+			}
+		
+				});
+				
+	}
     
     $scope.submitStatus = function (status) {
     	var workedOn=status.workedOn;
@@ -165,6 +177,29 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
      $scope.initStatus = function() {
          $scope.usersstatusLoad();
      };
+     
+     $scope.deleteStatus =function(id,$index){
+     	
+		  statusService.deleteStatus(id).then(function (response) {
+	    		if (response.success =true) {
+	    		appNotifyService.success( 'Status has been deleted.');
+	    	}
+	    $scope.allstatus.splice($index, 1);
+	    });
+	    }
+     
+     /*method to edit status*/
+     $scope.editStatus = function(id){
+ 		projectService.getStatuWithId(id).then(function (response) {
+ 			if (response.success =true) {
+ 				$scope.singleStatusData=response.data.gridData;
+ 				$("#myModalEdit").modal('show');
+ 			
+ 			}
+ 		
+ 				});
+ 				
+ 	}
      $scope.deleteProject =function(id,$index){
     	 projectService.deleteProject(id).then(function (response) {
      		if (response.success =true) {

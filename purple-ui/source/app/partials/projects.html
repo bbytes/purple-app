@@ -57,13 +57,13 @@
     </div>
 
 <div class="create-project" >
- <form  name="myForm">
+ <form  name="myForm" ng-submit="submitForm(userForm.$valid)" novalidate>
  <div class="row">
   <div class="col-md-5">
     <div class="form-group">
       <label for="comment" class="settings">PROJECT NAME</label>
       <input type="text" name= "myName" ng-model="project.projectName" class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
-      <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">The name is required.</span>
+      <span style="color:red"  ng-show="myForm.myName.$invalid && !myForm.myName.$pristine">The name is required.</span>
       
     </div>
   </div>
@@ -128,9 +128,9 @@
    <table ng-repeat="project in allprojects">
       <tr>
         <td class="table-user">{{project.projectName}} <br /><span class="u-number">{{project.usersCount}} Users</span></td>
-        <td><img src="../../assets/img/time.png"> 5 : 00 pm</td>
+        <td><img src="../../assets/img/time.png"> {{project.timePreference | date:'hh:mm a'}}</td>
         <td><a href="#"  ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png"> View Member List</a></td>
-        <td style="float:right;"><img src="../../assets/img/edit.png"><a href="#"  ng-click="deleteProject(project.projectId,$index)" ng-confirm-click="Are you sure want to delete??"> <img src="../../assets/img/delete.png"></a></td>
+        <td style="float:right;"><a href="#" ng-click="editProject(project.projectId)"><img src="../../assets/img/edit.png"></a><a href="#"  ng-click="deleteProject(project.projectId,$index)" ng-confirm-click="Are you sure want to delete??"> <img src="../../assets/img/delete.png"></a></td>
       </tr>
 
    </table>
@@ -187,7 +187,7 @@
 
 
 <!-- Modal -->
-  <div class="modal fade" id="myModal1" role="dialog">
+  <div class="modal fade" id="myModalEdit" role="dialog">
     <div class="modal-dialog">
     
       <!-- Modal content-->
