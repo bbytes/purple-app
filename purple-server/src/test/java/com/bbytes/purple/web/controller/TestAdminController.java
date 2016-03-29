@@ -166,17 +166,6 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":false")));
 	}
 
-	@Test
-	public void testDeleteNullUser() throws Exception {
-
-		String email = "null";
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(delete("/api/v1/admin/user/delete/{email:.+}", email).header(GlobalConstants.HEADER_AUTH_TOKEN,
-				xauthToken)).andExpect(status().is5xxServerError()).andDo(print())
-				.andExpect(content().string(containsString("{\"success\":false")));
-	}
-
 	// Test cases for get all users
 
 	@Test
@@ -302,18 +291,6 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		mockMvc.perform(delete("/api/v1/admin/project/delete/{projectid}", id).header(GlobalConstants.HEADER_AUTH_TOKEN,
 				xauthToken)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
-
-	}
-
-	@Test
-	public void testDeleteProjectFailedwithNull() throws Exception {
-
-		String id = "null";
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(delete("/api/v1/admin/project/delete/{projectid}", id).header(GlobalConstants.HEADER_AUTH_TOKEN,
-				xauthToken)).andExpect(content().string(containsString("{\"success\":false")))
-				.andExpect(status().is5xxServerError());
 
 	}
 
@@ -489,33 +466,4 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 	}
 
-	@Test
-	public void testUpdateProjectFailedwithNull() throws Exception {
-
-		String id = "null";
-
-		User user1 = new User("akshay", "akshay@gmail.com");
-		user1.setOrganization(org);
-		userService.save(user1);
-
-		List<String> userList = new ArrayList<String>();
-		userList.add(user1.getEmail());
-
-		ProjectDTO requestProjectDTO = new ProjectDTO();
-		requestProjectDTO.setProjectName("purple");
-		requestProjectDTO.setTimePreference("6.00 pm");
-		requestProjectDTO.setUsers(userList);
-
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-		String requestJson = ow.writeValueAsString(requestProjectDTO);
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(put("/api/v1/admin/project/update/{projectid}", id)
-				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8)
-				.content(requestJson)).andExpect(status().is5xxServerError()).andDo(print())
-				.andExpect(content().string(containsString("{\"success\":false")));
-
-	}
 }

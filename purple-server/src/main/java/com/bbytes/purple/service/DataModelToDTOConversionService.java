@@ -60,11 +60,19 @@ public class DataModelToDTOConversionService {
 	}
 
 	public ProjectDTO convertProject(Project project) {
+
+		List<UserDTO> userDTOList = new ArrayList<UserDTO>();
+		for (User user : project.getUser()) {
+			UserDTO userDTO = new UserDTO();
+			userDTO.setEmail(user.getEmail());
+			userDTO.setUserName(user.getName());
+			userDTOList.add(userDTO);
+		}
 		ProjectDTO projectDTO = new ProjectDTO();
 		projectDTO.setProjectId(project.getProjectId());
 		projectDTO.setProjectName(project.getProjectName());
 		projectDTO.setTimePreference(project.getTimePreference());
-		projectDTO.setUserList(project.getUser());
+		projectDTO.setUserList(userDTOList);
 		projectDTO.setUsersCount(project.getUser().size());
 		return projectDTO;
 	}

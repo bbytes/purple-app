@@ -45,7 +45,6 @@ public class AdminController {
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
-
 	/**
 	 * The add user method is used to add users into tenant
 	 * 
@@ -96,7 +95,7 @@ public class AdminController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/admin/user", method = RequestMethod.GET)
-	public RestResponse getUsers() throws PurpleException {
+	public RestResponse getAllUsers() throws PurpleException {
 
 		List<User> users = adminService.getAllUsers();
 		Map<String, Object> usersMap = dataModelToDTOConversionService
@@ -126,10 +125,11 @@ public class AdminController {
 			usersTobeAdded.add(userService.getUserByEmail(i));
 		}
 		addProject.setUser(usersTobeAdded);
-		Project project = adminService.createProject(addProject);
+		Project project = adminService.createProject(addProject, usersTobeAdded);
+		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
 		logger.debug("User with email  '" + projectDTO.getProjectName() + "' are added successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, project,
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap,
 				SuccessHandler.ADD_PROJECT_SUCCESS);
 
 		return projectReponse;
@@ -179,9 +179,10 @@ public class AdminController {
 	public RestResponse getProject(@PathVariable("projectid") String projectId) throws PurpleException {
 
 		Project project = adminService.getProject(projectId);
+		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
 		logger.debug("Projects are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, project,
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap,
 				SuccessHandler.GET_PROJECT_SUCCESS);
 
 		return projectReponse;
@@ -209,10 +210,11 @@ public class AdminController {
 		}
 		updateProject.setUser(usersTobeAdded);
 
-		Project projects = adminService.updateProject(projectId, updateProject);
+		Project project = adminService.updateProject(projectId, updateProject);
+		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
 		logger.debug("Projects are updated successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projects,
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap,
 				SuccessHandler.UPDATE_PROJECT_SUCCESS);
 
 		return projectReponse;

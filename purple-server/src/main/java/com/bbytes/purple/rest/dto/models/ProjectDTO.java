@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import com.bbytes.purple.domain.User;
-
 import lombok.Data;
 
 /**
@@ -27,7 +25,7 @@ public class ProjectDTO implements Serializable {
 
 	private List<String> users = Collections.<String> emptyList();
 
-	private List<User> userList = Collections.<User> emptyList();
+	private List<UserDTO> userList = Collections.<UserDTO> emptyList();
 
 	private long usersCount = 0;
 }

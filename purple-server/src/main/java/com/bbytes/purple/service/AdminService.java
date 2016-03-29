@@ -41,17 +41,14 @@ public class AdminService {
 
 	public void deleteUser(String email) throws PurpleException {
 
-		if (!email.equals("null")) {
-			if (!userService.userEmailExist(email))
-				throw new PurpleException("Error while deleting user", ErrorHandler.USER_NOT_FOUND);
-			try {
-				User deleteuser = userService.getUserByEmail(email);
-				userService.delete(deleteuser);
-			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_USER_FAILED);
-			}
-		} else
-			throw new PurpleException("Can not delete empty user", ErrorHandler.USER_NOT_FOUND);
+		if (!userService.userEmailExist(email))
+			throw new PurpleException("Error while deleting user", ErrorHandler.USER_NOT_FOUND);
+		try {
+			User deleteuser = userService.getUserByEmail(email);
+			userService.delete(deleteuser);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_USER_FAILED);
+		}
 	}
 
 	public List<User> getAllUsers() throws PurpleException {
@@ -66,14 +63,21 @@ public class AdminService {
 		return users;
 	}
 
-	public Project createProject(Project project) throws PurpleException {
+	public Project createProject(Project project, List<User> users) throws PurpleException {
 
 		if (project != null) {
 			if (projectService.projectNameExist(project.getProjectName()))
 				throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
+				List<Project> projectList = new ArrayList<Project>();
 				projectService.save(project);
 				project = projectService.findByProjectId(project.getProjectId());
+				for (User user : users) {
+					projectList = user.getProjects();
+					projectList.add(project);
+					user.setProjects(projectList);
+					userService.save(user);
+				}
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_PROJECT_FAILED);
 			}
@@ -83,17 +87,14 @@ public class AdminService {
 
 	public void deleteProject(String projectId) throws PurpleException {
 
-		if (!projectId.equals("null")) {
-			if (!projectService.projectIdExist(projectId))
-				throw new PurpleException("Error while deleting project", ErrorHandler.PROJECT_NOT_FOUND);
-			try {
-				Project project = projectService.findByProjectId(projectId);
-				projectService.delete(project);
-			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_PROJECT_FAILED);
-			}
-		} else
-			throw new PurpleException("Can not delete empty project", ErrorHandler.PROJECT_NOT_FOUND);
+		if (!projectService.projectIdExist(projectId))
+			throw new PurpleException("Error while deleting project", ErrorHandler.PROJECT_NOT_FOUND);
+		try {
+			Project project = projectService.findByProjectId(projectId);
+			projectService.delete(project);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_PROJECT_FAILED);
+		}
 	}
 
 	public List<Project> getAllProjects() throws PurpleException {
@@ -123,7 +124,7 @@ public class AdminService {
 	public Project updateProject(String projectId, Project project) throws PurpleException {
 
 		Project updatedProject = null;
-		if (!projectId.equals("null") && project != null) {
+		if (project != null) {
 			if (!projectService.projectIdExist(projectId) || projectService.projectNameExist(project.getProjectName()))
 				throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
