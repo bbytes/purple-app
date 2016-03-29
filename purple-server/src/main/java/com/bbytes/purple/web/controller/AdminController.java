@@ -1,12 +1,15 @@
 package com.bbytes.purple.web.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +25,9 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -45,6 +50,12 @@ public class AdminController {
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
+	@Autowired
+	private NotificationService notificationService;
+
+	@Value("${base.url}")
+	private String baseUrl;
+
 	/**
 	 * The add user method is used to add users into tenant
 	 * 
@@ -61,6 +72,18 @@ public class AdminController {
 		addUser.setStatus(User.PENDING);
 
 		User user = adminService.addUsers(addUser);
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(user.getEmail());
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, user.getName());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
+		emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
+		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.INVITE_URL + user.getEmail());
+		notificationService.sendTemplateEmail(emailList, GlobalConstants.EMAIL_INVITE_SUBJECT,
+				GlobalConstants.EMAIL_INVITE_TEMPLATE, emailBody);
+		userService.updatePassword(GlobalConstants.DEFAULT_PASSWORD, user);
+
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 		logger.debug("User with email  '" + userDTO.getEmail() + "' are added successfully");
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.ADD_USER_SUCCESS);

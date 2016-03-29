@@ -90,9 +90,9 @@ public class SignUpController {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
-		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.URL + xauthToken);
-		notificationService.sendTemplateEmail(emailList, GlobalConstants.EMAIL_SUBJECT, GlobalConstants.EMAIL_TEMPLATE,
-				emailBody);
+		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
+		notificationService.sendTemplateEmail(emailList, GlobalConstants.EMAIL_ACTIVATION_SUBJECT,
+				GlobalConstants.EMAIL_ACTIVATION_TEMPLATE, emailBody);
 
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 
