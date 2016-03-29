@@ -54,11 +54,12 @@ public class StatusController {
 
 		// We will get current logged in user
 		User user = userService.getLoggedinUser();
-
 		Status status = statusService.create(statusDTO, user);
+		StatusDTO statusMap = dataModelToDTOConversionService.convertStatus(status);
 
 		logger.debug("Status for project  '" + status.getProject().getProjectName() + "' is added successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, status, SuccessHandler.ADD_STATUS_SUCCESS);
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+				SuccessHandler.ADD_STATUS_SUCCESS);
 
 		return statusReponse;
 	}
@@ -74,9 +75,11 @@ public class StatusController {
 	public RestResponse getStatus(@PathVariable("statusid") String statusId) throws PurpleException {
 
 		Status status = statusService.getStatus(statusId);
+		StatusDTO statusMap = dataModelToDTOConversionService.convertStatus(status);
 
 		logger.debug("Status for project  '" + status.getProject().getProjectName() + "' is getting successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, status, SuccessHandler.GET_STATUS_SUCCESS);
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+				SuccessHandler.GET_STATUS_SUCCESS);
 
 		return statusReponse;
 	}
@@ -136,11 +139,11 @@ public class StatusController {
 			throws PurpleException {
 
 		User user = userService.getLoggedinUser();
-
 		Status status = statusService.updateStatus(statusId, statusDTO, user);
+		StatusDTO statusMap = dataModelToDTOConversionService.convertStatus(status);
 
 		logger.debug("Projects are fetched successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, status,
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
 				SuccessHandler.UPDATE_STATUS_SUCCESS);
 
 		return statusReponse;

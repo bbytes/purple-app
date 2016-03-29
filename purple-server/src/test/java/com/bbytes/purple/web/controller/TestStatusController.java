@@ -216,23 +216,6 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 	}
 
 	@Test
-	public void testGetStatusFailedWithNullId() throws Exception {
-
-		normalUser = new User("akshay", "akshay@gmail.com");
-		normalUser.setOrganization(org);
-		userService.save(normalUser);
-		userService.updatePassword("test123", normalUser);
-
-		String id = "null";
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
-		mockMvc.perform(get("/api/v1/status/{statusid}", id).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
-				.andExpect(status().is5xxServerError()).andDo(print())
-				.andExpect(content().string(containsString("{\"success\":false")));
-
-	}
-
-	@Test
 	public void testGetStatusFailedWithNotExistStatus() throws Exception {
 
 		normalUser = new User("akshay", "akshay@gmail.com");
@@ -322,23 +305,6 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 	}
 
 	@Test
-	public void testDeleteStatusFailedWithNullId() throws Exception {
-
-		normalUser = new User("akshay", "akshay@gmail.com");
-		normalUser.setOrganization(org);
-		userService.save(normalUser);
-		userService.updatePassword("test123", normalUser);
-
-		String id = "null";
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
-		mockMvc.perform(delete("/api/v1/status/{statusid}", id).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
-				.andExpect(status().is5xxServerError()).andDo(print())
-				.andExpect(content().string(containsString("{\"success\":false")));
-
-	}
-
-	@Test
 	public void testDeleteStatusFailedWithNotExistStatus() throws Exception {
 
 		normalUser = new User("akshay", "akshay@gmail.com");
@@ -397,35 +363,6 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 						.contentType(APPLICATION_JSON_UTF8).content(requestJson))
 				.andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
-
-	}
-
-	@Test
-	public void testUpdateStatusWithNullStatusId() throws Exception {
-
-		normalUser = new User("akshay", "akshay@gmail.com");
-		normalUser.setOrganization(org);
-		userService.save(normalUser);
-		userService.updatePassword("test123", normalUser);
-
-		String id = "null";
-		StatusDTO requestStatusDTO = new StatusDTO();
-		requestStatusDTO.setHours(4);
-		requestStatusDTO.setWorkedOn("Testing");
-		requestStatusDTO.setWorkingOn("Will do testing");
-		requestStatusDTO.setBlockers("Testing issue");
-
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-		String requestJson = ow.writeValueAsString(requestStatusDTO);
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
-		mockMvc.perform(
-				put("/api/v1/status/update/{statusid}", id).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
-						.contentType(APPLICATION_JSON_UTF8).content(requestJson))
-				.andExpect(status().is5xxServerError()).andDo(print())
-				.andExpect(content().string(containsString("{\"success\":false")));
 
 	}
 
