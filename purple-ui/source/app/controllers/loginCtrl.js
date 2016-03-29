@@ -16,7 +16,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
         	$window.sessionStorage.token = response.headers["x-auth-token"];
                $rootScope.loggedStatus = true;
                 $rootScope.loggedInUser = $scope.username;
-                $rootScope.userRole =response.data.userRole;
+                //$rootScope.userRole =response.data.userRole;
               // $rootScope.userName = response.data.name;
                 $rootScope.authToken = response.headers["x-auth-token"];
                // $rootScope.permissions = response.data.permissions;

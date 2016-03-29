@@ -1131,7 +1131,8 @@ small img{
  }
  .alert {
     border-radius: 0px !important;
-    border: 1px solid #ccc;
+    border: 0px solid #ccc;
+	padding:0px !important;
 }
 .add-user-icon{
 	height: 45px;
@@ -1144,4 +1145,19 @@ small img{
     font-size: 28px;
     color: #fff;
 	margin-top: 12px;
+}
+
+/*add user scroll*/
+.user-show {
+    position: relative;
+    width: 380px;
+    height: 300px;
+    overflow: hidden;
+
+}
+
+.user-show-next {
+    height: 300px;
+    width: 379px;
+    overflow-y: scroll;
 }

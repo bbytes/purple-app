@@ -2,9 +2,10 @@
     <h4 class="modal-title pull-left">{{ title }}</h4>
     <a class="pull-right glyphicon glyphicon-remove icon-clear" ng-click="cancel()"></a>
 </div>
-<div class="modal-body data-row-body">
- <table width="100%" ng-repeat="user in allusers">
-              <tr>
+<div class="modal-body data-row-body user-show">
+    <div class="user-show-next">
+        <table width="100%">
+              <tr ng-repeat="user in allusers">
                 <td class="add-user-table"> 
                 <small>
                <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
@@ -24,10 +25,8 @@
               </tr>
 
             </table>
-            
-
-
-        </div>
+     </div>
+  </div>
 
    <div class="modal-footer">
     <button class="btn save-close" ng-click="ok()"  ng-click="cancel()">SAVE & CLOSE</button>

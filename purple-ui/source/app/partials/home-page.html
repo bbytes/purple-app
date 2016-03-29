@@ -154,15 +154,15 @@
         <!-- /#sidebar-wrapper -->
 
 
-    <div id="page-content-wrapper"  ng-init="initStatus()">
-     <div class="container-fluid" ng-repeat="status in allstatus">
+    <div id="page-content-wrapper">
+     <div class="container-fluid">
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
          <!-- Main content -->
         <div class="content">
          
          <!-- Page Content -->
-                <div class="wrapper">
+                 <div class="wrapper">
    <div class="top-header">
      <span class="project"><span class="hash"># </span>{{status.projectName}}</span> <span class="username"><span class="hash">@ </span>  {{status.userName}}</span>
    </div>
@@ -172,15 +172,11 @@
         <p>March 10, 2016, 4:00 PM</p>
      </div>
     <li>
-        <div class="timeline-badge">
-         
-        </div>
+        <div class="timeline-badge"></div>
         <div class="timeline-panel">
             
              <div class="edit-left-side">
              <a data-target="#menu-toggle1" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle1"><img src="../../assets/img/comment.svg"></a>
-             <a href="#" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a>
-             <a href="#" ng-click="deleteStatus(status.statusId,$index)" ng-confirm-click="Are you sure want to delete??" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
           </div>
 
             <div class="timeline-heading">
@@ -206,15 +202,11 @@
     </li>
     
     <li class="timeline-inverted">
-        <div class="timeline-badge">
-        
-        </div>
+        <div class="timeline-badge"></div>
         <div class="timeline-panel">
 
           <div class="edit">
           <a data-target="#menu-toggle" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle"><img src="../../assets/img/comment.svg"></a>
-          <a href="#" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a>
-          <a href="#" ng-click="deleteStatus(status.statusId)" ng-confirm-click="Are you sure want to delete??"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
           </div>
 
             <div class="timeline-heading">
@@ -243,6 +235,7 @@
 </ul>
   
   </div>
+  
 </div>
 </div>
 </div>

@@ -100,9 +100,13 @@
   <div class="main-subtitle">
        <h4>users</h4>
     </div>
+</div>
+</div>
 
-   <div class="col-md-6" ng-repeat="user in newList">
-   <uib-alert type="{{alert.type}}" close="closeAlert()" ng-if="show">
+
+
+<div class="row">
+   <div class="col-md-4"  ng-repeat="user in newList"> 
         <small>
           <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
        </small>
@@ -110,13 +114,12 @@
          <h4>{{user.userName}}</h4>
          <p>{{user.email}}</p>
       </div>
-	  </uib-alert>
 	   <div style="margin-bottom:30px;"></div>
    </div>
   
    
 </div>
-</div>
+
   <button type="button" class="btn btn-default create" ng-click="createProject(project)">create project</button>
 
 <div class="col-md-12">
