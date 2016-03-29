@@ -32,7 +32,7 @@ public final class TokenHandler {
 	 * @return
 	 */
 	public String createJWTStringTokenForUser(TokenDataHolder tokenDataHolder) {
-		return createJWTStringTokenForUser(tokenDataHolder, 24);
+		return createJWTStringTokenForUser(tokenDataHolder, 720);
 	}
 
 	/**

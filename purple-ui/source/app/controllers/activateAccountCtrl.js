@@ -1,7 +1,7 @@
 /**
  * 
  */
-rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state,$q,$http,$window,$sessionStorage) {
+rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state,$q,$http,$window,$sessionStorage,appNotifyService) {
 	
 	
 	$scope.init = function (){
@@ -27,6 +27,7 @@ rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state,$
      			deferred.resolve(response);
      			if(response.data.accountInitialise = true)
      				{
+     				 appNotifyService.success('Your account activated successfully..redirecting to add users page');
      				$state.go("user-mgr");
      				}
      		}).error(function() {

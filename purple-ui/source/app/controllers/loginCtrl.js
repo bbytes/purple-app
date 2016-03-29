@@ -6,13 +6,14 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
    console.log("message");
         // Validating login form
         if (!isValid) {
+        appNotifyService.error('Please enter username and password', 'Invalid inputs');
            console.log('Please enter username and password', 'Invalid inputs');
             return false;
         }
 
         // Calling login service
         loginService.login($scope.username, $scope.password).then(function (response) {
-        	 if (response.headers["x-auth-token"]) {
+        	 if (response.headers["x-auth-token"] && response.data.accountInitialise == true) {
         	$window.sessionStorage.token = response.headers["x-auth-token"];
                $rootScope.loggedStatus = true;
                 $rootScope.loggedInUser = $scope.username;
@@ -45,7 +46,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
             	  // Erase the token if the user fails to log in
             	 delete $window.sessionStorage.token;
                 //Login failed. Showing error notification
-                appNotifyService.error(response.data, 'Login Failed.');
+                appNotifyService.error('Please Verify your account to login.');
             }
 
         }, function (error) {

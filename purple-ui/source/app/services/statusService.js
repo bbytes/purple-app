@@ -91,7 +91,7 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + '/api/v1/status',
+			url : $rootScope.baseUrl + 'api/v1/status',
 			headers : {
 				'Content-Type' : 'application/json'
 			}

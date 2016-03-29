@@ -2,17 +2,14 @@ rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupSer
   
     $rootScope.bodyClass = 'body-standalone';
     
-    $scope.submitSignUp = function (isValid) {
-
+    $scope.submitSignUp = function () {
+    	/*if (!isValid) {
+            appNotifyService.error('Please enter username and password', 'Invalid inputs');
+               console.log('Please enter username and password', 'Invalid inputs');
+                return false;
+            }
+*/
         // Validating login form
-        if (!isValid) {
-             console.log("message");
-           growl.error('Please enter valid inputs');
-            return false;
-        }
-
-        
-
         signupService.submitSignUp($scope.user).then(function (response) {
          if (response.success == true) {
                 
@@ -31,14 +28,21 @@ rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupSer
         	 appNotifyService.success('Activation link has been sent your registered mail.');
                 $state.go('login');
                 
-            } else {
-                //Login failed. Showing error notification
-                appNotifyService.error(response.data, 'Registration Failed something wrong.');
-            }
-
+            } 
+           
         }, function (error) {
+        	 if(error.reason =="organization_not_unique") {
+                 //Login failed. Showing error notification
+                 appNotifyService.error('Oops!!..Organization is already exist.');
+             }
+        	 else if(error.reason =="email_not_unique") {
+                 //Login failed. Showing error notification
+                 appNotifyService.error('Email is already exist.Please enter ');
+             }
+        	 else{
             //Login failed. Showing error notification
-            appNotifyService.error(error.msg, 'Login Failed.');
-        });
+            appNotifyService.error(error.msg, 'Registration  Failed.');
+        }
+    });
     };
 });
