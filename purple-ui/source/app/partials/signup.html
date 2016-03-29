@@ -1,7 +1,7 @@
   <div class="login-content signup">
 		    <img class="logo-img" src="../../assets/img/logo.png"></img> <h5 class="online online1">ONLINE <span class="standup">STANDUP</span></h5>
 			   <div id="container">
-				<form name="signupForm" ng-submit="submitSignUp()"  novalidate>
+				<form name="signupForm" ng-submit="submitSignUp(signupForm.$valid)"  novalidate>
 					<!-- #first_step -->
 					<div id="first_step">
 						<div class="form">
@@ -23,8 +23,11 @@
 							 <span class="label label-danger" ng-show="signupForm.password.$dirty && signupForm.password.$error.minlength">use atleast 8 characters</span>
                                   <span class="label label-danger" ng-show="signupForm.password.$dirty && signupForm.password.$error.required">Password required.</span>
 							<h5>Repeat Password</h5>
-							<input type="password" id="password_c" name="password_c" ng-model="password_c" placeholder="confirm password" valid-password-c="user.password"  required/>
-							   <span class="label label-danger" ng-show="signupForm.password_c.$error.noMatch" class="error">Passwords do not match.</span>
+							<input type="password" id="password_c" name="confirmPassword" ng-model="password_c"   required/>
+							 
+                                  <span class="label label-danger" ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Password required.</span>
+                                  <span class="label label-danger" ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (user.password != password_c)">Password mismatch
+                                  </span>
           
 		                      
 							<input class="send submit" type="submit"  value="SIGN ME UP" />    

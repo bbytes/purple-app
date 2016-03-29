@@ -2,13 +2,13 @@ rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupSer
   
     $rootScope.bodyClass = 'body-standalone';
     
-    $scope.submitSignUp = function () {
-    	/*if (!isValid) {
-            appNotifyService.error('Please enter username and password', 'Invalid inputs');
+    $scope.submitSignUp = function (isValid) {
+    	if (!isValid) {
+            appNotifyService.error('Please enter valid inputs', 'Invalid inputs');
                console.log('Please enter username and password', 'Invalid inputs');
                 return false;
             }
-*/
+
         // Validating login form
         signupService.submitSignUp($scope.user).then(function (response) {
          if (response.success == true) {
@@ -37,7 +37,7 @@ rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupSer
              }
         	 else if(error.reason =="email_not_unique") {
                  //Login failed. Showing error notification
-                 appNotifyService.error('Email is already exist.Please enter ');
+                 appNotifyService.error('Email is already exist.Please enter new email ');
              }
         	 else{
             //Login failed. Showing error notification

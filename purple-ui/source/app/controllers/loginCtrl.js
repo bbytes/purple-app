@@ -46,7 +46,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
             	  // Erase the token if the user fails to log in
             	 delete $window.sessionStorage.token;
                 //Login failed. Showing error notification
-                appNotifyService.error('Please Verify your account to login.');
+                appNotifyService.error('Please activate your account to login.');
             }
 
         }, function (error) {
