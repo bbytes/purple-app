@@ -77,7 +77,7 @@ public class SignUpController {
 		organization.setBusinessArea(signUpRequestDTO.getBusinessArea());
 
 		User user = new User(orgId, signUpRequestDTO.getEmail());
-		user.setEmail(signUpRequestDTO.getEmail());
+		user.setEmail(signUpRequestDTO.getEmail().toLowerCase());
 		user.setPassword(signUpRequestDTO.getPassword());
 		user.setOrganization(organization);
 		List<String> emailList = new ArrayList<String>();

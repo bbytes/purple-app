@@ -75,7 +75,7 @@ public class AdminController {
 	public RestResponse addUser(@RequestBody UserDTO userDTO) throws PurpleException {
 
 		Organization org = userService.getLoggedinUser().getOrganization();
-		User addUser = new User(userDTO.getUserName(), userDTO.getEmail());
+		User addUser = new User(userDTO.getUserName(), userDTO.getEmail().toLowerCase());
 		addUser.setOrganization(org);
 		addUser.setPassword(passwordHashService.encodePassword(GlobalConstants.DEFAULT_PASSWORD));
 		addUser.setStatus(User.PENDING);
