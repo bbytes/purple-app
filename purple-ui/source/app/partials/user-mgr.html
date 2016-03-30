@@ -100,8 +100,8 @@
        <h4>user activity <span class="list-member">{{joinedCount}} Joined {{pendingCount}} Pending</span></h4>
     </div>
  <div class="project-table" ng-init="initUser()">
-   <table ng-repeat="user in allusers">
-       <tr>
+   <table>
+       <tr ng-repeat="user in allusers">
          <td class="table-user">
 		     <small>
                <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>

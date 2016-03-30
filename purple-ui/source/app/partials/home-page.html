@@ -122,17 +122,31 @@
                 <hr />
            
             <div class="sidebar-nav">
-               <img class="round" width="40" height="40" avatar="Username">
+                <small>
+                  <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
+                 </small>
                  <div class="user-label">
                    <h4>username</h4>
                     <p class="comment">Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
                 </div>
-                 <h4 class="reaply">Reaply</h4>
+                 <h4 class="reaply"><a data-toggle="collapse" data-target="#reaply">Reaply</a></h4>
+				 <!----reaply dropdown--->
+				  <div id="reaply" class="collapse">
+                   <div class="form-group">
+                  <label for="comment">Reaply Comment:</label>
+                    <textarea class="form-control" id="reaply" name="text" rows="5" id="comment"></textarea>
+                    <h6 class="pull-right" id="count_message-reaply">
+                  </div>
+				  <button type="button" class="btn btn-default submit" style="width:30% !important;">REAPLY</button>
+                </div>
+				<!---/#ends----->
             </div>
               <hr />
 
               <div class="sidebar-nav">
-               <img class="round" width="40" height="40" avatar="Username">
+               <small>
+                  <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
+                 </small>
                  <div class="user-label">
                    <h4>username</h4>
                     <p class="comment"><b>@Username </b>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
@@ -141,7 +155,9 @@
             </div>
             
             <div class="last-reaply">
-              <img class="round" width="40" height="40" avatar="Username">
+              <small>
+                  <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
+                 </small>
                  <div class="user-label">
                    <h4>username</h4>
                     <p class="comment"><b>@Username </b>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
@@ -260,5 +276,15 @@ $('#text').keyup(function() {
   var text_remaining = text_max - text_length;
   
   $('#count_message').html(text_remaining + ' /200');
+});
+
+ var text_max = 200;
+$('#count_message-reaply').html(text_max + ' /200');
+
+$('#reaply').keyup(function() {
+  var text_length = $('#reaply').val().length;
+  var text_remaining = text_max - text_length;
+  
+  $('#count_message-reaply').html(text_remaining + ' /200');
 });
     </script>

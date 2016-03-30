@@ -106,7 +106,9 @@
 
 
 <div class="row">
-   <div class="col-md-4"  ng-repeat="user in newList"> 
+   <div class="col-md-4"  ng-repeat="user in newList">
+   <div class="alert alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>   
         <small>
           <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
        </small>
@@ -117,11 +119,12 @@
 	   <div style="margin-bottom:30px;"></div>
    </div>
   
-   
+   </div>
 </div>
 
   <button type="button" class="btn btn-default create" ng-click="createProject(project)">create project</button>
-
+ 
+  
 <div class="col-md-12">
  <div class="row">
    <div class="main-title">
