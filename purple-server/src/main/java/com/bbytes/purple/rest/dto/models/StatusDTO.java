@@ -23,7 +23,7 @@ public class StatusDTO implements Serializable {
 
 	private String userName;
 
-	private int hours;
+	private double hours;
 
 	private String workedOn;
 

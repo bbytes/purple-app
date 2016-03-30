@@ -35,7 +35,7 @@ public class Status implements Comparable<Status> {
 	private String blockers;
 	
 	@Field("hours")
-	private int hours;
+	private double hours;
 	
 	@Field("date_time")
 	private Date dateTime;
@@ -52,7 +52,7 @@ public class Status implements Comparable<Status> {
 	@LastModifiedDate
 	private DateTime lastModified;
 
-	public Status(String workingOn, String workedOn, int hours, Date dateTime) {
+	public Status(String workingOn, String workedOn, double hours, Date dateTime) {
 
 		this.workingOn = workingOn;
 		this.workedOn = workedOn;
