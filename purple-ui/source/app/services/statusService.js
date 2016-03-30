@@ -114,7 +114,7 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method :'DELETE',
-			url : $rootScope.baseUrl + '/api/v1/status/' +id,
+			url : $rootScope.baseUrl + 'api/v1/status/' +id,
 			//data : admin,
 			headers : {
 				'Content-Type' : 'application/json',

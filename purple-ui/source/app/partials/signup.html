@@ -1,44 +1,58 @@
-  <div class="login-content signup">
-		    <img class="logo-img" src="../../assets/img/logo.png"></img> <h5 class="online online1">ONLINE <span class="standup">STANDUP</span></h5>
-			   <div id="container">
-				<form name="signupForm" ng-submit="submitSignUp(signupForm.$valid)"  novalidate>
-					<!-- #first_step -->
-					<div id="first_step">
-						<div class="form">
-							<h5>Company Name</h5>
-							<input type="text" name="compnayname"  id="orgName" ng-model="user.orgName" capitalize required/>
-							<h5>Business Area</h5>
-							<select id="businessArea" name="businessArea" ng-model="user.businessArea" required>
-							<option  value="" >---Please select---</option>
-								<option  value="Services" >Services</option>
-								<option value="Products" >Products</option>
-							</select>
-							<h5>Email</h5>
-							<input type="text" name="email" ng-model="user.email"  ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/"  required/>
-							
-							<span class="label label-danger" ng-show="signupForm.email.$invalid &&!signupForm.email.$error.required">Email is invalid</span>
-							
-							<h5>Password</h5>
-							<input type="password" name="password"  ng-model="user.password"  ng-minlength="8" ng-maxlength="12"  required/>
-							 <span class="label label-danger" ng-show="signupForm.password.$dirty && signupForm.password.$error.minlength">use atleast 8 characters</span>
-                                  <span class="label label-danger" ng-show="signupForm.password.$dirty && signupForm.password.$error.required">Password required.</span>
-							<h5>Repeat Password</h5>
-							<input type="password" id="password_c" name="confirmPassword" ng-model="password_c"   required/>
-							 
-                                  <span class="label label-danger" ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Password required.</span>
-                                  <span class="label label-danger" ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (user.password != password_c)">Password mismatch
-                                  </span>
-          
-		                      
-							<input class="send submit" type="submit"  value="SIGN ME UP" />    
-						</div>
-					</div>  
-					</form>
-					<div class="clear"></div>
-		
-						        
-					</div>
-					
-				<br />
-				<center><p>BY SIGNING UP YOU AGREE TO T & C</p></center>
+
+<div class="login-content signup">
+	<img class="logo-img" src="../../assets/img/logo.png"></img>
+	<h5 class="online online1">
+		ONLINE <span class="standup">STANDUP</span>
+	</h5>
+	<div id="container">
+		<form name="signupForm" ng-submit="submitSignUp(signupForm.$valid)"
+			novalidate>
+			<!-- #first_step -->
+			<div id="first_step">
+				<div class="form">
+					<h5>Company Name</h5>
+					<input type="text" name="compnayname" id="orgName"
+						ng-model="user.orgName" capitalize required />
+					<h5>Business Area</h5>
+					<select id="businessArea" name="businessArea"
+						ng-model="user.businessArea" required>
+						<option value="">---Please select---</option>
+						<option value="Services">Services</option>
+						<option value="Products">Products</option>
+					</select>
+					<h5>Email</h5>
+					<input type="text" name="email" ng-model="user.email"
+						ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required /> <span
+						class="label label-danger"
+						ng-show="signupForm.email.$invalid &&!signupForm.email.$error.required">Email
+						is invalid</span>
+
+					<h5>Password</h5>
+					<input type="password" name="password" ng-model="user.password"
+						ng-minlength="8" ng-maxlength="12" required /> <span
+						class="label label-danger"
+						ng-show="signupForm.password.$dirty && signupForm.password.$error.minlength">use
+						atleast 8 characters</span> <span class="label label-danger"
+						ng-show="signupForm.password.$dirty && signupForm.password.$error.required">Password
+						required.</span>
+					<h5>Repeat Password</h5>
+					<input type="password" id="password_c" name="confirmPassword"
+						ng-model="password_c" required /> <span class="label label-danger"
+						ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Password
+						required.</span> <span class="label label-danger"
+						ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (user.password != password_c)">Password
+						mismatch </span> <input class="send submit" type="submit"
+						value="SIGN ME UP" />
+				</div>
 			</div>
+		</form>
+		<div class="clear"></div>
+
+
+	</div>
+
+	<br />
+	<center>
+		<p>BY SIGNING UP YOU AGREE TO T & C</p>
+	</center>
+</div>

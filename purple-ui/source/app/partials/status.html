@@ -62,14 +62,15 @@
 		<div class="top-header">
 			<span class="project"><span
 					class="username"><span class="hash">@ </span>
-						{{loggedInUser}}</span></span>
+						{{userName}}</span></span>
 		</div>
 
 		<ul class="timeline"  ng-repeat="artist in artists">
 			<div class="date-time">
 				<p>{{artist.date}}</p>
 			</div>
-			<li ng-class="" ng-repeat="status in artist.statusDTOList">
+			
+			<li ng-repeat="status in artist.statusDTOList"  ng-class-odd="'timeline'" ng-class-even="'timeline-inverted'">
 				<div class="timeline-badge"></div>
 				<div class="timeline-panel">
 					<div class="edit">
@@ -87,9 +88,10 @@
 					<div class="timeline-heading">
 						<h4>
 							<span class="hash"> <span class="hash">#</span>
-								{{status.projectName}}
+								{{status.projectName}}         {{status.time}}
 						</h4>
-						<p>{{status.hours}}</p>
+						
+						<p>{{status.hours}}hrs</p>
 					</div>
 					<div class="timeline-body worked-on">
 						<h3>worked on</h3>
@@ -114,7 +116,7 @@
 				</div>
 			</li>
 
-			<!-- <li class="timeline-inverted" ng-repeat="status in artist.statusDTOList">
+		<!-- <li class="timeline-inverted" ng-repeat="status in artist.statusDTOList">
 				<div class="timeline-badge"></div>
 				<div class="timeline-panel">
 					<div class="edit">
@@ -155,7 +157,7 @@
 					</div>
 
 				</div>
-			</li> -->
+			</li>  -->	
 
 			<li class="clearfix no-float"></li>
 		</ul>

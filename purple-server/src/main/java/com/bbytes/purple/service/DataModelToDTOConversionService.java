@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -180,8 +181,9 @@ public class DataModelToDTOConversionService {
 
 	public List<StatusResponseDTO> getStatusResponse(Map<String, List<StatusDTO>> statusMap) {
 		List<StatusResponseDTO> statusResponseDTOList = new LinkedList<StatusResponseDTO>();
-		ArrayList<String> keys = new ArrayList<String>(statusMap.keySet());
-		for (int i = keys.size() - 1; i >= 0; i--) {
+//		List<String> keys = new LinkedList<String>(statusMap.keySet());
+		Set<String> keys = statusMap.keySet();
+		for (String key : keys) {
 			StatusResponseDTO statusResponseDTO = new StatusResponseDTO();
 			statusResponseDTO.setDate(keys.get(i));
 			statusResponseDTO.setStatusList(statusMap.get(keys.get(i)));

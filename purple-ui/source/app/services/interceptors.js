@@ -12,8 +12,20 @@ rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $l
                 console.log(config.headers.Authorization);
                 config.headers['x-auth-token'] = $window.sessionStorage.token;
             }
+            if (!$rootScope.authToken && $sessionStorage.userInfo) {
+                var userInfo = $sessionStorage.userInfo;
+                if (userInfo) {
+                    $rootScope.authToken = userInfo.accessToken;
+                    $rootScope.loggedInUser=userInfo.email;
+                    $rootScope.userName=userInfo.name;
+                    $rootScope.userRole= userInfo.userRoles;
+                  
+                }
+            }
             return config;
+            
         },
+        
         response: function (response) {
             
             if(response.status === 200){                

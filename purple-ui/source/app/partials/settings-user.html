@@ -1,101 +1,144 @@
- <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="wrapper">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">
-                    <img src="../../assets/img/logo.png" alt=""> <span class="logo-text">online <b>standup</b></span>
-                </a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="#"><img src="../../assets/img/ic_compose.svg"></a>
-                    </li>
-                    <li>
-                        <a href="#"><img src="../../assets/img/ic_timeline.svg"></a>
-                    </li>
-                     <li>
-                        <a href="#"><img src="../../assets/img/ic_menu.svg"></a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
-   <div class="bottom-nav">
-    <div class="wrapper">
-     <div class="current-page">
-      <h5><a href="#/">users</a></h5>
-      <h5><a href="/projects">projects</a></h5>
-      <h5><a href="/settings" class="current-active">settings</a></h5>
-     </div>
-     </div>
-   </div>
 
-  <!-- /.main -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="wrapper">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#"> <img
+				src="../../assets/img/logo.png" alt=""> <span
+				class="logo-text">online <b>standup</b></span>
+			</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="status"><img
+						src="../../assets/img/ic_compose.svg"></a></li>
+				<li><a href="home-page"><img
+						src="../../assets/img/ic_timeline.svg"></a></li>
+				<li class="dropdown"><a class="btn dropdown-toggle"
+					data-toggle="dropdown" href="#"><img
+						src="../../assets/img/ic_menu.svg"> <span class="caret"></span></a>
+
+					<ul class="dropdown-menu dropdown-menu-right" role="menu"
+						aria-labelledby="dropdownMenu">
+
+						<li><a href="settings-user"><img
+								src="../../assets/img/set.png"> SETTINGS</a></li>
+						<li><a href="#" ng-controller="logoutCtrl"
+							ng-click="logout()"><img src="../../assets/img/set.png">
+								Logout</a></li>
+
+
+					</ul></li>
+			</ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container -->
+</nav>
+<div class="bottom-nav">
+	<div class="wrapper">
+		<div class="current-page">
+			<h5>
+				<a href="#/">users</a>
+			</h5>
+			<h5>
+				<a href="/projects">projects</a>
+			</h5>
+			<h5>
+				<a href="/settings" class="current-active">settings</a>
+			</h5>
+		</div>
+	</div>
+</div>
+
+<!-- /.main -->
 <div class="col-md-offset-2 col-md-8 main-section">
-    <div class="main-title">
-       <h4>preference</h4>
-    </div>
+	<div class="main-title">
+		<h4>preference</h4>
+	</div>
 
-<div class="create-settings">
-   <div class="row">
-     <div class="col-md-7">
-      <label  class="settings">TIMEZONE</label>
-        <select class="form-control turnintodropdown" id="sel1">
-           <option value="Asia/Kolkata">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
-           <option value="Pacific/Midway">(GMT-11:00) Midway Island, Samoa</option>
-           <option value="America/Adak">(GMT-10:00) Hawaii-Aleutian</option>
-           <option value="Pacific/Marquesas">(GMT-09:30) Marquesas Islands</option>
-           <option value="Pacific/Gambier">(GMT-09:00) Gambier Islands</option>
-        </select>
-         <button type="button" class="btn btn-default create" style="float:left; width:40.2%;">save</button>
-     </div>
+	<div class="create-settings">
+		<div class="row">
+			<div class="col-md-7">
+				<form name="timeForm">
+					<label class="settings">TIMEZONE</label> <select
+						class="form-control turnintodropdown" id="sel1"
+						ng-model="time.timeZone">
+						<option value="Asia/Kolkata">(GMT+05:30) Chennai,
+							Kolkata, Mumbai, New Delhi</option>
+						<option value="Pacific/Midway">(GMT-11:00) Midway Island,
+							Samoa</option>
+						<option value="America/Adak">(GMT-10:00) Hawaii-Aleutian</option>
+						<option value="Pacific/Marquesas">(GMT-09:30) Marquesas
+							Islands</option>
+						<option value="Pacific/Gambier">(GMT-09:00) Gambier
+							Islands</option>
+					</select>
+					<button type="button" class="btn btn-default create"
+						ng-click="updateTime(timeForm.$valid)"
+						style="float: left; width: 40.2%;">save</button>
+				</form>
+			</div>
 
-     <div class="col-md-5">
-      
-     </div>
-  
-     </div>
-   </div>
+			<div class="col-md-5"></div>
 
-    <div class="main-title">
-       <h4>reset password</h4>
-    </div>
-   
-   <div class="row"> 
-   <div class="col-md-8">
-     <div class="row">
-       <div class="col-md-6">
-        <label  class="settings">CURRENT PASSWORD</label>
-      <input type="password" class="form-control" name="password" id="password" ng-model="password" value="" />
-       </div>
-        <div class="col-md-6">
-       </div>
-       </div><br />
+		</div>
+	</div>
 
-      <div class="row">
-      <div class="col-md-6">
-          <label  class="settings">NEW PASSWORD</label>
-          <input type="password" class="form-control" name="password" id="password" ng-model="password" value="" />
-       </div>
-        <div class="col-md-6">
-          <label  class="settings">REPEAT NEW PASSWORD</label>
-          <input type="password" class="form-control" name="password" id="password" ng-model="password" value="" />
-       </div>
-      
-     </div>
-       <button type="button" class="btn btn-default create" style="float:left; width:35%;">save</button>
-   <div class="col-md-4">
-   </div>
- </div>
+	<div class="main-title">
+		<h4>reset password</h4>
+	</div>
 
- </div>
+	<div class="row">
+
+		<form name="signupForm">
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-6">
+						<label class="settings">CURRENT PASSWORD</label> <input
+							type="password" class="form-control" name="oldPassword"
+							ng-model="user.oldPassword" required />
+					</div>
+					<div class="col-md-6"></div>
+				</div>
+				<br />
+
+				<div class="row">
+					<div class="col-md-6">
+						<label class="settings">NEW PASSWORD</label> <input
+							type="password" class="form-control" name="password"
+							ng-model="user.newPassword" ng-minlength="8" ng-maxlength="12"
+							required /> <span class="label label-danger"
+							ng-show="signupForm.password.$dirty && signupForm.password.$error.minlength">use
+							atleast 8 characters</span> <span class="label label-danger"
+							ng-show="signupForm.password.$dirty && signupForm.password.$error.required">Password
+							required.</span>
+					</div>
+					<div class="col-md-6">
+						<label class="settings">REPEAT NEW PASSWORD</label> <input
+							type="password" class="form-control" id="password_c"
+							name="confirmPassword" ng-model="password_c" required /> <span
+							class="label label-danger"
+							ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Password
+							required.</span> <span class="label label-danger"
+							ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (user.newPassword != password_c)">Password
+							mismatch </span>
+					</div>
+
+				</div>
+				<button type="button" class="btn btn-default create"
+					style="float: left; width: 35%;"
+					ng-click="updatePassword(signupForm.$valid)">save</button>
+				<div class="col-md-4"></div>
+			</div>
+		</form>
+
+	</div>

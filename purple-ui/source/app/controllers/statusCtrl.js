@@ -39,7 +39,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionSt
             	    angular.forEach(response.data.gridData, function(value, key) {
             	        $scope.artists.push(value);
             	    });
-                $scope.allstatus   =  response.data.gridData.date;
+                $scope.allstatus   =  response.data.gridData;
             }
         });
     }

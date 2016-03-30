@@ -18,14 +18,14 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                $rootScope.loggedStatus = true;
                $rootScope.loggedInUser = $scope.username;
                $rootScope.userRole = response.data.userRole.id;
-              
+               $rootScope.userName = response.data.userName;
                 $rootScope.authToken = response.headers["x-auth-token"];
                // $rootScope.permissions = response.data.permissions;
 
                var userInfo = {
                     authToken: response.headers["x-auth-token"],
                     email: $rootScope.loggedInUser,
-                    //name: $rootScope.userName,
+                    name: $rootScope.userName,
                     userRoles:  $rootScope.userRole,
                    // permissions: response.data.permissions,
                    // viewMode:$rootScope.viewMode
