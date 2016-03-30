@@ -2,7 +2,9 @@ package com.bbytes.purple.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
+import com.bbytes.purple.rest.dto.models.StatusResponseDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.utils.GlobalConstants;
 
@@ -79,7 +82,7 @@ public class DataModelToDTOConversionService {
 
 	public StatusDTO convertStatus(Status status) {
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_TIME_FORMAT);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.TIME_FORMAT);
 
 		StatusDTO statusDTO = new StatusDTO();
 		statusDTO.setStatusId(status.getStatusId());
@@ -89,7 +92,7 @@ public class DataModelToDTOConversionService {
 		statusDTO.setWorkingOn(status.getWorkingOn());
 		statusDTO.setHours(status.getHours());
 		statusDTO.setBlockers(status.getBlockers());
-		statusDTO.setDateTime(simpleDateFormat.format(status.getDateTime()).toString());
+		statusDTO.setTime(simpleDateFormat.format(status.getDateTime()).toString());
 		return statusDTO;
 	}
 
@@ -136,13 +139,36 @@ public class DataModelToDTOConversionService {
 	}
 
 	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses) {
-		List<StatusDTO> statusDTOList = new ArrayList<>();
+
+		Map<String, List<StatusDTO>> statusMap = new HashMap<String, List<StatusDTO>>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 		for (Status status : statusses) {
-			statusDTOList.add(convertStatus(status));
+			String date = simpleDateFormat.format(status.getDateTime());
+			StatusDTO statusDTO = convertStatus(status);
+
+			if (statusMap.containsKey(date)) {
+				statusMap.get(date).add(statusDTO);
+			} else {
+				List<StatusDTO> statusDTOList = new LinkedList<StatusDTO>();
+				statusDTOList.add(statusDTO);
+				statusMap.put(date, statusDTOList);
+			}
 		}
 		Map<String, Object> responseData = new LinkedHashMap<String, Object>();
-		responseData.put(RestResponse.GRID_DATA, statusDTOList);
+		responseData.put(RestResponse.GRID_DATA, getStatusResponse(statusMap));
 		return responseData;
+	}
+
+	public List<StatusResponseDTO> getStatusResponse(Map<String, List<StatusDTO>> statusMap) {
+		List<StatusResponseDTO> statusResponseDTOList = new LinkedList<StatusResponseDTO>();
+		ArrayList<String> keys = new ArrayList<String>(statusMap.keySet());
+		for (int i = keys.size() - 1; i >= 0; i--) {
+			StatusResponseDTO statusResponseDTO = new StatusResponseDTO();
+			statusResponseDTO.setDate(keys.get(i));
+			statusResponseDTO.setStatusDTOList(statusMap.get(keys.get(i)));
+			statusResponseDTOList.add(statusResponseDTO);
+		}
+		return statusResponseDTOList;
 	}
 
 }

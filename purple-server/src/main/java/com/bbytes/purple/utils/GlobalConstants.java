@@ -26,7 +26,9 @@ public class GlobalConstants {
 
 	public static final String TOKEN_URL = "/activateAccount?token=";
 
-	public static final String DATE_TIME_FORMAT = "MMM d, yyyy, h:mm a";
+	public static final String TIME_FORMAT = "h:mm a";
+	
+	public static final String DATE_FORMAT = "MMM d, yyyy";
 
 	public static final String DEFAULT_PASSWORD = "purple123";
 

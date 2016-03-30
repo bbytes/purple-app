@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,11 +40,6 @@ public class StatusService extends AbstractService<Status, String> {
 
 	public List<Status> getStatusByUser(User user) {
 		return statusRepository.findByUser(user);
-	}
-
-	public Status findByDateTime(DateTime dateTime) {
-		return statusRepository.findByDateTime(dateTime);
-
 	}
 
 	public boolean statusIdExist(String projectId) {
