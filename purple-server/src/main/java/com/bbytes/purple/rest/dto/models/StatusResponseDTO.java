@@ -18,6 +18,6 @@ public class StatusResponseDTO implements Serializable {
 
 	private String date;
 
-	private List<StatusDTO> statusDTOList;
+	private List<StatusDTO> statusList;
 
 }

@@ -165,7 +165,7 @@ public class DataModelToDTOConversionService {
 		for (int i = keys.size() - 1; i >= 0; i--) {
 			StatusResponseDTO statusResponseDTO = new StatusResponseDTO();
 			statusResponseDTO.setDate(keys.get(i));
-			statusResponseDTO.setStatusDTOList(statusMap.get(keys.get(i)));
+			statusResponseDTO.setStatusList(statusMap.get(keys.get(i)));
 			statusResponseDTOList.add(statusResponseDTO);
 		}
 		return statusResponseDTOList;
