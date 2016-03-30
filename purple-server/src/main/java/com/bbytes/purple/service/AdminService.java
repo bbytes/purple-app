@@ -30,8 +30,7 @@ public class AdminService {
 			if (userService.userEmailExist(user.getEmail()) || tenantResolverService.emailExist(user.getEmail()))
 				throw new PurpleException("Error while adding users", ErrorHandler.USER_NOT_FOUND);
 			try {
-				userService.save(user);
-				user = userService.getUserByEmail(user.getEmail());
+				user = userService.save(user);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_USER_FAILED);
 			}

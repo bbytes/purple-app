@@ -27,6 +27,7 @@ import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.NotificationService;
+import com.bbytes.purple.service.PasswordHashService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
@@ -56,6 +57,9 @@ public class AdminController {
 
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private PasswordHashService passwordHashService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -73,10 +77,10 @@ public class AdminController {
 		Organization org = userService.getLoggedinUser().getOrganization();
 		User addUser = new User(userDTO.getUserName(), userDTO.getEmail());
 		addUser.setOrganization(org);
+		addUser.setPassword(passwordHashService.encodePassword(GlobalConstants.DEFAULT_PASSWORD));
 		addUser.setStatus(User.PENDING);
 
 		User user = adminService.addUsers(addUser);
-		userService.updatePassword(GlobalConstants.DEFAULT_PASSWORD, user);
 		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(user.getEmail());
