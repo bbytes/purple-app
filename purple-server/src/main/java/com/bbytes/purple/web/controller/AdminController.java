@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
@@ -48,6 +49,9 @@ public class AdminController {
 	private UserService userService;
 
 	@Autowired
+	protected TokenAuthenticationProvider tokenAuthenticationProvider;
+
+	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
 	@Autowired
@@ -72,6 +76,8 @@ public class AdminController {
 		addUser.setStatus(User.PENDING);
 
 		User user = adminService.addUsers(addUser);
+		userService.updatePassword(GlobalConstants.DEFAULT_PASSWORD, user);
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(user.getEmail());
 
@@ -79,10 +85,9 @@ public class AdminController {
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
 		emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
-		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.INVITE_URL + user.getEmail());
+		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 		notificationService.sendTemplateEmail(emailList, GlobalConstants.EMAIL_INVITE_SUBJECT,
 				GlobalConstants.EMAIL_INVITE_TEMPLATE, emailBody);
-		userService.updatePassword(GlobalConstants.DEFAULT_PASSWORD, user);
 
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 		logger.debug("User with email  '" + userDTO.getEmail() + "' are added successfully");
