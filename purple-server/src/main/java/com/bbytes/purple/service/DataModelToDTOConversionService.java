@@ -181,12 +181,11 @@ public class DataModelToDTOConversionService {
 
 	public List<StatusResponseDTO> getStatusResponse(Map<String, List<StatusDTO>> statusMap) {
 		List<StatusResponseDTO> statusResponseDTOList = new LinkedList<StatusResponseDTO>();
-//		List<String> keys = new LinkedList<String>(statusMap.keySet());
 		Set<String> keys = statusMap.keySet();
 		for (String key : keys) {
 			StatusResponseDTO statusResponseDTO = new StatusResponseDTO();
-			statusResponseDTO.setDate(keys.get(i));
-			statusResponseDTO.setStatusList(statusMap.get(keys.get(i)));
+			statusResponseDTO.setDate(key);
+			statusResponseDTO.setStatusList(statusMap.get(key));
 			statusResponseDTOList.add(statusResponseDTO);
 		}
 		return statusResponseDTOList;
