@@ -106,146 +106,113 @@
 </aside>
 <div>
 	<div>
+	
+	
 		<div id="wrapper" class="toggled">
 
-			<!-- Sidebar -->
-			<div id="sidebar-wrapper">
-				<div class="sidebar-wrapper-scroll">
-					<div class="scroll-box">
-						<div class="sidebar-nav">
-							<div class="form-group">
-								<label for="comment">Comment:</label>
-								<textarea class="form-control" id="text" name="text" rows="5"
-									id="comment"></textarea>
-								<h6 class="pull-right" id="count_message">
-							</div>
-							<button type="button" class="btn btn-default submit"
-								style="width: 30% !important;">POST</button>
-						</div>
-						<hr />
+      <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+         <div class="sidebar-wrapper-scroll">
+          <div class="scroll-box">
+            <div class="sidebar-nav">
+                <div class="form-group">
+                  <label for="comment">Comment:</label>
+                    <textarea class="form-control" id="text" name="text" rows="5" id="comment"></textarea>
+                    <h6 class="pull-right" id="count_message">
+                  </div>
+                 <button type="button" class="btn btn-default submit" style="width:30% !important;">POST</button>
+            </div>
+                <hr />
+           
+            <div class="sidebar-nav">
+               <img class="round" width="40" height="40" avatar="Username">
+                 <div class="user-label">
+                   <h4>username</h4>
+                    <p class="comment">Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                </div>
+                 <h4 class="reaply">Reaply</h4>
+            </div>
+              <hr />
 
-						<div class="sidebar-nav">
-							<small> <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
-							</small>
-							<div class="user-label">
-								<h4>username</h4>
-								<p class="comment">Invitamus me testatur sed quod non dum
-									animae tuae lacrimis ut libertatem deum rogus aegritudinis
-									causet. Dicens hoc contra serpentibus isto.</p>
-							</div>
-							<h4 class="reaply">
-								<a data-toggle="collapse" data-target="#reaply">Reaply</a>
-							</h4>
-							<!----reaply dropdown--->
-							<div id="reaply" class="collapse">
-								<div class="form-group">
-									<label for="comment">Reaply Comment:</label>
-									<textarea class="form-control" id="reaply" name="text" rows="5"
-										id="comment"></textarea>
-									<h6 class="pull-right" id="count_message-reaply">
-								</div>
-								<button type="button" class="btn btn-default submit"
-									style="width: 30% !important;">REAPLY</button>
-							</div>
-							<!---/#ends----->
-						</div>
-						<hr />
-
-						<div class="sidebar-nav">
-							<small> <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
-							</small>
-							<div class="user-label">
-								<h4>username</h4>
-								<p class="comment">
-									<b>@Username </b>Invitamus me testatur sed quod non dum animae
-									tuae lacrimis ut libertatem deum rogus aegritudinis causet.
-									Dicens hoc contra serpentibus isto.
-								</p>
-							</div>
-							<h4 class="reaply">Reaply</h4>
-						</div>
-
-						<div class="last-reaply">
-							<small> <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
-							</small>
-							<div class="user-label">
-								<h4>username</h4>
-								<p class="comment">
-									<b>@Username </b>Invitamus me testatur sed quod non dum animae
-									tuae lacrimis ut libertatem deum rogus aegritudinis causet.
-									Dicens hoc contra serpentibus isto.
-								</p>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-			<!-- /#sidebar-wrapper -->
+              <div class="sidebar-nav">
+               <img class="round" width="40" height="40" avatar="Username">
+                 <div class="user-label">
+                   <h4>username</h4>
+                    <p class="comment"><b>@Username </b>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                </div>
+                 <h4 class="reaply">Reaply</h4>
+            </div>
+            
+            <div class="last-reaply">
+              <img class="round" width="40" height="40" avatar="Username">
+                 <div class="user-label">
+                   <h4>username</h4>
+                    <p class="comment"><b>@Username </b>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
+                </div>
+            </div>
+         
+         </div>
+        </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
 
 
-			<div id="page-content-wrapper">
-				<div class="container-fluid" ng-init="initStatus()">
-					<!-- Content Wrapper. Contains page content -->
-					<div class="content-wrapper" >
-						<!-- Main content -->
-						<div class="content" >
+    <div id="page-content-wrapper">
+     <div class="container-fluid">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+         <!-- Main content -->
+        <div class="content">
+         
+         <!-- Page Content -->
+                <div class="wrapper">
+                     <div class="top-header">
+						 <span class="project"><span class="hash"># </span>{{status.projectName}}</span>
+						 <span class="username"><span class="hash">@ </span>{{status.userName}}</span>
+					 </div>
 
-							<!-- Page Content -->
-							<div class="wrapper">
-								<div class="top-header">
-									<span class="project"><span class="hash"># </span>{{status.projectName}}</span>
-									<span class="username"><span class="hash">@ </span>
-										{{status.userName}}</span>
-								</div>
+                     <ul class="timeline">
+                        <div class="date-time">
+                           <p>{{artist.date}}</p>
+                         </div>
+						 
+                           <li>
+                             <div class="timeline-badge"></div>
+                               <div class="timeline-panel">
+            
+                                 <div class="edit-left-side">
+									<a data-target="#menu-toggle1" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle1"><img src="../../assets/img/comment.svg"></a>
+								 </div>
 
-								<ul class="timeline" ng-repeat="artist in artists">
-									<div class="date-time">
-										<p>{{artist.date}}</p>
-									</div>
-									<li ng-repeat="status in artist.statusDTOList">
-										<div class="timeline-badge"></div>
-										<div class="timeline-panel">
+                                  <div class="timeline-heading">
+                                     <h4><span class="hash"># </span> {{status.projectName}} 
+									 <span class="hash">@ </span> {{status.userName}}</h4>
+                                   </div>
+								   
+                                  <div class="timeline-body worked-on">
+									 <h3>worked on</h3>
+										<p>{{status.workedOn}}</p>
+		                           </div>
 
-											<div class="edit-left-side">
-												<a data-target="#menu-toggle1" class="sidebar-toggle"
-													data-toggle="offcanvas" role="button" id="menu-toggle1"><img
-													src="../../assets/img/comment.svg"></a>
-											</div>
+                                   <div class="timeline-body working-on">
+									  <h3>working on</h3>
+									   <p>{{status.workingOn}}</p>
+								   </div>
 
-											<div class="timeline-heading">
-												<h4>
-													<span class="hash"># </span> {{status.projectName}} <span
-														class="hash">@ </span> {{status.userName}}
-												</h4>
-												<p>{{status.hours}}</p>
-											</div>
-											<div class="timeline-body worked-on">
-												<h3>worked on</h3>
-												<p>{{status.workedOn}}</p>
-											</div>
+                                   <div class="timeline-body blocker-on">
+									  <h3>blockers</h3>
+									  <p>{{status.blockers}}</p>
+								   </div>
 
-											<div class="timeline-body working-on">
-												<h3>working on</h3>
-												<p>{{status.workingOn}}</p>
-											</div>
-
-											<div class="timeline-body blocker-on">
-												<h3>blockers</h3>
-												<p>{{status.blockers}}</p>
-											</div>
-
-										</div>
-									</li>
-
-									<li class="timeline-inverted">
+                              </div>
+                          </li>
+    
+                          <li class="timeline-inverted">
 										<div class="timeline-badge"></div>
 										<div class="timeline-panel">
 
 											<div class="edit">
-												<a data-target="#menu-toggle" class="sidebar-toggle"
-													data-toggle="offcanvas" role="button" id="menu-toggle"><img
-													src="../../assets/img/comment.svg"></a>
+												<a data-target="#menu-toggle" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle"><img src="../../assets/img/comment.svg"></a>
 
 											</div>
 
@@ -273,17 +240,18 @@
 
 										</div>
 									</li>
-
-									<li class="clearfix no-float"></li>
-								</ul>
-
-							</div>
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+                                    <li class="clearfix no-float"></li>
+                             </ul>
+  
+                        </div>
+                    </div>
+                </div>
+          </div>
+      </div>
+</div>
+		
+		
+		
 	</div>
 </div>
 <script>
