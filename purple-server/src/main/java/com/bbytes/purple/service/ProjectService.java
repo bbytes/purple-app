@@ -31,6 +31,10 @@ public class ProjectService extends AbstractService<Project, String> {
 		return projectRepository.findOneByProjectName(name);
 	}
 
+	public List<Project> findProjectByUser(User user) {
+		return projectRepository.findByUser(user);
+	}
+
 	public boolean projectNameExist(String name) {
 		boolean state = projectRepository.findOneByProjectName(name) == null ? false : true;
 		return state;
@@ -96,5 +100,16 @@ public class ProjectService extends AbstractService<Project, String> {
 		} else
 			throw new PurpleException("Error while getting users", ErrorHandler.GET_USER_FAILED);
 		return users;
+	}
+
+	public List<Project> getProjects(User user) throws PurpleException {
+
+		List<Project> allProjects = new ArrayList<Project>();
+		try {
+			allProjects = findProjectByUser(user);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_PROJECT_FAILED);
+		}
+		return allProjects;
 	}
 }

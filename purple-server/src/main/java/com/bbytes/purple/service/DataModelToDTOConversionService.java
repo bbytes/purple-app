@@ -80,6 +80,15 @@ public class DataModelToDTOConversionService {
 		return projectDTO;
 	}
 
+	public ProjectDTO convertProjectList(Project project) {
+
+		ProjectDTO projectDTO = new ProjectDTO();
+		projectDTO.setProjectId(project.getProjectId());
+		projectDTO.setProjectName(project.getProjectName());
+		projectDTO.setTimePreference(project.getTimePreference());
+		return projectDTO;
+	}
+
 	public StatusDTO convertStatus(Status status) {
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.TIME_FORMAT);
@@ -117,6 +126,16 @@ public class DataModelToDTOConversionService {
 		projectCount = projects.size();
 		for (Project project : projects) {
 			projectDTOList.add(convertProject(project));
+		}
+		return getResponseMapWithGridDataAndProjectCount(projectCount, projectDTOList);
+	}
+
+	public Map<String, Object> getResponseMapWithGridDataAndProjectList(List<Project> projects) {
+		List<ProjectDTO> projectDTOList = new ArrayList<>();
+		long projectCount = 0;
+		projectCount = projects.size();
+		for (Project project : projects) {
+			projectDTOList.add(convertProjectList(project));
 		}
 		return getResponseMapWithGridDataAndProjectCount(projectCount, projectDTOList);
 	}
