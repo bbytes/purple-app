@@ -16,35 +16,39 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
         	 if (response.headers["x-auth-token"] && response.data.accountInitialise == true) {
         	$window.sessionStorage.token = response.headers["x-auth-token"];
                $rootScope.loggedStatus = true;
-                $rootScope.loggedInUser = $scope.username;
-                //$rootScope.userRole =response.data.userRole;
-              // $rootScope.userName = response.data.name;
+               $rootScope.loggedInUser = $scope.username;
+               $rootScope.userRole = response.data.userRole.id;
+              
                 $rootScope.authToken = response.headers["x-auth-token"];
                // $rootScope.permissions = response.data.permissions;
 
-                var userInfo = {
+               var userInfo = {
                     authToken: response.headers["x-auth-token"],
-                    id: $rootScope.loggedIn,
+                    email: $rootScope.loggedInUser,
                     //name: $rootScope.userName,
-                   // userRoles: response.data.userRoles,
+                    userRoles:  $rootScope.userRole,
                    // permissions: response.data.permissions,
                    // viewMode:$rootScope.viewMode
                 };
-                
-            //  $sessionStorage.userInfo = userInfo;
+              
+            $sessionStorage.userInfo =  userInfo;
 
                 // Login successful, set user locale and Redirect to home page
              /*   if(response.data.locale){
                     appLocaleService.setLocale(response.data.locale);
                 }
 */
+            
+           
                 $rootScope.showWelcomeMessage = true;
                 
                 $state.go('status');
                 
+                
             } else {
             	  // Erase the token if the user fails to log in
             	 delete $window.sessionStorage.token;
+            	 //delete  $sessionStorage.userInfo;
                 //Login failed. Showing error notification
                 appNotifyService.error('Please activate your account to login.');
             }
@@ -57,7 +61,8 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
     
     $scope.logout = function() {
     	 delete $window.sessionStorage.token;
-    	  //$sessionStorage.remove('userInfo');
+    
+    	$sessionStorage.remove('userInfo');
     	loginService.logout().then(function (response) {
 			
 				$location.path("login");

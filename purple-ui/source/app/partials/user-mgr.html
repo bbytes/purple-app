@@ -83,6 +83,7 @@
       <label for="comment" class="settings">USERNAME</label>
       <input type="text" ng-model="admin.userName"  name="myName" class="form-control"  ng-pattern="/[a-zA-Z0-9^ ]/" required>
       <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">The name is required.</span>
+      <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">name is invalid</span>
     </div>
     </div>
   </div>

@@ -20,12 +20,9 @@ rootApp.service('adminService', function($rootScope, $http, $q, $window) {
 		}).success(function(response, status, headers, config) {
 
 			deferred.resolve(response);
-		}).error(function() {
+		}).error(function(response) {
 			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
+			deferred.reject(response);
 		});
 
 		return deferred.promise;

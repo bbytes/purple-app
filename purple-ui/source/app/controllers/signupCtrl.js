@@ -10,6 +10,7 @@ rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupSer
             }
 
         // Validating login form
+    	
         signupService.submitSignUp($scope.user).then(function (response) {
          if (response.success == true) {
                 

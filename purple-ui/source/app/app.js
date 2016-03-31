@@ -183,7 +183,7 @@ rootApp.config([
 				views : {
 					'' : {
 						templateUrl : 'app/partials/settings-user.html',
-						controller : 'settings-userCtrl',
+						controller : 'userSettingsCtrl',
 					},
 					'header@home' : {
 						templateUrl : 'app/partials/home-header.html'
@@ -242,6 +242,10 @@ rootApp.config([
 				url : '/activateAccount?token',
 				templateUrl : 'app/partials/activateAccount.html',
 				controller : 'activateAccountCtrl'
+			}).state('useractivate', {
+				url : '/activateUserAccount?token',
+				templateUrl : 'app/partials/activateUserAccount.html',
+				controller : 'activateUserAccountCtrl'
 			}).state('accountactivate', {
 				controller : 'activateAccountCtrl'
 			});

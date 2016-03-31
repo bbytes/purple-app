@@ -5,11 +5,13 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
 	
 	 $rootScope.bodyClass = 'body-standalone1';
     $scope.invite = function (isValid) {
-    	
+    	//var details=$scope.admin;
         if (!isValid) {
         	appNotifyService.error('Please enter email and username', 'Invalid inputs');
             return false;
         }
+        
+     
         // Validating  form
     	if($scope.admin == null){
     		appNotifyService.error('Please enter email or username ', 'Not entered inputs');
@@ -18,8 +20,12 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
         else{
         // Calling login service
         adminService.inviteUser($scope.admin).then(function (response) {
+//$scope.clearAdminText(details);
+        	$scope.admin = '';
         	 if (response.success) {
+        		 appNotifyService.success('Activation link has been sent to added  email.');
         		 $scope.loadUsers();
+        		 
             } else {
                 //Login failed. Showing error notification
                 appNotifyService.error(response.data, 'Invite unsuccesfull.');
@@ -27,7 +33,13 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
 
         }, function (error) {
             //Login failed. Showing error notification
-            appNotifyService.error(error.msg, 'Invite unsuccesfull.');
+        	 if(error.reason =="user_not_found") {
+                 //Login failed. Showing error notification
+                 appNotifyService.error('Oops..!!Username or Email already exist..');
+             }
+        	 else{
+              appNotifyService.error(error.msg, 'Error while adding users..');
+        	 }
         });
         }
     };
@@ -59,6 +71,13 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
     	}
     		$scope.allusers.splice($index, 1);
     });
+    }
+    
+    $scope.clearAdminText = function(details){
+    	
+    	details.email = '';
+    	details.userName = '';
+    	//project.users.length = 0;
     }
     
 });

@@ -1,7 +1,10 @@
 /**
  * 
  */
-rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state,$q,$http,$window,$sessionStorage,appNotifyService) {
+/**
+ * 
+ */
+rootApp.controller('activateUserAccountCtrl', function ($scope, $rootScope, $state,$q,$http,$window,$sessionStorage,appNotifyService) {
 	
 	
 	$scope.init = function (){
@@ -25,15 +28,11 @@ rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state,$
      		}).success(function(response, status, headers, config) {
 
      			deferred.resolve(response);
-     			if(response.data.accountInitialise = true && response.data.userRole.id == "NORMAL")
+     			if(response.data.accountInitialise = true)
      				{
      				 appNotifyService.success('Your account activated successfully..redirecting to settings page');
      				 $state.go("settings-user");
      				}
-     			else{
-     				appNotifyService.success('Your account activated successfully..redirecting to add users page');
-    				 $state.go("user-mgr");
-     			}
      		}).error(function() {
      			// Something went wrong.
      			deferred.reject({

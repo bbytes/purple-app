@@ -5,6 +5,7 @@ rootApp.controller('logoutCtrl', function ($scope, $rootScope, $state, logoutSer
 	
 	  $scope.logout = function() {
 		  delete $window.sessionStorage.token;
+		  $sessionStorage.$reset();
 		  $state.go("login");
 	    /*	logoutService.logout().then(function (response) {
 				

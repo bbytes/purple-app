@@ -1,8 +1,9 @@
 /**
  * 
  */
-rootApp.controller('statusCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window,$location) {
+rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionStorage,statusService, projectService,appNotifyService,$window,$location) {
 	 $rootScope.bodyClass = 'body-standalone1';
+	 
     $scope.submitStatus = function () {
     	
        /* if (!isValid) {
@@ -14,8 +15,11 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state, projectSe
         
         // Calling login service
        statusService.submitStatus($scope.status).then(function (response) {
-        	 if (response.success) {
+        	 if (response.success = true) {
         		// $scope.loadUsers();
+        		 $scope.status = '';
+        		 $scope.usersstatusLoad();
+          		
             } else {
                 //Login failed. Showing error notification
                 appNotifyService.error(response.data, 'Invite unsuccesfull.');
@@ -26,6 +30,24 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state, projectSe
             appNotifyService.error(error.msg, 'Invite unsuccesfull.');
         });
         
+    };
+    
+    $scope.usersstatusLoad = function(){
+   	 statusService.getAllStatus().then(function (response) {
+            if (response.success) {
+            	 $scope.artists = [];
+            	    angular.forEach(response.data.gridData, function(value, key) {
+            	        $scope.artists.push(value);
+            	    });
+                $scope.allstatus   =  response.data.gridData.date;
+            }
+        });
+    }
+    
+   
+    
+    $scope.initStatus = function() {
+        $scope.usersstatusLoad();
     };
     
     $scope.initProjects = function() {

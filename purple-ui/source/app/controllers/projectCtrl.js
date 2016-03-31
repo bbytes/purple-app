@@ -126,11 +126,8 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
 				
 	}
     
-    $scope.submitStatus = function (status) {
-    	var workedOn=status.workedOn;
-        var workingOn=status.workingOn;
-        var time =status.time;
-        var projectId =status.projectId;
+    $scope.submitStatus = function () {
+    	
     	
         /* if (!isValid) {
          	appNotifyService.error('Please enter email and username', 'Invalid inputs');
@@ -143,10 +140,10 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
     	//All functions related to status have to write in statusCtrl time being written here
        
         statusService.submitStatus($scope.status).then(function (response) {
-         	 if (response.success) {
+         	 if (response.success =true) {
          		 
-         		$scope.usersstatusLoad();
-         		$window.location.reload()
+         		$scope.initStatus();
+         		
          		
              } else {
                  //Login failed. Showing error notification

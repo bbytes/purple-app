@@ -1,203 +1,249 @@
- <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="wrapper">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">
-                    <img src="../../assets/img/logo.png" alt=""> <span class="logo-text">online <b>standup</b></span>
-                </a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="#"><img src="../../assets/img/ic_compose.svg"></a>
-                    </li>
-                    <li>
-                        <a href="home-page"><img src="../../assets/img/ic_timeline.svg">
-                        </a>
-                    </li>
 
-                     <li class="dropdown">
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><img src="../../assets/img/ic_menu.svg">
-                         <span class="caret"></span></a>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="wrapper">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#"> <img
+				src="../../assets/img/logo.png" alt=""> <span
+				class="logo-text">online <b>standup</b></span>
+			</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#"><img
+						src="../../assets/img/ic_compose.svg"></a></li>
+				<li><a href="home-page"><img
+						src="../../assets/img/ic_timeline.svg"> </a></li>
 
-                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu">
-                             <li><a href="user-mgr"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
-                             <li><a href="projects"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
-                             <li><a href="settings"><img src="../../assets/img/set.png"> SETTINGS</a></li>
-                             <li><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><img src="../../assets/img/set.png"> Logout</a></li>
+				<li class="dropdown"><a class="btn dropdown-toggle"
+					data-toggle="dropdown" href="#"><img
+						src="../../assets/img/ic_menu.svg"> <span class="caret"></span></a>
 
-                           
-                         </ul>
-                    </li>
-                </ul>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
-   <div class="bottom-nav">
-    <div class="wrapper">
-     <div class="current-page">
-      <h5>status</h5>
-     </div>
-     </div>
-   </div>
+					<ul class="dropdown-menu dropdown-menu-right" role="menu"
+						aria-labelledby="dropdownMenu">
+						<li ng-show="userRole == 'ADMIN'"><a href="user-mgr"><img
+								src="../../assets/img/usr.png"> USER MANAGER</a></li>
+						<li ng-show="userRole == 'ADMIN'"><a href="projects"><img
+								src="../../assets/img/pro.png"> PROJECTS</a></li>
+						<li><a href="settings"><img
+								src="../../assets/img/set.png"> SETTINGS</a></li>
+						<li><a href="#" ng-controller="logoutCtrl"
+							ng-click="logout()"><img src="../../assets/img/set.png">
+								Logout</a></li>
 
-  <!-- /.main -->
-<div class="col-md-8" ng-controller="projectCtrl" ng-init="initStatus()">
-  <div class="wrapper" ng-repeat="status in allstatus">
-   <div class="top-header">
-     <span class="project"><span class="hash"> <span class="username"><span class="hash">@ </span> {{status.userName}}</span>
-   </div>
 
-   <ul class="timeline">
-     <div class="date-time">
-        <p>{{status.dateTime}}</p>
-     </div>
-    <li>
-        <div class="timeline-badge"></div>
-        <div class="timeline-panel">
-          <div class="edit">
-          <a href="#" ng-click="editStatus(status.statusId)"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a>
-          <a href="#" ng-click="deleteStatus(status.statusId,$index)" ng-confirm-click="Are you sure want to delete??"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
-          </div>
-        
-            <div class="timeline-heading">
-                <h4><span class="hash"> <span class="hash">@ </span> {{status.projectName}}</h4>
-                <p>{{status.hours}}</p>
-            </div>
-            <div class="timeline-body worked-on">
-               <h3>worked on</h3>
-                <p>{{status.workedOn}}</p>
-            </div>
+					</ul></li>
+			</ul>
+			</ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container -->
+</nav>
+<div class="bottom-nav">
+	<div class="wrapper">
+		<div class="current-page">
+			<h5>status</h5>
+		</div>
+	</div>
+</div>
 
-             <div class="timeline-body working-on">
-               <h3>working on</h3>
-                <p>{{status.workingOn}}</p>
-            </div>
+<!-- /.main -->
+<div class="col-md-8" ng-controller="statusCtrl" ng-init="initStatus()">
+	<div class="wrapper" >
+		<div class="top-header">
+			<span class="project"><span
+					class="username"><span class="hash">@ </span>
+						{{loggedInUser}}</span></span>
+		</div>
 
-             <div class="timeline-body blocker-on">
-               <h3>blockers</h3>
-                <p>{{status.blockers}}</p>
-            </div>
+		<ul class="timeline"  ng-repeat="artist in artists">
+			<div class="date-time">
+				<p>{{artist.date}}</p>
+			</div>
+			<li ng-class="" ng-repeat="status in artist.statusDTOList">
+				<div class="timeline-badge"></div>
+				<div class="timeline-panel">
+					<div class="edit">
+						<a href="#" ng-click="editStatus(status.statusId)"
+							class="navbar-toggle collapse in icon-menu"
+							data-toggle="collapse" id="menu-toggle-2"><img
+							src="../../assets/img/edit.svg"></a> <a href="#"
+							ng-click="deleteStatus(status.statusId,$index)"
+							ng-confirm-click="Are you sure want to delete??"
+							class="navbar-toggle collapse in icon-menu"
+							data-toggle="collapse" id="menu-toggle-2"><img
+							src="../../assets/img/delete.svg"></a>
+					</div>
 
-        </div>
-    </li>
-    
-    <li class="timeline-inverted">
-        <div class="timeline-badge"></div>
-        <div class="timeline-panel">
-          <div class="edit">
-       
-          <a href="#" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a>
-          <a href="#" ng-click="deleteStatus(status.statusId,$index)" ng-confirm-click="Are you sure want to delete??"class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
-          </div>
-            <div class="timeline-heading">
-                <h4><span class="hash"> <span class="hash">@ </span> {{status.projectName}}</h4>
-                <p>{{status.hours}}</p>
-            </div>
-            <div class="timeline-body worked-on">
-               <h3>worked on</h3>
-                <p>{{status.workedOn}}</p>
-            </div>
+					<div class="timeline-heading">
+						<h4>
+							<span class="hash"> <span class="hash">#</span>
+								{{status.projectName}}
+						</h4>
+						<p>{{status.hours}}</p>
+					</div>
+					<div class="timeline-body worked-on">
+						<h3>worked on</h3>
+						<p>{{status.workedOn}}</p>
+					</div>
 
-             <div class="timeline-body working-on">
-               <h3>working on</h3>
-                <p>{{status.workingOn}}</p>
-            </div>
+					<div class="timeline-body working-on">
+						<h3>working on</h3>
+						<p>{{status.workingOn}}</p>
+					</div>
 
-             <div class="timeline-body blocker-on">
-               <h3>blockers</h3>
-                <p>{{status.blockers}}</p>
-            </div>
+					<div class="timeline-body blocker-on">
+						<h3>blockers</h3>
+						<p>{{status.blockers}}</p>
+					</div>
+					
+					<div class="timeline-body blocker-on">
+						<h3>time</h3>
+						<p>{{status.time}}</p>
+					</div>
 
-        </div>
-    </li>
-   
-    <li class="clearfix no-float"></li>
-</ul>
-  
-  </div>
+				</div>
+			</li>
+
+			<!-- <li class="timeline-inverted" ng-repeat="status in artist.statusDTOList">
+				<div class="timeline-badge"></div>
+				<div class="timeline-panel">
+					<div class="edit">
+
+						<a href="#" class="navbar-toggle collapse in icon-menu"
+							data-toggle="collapse" id="menu-toggle-2"><img
+							src="../../assets/img/edit.svg"></a> <a href="#"
+							ng-click="deleteStatus(status.statusId,$index)"
+							ng-confirm-click="Are you sure want to delete??"
+							class="navbar-toggle collapse in icon-menu"
+							data-toggle="collapse" id="menu-toggle-2"><img
+							src="../../assets/img/delete.svg"></a>
+					</div>
+					<div class="timeline-heading">
+						<h4>
+							<span class="hash"> <span class="hash">#</span>
+								{{status.projectName}}
+						</h4>
+						<p>{{status.hours}}</p>
+					</div>
+					<div class="timeline-body worked-on">
+						<h3>worked on</h3>
+						<p>{{status.workedOn}}</p>
+					</div>
+
+					<div class="timeline-body working-on">
+						<h3>working on</h3>
+						<p>{{status.workingOn}}</p>
+					</div>
+
+					<div class="timeline-body blocker-on">
+						<h3>blockers</h3>
+						<p>{{status.blockers}}</p>
+					</div>
+					<div class="timeline-body blocker-on">
+						<h3>time</h3>
+						<p>{{status.time}}</p>
+					</div>
+
+				</div>
+			</li> -->
+
+			<li class="clearfix no-float"></li>
+		</ul>
+
+	</div>
 </div>
 <section sticky-nav="ng-sticky-fixed">
 <form name="myForm">
-<div class="col-md-4 side" >
+	<div class="col-md-4 side">
 
- <div class="row">
- <div class="col-md-9"   ng-controller="projectCtrl" ng-init="initProjects()"  >
-  <div class="form-sidebar">
-      <div class="form-group">
-         <select class="form-control"  name = "project" ng-model="$parent.status.projectId" required>
-        <option ng-repeat="project in allprojects" value="{{project.projectId}}">{{project.projectName}} </option>
-    
-    
-        </select>
-         <span style="color:red" ng-show="myForm.project.$error.required">Select project</span>
-       </div>
-     </div>
-  </div>
+		<div class="row">
+			<div class="col-md-9" ng-controller="projectCtrl"
+				ng-init="initProjects()">
+				<div class="form-sidebar">
+					<div class="form-group">
+						<select class="form-control" name="project"
+							ng-model="$parent.status.projectId" required>
+							<option ng-repeat="project in allprojects"
+								value="{{project.projectId}}">{{project.projectName}}</option>
 
-  <div class="col-md-3">
-     <div class="form-sidebar">
-       <div class="form-group">
-         <select class="form-control turnintodropdown" name="time" ng-model="$parent.status.hours" id="sel1" required>
-           <option>HRS</option>
-           <option>1</option>
-           <option>1.5</option>
-           <option>2</option>
-           <option>2.5</option>
-           <option>3</option>
-           <option>3.5</option>
-           <option>4</option>
-           <option>4.5</option>
-           <option>5</option>
-           <option>5.5</option>
-           <option>6</option>
-           <option>6.5</option>
-            <option>7</option>
-           <option>7.5</option>
-           <option>8</option>
-           <option>8.5</option>
-           <option>9</option>
-           <option>9.5</option>
-                <option>10</option>
-            <option>10.5</option>
-           <option>11</option>
-           <option>11.5</option>
-           <option>12</option>
-           
-        </select>
-          
-       </div>
-      </div>
-     </div>
-   </div>
-     
-     <div class="form-group">
-      <label for="comment">WORKED ON</label>
-       <textarea class="form-control" rows="5" name="myName" id="comment" ng-model="status.workedOn" required></textarea>
-       <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">This field is required.</span>
-       </div>
-     
-     <div class="form-group">
-      <label for="comment">WORKING ON</label>
-       <textarea class="form-control" rows="5" name ="nextName" id="comment" ng-model="status.workingOn" required></textarea>
-         <span style="color:red" ng-show="myForm.nextName.$touched && myForm.nextName.$invalid">This field is required.</span>
-       </div>
-       
-       <div class="form-group">
-      <label for="comment">BLOCKERS</label>
-       <textarea class="form-control" rows="5" id="comment" ng-model="status.blockers" required></textarea>
-       </div>
-   <button type="button" class="btn btn-default submit" ng-controller="projectCtrl" ng-click="submitStatus(status)">submit</button>
-     </div>
-     </form>
+
+						</select> <span style="color: red" ng-show="myForm.project.$error.required"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="form-sidebar">
+					<div class="form-group">
+						<select class="form-control turnintodropdown" name="time"
+							ng-model="status.hours" id="sel1" required>
+							<option>HRS</option>
+							<option>1</option>
+							<option>1.5</option>
+							<option>2</option>
+							<option>2.5</option>
+							<option>3</option>
+							<option>3.5</option>
+							<option>4</option>
+							<option>4.5</option>
+							<option>5</option>
+							<option>5.5</option>
+							<option>6</option>
+							<option>6.5</option>
+							<option>7</option>
+							<option>7.5</option>
+							<option>8</option>
+							<option>8.5</option>
+							<option>9</option>
+							<option>9.5</option>
+							<option>10</option>
+							<option>10.5</option>
+							<option>11</option>
+							<option>11.5</option>
+							<option>12</option>
+
+						</select>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="comment">WORKED ON</label>
+			<textarea class="form-control" rows="5" name="myName" id="comment"
+				ng-model="status.workedOn" required></textarea>
+			<span style="color: red"
+				ng-show="myForm.myName.$touched && myForm.myName.$invalid">This
+				field is required.</span>
+		</div>
+
+		<div class="form-group">
+			<label for="comment">WORKING ON</label>
+			<textarea class="form-control" rows="5" name="nextName" id="comment"
+				ng-model="status.workingOn" required></textarea>
+			<span style="color: red"
+				ng-show="myForm.nextName.$touched && myForm.nextName.$invalid">This
+				field is required.</span>
+		</div>
+
+		<div class="form-group">
+			<label for="comment">BLOCKERS</label>
+			<textarea class="form-control" rows="5" id="comment"
+				ng-model="status.blockers" required></textarea>
+		</div>
+		<button type="button" class="btn btn-default submit"
+			ng-click="submitStatus()">submit</button>
+	</div>
+</form>
 

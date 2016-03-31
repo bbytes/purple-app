@@ -1,73 +1,77 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="wrapper">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">
-                    <img src="../../assets/img/logo.png" alt=""> <span class="logo-text">online <b>standup</b></span>
-                </a>
-               
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="status"><img src="../../assets/img/ic_compose.svg"></a>
-                    </li>
-                    <li class="active">
-                        <a href="home-page"><img src="../../assets/img/ic_timeline.svg"></a>
-                    </li>
-                    <li class="dropdown">
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><img src="../../assets/img/ic_menu.svg">
-                         <span class="caret"></span></a>
+	<div class="wrapper">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#"> <img
+				src="../../assets/img/logo.png" alt=""> <span
+				class="logo-text">online <b>standup</b></span>
+			</a>
 
-                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu">
-                             <li><a href="user-mgr"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
-                             <li><a href="projects"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
-                             <li><a href="settings"><img src="../../assets/img/set.png"> SETTINGS</a></li>
-                             <li><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><img src="../../assets/img/set.png"> Logout</a></li>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li><a href="status"><img
+						src="../../assets/img/ic_compose.svg"></a></li>
+				<li class="active"><a href="home-page"><img
+						src="../../assets/img/ic_timeline.svg"></a></li>
+				<li class="dropdown"><a class="btn dropdown-toggle"
+					data-toggle="dropdown" href="#"><img
+						src="../../assets/img/ic_menu.svg"> <span class="caret"></span></a>
 
-                           
-                         </ul>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    <div class="bottom-nav">
-    <div class="wrapper"  style="background: #3f3f3f;">
-     <div class="current-page">
-      <h5><a href="#" class="current-active">timeline</a></h5>
-     </div>
-     </div>
-   </div>
-    </nav>
-    
-   
+					<ul class="dropdown-menu dropdown-menu-right" role="menu"
+						aria-labelledby="dropdownMenu">
+						<li><a href="user-mgr"><img
+								src="../../assets/img/usr.png"> USER MANAGER</a></li>
+						<li><a href="projects"><img
+								src="../../assets/img/pro.png"> PROJECTS</a></li>
+						<li><a href="settings"><img
+								src="../../assets/img/set.png"> SETTINGS</a></li>
+						<li><a href="#" ng-controller="logoutCtrl"
+							ng-click="logout()"><img src="../../assets/img/set.png">
+								Logout</a></li>
 
-    <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar left-side">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar" >
-           
-            <!-- Sidebar Menu -->
-            <ul class="sidebar-menu">
-               
-               
-                  <li class="treeview">
-                    <a href="#"  class="project-active">
-                       <i class="fa fa-inbox"></i>
-                        <span>PROJECTS</span>
-                    </a>
-                  </li>
 
-                <!--    <li class="treeview">
+					</ul></li>
+			</ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container -->
+	<div class="bottom-nav">
+		<div class="wrapper" style="background: #3f3f3f;">
+			<div class="current-page">
+				<h5>
+					<a href="#" class="current-active">timeline</a>
+				</h5>
+			</div>
+		</div>
+	</div>
+</nav>
+
+
+
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar left-side">
+	<!-- sidebar: style can be found in sidebar.less -->
+	<section class="sidebar">
+
+		<!-- Sidebar Menu -->
+		<ul class="sidebar-menu">
+
+
+			<li class="treeview"><a href="#" class="project-active"> <i
+					class="fa fa-inbox"></i> <span>PROJECTS</span>
+			</a></li>
+
+			<!--    <li class="treeview">
                     <a href="#">
                         <span># {{}}</span>
                     </a>
@@ -77,214 +81,238 @@
                     <a href="#">
                         <span># Project</span>
                     </a>
-                  </li>--> 
+                  </li>-->
 
-                <li class="treeview" >
-                    <a href="#" class="project-pro">
-                       <span class="projectx">#Projectx</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu" ng-repeat="status in allstatus">
-                      <li><a href="#">{{status.projectName}}</a></li>
-                    </ul>
-                </li>
+			<li class="treeview"><a href="#" class="project-pro"> <span
+					class="projectx">#Projectx</span> <i
+					class="fa fa-angle-left pull-right"></i>
+			</a>
+				<ul class="treeview-menu" ng-repeat="status in allstatus">
+					<li><a href="#">{{status.projectName}}</a></li>
+				</ul></li>
 
-                <li class="treeview">
-                    <a href="#" class="project-active">
-                        <i class="fa fa-user"></i> <span>USERS</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu" ng-repeat="status in allstatus">
-                        <li><a href="#">{{status.userName}}</a></li>
-                   
-                    </ul>
-                </li>
-            </ul>
-            <!-- /.sidebar-menu -->
-        </section>
-        <!-- /.sidebar -->
-    </aside>
+			<li class="treeview"><a href="#" class="project-active"> <i
+					class="fa fa-user"></i> <span>USERS</span> <i
+					class="fa fa-angle-left pull-right"></i>
+			</a>
+				<ul class="treeview-menu" ng-repeat="status in allstatus">
+					<li><a href="#">{{status.userName}}</a></li>
 
-   <div id="wrapper" class="toggled">
+				</ul></li>
+		</ul>
+		<!-- /.sidebar-menu -->
+	</section>
+	<!-- /.sidebar -->
+</aside>
+<div>
+	<div>
+		<div id="wrapper" class="toggled">
 
-      <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-         <div class="sidebar-wrapper-scroll">
-          <div class="scroll-box">
-            <div class="sidebar-nav">
-                <div class="form-group">
-                  <label for="comment">Comment:</label>
-                    <textarea class="form-control" id="text" name="text" rows="5" id="comment"></textarea>
-                    <h6 class="pull-right" id="count_message">
-                  </div>
-                 <button type="button" class="btn btn-default submit" style="width:30% !important;">POST</button>
-            </div>
-                <hr />
-           
-            <div class="sidebar-nav">
-                <small>
-                  <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
-                 </small>
-                 <div class="user-label">
-                   <h4>username</h4>
-                    <p class="comment">Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
-                </div>
-                 <h4 class="reaply"><a data-toggle="collapse" data-target="#reaply">Reaply</a></h4>
-				 <!----reaply dropdown--->
-				  <div id="reaply" class="collapse">
-                   <div class="form-group">
-                  <label for="comment">Reaply Comment:</label>
-                    <textarea class="form-control" id="reaply" name="text" rows="5" id="comment"></textarea>
-                    <h6 class="pull-right" id="count_message-reaply">
-                  </div>
-				  <button type="button" class="btn btn-default submit" style="width:30% !important;">REAPLY</button>
-                </div>
-				<!---/#ends----->
-            </div>
-              <hr />
+			<!-- Sidebar -->
+			<div id="sidebar-wrapper">
+				<div class="sidebar-wrapper-scroll">
+					<div class="scroll-box">
+						<div class="sidebar-nav">
+							<div class="form-group">
+								<label for="comment">Comment:</label>
+								<textarea class="form-control" id="text" name="text" rows="5"
+									id="comment"></textarea>
+								<h6 class="pull-right" id="count_message">
+							</div>
+							<button type="button" class="btn btn-default submit"
+								style="width: 30% !important;">POST</button>
+						</div>
+						<hr />
 
-              <div class="sidebar-nav">
-               <small>
-                  <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
-                 </small>
-                 <div class="user-label">
-                   <h4>username</h4>
-                    <p class="comment"><b>@Username </b>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
-                </div>
-                 <h4 class="reaply">Reaply</h4>
-            </div>
-            
-            <div class="last-reaply">
-              <small>
-                  <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
-                 </small>
-                 <div class="user-label">
-                   <h4>username</h4>
-                    <p class="comment"><b>@Username </b>Invitamus me testatur sed quod non dum animae tuae lacrimis ut libertatem deum rogus aegritudinis causet. Dicens hoc contra serpentibus isto.</p>
-                </div>
-            </div>
-         
-         </div>
-        </div>
-        </div>
-        <!-- /#sidebar-wrapper -->
+						<div class="sidebar-nav">
+							<small> <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
+							</small>
+							<div class="user-label">
+								<h4>username</h4>
+								<p class="comment">Invitamus me testatur sed quod non dum
+									animae tuae lacrimis ut libertatem deum rogus aegritudinis
+									causet. Dicens hoc contra serpentibus isto.</p>
+							</div>
+							<h4 class="reaply">
+								<a data-toggle="collapse" data-target="#reaply">Reaply</a>
+							</h4>
+							<!----reaply dropdown--->
+							<div id="reaply" class="collapse">
+								<div class="form-group">
+									<label for="comment">Reaply Comment:</label>
+									<textarea class="form-control" id="reaply" name="text" rows="5"
+										id="comment"></textarea>
+									<h6 class="pull-right" id="count_message-reaply">
+								</div>
+								<button type="button" class="btn btn-default submit"
+									style="width: 30% !important;">REAPLY</button>
+							</div>
+							<!---/#ends----->
+						</div>
+						<hr />
+
+						<div class="sidebar-nav">
+							<small> <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
+							</small>
+							<div class="user-label">
+								<h4>username</h4>
+								<p class="comment">
+									<b>@Username </b>Invitamus me testatur sed quod non dum animae
+									tuae lacrimis ut libertatem deum rogus aegritudinis causet.
+									Dicens hoc contra serpentibus isto.
+								</p>
+							</div>
+							<h4 class="reaply">Reaply</h4>
+						</div>
+
+						<div class="last-reaply">
+							<small> <ng-letter-avatar data="username" shape="round"></ng-letter-avatar>
+							</small>
+							<div class="user-label">
+								<h4>username</h4>
+								<p class="comment">
+									<b>@Username </b>Invitamus me testatur sed quod non dum animae
+									tuae lacrimis ut libertatem deum rogus aegritudinis causet.
+									Dicens hoc contra serpentibus isto.
+								</p>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<!-- /#sidebar-wrapper -->
 
 
-    <div id="page-content-wrapper">
-     <div class="container-fluid">
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-         <!-- Main content -->
-        <div class="content">
-         
-         <!-- Page Content -->
-                 <div class="wrapper">
-   <div class="top-header">
-     <span class="project"><span class="hash"># </span>{{status.projectName}}</span> <span class="username"><span class="hash">@ </span>  {{status.userName}}</span>
-   </div>
+			<div id="page-content-wrapper">
+				<div class="container-fluid" ng-init="initStatus()">
+					<!-- Content Wrapper. Contains page content -->
+					<div class="content-wrapper" >
+						<!-- Main content -->
+						<div class="content" >
 
-   <ul class="timeline">
-     <div class="date-time">
-        <p>{{status.dateTime}}</p>
-     </div>
-    <li>
-        <div class="timeline-badge"></div>
-        <div class="timeline-panel">
-            
-             <div class="edit-left-side">
-             <a data-target="#menu-toggle1" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle1"><img src="../../assets/img/comment.svg"></a>
-          </div>
+							<!-- Page Content -->
+							<div class="wrapper">
+								<div class="top-header">
+									<span class="project"><span class="hash"># </span>{{status.projectName}}</span>
+									<span class="username"><span class="hash">@ </span>
+										{{status.userName}}</span>
+								</div>
 
-            <div class="timeline-heading">
-                <h4><span class="hash"># </span> {{status.projectName}} <span class="hash">@ </span> {{status.userName}}</h4>
-                <p>{{status.hours}}</p>
-            </div>
-            <div class="timeline-body worked-on">
-               <h3>worked on</h3>
-                <p>{{status.workedOn}}</p>
-            </div>
+								<ul class="timeline" ng-repeat="artist in artists">
+									<div class="date-time">
+										<p>{{artist.date}}</p>
+									</div>
+									<li ng-repeat="status in artist.statusDTOList">
+										<div class="timeline-badge"></div>
+										<div class="timeline-panel">
 
-             <div class="timeline-body working-on">
-               <h3>working on</h3>
-                <p>{{status.workingOn}}</p>
-            </div>
+											<div class="edit-left-side">
+												<a data-target="#menu-toggle1" class="sidebar-toggle"
+													data-toggle="offcanvas" role="button" id="menu-toggle1"><img
+													src="../../assets/img/comment.svg"></a>
+											</div>
 
-             <div class="timeline-body blocker-on">
-               <h3>blockers</h3>
-                <p>{{status.blockers}}</p>
-            </div>
+											<div class="timeline-heading">
+												<h4>
+													<span class="hash"># </span> {{status.projectName}} <span
+														class="hash">@ </span> {{status.userName}}
+												</h4>
+												<p>{{status.hours}}</p>
+											</div>
+											<div class="timeline-body worked-on">
+												<h3>worked on</h3>
+												<p>{{status.workedOn}}</p>
+											</div>
 
-        </div>
-    </li>
-    
-    <li class="timeline-inverted">
-        <div class="timeline-badge"></div>
-        <div class="timeline-panel">
+											<div class="timeline-body working-on">
+												<h3>working on</h3>
+												<p>{{status.workingOn}}</p>
+											</div>
 
-          <div class="edit">
-          <a data-target="#menu-toggle" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle"><img src="../../assets/img/comment.svg"></a>
+											<div class="timeline-body blocker-on">
+												<h3>blockers</h3>
+												<p>{{status.blockers}}</p>
+											</div>
 
-          </div>
+										</div>
+									</li>
 
-            <div class="timeline-heading">
-                <h4><span class="hash"># </span>  {{status.projectName}}  <span class="hash">@ </span> {{status.userName}}</h4>
-                <p>{{status.hours}}</p>
-            </div>
-            <div class="timeline-body worked-on">
-               <h3>worked on</h3>
-                <p>{{status.workedOn}}</p>
-            </div>
+									<li class="timeline-inverted">
+										<div class="timeline-badge"></div>
+										<div class="timeline-panel">
 
-             <div class="timeline-body working-on">
-               <h3>working on</h3>
-                <p>{{status.workingOn}}</p>
-            </div>
+											<div class="edit">
+												<a data-target="#menu-toggle" class="sidebar-toggle"
+													data-toggle="offcanvas" role="button" id="menu-toggle"><img
+													src="../../assets/img/comment.svg"></a>
 
-             <div class="timeline-body blocker-on">
-               <h3>blockers</h3>
-                <p>{{status.blockers}}</p>
-            </div>
+											</div>
 
-        </div>
-    </li>
-   
-    <li class="clearfix no-float"></li>
-</ul>
-  
-  </div>
-  
+											<div class="timeline-heading">
+												<h4>
+													<span class="hash"># </span> {{status.projectName}} <span
+														class="hash">@ </span> {{status.userName}}
+												</h4>
+												<p>{{status.hours}}</p>
+											</div>
+											<div class="timeline-body worked-on">
+												<h3>worked on</h3>
+												<p>{{status.workedOn}}</p>
+											</div>
+
+											<div class="timeline-body working-on">
+												<h3>working on</h3>
+												<p>{{status.workingOn}}</p>
+											</div>
+
+											<div class="timeline-body blocker-on">
+												<h3>blockers</h3>
+												<p>{{status.blockers}}</p>
+											</div>
+
+										</div>
+									</li>
+
+									<li class="clearfix no-float"></li>
+								</ul>
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-</div>
-</div>
-</div>
-</div>
- <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-     $("#menu-toggle1").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
+<script>
+	$("#menu-toggle").click(function(e) {
+		e.preventDefault();
+		$("#wrapper").toggleClass("toggled");
+	});
+	$("#menu-toggle1").click(function(e) {
+		e.preventDefault();
+		$("#wrapper").toggleClass("toggled");
+	});
 
-     var text_max = 200;
-$('#count_message').html(text_max + ' /200');
+	var text_max = 200;
+	$('#count_message').html(text_max + ' /200');
 
-$('#text').keyup(function() {
-  var text_length = $('#text').val().length;
-  var text_remaining = text_max - text_length;
-  
-  $('#count_message').html(text_remaining + ' /200');
-});
+	$('#text').keyup(function() {
+		var text_length = $('#text').val().length;
+		var text_remaining = text_max - text_length;
 
- var text_max = 200;
-$('#count_message-reaply').html(text_max + ' /200');
+		$('#count_message').html(text_remaining + ' /200');
+	});
 
-$('#reaply').keyup(function() {
-  var text_length = $('#reaply').val().length;
-  var text_remaining = text_max - text_length;
-  
-  $('#count_message-reaply').html(text_remaining + ' /200');
-});
-    </script>
+	var text_max = 200;
+	$('#count_message-reaply').html(text_max + ' /200');
+
+	$('#reaply').keyup(function() {
+		var text_length = $('#reaply').val().length;
+		var text_remaining = text_max - text_length;
+
+		$('#count_message-reaply').html(text_remaining + ' /200');
+	});
+</script>

@@ -1,288 +1,302 @@
- <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="wrapper">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">
-                    <img src="../../assets/img/logo.png" alt=""> <span class="logo-text">online <b>standup</b></span>
-                </a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="#"><img src="../../assets/img/ic_compose.svg"></a>
-                    </li>
-                    <li>
-                        <a href="home-page"><img src="../../assets/img/ic_timeline.svg"></a>
-                    </li>
-                    <li class="dropdown">
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><img src="../../assets/img/ic_menu.svg">
-                         <span class="caret"></span></a>
 
-                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu">
-                             <li><a href="user-mgr"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
-                             <li><a href="projects"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
-                             <li><a href="settings"><img src="../../assets/img/set.png"> SETTINGS</a></li>
-                             <li ><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><img src="../../assets/img/set.png"> Logout</a></li>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="wrapper">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#"> <img
+				src="../../assets/img/logo.png" alt=""> <span
+				class="logo-text">online <b>standup</b></span>
+			</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#"><img
+						src="../../assets/img/ic_compose.svg"></a></li>
+				<li><a href="home-page"><img
+						src="../../assets/img/ic_timeline.svg"></a></li>
+				<li class="dropdown"><a class="btn dropdown-toggle"
+					data-toggle="dropdown" href="#"><img
+						src="../../assets/img/ic_menu.svg"> <span class="caret"></span></a>
 
-                           
-                         </ul>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
-   <div class="bottom-nav">
-    <div class="wrapper">
-     <div class="current-page">
-      <h5><a href="user-mgr">users</a></h5>
-      <h5><a href="projects"  class="current-active">projects</a></h5>
-      <h5><a href="settings">settings</a></h5>
-     </div>
-     </div>
-   </div>
+					<ul class="dropdown-menu dropdown-menu-right" role="menu"
+						aria-labelledby="dropdownMenu">
+						<li ng-show="roles == ADMIN"><a href="user-mgr"><img
+								src="../../assets/img/usr.png"> USER MANAGER</a></li>
+						<li ng-show="roles == ADMIN"><a href="projects"><img
+								src="../../assets/img/pro.png"> PROJECTS</a></li>
+						<li><a href="settings"><img
+								src="../../assets/img/set.png"> SETTINGS</a></li>
+						<li><a href="#" ng-controller="logoutCtrl"
+							ng-click="logout()"><img src="../../assets/img/set.png">
+								Logout</a></li>
 
-  <!-- /.main -->
+
+					</ul></li>
+			</ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container -->
+</nav>
+<div class="bottom-nav">
+	<div class="wrapper">
+		<div class="current-page">
+			<h5>
+				<a href="user-mgr">users</a>
+			</h5>
+			<h5>
+				<a href="projects" class="current-active">projects</a>
+			</h5>
+			<h5>
+				<a href="settings">settings</a>
+			</h5>
+		</div>
+	</div>
+</div>
+
+<!-- /.main -->
 <div class="col-md-offset-2 col-md-8">
-    <div class="main-title">
-       <h4>create project</h4>
-    </div>
+	<div class="main-title">
+		<h4>create project</h4>
+	</div>
 
-<div class="create-project" >
- <form  name="myForm" ng-submit="submitForm(userForm.$valid)" novalidate>
- <div class="row">
-  <div class="col-md-5">
-    <div class="form-group">
-      <label for="comment" class="settings">PROJECT NAME</label>
-      <input type="text" name= "myName" ng-model="project.projectName" class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
-      <span style="color:red"  ng-show="myForm.myName.$invalid && !myForm.myName.$pristine">The name is required.</span>
-      
-    </div>
-  </div>
+	<div class="create-project">
+		<form name="myForm" ng-submit="submitForm(userForm.$valid)" novalidate>
+			<div class="row">
+				<div class="col-md-5">
+					<div class="form-group">
+						<label for="comment" class="settings">PROJECT NAME</label> <input
+							type="text" name="myName" ng-model="project.projectName"
+							class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
+						<span style="color: red"
+							ng-show="myForm.myName.$invalid && !myForm.myName.$pristine">The
+							name is required.</span>
 
-  <div class="col-md-4">
-    <div class="form-group">
-      <label for="comment" class="settings">TIME PREFERENCE</label>
-      <div class="row">
-	  
-	  <input type="text" size="8" class="form-control" ng-model="project.timePreference" data-time-format="h:mm:ss a" data-autoclose="1" placeholder="Time" bs-timepicker required>
-	  
-      
+					</div>
+				</div>
 
-       </div>
-    </div>
-    </div>
-	
-	<div class="col-md-3">
-             <small>
-               <div class="add-user-icon">+</div>
-             </small>
-      <div class="user-label" ng-init="initUser()">
-         <h4 style="margin-top:22px;"><a href="#" ng-click="getAllUseresInModal()">Add Users</a></h4>
-      </div>
-   </div>
-	
-  </div>
-  </form>
-</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label for="comment" class="settings">TIME PREFERENCE</label>
+						<div class="row">
 
- 
- <div class="col-md-12">
- <div class="row">
-  <div class="main-subtitle">
-       <h4>users</h4>
-    </div>
-</div>
-</div>
+							<input type="text" size="8" class="form-control"
+								ng-model="project.timePreference" data-time-format="h:mm:ss a"
+								data-autoclose="1" placeholder="Time" bs-timepicker required>
 
 
 
-<div class="row">
-   <div class="col-md-4"  ng-repeat="user in newList">
-   <div class="alert alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>   
-        <small>
-          <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
-       </small>
-      <div class="user-label">
-         <h4>{{user.userName}}</h4>
-         <p>{{user.email}}</p>
-      </div>
-	   <div style="margin-bottom:30px;"></div>
-   </div>
-  
-   </div>
-</div>
+						</div>
+					</div>
+				</div>
 
-  <button type="button" class="btn btn-default create" ng-click="createProject(project)">create project</button>
- 
-  
-<div class="col-md-12">
- <div class="row">
-   <div class="main-title">
-       <h4>projects <span class="list-member">{{projectCount}} project</span></h4>
-    </div>
- <div class="project-table" ng-init="initProjects()">
-   <table ng-repeat="project in allprojects">
-      <tr>
-        <td class="table-user">{{project.projectName}} <br /><span class="u-number">{{project.usersCount}} Users</span></td>
-        <td><img src="../../assets/img/time.png"> {{project.timePreference | date:'hh:mm a'}}</td>
-        <td><a href="#"  ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png"> View Member List</a></td>
-        <td style="float:right;"><a href="#" ng-click="editProject(project.projectId)"><img src="../../assets/img/edit.png"></a><a href="#"  ng-click="deleteProject(project.projectId,$index)" ng-confirm-click="Are you sure want to delete??"> <img src="../../assets/img/delete.png"></a></td>
-      </tr>
+				<div class="col-md-3">
+					<small>
+						<div class="add-user-icon">+</div>
+					</small>
+					<div class="user-label" ng-init="initUser()">
+						<h4 style="margin-top: 22px;">
+							<a href="#" ng-click="getAllUseresInModal()">Add Users</a>
+						</h4>
+					</div>
+				</div>
 
-   </table>
- </div>
- </div>
- </div>
+			</div>
+		</form>
+	</div>
+
+
+	<div class="col-md-12">
+		<div class="row">
+			<div class="main-subtitle">
+				<h4>users</h4>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="row">
+		<div class="col-md-4" ng-repeat="user in newList">
+			<div class="alert alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<small> <ng-letter-avatar data="{{user.userName}}"
+						shape="round"></ng-letter-avatar>
+				</small>
+				<div class="user-label">
+					<h4>{{user.userName}}</h4>
+					<p>{{user.email}}</p>
+				</div>
+				<div style="margin-bottom: 30px;"></div>
+			</div>
+
+		</div>
+	</div>
+
+	<button type="button" class="btn btn-default create"
+		ng-click="createProject(project)">create project</button>
+
+
+	<div class="col-md-12">
+		<div class="row">
+			<div class="main-title">
+				<h4>
+					projects <span class="list-member">{{projectCount}} project</span>
+				</h4>
+			</div>
+			<div class="project-table" ng-init="initProjects()">
+				<table ng-repeat="project in allprojects">
+					<tr>
+						<td class="table-user">{{project.projectName}} <br />
+						<span class="u-number">{{project.usersCount}} Users</span></td>
+						<td><img src="../../assets/img/time.png">
+							{{project.timePreference | date:'hh:mm a'}}</td>
+						<td><a href="#" ng-click="viewMembers(project.userList)"><img
+								src="../../assets/img/user.png"> View Member List</a></td>
+						<td style="float: right;"><a href="#home" role="tab"
+							data-toggle="tab" ng-click="editProject(project.projectId)"><img
+								src="../../assets/img/edit.png"></a><a href="#"
+							ng-click="deleteProject(project.projectId,$index)"
+							ng-confirm-click="Are you sure want to delete??"> <img
+								src="../../assets/img/delete.png"></a></td>
+					</tr>
+
+				</table>
+			</div>
+		</div>
+	</div>
 
 </div>
 
 <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog" >
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
 
-        <div class="modal-body"  ng-repeat="user in membersList">
-            <table width="100%">
-              <tr>
-                <td class="add-user-table"> 
-                 <small>
-               <ng-letter-avatar data="sanjay" shape="round"></ng-letter-avatar>
-             </small>
-                <div class="user-label">
-                <h4>{{user.userName}}</h4>
-                <p>{{user.email}}</p>
-                </div>
-             </td>
-                <td class="add-user">
-                   <input id="switch-create-destroy" type="checkbox"  data-switch-no-init>
-                </td>
-              </tr>
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
 
-          
-
-            </table>
-            
+			<div class="modal-body" ng-repeat="user in membersList">
+				<table width="100%">
+					<tr>
+						<td class="add-user-table"><small> <ng-letter-avatar
+									data="sanjay" shape="round"></ng-letter-avatar>
+						</small>
+							<div class="user-label">
+								<h4>{{user.userName}}</h4>
+								<p>{{user.email}}</p>
+							</div></td>
+						<td class="add-user"><input id="switch-create-destroy"
+							type="checkbox" data-switch-no-init></td>
+					</tr>
 
 
-        </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-  
+				</table>
+
+
+
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+
 </div>
 
 
 <!-- Modal -->
-  <div class="modal fade" id="myModalEdit" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
+<div class="modal fade" id="myModalEdit" role="dialog">
+	<div class="modal-dialog">
 
-        <div class="modal-body">
-             <table width="100%">
-              <tr>
-                <td class="add-user-table"> 
-                 <small>
-                   <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
-                </small>
-                <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
-                </div>
-             </td>
-                <td class="add-user">
-                  
-                </td>
-              </tr>
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
 
-            <tr>
-                <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="E">
-                <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
-                </div>
-             </td>
-                <td>
-                 
-                </td>
-              </tr>
+			<div class="modal-body">
+				<table width="100%">
+					<tr>
+						<td class="add-user-table"><small> <ng-letter-avatar
+									data="{{user.userName}}" shape="round"></ng-letter-avatar>
+						</small>
+							<div class="user-label">
+								<h4>username</h4>
+								<p>username@gmail.com</p>
+							</div></td>
+						<td class="add-user"></td>
+					</tr>
 
-              <tr>
-                <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="P">
-                <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
-                </div>
-             </td>
-                <td>
-                 
-                </td>
-              </tr>
+					<tr>
+						<td class="add-user-table"><img class="round" width="40"
+							height="40" avatar="E">
+							<div class="user-label">
+								<h4>username</h4>
+								<p>username@gmail.com</p>
+							</div></td>
+						<td></td>
+					</tr>
 
-              <tr>
-                <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="L">
-                <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
-                </div>
-             </td>
-                <td>
-                 
-                </td>
-              </tr>
+					<tr>
+						<td class="add-user-table"><img class="round" width="40"
+							height="40" avatar="P">
+							<div class="user-label">
+								<h4>username</h4>
+								<p>username@gmail.com</p>
+							</div></td>
+						<td></td>
+					</tr>
 
-              <tr>
-                <td class="add-user-table"> 
-                <img class="round" width="40" height="40" avatar="s">
-                <div class="user-label">
-                <h4>username</h4>
-                <p>username@gmail.com</p>
-                </div>
-             </td>
-                <td>
-                 
-                </td>
-              </tr>
+					<tr>
+						<td class="add-user-table"><img class="round" width="40"
+							height="40" avatar="L">
+							<div class="user-label">
+								<h4>username</h4>
+								<p>username@gmail.com</p>
+							</div></td>
+						<td></td>
+					</tr>
 
-            </table>
-            
+					<tr>
+						<td class="add-user-table"><img class="round" width="40"
+							height="40" avatar="s">
+							<div class="user-label">
+								<h4>username</h4>
+								<p>username@gmail.com</p>
+							</div></td>
+						<td></td>
+					</tr>
+
+				</table>
 
 
-        </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-  
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+
 </div>
