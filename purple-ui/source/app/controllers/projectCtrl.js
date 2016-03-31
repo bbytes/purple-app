@@ -18,8 +18,9 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
     	
         	projectService.createProject($scope.project).then(function (response) {
         	 if (response.success) {
+        		 $scope.project='';
         		 $scope.loadUsers();
-        		 $scope.clearProjectText(project);
+        		
             } else {
                 //Login failed. Showing error notification
                 appNotifyService.error(response.data, 'Invite unsuccesfull.');
@@ -47,13 +48,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
             }
         });
     }
-    $scope.clearProjectText = function(project){
-    	
-    	project.projectName = '';
-    	project.timePreference = '';
-    	project.users.length = 0;
-    }
-    
+   
     $scope.initProjects = function() {
         $scope.loadUsers();
     };
@@ -91,6 +86,15 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
     });
     }
     
+    
+    
+    
+    /*to delete user from modal*/
+    $scope.deleteUserFromList =function(id,$index){
+     	
+	    $scope.newList.splice($index, 1);
+	    
+	    }
     $scope.initUser = function(){
     	adminService.getAllusers().then(function (response) {
             if (response.success =true) {

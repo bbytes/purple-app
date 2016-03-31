@@ -18,7 +18,8 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionSt
         	 if (response.success = true) {
         		// $scope.loadUsers();
         		 $scope.status = '';
-        		 $scope.usersstatusLoad();
+        		 $window.location.reload();
+        		// $scope.artists.push(value,1);
           		
             } else {
                 //Login failed. Showing error notification
@@ -35,11 +36,14 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionSt
     $scope.usersstatusLoad = function(){
    	 statusService.getAllStatus().then(function (response) {
             if (response.success) {
+            	
             	 $scope.artists = [];
             	    angular.forEach(response.data.gridData, function(value, key) {
             	        $scope.artists.push(value);
+
+            	        $scope.allstatus   =  value.statusList;
             	    });
-                $scope.allstatus   =  response.data.gridData;
+              
             }
         });
     }
@@ -71,13 +75,14 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionSt
 
    
     
-    $scope.deleteUser =function(email){
-    	adminService.deleteUser(email).then(function (response) {
-    		if (response.success) {
-    			//$route.reload();
-    			$window.location.reload();
-    	}
-    });
-    }
+    $scope.deleteStatus =function(id,$index){
+     	
+		  statusService.deleteStatus(id).then(function (response) {
+	    		if (response.success =true) {
+	    		appNotifyService.success( 'Status has been deleted.');
+	    	}
+	    $scope.allstatus.splice($index, 1);
+	    });
+	    }
     
 });

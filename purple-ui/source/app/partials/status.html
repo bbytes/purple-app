@@ -65,12 +65,13 @@
 						{{userName}}</span></span>
 		</div>
 
-		<ul class="timeline"  ng-repeat="artist in artists">
-			<div class="date-time">
+		<ul class="timeline newid" ng-repeat="artist in artists">
+	
+			<div class="date-time" >
 				<p>{{artist.date}}</p>
 			</div>
 			
-			<li ng-repeat="status in artist.statusList"  ng-class-odd="'timeline'" ng-class-even="'timeline-inverted'">
+			<li ng-repeat="status in artist.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
 				<div class="timeline-badge"></div>
 				<div class="timeline-panel">
 					<div class="edit">
@@ -88,7 +89,8 @@
 					<div class="timeline-heading">
 						<h4>
 							<span class="hash"> <span class="hash">#</span>
-								{{status.projectName}}         {{status.time}}
+							
+								{{status.projectName}}        <span  style="float:right"> {{status.time}}</span>
 						</h4>
 						
 						<p>{{status.hours}}hrs</p>
@@ -108,11 +110,6 @@
 						<p>{{status.blockers}}</p>
 					</div>
 					
-					<div class="timeline-body blocker-on">
-						<h3>time</h3>
-						<p>{{status.time}}</p>
-					</div>
-
 				</div>
 			</li>
 
@@ -235,8 +232,7 @@
 			<textarea class="form-control" rows="5" name="nextName" id="comment"
 				ng-model="status.workingOn" required></textarea>
 			<span style="color: red"
-				ng-show="myForm.nextName.$touched && myForm.nextName.$invalid">This
-				field is required.</span>
+				ng-show="myForm.nextName.$touched && myForm.nextName.$invalid"></span>
 		</div>
 
 		<div class="form-group">

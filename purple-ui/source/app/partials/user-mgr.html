@@ -1,136 +1,155 @@
- <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="wrapper">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">
-                    <img src="../../assets/img/logo.png" alt=""> <span class="logo-text">online <b>standup</b></span>
-                </a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="#"><img src="../../assets/img/ic_compose.svg"></a>
-                    </li>
-                    <li>
-                        <a href="home-page"><img src="../../assets/img/ic_timeline.svg"></a>
-                    </li>
-                    
-                     <li class="dropdown">
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><img src="../../assets/img/ic_menu.svg">
-                         <span class="caret"></span></a>
 
-                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu">
-                             <li><a href="user-mgr"><img src="../../assets/img/usr.png"> USER MANAGER</a></li>
-                             <li><a href="projects"><img src="../../assets/img/pro.png"> PROJECTS</a></li>
-                             <li><a href="settings"><img src="../../assets/img/set.png"> SETTINGS</a></li>
-                             <li><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><img src="../../assets/img/set.png"> Logout</a></li>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="wrapper">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#"> <img
+				src="../../assets/img/logo.png" alt=""> <span
+				class="logo-text">online <b>standup</b></span>
+			</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#"><img
+						src="../../assets/img/ic_compose.svg"></a></li>
+				<li><a href="home-page"><img
+						src="../../assets/img/ic_timeline.svg"></a></li>
 
-                           
-                         </ul>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
-   <div class="bottom-nav">
-    <div class="wrapper">
-     <div class="current-page">
-      <h5><a href="user-mgr" class="current-active">users</a></h5>
-      <h5><a href="projects"  >projects</a></h5>
-      <h5><a href="settings">settings</a></h5>
-     </div>
-     </div>
-   </div>
+				<li class="dropdown"><a class="btn dropdown-toggle"
+					data-toggle="dropdown" href="#"><img
+						src="../../assets/img/ic_menu.svg"> <span class="caret"></span></a>
 
-  <!-- /.main -->
-<div class="col-md-offset-2 col-md-8">
-    <div class="main-title">
-       <h4>INVITE</h4>
-      <div class="upload">
-       <label for="file-upload" class="custom-file-upload">
-        <img src="../../assets/img/upload.png"> BULCK UPLOAD
-       </label>
-       <input id="file-upload" type="file"/>
-    </div>
-  </div>
+					<ul class="dropdown-menu dropdown-menu-right" role="menu"
+						aria-labelledby="dropdownMenu">
+						<li ng-show="userRole == 'ADMIN'"><a href="user-mgr"><img
+								src="../../assets/img/usr.png"> USER MANAGER</a></li>
+						<li ng-show="userRole == 'ADMIN'"><a href="projects"><img
+								src="../../assets/img/pro.png"> PROJECTS</a></li>
+						<li><a href="settings"><img
+								src="../../assets/img/set.png"> SETTINGS</a></li>
+						<li><a href="#" ng-controller="logoutCtrl"
+							ng-click="logout()"><img src="../../assets/img/set.png">
+								Logout</a></li>
 
-<div class="create-project">
- <form  name="myForm">
- <div class="row">
-  <div class="col-md-6">
-   
-    <div class="form-group">
-      <label for="comment" class="settings">EMAIL</label>
-      <input type="email" name="email" ng-model="admin.email" class="form-control" required>
-        <span style="color:red" ng-show="myForm.email.$dirty && myForm.email.$invalid">
-  <span ng-show="myForm.email.$error.required">Email is required.</span>
-  <span ng-show="myForm.email.$error.email">Invalid email address.</span>
-  </span>
-    </div>
-  </div>
 
-  <div class="col-md-6">
-    <div class="form-group">
-      <label for="comment" class="settings">USERNAME</label>
-      <input type="text" ng-model="admin.userName"  name="myName" class="form-control"  ng-pattern="/[a-zA-Z0-9^ ]/" required>
-      <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">The name is required.</span>
-      <span style="color:red" ng-show="myForm.myName.$touched && myForm.myName.$invalid">name is invalid</span>
-    </div>
-    </div>
-  </div>
-    <button type="button" class="btn btn-default create" ng-click="invite(myForm.$valid)">send invite</button>
-    </form>
+					</ul></li>
+			</ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container -->
+</nav>
+<div class="bottom-nav">
+	<div class="wrapper">
+		<div class="current-page">
+			<h5>
+				<a href="user-mgr" class="current-active">users</a>
+			</h5>
+			<h5>
+				<a href="projects">projects</a>
+			</h5>
+			<h5>
+				<a href="settings">settings</a>
+			</h5>
+		</div>
+	</div>
 </div>
- 
+
+<!-- /.main -->
+<div class="col-md-offset-2 col-md-8">
+	<div class="main-title">
+		<h4>INVITE</h4>
+		<div class="upload">
+			<label for="file-upload" class="custom-file-upload"> <img
+				src="../../assets/img/upload.png"> BULCK UPLOAD
+			</label> <input id="file-upload" type="file" />
+		</div>
+	</div>
+
+	<div class="create-project">
+		<form name="myForm">
+			<div class="row">
+				<div class="col-md-6">
+
+					<div class="form-group">
+						<label for="comment" class="settings">EMAIL</label> <input
+							type="email" name="email" ng-model="admin.email"
+							class="form-control" required> <span style="color: red"
+							ng-show="myForm.email.$dirty && myForm.email.$invalid"> <span
+							ng-show="myForm.email.$error.required">Email is required.</span>
+							<span ng-show="myForm.email.$error.email">Invalid email
+								address.</span>
+						</span>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="comment" class="settings">USERNAME</label> <input
+							type="text" ng-model="admin.userName" name="myName"
+							class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
+						<span style="color: red"
+							ng-show="myForm.myName.$touched && myForm.myName.$invalid">The
+							name is required.</span> <span style="color: red"
+							ng-show="myForm.myName.$touched && myForm.myName.$invalid">name
+							is invalid</span>
+					</div>
+				</div>
+			</div>
+			<button type="button" class="btn btn-default create"
+				ng-click="invite(myForm.$valid)">send invite</button>
+		</form>
+	</div>
 
 
-  
 
-<div class="col-md-12">
- <div class="row">
-   <div class="main-title">
-       <h4>user activity <span class="list-member">{{joinedCount}} Joined {{pendingCount}} Pending</span></h4>
-    </div>
- <div class="project-table" ng-init="initUser()">
-   <table>
-       <tr ng-repeat="user in allusers">
-         <td class="table-user">
-		     <small>
-               <ng-letter-avatar data="{{user.userName}}" shape="round"></ng-letter-avatar>
-             </small>
-        
-             <div class="user-label">
-             <h4>{{user.userName}}</h4>
-             <p>{{user.email}}</p>
-             </div>
-        </td>
-        <td>
-          <img src="../../assets/img/pending.png"> {{user.status}}
-        </td>
-        <td>
-           <select class="form-control turnintodropdown" id="sel1">
-           <option>{{user.userRole.value}}</option>
-           </select>
-        </td>
-          <td style="float:right;">
-             <div ng-click="deleteUser(user.email, $index)" ng-confirm-click="Are you sure want to delete??"><img src="../../assets/img/delete.png"></div>
-          </td>
-      </tr>
 
-        
 
-   </table>
- </div>
- </div>
- </div>
+	<div class="col-md-12">
+		<div class="row">
+			<div class="main-title">
+				<h4>
+					user activity <span class="list-member">{{joinedCount}}
+						Joined {{pendingCount}} Pending</span>
+				</h4>
+			</div>
+			<div class="project-table" ng-init="initUser()">
+				<table>
+					<tr ng-repeat="user in allusers">
+						<td class="table-user"><small> <ng-letter-avatar
+									data="{{user.userName}}" shape="round"></ng-letter-avatar>
+						</small>
+
+							<div class="user-label">
+								<h4>{{user.userName}}</h4>
+								<p>{{user.email}}</p>
+							</div></td>
+						<td><img src="../../assets/img/pending.png">
+							{{user.status}}</td>
+						<td><select class="form-control turnintodropdown" id="sel1">
+								<option>{{user.userRole.value}}</option>
+						</select></td>
+						<td style="float: right;">
+							<div ng-click="deleteUser(user.email, $index)"
+								ng-confirm-click="Are you sure want to delete??">
+								<img src="../../assets/img/delete.png">
+							</div>
+						</td>
+					</tr>
+
+
+
+				</table>
+			</div>
+		</div>
+	</div>
 
 </div>
