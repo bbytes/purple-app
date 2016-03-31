@@ -1,5 +1,6 @@
 package com.bbytes.purple.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +56,9 @@ public class StatusController {
 		// We will get current logged in user
 		User user = userService.getLoggedinUser();
 		Status status = statusService.create(statusDTO, user);
-		StatusDTO statusMap = dataModelToDTOConversionService.convertStatus(status);
+		List<Status> statusList = new ArrayList<Status>();
+		statusList.add(status);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
 
 		logger.debug("Status for project  '" + status.getProject().getProjectName() + "' is added successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
@@ -75,7 +78,9 @@ public class StatusController {
 	public RestResponse getStatus(@PathVariable("statusid") String statusId) throws PurpleException {
 
 		Status status = statusService.getStatus(statusId);
-		StatusDTO statusMap = dataModelToDTOConversionService.convertStatus(status);
+		List<Status> statusList = new ArrayList<Status>();
+		statusList.add(status);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
 
 		logger.debug("Status for project  '" + status.getProject().getProjectName() + "' is getting successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
@@ -140,7 +145,9 @@ public class StatusController {
 
 		User user = userService.getLoggedinUser();
 		Status status = statusService.updateStatus(statusId, statusDTO, user);
-		StatusDTO statusMap = dataModelToDTOConversionService.convertStatus(status);
+		List<Status> statusList = new ArrayList<Status>();
+		statusList.add(status);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
 
 		logger.debug("Projects are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
