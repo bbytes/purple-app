@@ -67,11 +67,11 @@ public class SettingController {
 	@RequestMapping(value = "/api/v1/admin/setting/timezone", method = RequestMethod.POST)
 	public RestResponse updateTimeZone(@RequestParam String timeZone) throws PurpleException {
 
+		final String TIMEZONE_SUCCESS_MSG = "Successfully updated user's timezone";
 		User user = userService.getLoggedinUser();
 		settingService.updateTimeZone(timeZone, user);
-
 		logger.debug(timeZone + " is updated successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, user, SuccessHandler.RESET_PASSWORD);
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, TIMEZONE_SUCCESS_MSG, SuccessHandler.UPDATE_TIMEZONE);
 
 		return userReponse;
 	}
