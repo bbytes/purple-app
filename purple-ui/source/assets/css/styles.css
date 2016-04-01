@@ -1210,3 +1210,10 @@ small img{
 ul.timeline > li:nth-child(odd) {
 	margin-top : 30px;
 }
+.submit { cursor:pointer !important; }
+.content-wrapper, .right-side {
+    z-index: 800;
+    min-height: 100%;
+    background-color: transparent !important;
+}
+
