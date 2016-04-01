@@ -124,11 +124,10 @@ public class AdminService {
 
 		Project updatedProject = null;
 		if (project != null) {
-			if (!projectService.projectIdExist(projectId) || projectService.projectNameExist(project.getProjectName()))
-				throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
+			if (!projectService.projectIdExist(projectId))
+				throw new PurpleException("Error while updating project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				Project updateProject = projectService.findByProjectId(projectId);
-				updateProject.setProjectName(project.getProjectName());
 				updateProject.setTimePreference(project.getTimePreference());
 				updateProject.setUser(project.getUser());
 				updatedProject = projectService.save(updateProject);

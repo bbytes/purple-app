@@ -433,13 +433,13 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 	}
 
 	@Test
-	public void testUpdateProjectFailedwithSameName() throws Exception {
+	public void testUpdateProjectFailedwithNotExitID() throws Exception {
 
 		Project project1 = new Project("purple", "4pm");
 		project1.setOrganization(org);
 		projectService.save(project1);
 
-		String id = projectService.findByProjectName("purple").getProjectId();
+		String id = "dbcdcbdcdb455222";
 
 		User user1 = new User("akshay", "akshay@gmail.com");
 		user1.setOrganization(org);
@@ -449,7 +449,6 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		userList.add(user1.getEmail());
 
 		ProjectDTO requestProjectDTO = new ProjectDTO();
-		requestProjectDTO.setProjectName("purple");
 		requestProjectDTO.setTimePreference("6.00 pm");
 		requestProjectDTO.setUsers(userList);
 
