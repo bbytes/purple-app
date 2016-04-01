@@ -2,7 +2,6 @@ package com.bbytes.purple.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
-import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
@@ -40,9 +38,6 @@ public class ProjectController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
 	/**
 	 * The addUserToProject method is used to add the list of users into project
@@ -109,27 +104,6 @@ public class ProjectController {
 
 		logger.debug(users.size() + "' users are fetched successfully");
 		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, users, SuccessHandler.GET_USER_SUCCESS);
-
-		return projectReponse;
-	}
-
-	/**
-	 * The getAllProjectsByUser method is used to fetched all projects by logged
-	 * in user
-	 * 
-	 * @return
-	 * @throws PurpleException
-	 */
-	@RequestMapping(value = "/api/v1/user/allproject", method = RequestMethod.GET)
-	public RestResponse getAllProjectsByUser() throws PurpleException {
-
-		User user = userService.getLoggedinUser();
-		List<Project> projects = projectService.getProjects(user);
-		Map<String, Object> projectsMap = dataModelToDTOConversionService
-				.getResponseMapWithGridDataAndProjectList(projects);
-		logger.debug("Projects are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectsMap,
-				SuccessHandler.GET_PROJECT_SUCCESS);
 
 		return projectReponse;
 	}

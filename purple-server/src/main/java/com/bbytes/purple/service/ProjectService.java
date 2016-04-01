@@ -101,15 +101,4 @@ public class ProjectService extends AbstractService<Project, String> {
 			throw new PurpleException("Error while getting users", ErrorHandler.GET_USER_FAILED);
 		return users;
 	}
-
-	public List<Project> getProjects(User user) throws PurpleException {
-
-		List<Project> allProjects = new ArrayList<Project>();
-		try {
-			allProjects = findProjectByUser(user);
-		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.GET_PROJECT_FAILED);
-		}
-		return allProjects;
-	}
 }

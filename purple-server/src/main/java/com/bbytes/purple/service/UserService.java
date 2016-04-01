@@ -1,6 +1,9 @@
 package com.bbytes.purple.service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -8,15 +11,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Organization;
+import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
+import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.UserRepository;
+import com.bbytes.purple.utils.ErrorHandler;
 
 @Service
 public class UserService extends AbstractService<User, String> {
 
 	@Autowired
 	private PasswordHashService passwordHashService;
+
+	@Autowired
+	private ProjectService projectService;
 
 	private UserRepository userRepository;
 
@@ -37,6 +46,10 @@ public class UserService extends AbstractService<User, String> {
 
 	public List<User> getUserByRoleName(UserRole role) {
 		return userRepository.findByUserRole(role);
+	}
+
+	public Set<User> getUserByProjects(Project project) {
+		return userRepository.findByProjects(project);
 	}
 
 	public User getUserByEmail(String email) {
@@ -104,5 +117,31 @@ public class UserService extends AbstractService<User, String> {
 		final String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = getUserByEmail(email);
 		return user;
+	}
+
+	public List<Project> getProjects(User user) throws PurpleException {
+
+		List<Project> allProjects = new ArrayList<Project>();
+		try {
+			allProjects = projectService.findProjectByUser(user);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_PROJECT_FAILED);
+		}
+		return allProjects;
+	}
+
+	public Set<User> getAllUsersbyProjects(List<String> projectList) throws PurpleException {
+
+		Set<User> allUsers = new HashSet<User>();
+		try {
+			for (String projectId : projectList) {
+				Project project = projectService.findByProjectId(projectId);
+				allUsers.addAll(getUserByProjects(project));
+			}
+
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_PROJECT_FAILED);
+		}
+		return allUsers;
 	}
 }

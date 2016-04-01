@@ -311,41 +311,4 @@ public class TestProjectController extends PurpleWebBaseApplicationTests {
 
 	}
 
-	// Test cases for get all projects by logged in user
-
-	@Test
-	public void testGetAllProjectFailed() throws Exception {
-
-		mockMvc.perform(get("/api/v1/user/allproject")).andExpect(status().is4xxClientError()).andDo(print());
-
-	}
-
-	@Test
-	public void testGetAllProjectByUser() throws Exception {
-
-		normalUser = new User("akshay", "akshay@gmail.com");
-		normalUser.setOrganization(org);
-		userService.save(normalUser);
-		userService.updatePassword("test123", normalUser);
-
-		List<User> userList = new ArrayList<User>();
-		userList.add(normalUser);
-
-		Project project1 = new Project("web", "4pm");
-		project1.setOrganization(org);
-		project1.setUser(userList);
-		projectService.save(project1);
-
-		Project project2 = new Project("reveal", "4pm");
-		project2.setOrganization(org);
-		project2.setUser(userList);
-		projectService.save(project2);
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
-
-		mockMvc.perform(get("/api/v1/user/allproject").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
-				.contentType(APPLICATION_JSON_UTF8)).andExpect(status().isOk()).andDo(print())
-				.andExpect(content().string(containsString("{\"success\":true")));
-	}
-
 }
