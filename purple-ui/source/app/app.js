@@ -120,13 +120,15 @@ rootApp.config([
 				views : {
 					'' : {
 						templateUrl : 'app/partials/status.html',
-						controller : 'statusCtrl',
+					    controller: 'statusCtrl'
+						
 					},
 					'header@home' : {
 						templateUrl : 'app/partials/home-header.html'
 					},
 					'main@home' : {
-						templateUrl : 'app/partials/home-main.html'
+						templateUrl : 'app/partials/status.html'
+						 
 					},
 					'footer@home' : {
 						templateUrl : 'app/partials/home-footer.html'

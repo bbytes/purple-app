@@ -63,7 +63,7 @@
 </div>
 
 <!-- /.main -->
-<div class="col-md-offset-2 col-md-8">
+<div class="col-md-offset-2 col-md-8" ng-show="showpage == false">
 	<div class="main-title">
 		<h4>create project</h4>
 	</div>
@@ -164,8 +164,7 @@
 							{{project.timePreference | date:'hh:mm a'}}</td>
 						<td><a href="#" ng-click="viewMembers(project.userList)"><img
 								src="../../assets/img/user.png"> View Member List</a></td>
-						<td style="float: right;"><a href="#home" role="tab"
-							data-toggle="tab" ng-click="editProject(project.projectId)"><img
+						<td style="float: right;"><a href="#home" role="tab" data-toggle="tab"  ng-click="showEditPage(project.projectId)"><img
 								src="../../assets/img/edit.png"></a><a href="#"
 							ng-click="deleteProject(project.projectId,$index)"
 							ng-confirm-click="Are you sure want to delete??"> <img
@@ -179,6 +178,126 @@
 
 </div>
 
+<!-- update project -->
+<div class="col-md-offset-2 col-md-8" ng-show="showpage == true">
+	<div class="main-title">
+		<h4>create project</h4>
+	</div>
+
+		<form name="myForm" novalidate>
+		
+	<div class="create-project">
+	
+			<div class="row">
+				<div class="col-md-5">
+					<div class="form-group">
+						<label for="comment" class="settings">PROJECT NAME</label> 
+						<input type="text" name="myName" ng-model="data.projectName" ng-init="new.projectName=data.projectName"
+							class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" readonly required>
+							
+						<span style="color: red"
+							ng-show="myForm.myName.$invalid && !myForm.myName.$pristine">The
+							name is required.</span>
+
+					</div>
+					
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group">
+						<label for="comment" class="settings">TIME PREFERENCE</label>
+						<div class="row">
+
+							<input type="text" size="8" class="form-control"
+								 data-time-format="h:mm:ss a" ng-model="data.timePreference" 
+								data-autoclose="1" placeholder="Time" bs-timepicker required>
+
+
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-3">
+					<small>
+						<div class="add-user-icon">+</div>
+					</small>
+					<div class="user-label" ng-init="initUserToUpdate()">
+						<h4 style="margin-top: 22px;">
+							<a href="#" ng-click="getAllUseresInUpdateModal()">Add Users</a>
+						</h4>
+					</div>
+				</div>
+
+			</div>
+		
+	</div>
+	</form>
+
+
+	<div class="col-md-12">
+		<div class="row">
+			<div class="main-subtitle">
+				<h4>users</h4>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="row">
+		<div class="col-md-4" ng-repeat="user in orgUserList">
+			<div class="alert alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close"  ng-click="deleteOrgUserFromList(user.id,$index)">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<small> <ng-letter-avatar data="{{user.userName}}"
+						shape="round"></ng-letter-avatar>
+				</small>
+				<div class="user-label">
+					<h4>{{user.userName}}</h4>
+					<p>{{user.email}}</p>
+				</div>
+				<div style="margin-bottom: 30px;"></div>
+			</div>
+
+		</div>
+	</div>
+
+	<button type="button" class="btn btn-default create"
+		ng-click="updateProject(data)">update project</button>
+
+
+	<div class="col-md-12">
+		<div class="row">
+			<div class="main-title">
+				<h4>
+					projects <span class="list-member">{{projectCount}} project</span>
+				</h4>
+			</div>
+			<div class="project-table" ng-init="initProjects()">
+				<table ng-repeat="project in allprojects">
+					<tr>
+						<td class="table-user">{{project.projectName}} <br />
+						<span class="u-number">{{project.usersCount}} Users</span></td>
+						<td><img src="../../assets/img/time.png">
+							{{project.timePreference | date:'hh:mm a'}}</td>
+						<td><a href="#" ng-click="viewMembers(project.userList)"><img
+								src="../../assets/img/user.png"> View Member List</a></td>
+						<td style="float: right;"><a href="#home" role="tab" data-toggle="tab"  ng-click="showEditPage(project.projectId)"><img
+								src="../../assets/img/edit.png"></a><a href="#"
+							ng-click="deleteProject(project.projectId,$index)"
+							ng-confirm-click="Are you sure want to delete??"> <img
+								src="../../assets/img/delete.png"></a></td>
+					</tr>
+
+				</table>
+			</div>
+		</div>
+	</div>
+
+</div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog">
 	<div class="modal-dialog">
@@ -186,21 +305,16 @@
 		<!-- Modal content-->
 		<div class="modal-content">
 			<div class="modal-header">
+			 <h4 class="modal-title pull-left">Members</h4>
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 			</div>
-
-	     
-	     <div class="modal-body" ng-repeat="user in membersList">
-		 <div class="right-inner-addon ">
-		    <i class="fa fa-search"></i> <input ng-model="searchText"
-			class="form-control" placeholder="Search...">
-	    </div>
-	      <div class="scrollbox">
-		<div class="scrollbox-content">
-			<div class="user-show-next">
-
+            <div>
+           
+            </div>
+			<div class="modal-body" ng-repeat="user in membersList">
+		
 				<table width="100%">
-					<tr ng-repeat="user in allusers | filter:searchText">
+					<tr>
 						<td class="add-user-table"><small> <ng-letter-avatar
 									data="{{user.userName}}" shape="round"></ng-letter-avatar>
 						</small>
@@ -208,14 +322,21 @@
 								<h4>{{user.userName}}</h4>
 								<p>{{user.email}}</p>
 							</div></td>
-						<td class="add-user"><input id="switch-create-destroy"
-							type="checkbox" data-switch-no-init></td>
+						
 					</tr>
 
 				</table>
+
+
+
 			</div>
+
 		</div>
+
 	</div>
+</div>
+
+</div>
 
 
 			<div class="modal-footer">

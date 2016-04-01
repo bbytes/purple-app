@@ -90,9 +90,37 @@ rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 		var deferred = $q.defer();
 
 		$http({
-			method :'POST',
+			method :'GET',
 			url : $rootScope.baseUrl + 'api/v1/admin/project/' +id,
 			//data : admin,
+			headers : {
+				'Content-Type' : 'application/json',
+
+			}
+
+		}).success(function(response, status, headers, config) {
+
+			deferred.resolve(response);
+		}).error(function() {
+			// Something went wrong.
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+
+	};
+	
+	this.updateProject = function(data,id) {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'PUT',
+			url : $rootScope.baseUrl + 'api/v1/admin/project/update/'+id,
+			data : data,
 			headers : {
 				'Content-Type' : 'application/json',
 

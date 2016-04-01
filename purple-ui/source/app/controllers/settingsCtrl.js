@@ -65,4 +65,6 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
 	   user.newPassword = '';
     	project.users.length = 0;
     }
+      
+      
 });

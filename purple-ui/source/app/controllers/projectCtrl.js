@@ -3,6 +3,7 @@
  */
 rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,adminService, $uibModal,statusService,$window) {
 	 $rootScope.bodyClass = 'body-standalone1';
+	 $scope.showpage = false;
     $scope.createProject = function (project) {
     	
        
@@ -19,11 +20,12 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
         	projectService.createProject($scope.project).then(function (response) {
         	 if (response.success) {
         		 $scope.project='';
+        		 $scope.newList='';
         		 $scope.loadUsers();
         		
             } else {
                 //Login failed. Showing error notification
-                appNotifyService.error(response.data, 'Invite unsuccesfull.');
+                appNotifyService.error(response.data, 'error while creating project.');
             }
 
         }, function (error) {
@@ -95,6 +97,12 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
 	    $scope.newList.splice($index, 1);
 	    
 	    }
+  /*To delete user from ui*/  
+    $scope.deleteOrgUserFromList =function(id,$index){
+     	
+	    $scope.orgUserList.splice($index, 1);
+	    
+	    }
     $scope.initUser = function(){
     	adminService.getAllusers().then(function (response) {
             if (response.success =true) {
@@ -129,7 +137,93 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
 				});
 				
 	}
+   
+    /*update */
+    $scope.showEditPage = function(id) {
+		
+		projectService.getProjectWithId(id).then(function (response) {
+			if (response.success =true) {
+				
+				$scope.data=response.data;
+				
+				$scope.timePreference=response.data.timePreference;
+				$scope.singleProjectId=response.data.projectId;
+				$scope.orgUserList=response.data.userList;
+				$scope.showpage = true;
+				
+			}
+		
+				});
+
+	}
     
+  $scope.getAllUseresInUpdateModal = function(){
+    	
+    	var uibModalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'app/partials/usersupdate-modal.html',
+            controller: 'updateModalCtrl',
+            backdrop: 'static',
+            size: 'md',
+            resolve: {
+                options: function () {
+                    return {
+                        "title": 'Add Users',
+                        	"data":$scope.orgUserList
+                    };
+                }
+            }
+        });
+    	
+    uibModalInstance.result.then(function (selection) {
+    	$scope.newupdateList = [];
+    	angular.forEach($scope.orgUserList, function(user){
+    		if(selection.indexOf(user.email) > -1)
+    		{
+    			$scope.newupdateList.push(user);
+    		}
+    	});
+    	console.log($scope.newupdateList);
+    });
+    }
+  
+  $scope.updateProject = function () {
+  	
+      
+      // Validating  form
+  	
+  
+  $scope.updateuserEmailsList = [];
+  	angular.forEach($scope.newupdateList, function(user){
+  		$scope.updateuserEmailsList.push(user.email);
+  	});
+  //	$scope.project.users = scope.up$dateuserEmailsList;
+  	
+      // Calling login service
+  	
+  	//var res = data.split();
+	  $scope.updateData = {
+			  projectName : $scope.data.projectName,
+			  timePreference : $scope.data.timePreference,
+			  users : $scope.updateuserEmailsList
+	  }
+	  var id=$scope.data.projectId;
+      	projectService.updateProject($scope.updateData,id).then(function (response) {
+      	 if (response.success) {
+      		 $scope.updateData='';
+      		 $scope.loadUsers();
+      		
+          } else {
+              //Login failed. Showing error notification
+              appNotifyService.error(response.data, 'Invite unsuccesfull.');
+          }
+
+      }, function (error) {
+          //Login failed. Showing error notificationvar
+          appNotifyService.error(error.msg, 'Invite unsuccesfull.');
+      });
+      
+  };
     $scope.submitStatus = function () {
     	
     	
