@@ -1,6 +1,7 @@
 package com.bbytes.purple.service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,34 @@ public class AdminService {
 		}
 
 		return users;
+	}
+
+	public List<User> getUsersToBeAdded(String projectId) throws PurpleException {
+
+		List<User> userList = new LinkedList<User>();
+		try {
+			if (projectId == null || projectId.isEmpty()) {
+				List<User> users = userService.getUserByRoleName(UserRole.NORMAL_USER_ROLE);
+				for (User user : users) {
+					if (user.getStatus().equals(User.JOINED))
+						userList.add(user);
+				}
+			} else {
+				if (!projectService.projectIdExist(projectId))
+					throw new PurpleException("Error while getting users list", ErrorHandler.PROJECT_NOT_FOUND);
+				List<User> usersOfProject = projectService.getAllUsers(projectId);
+				List<User> users = userService.getUserByRoleName(UserRole.NORMAL_USER_ROLE);
+				for (User user : users) {
+					if (user.getStatus().equals(User.JOINED))
+						userList.add(user);
+				}
+				userList.removeAll(usersOfProject);
+			}
+
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
+		}
+		return userList;
 	}
 
 	public Project createProject(Project project, List<User> users) throws PurpleException {

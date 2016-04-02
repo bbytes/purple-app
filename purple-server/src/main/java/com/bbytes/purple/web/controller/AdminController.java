@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
@@ -133,9 +134,29 @@ public class AdminController {
 		Map<String, Object> usersMap = dataModelToDTOConversionService
 				.getResponseMapWithGridDataAndUserStatusCount(users);
 		logger.debug("Users are fetched successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, usersMap, SuccessHandler.GET_PROJECT_SUCCESS);
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, usersMap, SuccessHandler.GET_USER_SUCCESS);
 
 		return userReponse;
+	}
+
+	/**
+	 * The getUserListToBeAddedToProject method is used to get userList are to
+	 * be added to project
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/admin/users/project", method = RequestMethod.GET)
+	public RestResponse getuserListToBeAddedToProject(@RequestParam(required = false) String projectId)
+			throws PurpleException {
+
+		List<User> user = adminService.getUsersToBeAdded(projectId);
+		Map<String, Object> usersMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndUserStatusCount(user);
+		logger.debug("Projects are fetched successfully");
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, usersMap, SuccessHandler.GET_USER_SUCCESS);
+
+		return projectReponse;
 	}
 
 	/**

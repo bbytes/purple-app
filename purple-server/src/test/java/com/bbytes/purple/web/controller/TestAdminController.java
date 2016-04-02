@@ -112,9 +112,8 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		TenancyContextHolder.setTenant(adminUser.getOrganization().getOrgId());
 		organizationRepository.deleteAll();
 
-
 		if (springProfileService.isSaasMode()) {
-			
+
 			UserDTO requestUserDTO = new UserDTO();
 			requestUserDTO.setUserName("user1");
 			requestUserDTO.setEmail("aaa@gmail.com");
@@ -123,7 +122,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 			mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 			ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
 			String requestJson = ow.writeValueAsString(requestUserDTO);
-			
+
 			String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
 			mockMvc.perform(post("/api/v1/admin/user/add").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 					.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is5xxServerError())
@@ -177,6 +176,85 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 	@Test
 	public void testGetAllUserPasses() throws Exception {
+
+		normalUser = new User("normal-user", "normal@gmail.com");
+		normalUser.setOrganization(org);
+		userService.save(normalUser);
+
+		normalUser1 = new User("normal-user2", "normal2@gmail.com");
+		normalUser1.setOrganization(org);
+		userService.save(normalUser1);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/admin/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
+
+	/**
+	 * Test cases for get all users to be added to project
+	 * 
+	 */
+
+	@Test
+	public void testgetuserListToBeAddedToProjectFailed() throws Exception {
+
+		mockMvc.perform(get("/api/v1/admin/users/project")).andExpect(status().is4xxClientError()).andDo(print());
+
+	}
+
+	@Test
+	public void testgetuserListToBeAddedToProjectPassesWithNullProject() throws Exception {
+
+		normalUser = new User("normal-user", "normal@gmail.com");
+		normalUser.setOrganization(org);
+		normalUser.setStatus(User.JOINED);
+		userService.save(normalUser);
+
+		normalUser1 = new User("normal-user2", "normal2@gmail.com");
+		normalUser1.setOrganization(org);
+		normalUser1.setStatus(User.JOINED);
+		userService.save(normalUser1);
+		String id = null;
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/admin/users/project").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.param("projectId", id)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+	}
+
+	@Test
+	public void testgetuserListToBeAddedToProjectPassesWithProject() throws Exception {
+
+		normalUser = new User("normal-user", "normal@gmail.com");
+		normalUser.setOrganization(org);
+		normalUser.setStatus(User.JOINED);
+		userService.save(normalUser);
+
+		normalUser1 = new User("normal-user2", "normal2@gmail.com");
+		normalUser1.setOrganization(org);
+		normalUser1.setStatus(User.JOINED);
+		userService.save(normalUser1);
+
+		List<User> userList = new ArrayList<User>();
+		userList.add(normalUser);
+
+		Project project1 = new Project("purple", "4pm");
+		project1.setOrganization(org);
+		project1.setUser(userList);
+		projectService.save(project1);
+
+		String id = project1.getProjectId();
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/admin/users/project").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.param("projectId", id)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+	}
+
+	@Test
+	public void testgetuserListToBeAddedToProjectPasses() throws Exception {
 
 		normalUser = new User("normal-user", "normal@gmail.com");
 		normalUser.setOrganization(org);

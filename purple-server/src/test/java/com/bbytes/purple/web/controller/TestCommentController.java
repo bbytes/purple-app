@@ -135,8 +135,6 @@ public class TestCommentController extends PurpleWebBaseApplicationTests {
 		CommentDTO requestComment = new CommentDTO();
 		requestComment.setCommentDesc("Hello World is awesome");
 
-		commentService.updateComment(id, requestComment);
-
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
@@ -147,8 +145,8 @@ public class TestCommentController extends PurpleWebBaseApplicationTests {
 		mockMvc.perform(
 				put("/api/v1/comment/update/{commentid}", id).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 						.contentType(APPLICATION_JSON_UTF8).content(requestJson))
-				.andExpect(status().is5xxServerError()).andDo(print())
-				.andExpect(content().string(containsString("{\"success\":false")));
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true")));
 	}
 
 	/**
@@ -156,17 +154,27 @@ public class TestCommentController extends PurpleWebBaseApplicationTests {
 	 */
 
 	@Test
-	public void testGetComment() throws Exception {
+	public void testGetAllComment() throws Exception {
 
-		Comment comment = new Comment("PIM POM", user, status);
-		commentRepository.save(comment);
+		Comment comment1 = new Comment("One Comment", user, status);
+		commentRepository.save(comment1);
 
-		String id = comment.getCommentId();
+		Comment comment2 = new Comment("Comment two", user, status);
+		commentRepository.save(comment2);
+
+		Status newStatus = new Status("new status", "new status", 40, new Date());
+		status.setUser(user);
+		statusService.save(newStatus);
+
+		Comment comment3 = new Comment("New Comment", user, newStatus);
+		commentRepository.save(comment3);
+
+		String statusId = status.getStatusId();
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
 
-		mockMvc.perform(get("/api/v1/comment/{commentId}", id).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
-				.andExpect(status().isOk()).andDo(print())
+		mockMvc.perform(get("/api/v1/comments").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).param("statusId",
+				statusId)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 	}
 

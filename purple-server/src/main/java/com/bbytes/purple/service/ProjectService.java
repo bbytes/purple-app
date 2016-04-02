@@ -91,14 +91,11 @@ public class ProjectService extends AbstractService<Project, String> {
 	public List<User> getAllUsers(String projectId) throws PurpleException {
 
 		List<User> users = new ArrayList<User>();
-		if (!projectId.equals("null")) {
 			try {
 				users = findByProjectId(projectId).getUser();
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
 			}
-		} else
-			throw new PurpleException("Error while getting users", ErrorHandler.GET_USER_FAILED);
 		return users;
 	}
 }
