@@ -1,5 +1,8 @@
 package com.bbytes.purple.service;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,10 @@ public class CommentService extends AbstractService<Comment, String> {
 		return commentRepository.findOne(commentId);
 	}
 
+	public List<Comment> getCommentByStatus(Status status) {
+		return commentRepository.findByStatus(status);
+	}
+
 	public boolean commentIdExist(String commentId) {
 		boolean isExist = commentRepository.findOne(commentId) == null ? false : true;
 		return isExist;
@@ -57,49 +64,44 @@ public class CommentService extends AbstractService<Comment, String> {
 	}
 
 	public void deleteComment(String commentId) throws PurpleException {
-		if (!commentId.equals(null)) {
-			if (!commentIdExist(commentId))
-				throw new PurpleException("Error while deleting comment", ErrorHandler.COMMENT_NOT_FOUND);
-			try {
-				Comment comment = commentRepository.findOne(commentId);
-				commentRepository.delete(comment);
+		if (!commentIdExist(commentId))
+			throw new PurpleException("Error while deleting comment", ErrorHandler.COMMENT_NOT_FOUND);
+		try {
+			Comment comment = commentRepository.findOne(commentId);
+			commentRepository.delete(comment);
 
-			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.GET_COMMENT_FAILED);
-			}
-		} else
-			throw new PurpleException("Can not delete empty comment", ErrorHandler.COMMENT_NOT_FOUND);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_COMMENT_FAILED);
+		}
 	}
 
 	public Comment updateComment(String commentId, CommentDTO comment) throws PurpleException {
 		Comment updateComment = null;
-		if (!commentId.equals(null)) {
-			if (!commentIdExist(commentId))
-				throw new PurpleException("Error while update comment", ErrorHandler.COMMENT_NOT_FOUND);
-			try {
-				updateComment = findByCommentId(commentId);
-				updateComment.setCommentDesc(comment.getCommentDesc());
-				commentRepository.save(updateComment);
-			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_COMMENT_FAILED);
-			}
+		if (!commentIdExist(commentId))
+			throw new PurpleException("Error while update comment", ErrorHandler.COMMENT_NOT_FOUND);
+		try {
+			updateComment = findByCommentId(commentId);
+			updateComment.setCommentDesc(comment.getCommentDesc());
+			commentRepository.save(updateComment);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_COMMENT_FAILED);
 		}
 		return updateComment;
 	}
 
-	public Comment getComment(String commentId) throws PurpleException {
-		Comment getComments = null;
-		if (!commentId.equals(null)) {
-			if (!commentIdExist(commentId))
-				throw new PurpleException("Error while update comment", ErrorHandler.COMMENT_NOT_FOUND);
-
+	public List<Comment> getAllComment(String statusId) throws PurpleException {
+		List<Comment> comments = new LinkedList<Comment>();
+		if (!statusId.isEmpty() && statusId != null) {
+			if (!statusService.statusIdExist(statusId))
+				throw new PurpleException("Error while update comment", ErrorHandler.STATUS_NOT_FOUND);
 			try {
-				getComments = commentRepository.findOne(commentId);
+				Status status = statusService.getStatusbyId(statusId);
+				comments = commentRepository.findByStatus(status);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.GET_COMMENT_FAILED);
 			}
-
 		}
-		return getComments;
+
+		return comments;
 	}
 }

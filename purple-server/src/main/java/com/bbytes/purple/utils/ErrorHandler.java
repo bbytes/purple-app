@@ -49,6 +49,8 @@ public class ErrorHandler {
 	public static final String GET_STATUS_FAILED = "get_status_failed";
 
 	public static final String GET_COMMENT_FAILED = "get_comment_failed";
+	
+	public static final String DELETE_COMMENT_FAILED = "delete_comment_failed";
 
 	public static final String UPDATE_STATUS_FAILED = "update_status_failed";
 
