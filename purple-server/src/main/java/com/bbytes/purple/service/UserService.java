@@ -48,10 +48,6 @@ public class UserService extends AbstractService<User, String> {
 		return userRepository.findByUserRole(role);
 	}
 
-	public Set<User> getUserByProjects(Project project) {
-		return userRepository.findByProjects(project);
-	}
-
 	public User getUserByEmail(String email) {
 		return userRepository.findOneByEmail(email);
 	}
@@ -136,7 +132,7 @@ public class UserService extends AbstractService<User, String> {
 		try {
 			for (String projectId : projectList) {
 				Project project = projectService.findByProjectId(projectId);
-				allUsers.addAll(getUserByProjects(project));
+				allUsers.addAll(project.getUser());
 			}
 
 		} catch (Throwable e) {

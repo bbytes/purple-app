@@ -134,18 +134,6 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 		project2.setUser(userList2);
 		projectService.save(project2);
 
-		List<Project> projectList1 = new ArrayList<Project>();
-		projectList1.add(project1);
-		user1.setProjects(projectList1);
-		userService.save(user1);
-
-		List<Project> projectList2 = new ArrayList<Project>();
-		projectList2.add(project1);
-		projectList2.add(project2);
-
-		user2.setProjects(projectList2);
-		userService.save(user2);
-
 		List<String> projectList = new ArrayList<String>();
 		projectList.add(projectService.findByProjectId(project1.getProjectId()).getProjectId());
 		projectList.add(projectService.findByProjectId(project2.getProjectId()).getProjectId());

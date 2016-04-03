@@ -9,7 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +24,7 @@ import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
+import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -394,4 +397,282 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":false")));
 
 	}
+
+	/**
+	 * Test cases for all status of all user associated with all project of
+	 * current user
+	 */
+	@Test
+	public void testgetAllStatusByProjectAndUserFailed() throws Exception {
+
+		mockMvc.perform(get("/api/v1/status/project/user")).andExpect(status().is4xxClientError()).andDo(print());
+
+	}
+
+	@Test
+	public void testgetAllStatusByAllProjectAndAllUser() throws Exception {
+
+		normalUser = new User("akshay", "akshay@gmail.com");
+		normalUser.setOrganization(org);
+		userService.save(normalUser);
+		userService.updatePassword("test123", normalUser);
+
+		User user1 = new User("user1", "user1@gmail.com");
+		user1.setOrganization(org);
+		userService.save(user1);
+
+		User user2 = new User("user2", "user2@gmail.com");
+		user2.setOrganization(org);
+		userService.save(user2);
+
+		List<User> userList1 = new ArrayList<User>();
+		userList1.add(normalUser);
+		userList1.add(user1);
+
+		List<User> userList2 = new ArrayList<User>();
+		userList2.add(user1);
+		userList2.add(user2);
+
+		project.setUser(userList1);
+		projectService.save(project);
+
+		Project project1 = new Project("Project1", "12PM");
+		project1.setOrganization(org);
+		project1.setUser(userList1);
+		projectService.save(project1);
+
+		Project project2 = new Project("Project2", "1PM");
+		project2.setOrganization(org);
+		project2.setUser(userList2);
+		projectService.save(project2);
+
+		Status status1 = new Status("status1", "status1", 3, new Date());
+		status1.setProject(project);
+		status1.setUser(normalUser);
+		statusService.save(status1);
+
+		Status status2 = new Status("status2", "status2", 3, new Date());
+		status2.setProject(project1);
+		status2.setUser(user1);
+		statusService.save(status2);
+
+		Status status3 = new Status("status3", "status3", 3, new Date());
+		status3.setProject(project2);
+		status3.setUser(user1);
+		statusService.save(status3);
+
+		UsersAndProjectsDTO requestStatusDTO = new UsersAndProjectsDTO();
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+		String requestJson = ow.writeValueAsString(requestStatusDTO);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/status/project/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true")));
+
+	}
+
+	@Test
+	public void testgetAllStatusByOneProjectAndAllUser() throws Exception {
+
+		normalUser = new User("akshay", "akshay@gmail.com");
+		normalUser.setOrganization(org);
+		userService.save(normalUser);
+		userService.updatePassword("test123", normalUser);
+
+		User user1 = new User("user1", "user1@gmail.com");
+		user1.setOrganization(org);
+		userService.save(user1);
+
+		User user2 = new User("user2", "user2@gmail.com");
+		user2.setOrganization(org);
+		userService.save(user2);
+
+		List<User> userList1 = new ArrayList<User>();
+		userList1.add(normalUser);
+		userList1.add(user1);
+
+		List<User> userList2 = new ArrayList<User>();
+		userList2.add(user1);
+		userList2.add(user2);
+
+		project.setUser(userList1);
+		projectService.save(project);
+
+		Project project1 = new Project("Project1", "12PM");
+		project1.setOrganization(org);
+		project1.setUser(userList1);
+		projectService.save(project1);
+
+		Project project2 = new Project("Project2", "1PM");
+		project2.setOrganization(org);
+		project2.setUser(userList2);
+		projectService.save(project2);
+
+		Status status1 = new Status("status1", "status1", 3, new Date(10000000));
+		status1.setProject(project);
+		status1.setUser(normalUser);
+		statusService.save(status1);
+
+		Status status2 = new Status("status2", "status2", 3, new Date());
+		status2.setProject(project1);
+		status2.setUser(user1);
+		statusService.save(status2);
+
+		Status status3 = new Status("status3", "status3", 3, new Date());
+		status3.setProject(project2);
+		status3.setUser(user1);
+		statusService.save(status3);
+
+		List<String> projectId = new ArrayList<String>();
+		projectId.add(project.getProjectId());
+		projectId.add(project1.getProjectId());
+
+		UsersAndProjectsDTO requestStatusDTO = new UsersAndProjectsDTO();
+		requestStatusDTO.setProjectList(projectId);
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+		String requestJson = ow.writeValueAsString(requestStatusDTO);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/status/project/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true")));
+
+	}
+
+	@Test
+	public void testgetAllStatusByAllProjectAndOneUser() throws Exception {
+
+		projectService.save(project);
+
+		Project project1 = new Project("Project1", "12PM");
+		project1.setOrganization(org);
+		projectService.save(project1);
+
+		Project project2 = new Project("Project2", "1PM");
+		project2.setOrganization(org);
+		projectService.save(project2);
+
+		List<Project> projectList1 = new ArrayList<Project>();
+		projectList1.add(project);
+
+		List<Project> projectList2 = new ArrayList<Project>();
+		projectList2.add(project1);
+
+		normalUser = new User("akshay", "akshay@gmail.com");
+		normalUser.setOrganization(org);
+		normalUser.setProjects(projectList1);
+		userService.save(normalUser);
+		userService.updatePassword("test123", normalUser);
+
+		User user1 = new User("user1", "user1@gmail.com");
+		user1.setOrganization(org);
+		userService.save(user1);
+
+		User user2 = new User("user2", "user2@gmail.com");
+		user2.setOrganization(org);
+		userService.save(user2);
+
+		Status status1 = new Status("status1", "status1", 3, new Date(10000000));
+		status1.setProject(project);
+		status1.setUser(normalUser);
+		statusService.save(status1);
+
+		Status status2 = new Status("status2", "status2", 3, new Date());
+		status2.setProject(project1);
+		status2.setUser(user1);
+		statusService.save(status2);
+
+		Status status3 = new Status("status3", "status3", 3, new Date());
+		status3.setProject(project2);
+		status3.setUser(user1);
+		statusService.save(status3);
+
+		List<String> emails = new ArrayList<String>();
+		emails.add(normalUser.getEmail());
+		emails.add(user1.getEmail());
+
+		UsersAndProjectsDTO requestStatusDTO = new UsersAndProjectsDTO();
+		requestStatusDTO.setUserList(emails);
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+		String requestJson = ow.writeValueAsString(requestStatusDTO);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/status/project/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true")));
+
+	}
+
+	@Test
+	public void testgetAllStatusByOneProjectAndOneUser() throws Exception {
+
+		projectService.save(project);
+
+		Project project1 = new Project("Project1", "12PM");
+		project1.setOrganization(org);
+		projectService.save(project1);
+
+		Project project2 = new Project("Project2", "1PM");
+		project2.setOrganization(org);
+		projectService.save(project2);
+
+		normalUser = new User("akshay", "akshay@gmail.com");
+		normalUser.setOrganization(org);
+		userService.save(normalUser);
+		userService.updatePassword("test123", normalUser);
+
+		User user1 = new User("user1", "user1@gmail.com");
+		user1.setOrganization(org);
+		userService.save(user1);
+
+		User user2 = new User("user2", "user2@gmail.com");
+		user2.setOrganization(org);
+		userService.save(user2);
+
+		Status status1 = new Status("status1", "status1", 3, new Date(10000000));
+		status1.setProject(project);
+		status1.setUser(normalUser);
+		statusService.save(status1);
+
+		Status status2 = new Status("status2", "status2", 3, new Date());
+		status2.setProject(project1);
+		status2.setUser(user1);
+		statusService.save(status2);
+
+		Status status3 = new Status("status3", "status3", 3, new Date());
+		status3.setProject(project2);
+		status3.setUser(user1);
+		statusService.save(status3);
+
+		List<String> emails = new ArrayList<String>();
+		emails.add(normalUser.getEmail());
+		List<String> projectId = new ArrayList<String>();
+		projectId.add(project.getProjectId());
+
+		UsersAndProjectsDTO requestStatusDTO = new UsersAndProjectsDTO();
+		requestStatusDTO.setUserList(emails);
+		requestStatusDTO.setProjectList(projectId);
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+		String requestJson = ow.writeValueAsString(requestStatusDTO);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/status/project/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true")));
+
+	}
+
 }

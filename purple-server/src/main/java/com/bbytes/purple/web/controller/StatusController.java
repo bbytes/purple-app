@@ -18,6 +18,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
+import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
@@ -152,6 +153,26 @@ public class StatusController {
 		logger.debug("Projects are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
 				SuccessHandler.UPDATE_STATUS_SUCCESS);
+
+		return statusReponse;
+	}
+
+	/**
+	 * The get all status method is used to get all status related to project
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/status/project/user", method = RequestMethod.GET)
+	public RestResponse getAllStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO)
+			throws PurpleException {
+
+		User user = userService.getLoggedinUser();
+		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
+		logger.debug("All status are fetched successfully");
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+				SuccessHandler.GET_STATUS_SUCCESS);
 
 		return statusReponse;
 	}

@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Data;
+
 /**
  * Users And Project DTO Object
  * 
  * @author akshay
  *
  */
+@Data
 public class UsersAndProjectsDTO implements Serializable {
 
 	private static final long serialVersionUID = -8445449919059016201L;
