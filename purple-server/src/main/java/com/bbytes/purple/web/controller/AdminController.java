@@ -153,10 +153,10 @@ public class AdminController {
 		List<User> user = adminService.getUsersToBeAdded(projectId);
 		Map<String, Object> usersMap = dataModelToDTOConversionService
 				.getResponseMapWithGridDataAndUserStatusCount(user);
-		logger.debug("Projects are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, usersMap, SuccessHandler.GET_USER_SUCCESS);
+		logger.debug("Users are fetched successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, usersMap, SuccessHandler.GET_USER_SUCCESS);
 
-		return projectReponse;
+		return userReponse;
 	}
 
 	/**
