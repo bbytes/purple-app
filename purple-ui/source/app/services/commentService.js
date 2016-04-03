@@ -4,7 +4,7 @@
 
 rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
-	this.submitStatus = function(status) {
+	this.postComment = function(status) {
 
 		var deferred = $q.defer();
 
