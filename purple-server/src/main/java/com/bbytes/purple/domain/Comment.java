@@ -1,5 +1,6 @@
 package com.bbytes.purple.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class Comment {
 	private Status status;
 	
 	// embedded list 
-	private List<Reply> replies = Collections.<Reply> emptyList();
+	private List<Reply> replies = new ArrayList<>();
 	
 	@CreatedDate
 	private DateTime creationDate;
