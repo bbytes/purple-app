@@ -212,7 +212,9 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
    
 }
 .bottom-nav{
-    background:  #3f3f3f;
+    background: #3f3f3f !important;
+    z-index: 999;
+    border-radius: 0;
 }
 .current-page{
     padding: 13px 15px;
@@ -923,7 +925,7 @@ input[type="file"] {
     left: 0;
     width: 230px;
     min-height: 100%;
-    padding-top: 99px !important;
+    padding-top: 106px !important;
     transition: -webkit-transform .3s ease-in-out, width .3s ease-in-out;
     transition: transform .3s ease-in-out, width .3s ease-in-out;
 }
@@ -951,7 +953,7 @@ input[type="file"] {
 }
 
 #sidebar-wrapper {
-    z-index: 1000;
+    z-index: 9;
     position: fixed;
     right: 250px;
     width: 0;
@@ -964,7 +966,7 @@ input[type="file"] {
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
     top:0;
-    padding-top: 99px;
+    padding-top: 106px;
 }
 
 #wrapper.toggled #sidebar-wrapper {
