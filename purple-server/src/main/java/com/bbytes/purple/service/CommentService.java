@@ -93,7 +93,7 @@ public class CommentService extends AbstractService<Comment, String> {
 		List<Comment> comments = new LinkedList<Comment>();
 		if (!statusId.isEmpty() && statusId != null) {
 			if (!statusService.statusIdExist(statusId))
-				throw new PurpleException("Error while update comment", ErrorHandler.STATUS_NOT_FOUND);
+				throw new PurpleException("Error while getting comment", ErrorHandler.STATUS_NOT_FOUND);
 			try {
 				Status status = statusService.getStatusbyId(statusId);
 				comments = commentRepository.findByStatus(status);

@@ -2,6 +2,7 @@ package com.bbytes.purple.web.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -84,7 +85,9 @@ public class TestReplyController extends PurpleWebBaseApplicationTests {
 		userService.updatePassword("test123", normalUser);
 	}
 
-	// Test Cases for add reply on comment
+	/**
+	 * Test Cases for add reply on comment
+	 */
 
 	@Test
 	public void testAddReplyFailed() throws Exception {
@@ -100,6 +103,13 @@ public class TestReplyController extends PurpleWebBaseApplicationTests {
 
 		String id = comment.getCommentId();
 
+		List<Reply> replyList = new ArrayList<Reply>();
+		Reply reply = new Reply("previous reply");
+		reply.setUser(normalUser);
+		replyList.add(reply);
+		comment.setReplies(replyList);
+		commentService.save(comment);
+
 		ReplyDTO requestReplyDTO = new ReplyDTO();
 		requestReplyDTO.setReplyDesc("Reply1");
 
@@ -108,7 +118,7 @@ public class TestReplyController extends PurpleWebBaseApplicationTests {
 		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
 		String requestJson = ow.writeValueAsString(requestReplyDTO);
 
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
 		mockMvc.perform(
 				post("/api/v1/comment/{commentid}/reply", id).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 						.contentType(APPLICATION_JSON_UTF8).content(requestJson))
@@ -158,7 +168,9 @@ public class TestReplyController extends PurpleWebBaseApplicationTests {
 
 	}
 
-	// Test Cases for delete reply on comment
+	/**
+	 * Test Cases for delete reply on comment
+	 */
 
 	@Test
 	public void testDeleteReplyFailed() throws Exception {
@@ -194,21 +206,6 @@ public class TestReplyController extends PurpleWebBaseApplicationTests {
 	}
 
 	@Test
-	public void testDeleteReplyFailedWithNull() throws Exception {
-
-		String commentId = "null";
-
-		String replyId = "null";
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
-		mockMvc.perform(delete("/api/v1/comment/{commentid}/reply/{replyid}", commentId, replyId)
-				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)).andExpect(status().is5xxServerError())
-				.andDo(print()).andExpect(content().string(containsString("{\"success\":false")))
-				.andExpect(status().is5xxServerError());
-
-	}
-
-	@Test
 	public void testDeleteReplyFailedWithInvalidComment() throws Exception {
 
 		String commentId = "dscsdcdscds555";
@@ -227,6 +224,50 @@ public class TestReplyController extends PurpleWebBaseApplicationTests {
 				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)).andExpect(status().is5xxServerError())
 				.andDo(print()).andExpect(content().string(containsString("{\"success\":false")))
 				.andExpect(status().is5xxServerError());
+
+	}
+
+	/**
+	 * Test cases for getting all replies for comment
+	 */
+
+	@Test
+	public void testGetReplyFailed() throws Exception {
+
+		String commentId = "sdcsdcs";
+
+		mockMvc.perform(get("/api/v1/comment/{commentid}/reply/all", commentId)).andExpect(status().is4xxClientError())
+				.andDo(print());
+	}
+
+	@Test
+	public void testGetReplyPasses() throws Exception {
+
+		String id = comment.getCommentId();
+
+		List<Reply> replyList = new ArrayList<Reply>();
+
+		Reply reply1 = new Reply("previous reply");
+		reply1.setUser(adminUser);
+
+		Reply reply2 = new Reply("now reply");
+		reply2.setUser(normalUser);
+
+		Reply reply3 = new Reply(" reply");
+		reply3.setUser(normalUser);
+
+		replyList.add(reply1);
+		replyList.add(reply2);
+		replyList.add(reply3);
+
+		comment.setReplies(replyList);
+		commentService.save(comment);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
+		mockMvc.perform(
+				get("/api/v1/comment/{commentid}/reply/all", id).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 	}
 }

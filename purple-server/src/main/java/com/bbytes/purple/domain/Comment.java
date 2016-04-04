@@ -1,5 +1,6 @@
 package com.bbytes.purple.domain;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -34,7 +35,7 @@ public class Comment {
 	private Status status;
 	
 	// embedded list 
-	private List<Reply> replies;
+	private List<Reply> replies = Collections.<Reply> emptyList();
 	
 	@CreatedDate
 	private DateTime creationDate;

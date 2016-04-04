@@ -40,7 +40,7 @@ public class ReplyService extends AbstractService<Reply, String> {
 				throw new PurpleException("Error while posting reply", ErrorHandler.COMMENT_NOT_FOUND);
 			try {
 				comment = commentService.findByCommentId(commentId);
-				// replyList = comment.getReplies();
+				replyList = comment.getReplies();
 				Reply reply = new Reply(replyDTO.getReplyDesc());
 				reply.setUser(user);
 				replyList.add(reply);
@@ -54,28 +54,37 @@ public class ReplyService extends AbstractService<Reply, String> {
 		return comment;
 	}
 
-	public Comment deleteReply(String commentId, String replyId, User user) throws PurpleException {
+	public void deleteReply(String commentId, String replyId) throws PurpleException {
 		Comment comment = null;
 		List<Reply> replyList = new ArrayList<Reply>();
-		if (!commentId.equalsIgnoreCase("null") && !replyId.equalsIgnoreCase("null")) {
-			if (!commentService.commentIdExist(commentId))
-				throw new PurpleException("Error while deleting reply", ErrorHandler.COMMENT_NOT_FOUND);
-			try {
-				comment = commentService.findByCommentId(commentId);
-				replyList = comment.getReplies();
-				List<Reply> tobeRemoved = new ArrayList<Reply>();
-				for (Reply reply : replyList) {
-					if (reply.getReplyId().toString().equals(replyId))
-						tobeRemoved.add(reply);
-				}
-				replyList.removeAll(tobeRemoved);
-				comment.setReplies(replyList);
-				comment = commentService.save(comment);
-			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_REPLY_FAILED);
+		if (!commentService.commentIdExist(commentId))
+			throw new PurpleException("Error while deleting reply", ErrorHandler.COMMENT_NOT_FOUND);
+		try {
+			comment = commentService.findByCommentId(commentId);
+			replyList = comment.getReplies();
+			List<Reply> tobeRemoved = new ArrayList<Reply>();
+			for (Reply reply : replyList) {
+				if (reply.getReplyId().toString().equals(replyId))
+					tobeRemoved.add(reply);
 			}
-		} else
-			throw new PurpleException("Can not add reply with empty comment", ErrorHandler.COMMENT_NOT_FOUND);
+			replyList.removeAll(tobeRemoved);
+			comment.setReplies(replyList);
+			comment = commentService.save(comment);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_REPLY_FAILED);
+		}
+	}
+
+	public Comment getAllReplies(String commentId) throws PurpleException {
+		Comment comment = null;
+		if (!commentService.commentIdExist(commentId))
+			throw new PurpleException("Error while getting reply", ErrorHandler.COMMENT_NOT_FOUND);
+		try {
+			comment = commentService.findByCommentId(commentId);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_COMMENT_FAILED);
+		}
+
 		return comment;
 	}
 }

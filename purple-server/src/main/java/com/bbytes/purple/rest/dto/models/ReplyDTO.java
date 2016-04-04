@@ -17,4 +17,6 @@ public class ReplyDTO implements Serializable {
 	private String replyId;
 
 	private String replyDesc;
+	
+	private String userName;
 }

@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Project;
+import com.bbytes.purple.domain.Reply;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
+import com.bbytes.purple.rest.dto.models.ReplyDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.StatusResponseDTO;
@@ -30,6 +32,7 @@ public class DataModelToDTOConversionService {
 	public static final String PENDING_USERS_COUNT = "pending_count";
 	public static final String PROJECT_COUNT = "project_count";
 	public static final String COMMENT_COUNT = "comment_count";
+	public static final String REPLY_COUNT = "reply_count";
 
 	public BaseDTO convertToBaseDTO(String value) {
 		BaseDTO baseDTO = new BaseDTO();
@@ -116,6 +119,14 @@ public class DataModelToDTOConversionService {
 		return commentDTO;
 	}
 
+	public ReplyDTO convertReply(Reply reply) {
+		ReplyDTO replyDTO = new ReplyDTO();
+		replyDTO.setReplyId(reply.getReplyId().toString());
+		replyDTO.setUserName(reply.getUser().getName());
+		replyDTO.setReplyDesc(reply.getReplyDesc());
+		return replyDTO;
+	}
+
 	public Map<String, Object> getResponseMapWithGridDataAndUserStatusCount(List<User> users) {
 		List<UserDTO> userDTOList = new ArrayList<UserDTO>();
 		long joinedCount = 0;
@@ -139,6 +150,16 @@ public class DataModelToDTOConversionService {
 			commentDTOList.add(convertComment(comment));
 		}
 		return getResponseMapWithGridDataAndComment(commentCount, commentDTOList);
+	}
+
+	public Map<String, Object> getResponseMapWithGridDataAndReply(Comment comment) {
+		List<ReplyDTO> ReplyDTOList = new ArrayList<ReplyDTO>();
+		long replyCount = 0;
+		replyCount = comment.getReplies().size();
+		for (Reply reply : comment.getReplies()) {
+			ReplyDTOList.add(convertReply(reply));
+		}
+		return getResponseMapWithGridDataAndReply(replyCount, ReplyDTOList);
 	}
 
 	public Map<String, Object> getResponseMapWithGridDataAndProjectCount(List<Project> projects) {
@@ -181,6 +202,13 @@ public class DataModelToDTOConversionService {
 	private Map<String, Object> getResponseMapWithGridDataAndComment(long commentCount, List<CommentDTO> gridData) {
 		Map<String, Object> responseData = new LinkedHashMap<String, Object>();
 		responseData.put(COMMENT_COUNT, commentCount);
+		responseData.put(RestResponse.GRID_DATA, gridData);
+		return responseData;
+	}
+
+	private Map<String, Object> getResponseMapWithGridDataAndReply(long replyCount, List<ReplyDTO> gridData) {
+		Map<String, Object> responseData = new LinkedHashMap<String, Object>();
+		responseData.put(REPLY_COUNT, replyCount);
 		responseData.put(RestResponse.GRID_DATA, gridData);
 		return responseData;
 	}
