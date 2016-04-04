@@ -103,7 +103,7 @@ public class ReplyController {
 
 		logger.debug("All Replies for comment Id  '" + commentId + "' is fetched successfully");
 		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyMap,
-				SuccessHandler.DELETE_REPLY_SUCCESS);
+				SuccessHandler.GET_REPLY_SUCCESS);
 
 		return replyReponse;
 	}
