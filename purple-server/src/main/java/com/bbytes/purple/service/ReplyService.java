@@ -35,9 +35,9 @@ public class ReplyService extends AbstractService<Reply, String> {
 	public Comment postReply(String commentId, ReplyDTO replyDTO, User user) throws PurpleException {
 		Comment comment = null;
 		List<Reply> replyList = new ArrayList<Reply>();
-		if (!commentId.equalsIgnoreCase("null") && replyDTO.getReplyDesc() != null) {
-			if (!commentService.commentIdExist(commentId))
-				throw new PurpleException("Error while posting reply", ErrorHandler.COMMENT_NOT_FOUND);
+		if (!commentService.commentIdExist(commentId))
+			throw new PurpleException("Error while posting reply", ErrorHandler.COMMENT_NOT_FOUND);
+		if (replyDTO.getReplyDesc() != null) {
 			try {
 				comment = commentService.findByCommentId(commentId);
 				replyList = comment.getReplies();
@@ -49,8 +49,7 @@ public class ReplyService extends AbstractService<Reply, String> {
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_REPLY_FAILED);
 			}
-		} else
-			throw new PurpleException("Can not add reply with empty comment", ErrorHandler.COMMENT_NOT_FOUND);
+		}
 		return comment;
 	}
 
