@@ -163,7 +163,7 @@ public class StatusController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/status/project/user", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/status/project/user", method = RequestMethod.POST)
 	public RestResponse getAllStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO)
 			throws PurpleException {
 
