@@ -66,7 +66,7 @@ public class UserController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/projects/users/all", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/projects/users/all", method = RequestMethod.POST)
 	public RestResponse getUsersByProjects(@RequestBody List<String> projectList) throws PurpleException {
 
 		Set<User> users = userService.getAllUsersbyProjects(projectList);
