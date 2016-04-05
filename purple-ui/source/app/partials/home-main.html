@@ -1,44 +1,29 @@
-<nav class="sidenav-toggle">
-    <span class="mob-view">My View</span>
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#side-menu-mob" aria-expanded="false"></button>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="wrapper">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#"> <img
+				src="../../assets/img/logo.png" alt=""> <span
+				class="logo-text">online <b>standup</b></span>
+			</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li><a href="login">LOGIN</a></li>
+				<li><a href="signup">SIGNUP</a></li>
 
-    <div class="collapse sidebar" id="side-menu-mob" ng-controller="myHomeCtrl">
-        <div class="side-menu">
-            <div class="vt-menu">
-                <div class="menu-head my-view">{{"menu.myView"| translate}}</div>
-                <ul class="nav" role="tablist">
-                    <li role="presentation" ui-sref-active="active"><a ui-sref=".myalerts">{{"menu.myAlerts"| translate}}</a></li>
-                    <li role="presentation" ui-sref-active="active"><a ui-sref=".mymonitors">{{"menu.myMonitors"| translate}}</a></li>
-                    <li role="presentation" ui-sref-active="active"><a ui-sref=".myreports">{{"menu.myReports"| translate}}</a></li>
-                    <li role="presentation" ui-sref-active="active"><a ui-sref=".myshiftlineup">{{"menu.myLineup"| translate}}</a></li>
-                </ul>
-            </div>
-            <div class="vt-menu vt-bottom">
-                <div class="menu-head">{{"menu.history"| translate}}</div>
-                <uib-accordion close-others="oneAtATime" >
-                    <uib-accordion-group heading="{{'menu.hisAlert' | translate}}" is-open="accMenu[0]">
-                        <ul class="accordian-menu" role="tablist">
-                            <li role="presentation" ui-sref-active="active"><a ui-sref=".alertDateQuery"><span class="icon-chevron_right"> </span>{{"menu.hisDateqry"| translate}}</a></li>
-                            <li role="presentation" ui-sref-active="active"><a ui-sref=".alertSourceQuery"><span class="icon-chevron_right"> </span>{{"menu.hisSourceqry"| translate}}</a></li>                                    
-                        </ul>
-                    </uib-accordion-group>
-                    <uib-accordion-group heading="{{'menu.hisReport' | translate}}" is-open="accMenu[1]">
-                        <ul class="accordian-menu" role="tablist">
-                            <li role="presentation" ui-sref-active="active"><a ui-sref=".reportDateQuery"><span class="icon-chevron_right"> </span>{{"menu.hisDateqry"| translate}}</a></li>
-                            <li role="presentation" ui-sref-active="active"><a ui-sref=".reportSourceQuery"><span class="icon-chevron_right"> </span>{{"menu.hisSourceqry"| translate}}</a></li>
-                        </ul>
-                    </uib-accordion-group>
-                    <uib-accordion-group heading="{{'menu.myLineup' | translate}}" is-open="accMenu[2]">
-                        <ul class="accordian-menu" role="tablist">
-                            <li role="presentation" ui-sref-active="active"><a ui-sref=".shiftLineUpSourceQuery"><span class="icon-chevron_right"> </span>{{"menu.hisSourceqry"| translate}}</a></li>
-                            <li role="presentation" ui-sref-active="active"><a ui-sref=".shiftLineUpShiftQuery"><span class="icon-chevron_right"> </span>{{"menu.hisShiftqry"| translate}}</a></li>
-                            <li role="presentation" ui-sref-active="active"><a ui-sref=".shiftLineUpOwnerQuery"><span class="icon-chevron_right"> </span>{{"menu.hisOwnqry"| translate}}</a></li>
-                        </ul>
-                    </uib-accordion-group>
-                </uib-accordion>
-            </div>
-        </div>
-    </div>
+			</ul>
+			
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container -->
 </nav>
-<div ui-view></div>
-<span us-spinner="{radius:20, width:6, length: 14, lines:15}"></span>

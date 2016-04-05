@@ -78,9 +78,7 @@ rootApp.config([
 					'' : {
 						templateUrl : 'app/partials/home.html'
 					},
-					'header@home' : {
-						templateUrl : 'app/partials/home-header.html'
-					},
+					
 					'main@home' : {
 						templateUrl : 'app/partials/home-main.html'
 					},
@@ -102,16 +100,17 @@ rootApp.config([
 				url : '/home-page',
 				views : {
 					'' : {
-						templateUrl : 'app/partials/home-page.html',
-						controller : 'homepageCtrl',
+						templateUrl : 'app/partials/home.html'
+						
 					},
-					'header@home' : {
+					'header@home-page' : {
 						templateUrl : 'app/partials/home-header.html'
 					},
-					'main@home' : {
-						templateUrl : 'app/partials/home-main.html'
+					'main@home-page' : {
+						templateUrl : 'app/partials/home-page.html',
+						controller : 'homepageCtrl'
 					},
-					'footer@home' : {
+					'footer@home-page' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				}
@@ -119,18 +118,19 @@ rootApp.config([
 				url : '/status',
 				views : {
 					'' : {
-						templateUrl : 'app/partials/status.html',
-					    controller: 'statusCtrl'
+						templateUrl : 'app/partials/home.html'
+					   
 						
 					},
-					'header@home' : {
+					'header@status' : {
 						templateUrl : 'app/partials/home-header.html'
 					},
-					'main@home' : {
-						templateUrl : 'app/partials/status.html'
+					'main@status' : {
+						templateUrl : 'app/partials/status.html',
+						   controller: 'statusCtrl'
 						 
 					},
-					'footer@home' : {
+					'footer@status' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				},
@@ -142,16 +142,17 @@ rootApp.config([
 				url : '/projects',
 				views : {
 					'' : {
-						templateUrl : 'app/partials/projects.html',
-						controller : 'projectCtrl',
+						templateUrl : 'app/partials/home.html'
+						
 					},
-					'header@home' : {
+					'header@projects' : {
 						templateUrl : 'app/partials/home-header.html'
 					},
-					'main@home' : {
-						templateUrl : 'app/partials/home-main.html'
+					'main@projects' : {
+						templateUrl : 'app/partials/projects.html',
+						controller : 'projectCtrl'
 					},
-					'footer@home' : {
+					'footer@projects' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				},
@@ -163,16 +164,17 @@ rootApp.config([
 				url : '/settings',
 				views : {
 					'' : {
-						templateUrl : 'app/partials/settings.html',
-						controller : 'settingsCtrl',
+						templateUrl : 'app/partials/home.html'
+						
 					},
-					'header@home' : {
+					'header@settings' : {
 						templateUrl : 'app/partials/home-header.html'
 					},
-					'main@home' : {
-						templateUrl : 'app/partials/home-main.html'
+					'main@settings' : {
+						templateUrl : 'app/partials/settings.html',
+						controller : 'settingsCtrl'
 					},
-					'footer@home' : {
+					'footer@settings' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				},
@@ -184,16 +186,17 @@ rootApp.config([
 				url : '/settings-user',
 				views : {
 					'' : {
-						templateUrl : 'app/partials/settings-user.html',
-						controller : 'userSettingsCtrl',
+						templateUrl : 'app/partials/home.html',
+						
 					},
-					'header@home' : {
+					'header@settings-user' : {
 						templateUrl : 'app/partials/home-header.html'
 					},
-					'main@home' : {
-						templateUrl : 'app/partials/home-main.html'
+					'main@settings-user' : {
+						templateUrl : 'app/partials/settings-user.html',
+						controller : 'userSettingsCtrl'
 					},
-					'footer@home' : {
+					'footer@settings-user' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				}
@@ -201,16 +204,17 @@ rootApp.config([
 				url : '/user-mgr',
 				views : {
 					'' : {
-						templateUrl : 'app/partials/user-mgr.html',
-						controller : 'adminCtrl',
+						templateUrl : 'app/partials/home.html',
+					
 					},
-					'header@home' : {
+					'header@user-mgr' : {
 						templateUrl : 'app/partials/home-header.html'
 					},
-					'main@home' : {
-						templateUrl : 'app/partials/home-main.html'
+					'main@user-mgr' : {
+						templateUrl : 'app/partials/user-mgr.html',
+						controller : 'adminCtrl'
 					},
-					'footer@home' : {
+					'footer@user-mgr' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				},

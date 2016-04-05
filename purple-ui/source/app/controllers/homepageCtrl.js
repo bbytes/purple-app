@@ -3,7 +3,7 @@
  */
 rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window,$location,statusService, commentService) {
   $scope.usersstatusLoad = function(){
-    	 statusService.getAllStatus().then(function (response) {
+    	 statusService.getAllTimelineStatus().then(function (response) {
              if (response.success) {
             	 $scope.artists = [];
          	    angular.forEach(response.data.gridData, function(value, key) {
@@ -30,5 +30,19 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 		 $scope.commentDesc = null
 	 }
    
+     /* Method to get Loggedin user projects for status*/
+     
+     $scope.loadUsersProjects = function(){
+     	projectService.getUserproject().then(function (response) {
+             if (response.success) {
+            
+                 $scope.userprojects   =  response.data.gridData;
+             }
+         });
+     }
+     $scope.initUserProjects = function() {
+         $scope.loadUsersProjects();
+     };
+     
      
 });

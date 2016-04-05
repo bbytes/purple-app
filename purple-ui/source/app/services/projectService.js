@@ -140,5 +140,73 @@ rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 
 	};
+	
+	this.getUserproject = function() {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/user/projects',
+			headers : {
+				'Content-Type' : 'application/json'
+			}
+		}).success(function(response, status, headers, config) {
+			deferred.resolve(response);
+		}).error(function() {
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+	};
+	
+	this.getAllUsersToAdd = function() {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/admin/users/project',
+			headers : {
+				'Content-Type' : 'application/json'
+			}
+		}).success(function(response, status, headers, config) {
+			deferred.resolve(response);
+		}).error(function() {
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+	};
+	
+	
+	this.getMoreUsersToAdd = function(projid) {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/admin/users/project',
+			params:projid,
+			headers : {
+				'Content-Type' : 'application/json'
+			}
+		}).success(function(response, status, headers, config) {
+			deferred.resolve(response);
+		}).error(function() {
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+	};
 
 });

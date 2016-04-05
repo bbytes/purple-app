@@ -6,16 +6,7 @@ rootApp.controller('allusersModalCtrl', function ($scope,$rootScope,adminService
     $scope.allusers = options.data;
     console.log( $scope.allusers);
     
-    $scope.initUser = function() {
-    adminService.getAllusers().then(function (response) {
-        if (response.success) {
-        	if (response) {
-				$scope.userscount = response.data.length;
-			}
-            $scope.allusers   =response.data.gridData;;
-        }
-    });
-    }
+ 
     
     
     $scope.toggleSelection = function toggleSelection(id) {

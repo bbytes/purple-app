@@ -1,7 +1,15 @@
 
+<div class="bottom-nav">
+	<div class="wrapper">
+		<div class="current-page">
+			<h5>status</h5>
+		</div>
+	</div>
+</div>
 
 <!-- /.main -->
-<div class="col-md-8" ng-controller="statusCtrl" ng-init="initStatus()">
+<div ng-show="showeditpage == false">
+<div class="col-md-8"  ng-init="initStatus()">
 	<div class="wrapper" >
 		<div class="top-header">
 			<span class="project"><span
@@ -19,7 +27,7 @@
 				<div class="timeline-badge"></div>
 				<div class="timeline-panel">
 					<div class="edit">
-						<a href="#" ng-click="editStatus(status.statusId)"
+						<a href="#" ng-click="showUpdatePage(status.statusId)"
 							class="navbar-toggle collapse in icon-menu"
 							data-toggle="collapse" id="menu-toggle-2"><img
 							src="../../assets/img/edit.svg"></a> <a href="#"
@@ -105,18 +113,19 @@
 
 	</div>
 </div>
+
 <section sticky-nav="ng-sticky-fixed">
 <form name="myForm">
 	<div class="col-md-4 side">
 
 		<div class="row">
 			<div class="col-md-9" ng-controller="projectCtrl"
-				ng-init="initProjects()">
+				ng-init="initUserProjects()">
 				<div class="form-sidebar">
 					<div class="form-group">
 						<select class="form-control" name="project"
 							ng-model="$parent.status.projectId" required>
-							<option ng-repeat="project in allprojects"
+							<option ng-repeat="project in userprojects"
 								value="{{project.projectId}}">{{project.projectName}}</option>
 
 
@@ -188,4 +197,197 @@
 			ng-click="submitStatus()">submit</button>
 	</div>
 </form>
+</div>
+<!-- Update -->
+<div ng-show="showeditpage == true">
+<div class="col-md-8" ng-init="initStatus()">
 
+
+	<div class="wrapper" >
+		<div class="top-header">
+			<span class="project"><span
+					class="username"><span class="hash">@ </span>
+						{{userName}}</span></span>
+		</div>
+
+		<ul class="timeline newid" ng-repeat="artist in artists">
+	
+			<div class="date-time" >
+				<p>{{artist.date}}</p>
+			</div>
+			
+			<li ng-repeat="status in artist.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
+				<div class="timeline-badge"></div>
+				<div class="timeline-panel">
+					<div class="edit">
+						<a href="#" ng-click="showUpdatePage(status.statusId)"
+							class="navbar-toggle collapse in icon-menu"
+							data-toggle="collapse" id="menu-toggle-2"><img
+							src="../../assets/img/edit.svg"></a> <a href="#"
+							ng-click="deleteStatus(status.statusId,$index)"
+							ng-confirm-click="Are you sure want to delete??"
+							class="navbar-toggle collapse in icon-menu"
+							data-toggle="collapse" id="menu-toggle-2"><img
+							src="../../assets/img/delete.svg"></a>
+					</div>
+
+					<div class="timeline-heading">
+						<h4>
+							<span class="hash"> <span class="hash">#</span>
+							
+								{{status.projectName}}        <span  style="float:right"> {{status.time}}</span>
+						</h4>
+						
+						<p>{{status.hours}}hrs</p>
+					</div>
+					<div class="timeline-body worked-on">
+						<h3>worked on</h3>
+						<p>{{status.workedOn}}</p>
+					</div>
+
+					<div class="timeline-body working-on">
+						<h3>working on</h3>
+						<p>{{status.workingOn}}</p>
+					</div>
+
+					<div class="timeline-body blocker-on">
+						<h3>blockers</h3>
+						<p>{{status.blockers}}</p>
+					</div>
+					
+				</div>
+			</li>
+
+		<!-- <li class="timeline-inverted" ng-repeat="status in artist.statusDTOList">
+				<div class="timeline-badge"></div>
+				<div class="timeline-panel">
+					<div class="edit">
+
+						<a href="#" class="navbar-toggle collapse in icon-menu"
+							data-toggle="collapse" id="menu-toggle-2"><img
+							src="../../assets/img/edit.svg"></a> <a href="#"
+							ng-click="deleteStatus(status.statusId,$index)"
+							ng-confirm-click="Are you sure want to delete??"
+							class="navbar-toggle collapse in icon-menu"
+							data-toggle="collapse" id="menu-toggle-2"><img
+							src="../../assets/img/delete.svg"></a>
+					</div>
+					<div class="timeline-heading">
+						<h4>
+							<span class="hash"> <span class="hash">#</span>
+								{{status.projectName}}
+						</h4>
+						<p>{{status.hours}}</p>
+					</div>
+					<div class="timeline-body worked-on">
+						<h3>worked on</h3>
+						<p>{{status.workedOn}}</p>
+					</div>
+
+					<div class="timeline-body working-on">
+						<h3>working on</h3>
+						<p>{{status.workingOn}}</p>
+					</div>
+
+					<div class="timeline-body blocker-on">
+						<h3>blockers</h3>
+						<p>{{status.blockers}}</p>
+					</div>
+					<div class="timeline-body blocker-on">
+						<h3>time</h3>
+						<p>{{status.time}}</p>
+					</div>
+
+				</div>
+			</li>  -->	
+
+			<li class="clearfix no-float"></li>
+		</ul>
+
+	</div>
+</div>
+
+<section sticky-nav="ng-sticky-fixed">
+<form name="myForm">
+	<div class="col-md-4 side" ng-repeat="newsatus in allstatus">
+
+		<div class="row">
+			<div class="col-md-9">
+				<div class="form-sidebar">
+					<div class="form-group">
+						<select class="form-control" name="project"
+							ng-model="newsatus.projectName" value="{{newsatus.projectName}}" readonly required>
+							<option 
+								value="{{project.projectId}}">{{newsatus.projectName}}</option>
+
+
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="form-sidebar">
+					<div class="form-group">
+					
+						<select class="form-control turnintodropdown" name="time"
+							ng-model="newsatus.hours"  id="sel1"required>
+							<option>{{newsatus.hours}}</option>
+							<option>1</option>
+							<option>1.5</option>
+							<option>2</option>
+							<option>2.5</option>
+							<option>3</option>
+							<option>3.5</option>
+							<option>4</option>
+							<option>4.5</option>
+							<option>5</option>
+							<option>5.5</option>
+							<option>6</option>
+							<option>6.5</option>
+							<option>7</option>
+							<option>7.5</option>
+							<option>8</option>
+							<option>8.5</option>
+							<option>9</option>
+							<option>9.5</option>
+							<option>10</option>
+							<option>10.5</option>
+							<option>11</option>
+							<option>11.5</option>
+							<option>12</option>
+
+						</select>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="comment">WORKED ON</label>
+			<textarea class="form-control" rows="5" name="myName" id="comment"
+				ng-model="newsatus.workedOn" required></textarea>
+			<span style="color: red"
+				ng-show="myForm.myName.$touched && myForm.myName.$invalid">This
+				field is required.</span>
+		</div>
+
+		<div class="form-group">
+			<label for="comment">WORKING ON</label>
+			<textarea class="form-control" rows="5" name="nextName" id="comment"
+				ng-model="newsatus.workingOn" required></textarea>
+			<span style="color: red"
+				ng-show="myForm.nextName.$touched && myForm.nextName.$invalid"></span>
+		</div>
+
+		<div class="form-group">
+			<label for="comment">BLOCKERS</label>
+			<textarea class="form-control" rows="5" id="comment"
+				ng-model="newsatus.blockers" required></textarea>
+		</div>
+		<button type="button" class="btn btn-default submit"
+			ng-click="updateStatus(newsatus.statusId,newsatus)">update</button>
+	</div>
+</form>
+</div>

@@ -135,5 +135,89 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 
 	};
+	
+	this.getStatusWithId = function(id) {
+
+		var deferred = $q.defer();
+
+		$http({
+			method :'GET',
+			url : $rootScope.baseUrl + 'api/v1/status/' +id,
+			//data : admin,
+			headers : {
+				'Content-Type' : 'application/json',
+
+			}
+
+		}).success(function(response, status, headers, config) {
+
+			deferred.resolve(response);
+		}).error(function() {
+			// Something went wrong.
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+
+	};
+	
+	this.updateStatus = function(data,id) {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'PUT',
+			url : $rootScope.baseUrl + 'api/v1/status/update/'+id,
+			data : data,
+			headers : {
+				'Content-Type' : 'application/json',
+
+			}
+
+		}).success(function(response, status, headers, config) {
+
+			deferred.resolve(response);
+		}).error(function() {
+			// Something went wrong.
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+
+	};
+	
+	
+	this.getAllTimelineStatus = function() {
+		 $scope.updateData = {
+				  user : null,
+				  project :null
+				
+		  }
+		var deferred = $q.defer();
+
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/status/project/user',
+			data:updateData,
+			headers : {
+				'Content-Type' : 'application/json'
+			}
+		}).success(function(response, status, headers, config) {
+			deferred.resolve(response);
+		}).error(function() {
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+	};
 
 });

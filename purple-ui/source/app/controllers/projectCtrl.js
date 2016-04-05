@@ -55,7 +55,19 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
         $scope.loadUsers();
     };
     
+    /* Method to get Loggedin user projects for status*/
     
+    $scope.loadUsersProjects = function(){
+    	projectService.getUserproject().then(function (response) {
+            if (response.success) {
+           
+                $scope.userprojects   =  response.data.gridData;
+            }
+        });
+    }
+    $scope.initUserProjects = function() {
+        $scope.loadUsersProjects();
+    };
     
     
     $scope.getAllUseresInModal = function(){
@@ -104,7 +116,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
 	    
 	    }
     $scope.initUser = function(){
-    	adminService.getAllusers().then(function (response) {
+    	projectService.getAllUsersToAdd().then(function (response) {
             if (response.success =true) {
             	if (response) {
 					$scope.userscount = response.data.length;
@@ -145,9 +157,6 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
 			if (response.success =true) {
 				
 				$scope.data=response.data;
-				
-				$scope.timePreference=response.data.timePreference;
-				$scope.singleProjectId=response.data.projectId;
 				$scope.orgUserList=response.data.userList;
 				$scope.showpage = true;
 				
@@ -157,7 +166,18 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
 
 	}
     
-  $scope.getAllUseresInUpdateModal = function(){
+   
+    
+  $scope.getAllUseresInUpdateModal = function(projid){
+	  
+	
+	    	projectService.getMoreUsersToAdd(projid).then(function (response) {
+	            if (response.success =true) {
+	                $scope.allmoreusers   =  response.data.gridData;
+	              
+	            }
+	        });
+	   
     	
     	var uibModalInstance = $uibModal.open({
             animation: true,
@@ -169,7 +189,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
                 options: function () {
                     return {
                         "title": 'Add Users',
-                        	"data":$scope.orgUserList
+                        	"data":$scope.allmoreusers
                     };
                 }
             }
@@ -177,13 +197,13 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
     	
     uibModalInstance.result.then(function (selection) {
     	$scope.newupdateList = [];
-    	angular.forEach($scope.orgUserList, function(user){
+    	angular.forEach($scope.allmoreusers, function(user){
     		if(selection.indexOf(user.email) > -1)
     		{
-    			$scope.newupdateList.push(user);
+    			$scope.orgUserList.push(user);
     		}
     	});
-    	console.log($scope.newupdateList);
+    	console.log($scope.orgUserList);
     });
     }
   
@@ -194,7 +214,7 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectS
   	
   
   $scope.updateuserEmailsList = [];
-  	angular.forEach($scope.newupdateList, function(user){
+  	angular.forEach($scope.orgUserList, function(user){
   		$scope.updateuserEmailsList.push(user.email);
   	});
   //	$scope.project.users = scope.up$dateuserEmailsList;
