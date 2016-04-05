@@ -22,5 +22,7 @@ public class CommentDTO implements Serializable {
 	private String statusId;
 
 	private String userName;
+	
+	private long replyCount = 0;
 
 }

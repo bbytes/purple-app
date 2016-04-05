@@ -116,6 +116,7 @@ public class DataModelToDTOConversionService {
 		commentDTO.setCommentId(comment.getCommentId());
 		commentDTO.setCommentDesc(comment.getCommentDesc());
 		commentDTO.setUserName(comment.getUser().getName());
+		commentDTO.setReplyCount(comment.getReplies().size());
 		return commentDTO;
 	}
 
