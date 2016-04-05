@@ -79,5 +79,17 @@ public class UserController {
 
 		return projectReponse;
 	}
+	
+	@RequestMapping(value = "/api/v1/projects/users/all/map", method = RequestMethod.POST)
+	public RestResponse getUsersByProjectsMap(@RequestBody List<String> projectList) throws PurpleException {
+
+		List<Project> projects = userService.getAllUsersbyProjectMap(projectList);
+		Map<String, Object> projectMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndProjectCount(projects);
+		logger.debug("Projects are fetched successfully");
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap, SuccessHandler.GET_PROJECT_SUCCESS);
+
+		return projectReponse;
+	}
 
 }

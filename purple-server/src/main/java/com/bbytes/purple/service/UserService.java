@@ -2,6 +2,7 @@ package com.bbytes.purple.service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -139,5 +140,20 @@ public class UserService extends AbstractService<User, String> {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_PROJECT_FAILED);
 		}
 		return allUsers;
+	}
+	
+	public List<Project> getAllUsersbyProjectMap(List<String> projectList) throws PurpleException {
+
+		List<Project> allProjects = new LinkedList<Project>();
+		try {
+			for (String projectId : projectList) {
+				Project project = projectService.findByProjectId(projectId);
+				allProjects.add(project);
+			}
+
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_PROJECT_FAILED);
+		}
+		return allProjects;
 	}
 }

@@ -2,6 +2,7 @@ package com.bbytes.purple.web.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -109,8 +110,47 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":true")));
 	}
 
-	// Test cases for get all users by projects
+	// Test cases for get all users by projects Map
 
+	@Test
+	public void testGetAllUsersByProjectsMapFailed() throws Exception {
+
+		mockMvc.perform(get("/api/v1/projects/users/all/map")).andExpect(status().is4xxClientError()).andDo(print());
+
+	}
+
+	@Test
+	public void testGetAllUsersByProjectsMapPasses() throws Exception {
+
+		List<User> userList1 = new ArrayList<User>();
+		userList1.add(user1);
+		userList1.add(user2);
+
+		List<User> userList2 = new ArrayList<User>();
+		userList2.add(user2);
+
+		project1.setUser(userList1);
+		projectService.save(project1);
+
+		project2.setUser(userList2);
+		projectService.save(project2);
+
+		List<String> projectList = new ArrayList<String>();
+		projectList.add(projectService.findByProjectId(project1.getProjectId()).getProjectId());
+		projectList.add(projectService.findByProjectId(project2.getProjectId()).getProjectId());
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+		String requestJson = ow.writeValueAsString(projectList);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
+		mockMvc.perform(post("/api/v1/projects/users/all/map").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
+	
 	@Test
 	public void testGetAllUsersByProjectsFailed() throws Exception {
 
