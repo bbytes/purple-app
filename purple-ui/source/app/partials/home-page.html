@@ -14,25 +14,25 @@
 
 
 <!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar left-side" >
+<aside class="main-sidebar left-side" ng-init="initStatus()">
 	<!-- sidebar: style can be found in sidebar.less -->
 	<section class="sidebar">
 
 		<!-- Sidebar Menu -->
-		<ul class="sidebar-menu" ng-init="initStatus()">
+		<ul class="sidebar-menu" ng-init="initUserProjects()">
 
-			<li class="treeview" ng-init="initUserProjects()"  ng-repeat="project in userprojects"><a class="btn dropdown-toggle"
+			<li class="treeview"  ><a class="btn dropdown-toggle"
 					data-toggle="dropdown" href="#"><i
 					class="fa fa-inbox"></i> <span>PROJECTS</span></a>
 
 					<ul  class="dropdown-menu dropdown-menu-right" role="menu"
-						aria-labelledby="dropdownMenu">
+						aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects">
+						
 						<li><a href="#" class="project-pro"> <span
 					class="projectx">ALL</span> <i
 					class="fa fa-angle-left pull-right"></i>
 			</a></li>
-						<li><a href="projects"><img
-								src="../../assets/img/pro.png"> {{project.projectName}}</a></li>
+						<li><a href="#"> {{project.projectName}}</a></li>
 						
 					
 
@@ -139,16 +139,16 @@
          <!-- Page Content -->
                 <div class="wrapper">
                      <div class="top-header">
-						 <span class="project"><span class="hash"># </span>{{status.projectName}}</span>
-						 <span class="username"><span class="hash">@ </span>{{status.userName}}</span>
+						<!--  <span class="project"><span class="hash"># </span>{{status.projectName}}</span> -->
+						 <span class="username"><span class="hash">@ </span>{{userName}}</span>
 					 </div>
 
-                     <ul class="timeline">
+                     <ul class="timeline newid" ng-repeat="artist in artists">
                         <div class="date-time">
                            <p>{{artist.date}}</p>
                          </div>
 						 
-                           <li>
+                           <li ng-repeat="status in artist.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
                              <div class="timeline-badge"></div>
                                <div class="timeline-panel">
             
@@ -158,7 +158,7 @@
 
                                   <div class="timeline-heading">
                                      <h4><span class="hash"># </span> {{status.projectName}} 
-									 <span class="hash">@ </span> {{status.userName}}</h4>
+									<!-- <span class="hash">@ </span> {{status.userName}}</h4> --> 
                                    </div>
 								   
                                   <div class="timeline-body worked-on">
@@ -179,7 +179,7 @@
                               </div>
                           </li>
     
-                          <li class="timeline-inverted">
+                        <!--   <li class="timeline-inverted">
 										<div class="timeline-badge"></div>
 										<div class="timeline-panel">
 
@@ -211,7 +211,7 @@
 											</div>
 
 										</div>
-									</li>
+									</li>--> 
                                     <li class="clearfix no-float"></li>
                              </ul>
   

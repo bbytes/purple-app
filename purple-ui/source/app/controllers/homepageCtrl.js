@@ -3,7 +3,13 @@
  */
 rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window,$location,statusService, commentService) {
   $scope.usersstatusLoad = function(){
-    	 statusService.getAllTimelineStatus().then(function (response) {
+	  $scope.updateData = {
+			  projectList :[],
+			  userList : []
+			 
+			
+	  }
+    	 statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
              if (response.success) {
             	 $scope.artists = [];
          	    angular.forEach(response.data.gridData, function(value, key) {

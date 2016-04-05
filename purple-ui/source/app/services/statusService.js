@@ -193,16 +193,12 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 	};
 	
 	
-	this.getAllTimelineStatus = function() {
-		 $scope.updateData = {
-				  user : null,
-				  project :null
-				
-		  }
+	this.getAllTimelineStatus = function(updateData) {
+		 
 		var deferred = $q.defer();
 
 		$http({
-			method : 'GET',
+			method : 'POST',
 			url : $rootScope.baseUrl + 'api/v1/status/project/user',
 			data:updateData,
 			headers : {
