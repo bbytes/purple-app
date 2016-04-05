@@ -1,7 +1,6 @@
 package com.bbytes.purple.domain;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -50,7 +49,4 @@ public class Comment {
 		this.user = user;
 		this.status = status;
 	}
-
-	
-	
 }

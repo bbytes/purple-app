@@ -4,6 +4,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -12,6 +15,7 @@ import com.bbytes.purple.PurpleWebBaseApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
+import com.bbytes.purple.rest.dto.models.NotificationDTO;
 import com.bbytes.purple.rest.dto.models.PasswordDTO;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
@@ -65,24 +69,25 @@ public class TestSettingController extends PurpleWebBaseApplicationTests {
 				.andDo(print());
 
 	}
-	
-	 @Test
-	 public void testResetPassword_password_fail() throws Exception {
-	  
-	  PasswordDTO pwdDTO = new PasswordDTO();
-	  pwdDTO.setOldPassword("test1");
-	  pwdDTO.setNewPassword("test1235");
 
-	  ObjectMapper mapper = new ObjectMapper();
-	  mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-	  ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-	  String requestJson = ow.writeValueAsString(pwdDTO);
+	@Test
+	public void testResetPassword_password_fail() throws Exception {
 
-	  String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		PasswordDTO pwdDTO = new PasswordDTO();
+		pwdDTO.setOldPassword("test1");
+		pwdDTO.setNewPassword("test1235");
 
-	  mockMvc.perform(post("/api/v1/user/setting/password").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
-	    .contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is5xxServerError()).andDo(print());   
-	 }
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+		String requestJson = ow.writeValueAsString(pwdDTO);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+
+		mockMvc.perform(post("/api/v1/user/setting/password").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is5xxServerError())
+				.andDo(print());
+	}
 
 	@Test
 	public void testReset_Passsword_fail() throws Exception {
@@ -99,5 +104,41 @@ public class TestSettingController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testUpdateTimeZone_fail() throws Exception {
 		mockMvc.perform(post("/api/v1/admin/setting/timezone")).andExpect(status().is4xxClientError()).andDo(print());
+	}
+
+	/**
+	 * Test cases for notification setting
+	 */
+
+	@Test
+	public void testNotificationSettingFailed() throws Exception {
+		mockMvc.perform(post("/api/v1/admin/notificationSetting")).andExpect(status().is4xxClientError())
+				.andDo(print());
+	}
+
+	@Test
+	public void testNotificationSettingPasses() throws Exception {
+
+		List<String> holidayDates = new ArrayList<String>();
+		holidayDates.add("16/04/2016");
+		holidayDates.add("02/10/2016");
+		holidayDates.add("30/11/2016");
+		holidayDates.add("15/06/2016");
+
+		NotificationDTO requestNotification = new NotificationDTO();
+		requestNotification.setCaptureHours(false);
+		requestNotification.setWeekendNotification(true);
+		requestNotification.setStatusEnable("3 Days");
+		requestNotification.setHolidayDate(holidayDates);
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+		String requestJson = ow.writeValueAsString(requestNotification);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(post("/api/v1/admin/notificationSetting").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is2xxSuccessful())
+				.andDo(print());
 	}
 }

@@ -9,10 +9,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbytes.purple.domain.NotificationSetting;
+import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
+import com.bbytes.purple.rest.dto.models.NotificationDTO;
+import com.bbytes.purple.rest.dto.models.NotificationResponseDTO;
 import com.bbytes.purple.rest.dto.models.PasswordDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.SettingService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.SuccessHandler;
@@ -30,6 +35,9 @@ public class SettingController {
 
 	@Autowired
 	private SettingService settingService;
+
+	@Autowired
+	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
 	@Autowired
 	private UserService userService;
@@ -71,7 +79,31 @@ public class SettingController {
 		User user = userService.getLoggedinUser();
 		settingService.updateTimeZone(timeZone, user);
 		logger.debug(timeZone + " is updated successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, TIMEZONE_SUCCESS_MSG, SuccessHandler.UPDATE_TIMEZONE);
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, TIMEZONE_SUCCESS_MSG,
+				SuccessHandler.UPDATE_TIMEZONE);
+
+		return userReponse;
+	}
+
+	/**
+	 * The notificationSetting method is used to get all notification settings
+	 * 
+	 * @param notificationSettingDTO
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/admin/notificationSetting", method = RequestMethod.POST)
+	public RestResponse notificationSetting(@RequestBody NotificationDTO notificationSettingDTO)
+			throws PurpleException {
+
+		Organization organization = userService.getLoggedinUser().getOrganization();
+		NotificationSetting notificationSetting = settingService.saveNotification(notificationSettingDTO, organization);
+		NotificationResponseDTO notificationMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndNotification(notificationSetting);
+
+		logger.debug("Notification settings are saved successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, notificationMap,
+				SuccessHandler.NOTIFICATION_SUCCESS);
 
 		return userReponse;
 	}

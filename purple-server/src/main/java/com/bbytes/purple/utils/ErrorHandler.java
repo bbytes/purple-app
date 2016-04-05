@@ -27,6 +27,8 @@ public class ErrorHandler {
 	public static final String COMMENT_NOT_FOUND = "comment_not_found";
 
 	public static final String REPLY_NOT_FOUND = "reply_not_found";
+	
+	public static final String NOTIFICATION_FAILED = "notification_failed";
 
 	public static final String ADD_USER_FAILED = "add_user_failed";
 

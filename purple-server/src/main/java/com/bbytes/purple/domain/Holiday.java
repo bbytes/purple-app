@@ -2,8 +2,8 @@ package com.bbytes.purple.domain;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -19,24 +19,16 @@ import lombok.Data;
 public class Holiday {
 
 	@Id
-	private String holidayId;
+	private ObjectId holidayId;
 	
 	@Field("holiday_name")
 	private String holidayName;
 	
 	@Field("holiday_date")
 	private Date holidayDate;
-	
-	@DBRef(lazy=true)
-	private Organization organization;
 
-	public Holiday(String holidayName, Date holidayDate, Organization organization) {
-		
-		this.holidayName = holidayName;
+	public Holiday(Date holidayDate) {
+		holidayId = ObjectId.get();
 		this.holidayDate = holidayDate;
-		this.organization = organization;
 	}
-
-	
-	
 }
