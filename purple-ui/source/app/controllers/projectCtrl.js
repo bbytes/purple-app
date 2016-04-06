@@ -2,6 +2,11 @@
  * 
  */
 rootApp.controller('projectCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,adminService, $uibModal,statusService,$window) {
+	
+	  $scope.isActive = function(route) {
+        return route === $location.path();
+    }
+	
 	 $rootScope.bodyClass = 'body-standalone1';
 	 $scope.showpage = false;
     $scope.createProject = function (project) {

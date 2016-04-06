@@ -1,7 +1,7 @@
 // Define Angular Module with dependencies 
 var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
 		'ngAnimate', 'templates-main', 'toaster', 'ngStorage', 'angular-md5',
-		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav']);
+		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav','pageslide-directive']);
 
 // Defining global variables
 rootApp.run([
@@ -259,3 +259,6 @@ rootApp.config([
 			// $httpProvider.defaults.headers.common['Access-Control-Allow-Origin']
 			// = '*';
 		} ]);
+		
+		
+		

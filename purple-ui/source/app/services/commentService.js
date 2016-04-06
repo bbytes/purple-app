@@ -4,14 +4,14 @@
 
 rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
-	this.postComment = function(status) {
+	this.postComment = function(statusId) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + '/api/v1/comment/add',
-			data : status,
+			url : $rootScope.baseUrl + 'api/v1/comment/add',
+			data : statusId,
 			headers : {
 				'Content-Type' : 'application/json',
 
@@ -40,7 +40,7 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + '/api/v1/comments?statusId=5703b7c67dba890a08ad4a64',
+			url : $rootScope.baseUrl + 'api/v1/comments?statusId='+ statusId,
 			headers : {
 				'Content-Type' : 'application/json'
 			}
@@ -64,7 +64,7 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + '/api/v1/comment/5702a3559fb50424e849624f/reply',
+			url : $rootScope.baseUrl + '/api/v1/comment/' +statusId +'/reply',
 			data : status,
 			headers : {
 				'Content-Type' : 'application/json',
@@ -94,7 +94,7 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + '/api/v1/comment/5702a3559fb50424e849624f/reply/all',
+			url : $rootScope.baseUrl + '/api/v1/comment/'+statusId+'/reply/all',
 			headers : {
 				'Content-Type' : 'application/json'
 			}

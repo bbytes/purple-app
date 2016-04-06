@@ -3,6 +3,7 @@
  */
 rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionStorage,statusService, projectService,appNotifyService,$window,$location) {
 	 $rootScope.bodyClass = 'body-standalone1';
+	 
 	 $scope.showeditpage = false;
     $scope.submitStatus = function () {
     	
@@ -137,5 +138,10 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionSt
   };
   
   
+  $scope.isActive = function (viewLocation) {
+     var active = (viewLocation === $location.path());
+     return active;
+};
+
     
 });

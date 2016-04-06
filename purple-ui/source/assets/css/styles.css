@@ -766,7 +766,7 @@ a{
     background: #7c6991 !important;
     color:#fff !important;
 }
-.project-pro{
+.projectpro{
     background: #cc95b5 !important;
 	border-radius:0px !important;
 	
@@ -792,6 +792,7 @@ a{
 }
 .list-group a{
 	  border-bottom: 0px !important;
+	  cursor:pointer;
 }
 .panel-group .panel + .panel {
     margin-top: 1px !important;
@@ -799,9 +800,9 @@ a{
 .projectx{
     background: #aa6489;
     display: inline;
-    color: #fff;
+    color: #fff !important;
     font-weight: bold;
-    padding: 2px;
+    padding: 1px;
 }
 .nav-stacked > li + li {
     margin-top: 0px !important;
@@ -1263,4 +1264,15 @@ ul.timeline > li:nth-child(odd) {
 .disabled {
   background: #eee;
   color: #aaa;
+}
+
+.sel {
+    background: #cc95b5 !important;
+}
+.sel a{
+	 background: #aa6489;
+    display: inline;
+    color: #fff !important;
+    font-weight: bold;
+    padding: 1px;
 }

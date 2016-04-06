@@ -22,7 +22,7 @@
          	
 <div class="panel-group" id="accordion" ng-init="initUserProjects()">
   <div class="panel panel-default">
-    <div class="panel-heading project-pro">
+    <div class="panel-heading project-active">
       <h4 class="panel-title">
         <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseOne">
           <i class="fa fa-inbox"></i>
@@ -34,6 +34,8 @@
         <ul class="list-group">
            <li><a ng-click="usersstatusLoad()" >ALL</a></li>
            <li  role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)">{{project.projectName}}</a></li>
+            <li><a ng-click="getAllTimelineStatus(project.projectList)" >ALL</a></li>
+           <li ng-repeat="project in userprojects" ng-click="select($index)" ng-class="{sel: $index == selected}" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)">{{project.projectName}}</a></li>
                        
           </ul>
       </div>
@@ -51,7 +53,8 @@
     <div id="collapseTwo" class="panel-collapse collapse in">
       <div class="panel-body">
          <ul class="list-group"  ng-repeat="users in projectUsers">
-            <li><a ng-click="loadUserMap(users.email)">{{users.userName}}</a></li>
+            <li><a ng-click="loadProjectMap(users.userName)">{{users.userName}}</a></li>
+        </ul>
       </div>
     </div>
   </div>
@@ -64,14 +67,27 @@
 	<!-- /.sidebar -->
 </aside>
 
-		<div id="wrapper" class="toggled">
+	<div id="wrapper" class="toggled">
 		
       <!-- Sidebar -->
         <div id="sidebar-wrapper">
          <div class="sidebar-wrapper-scroll">
           <div class="scroll-box">
             <!---slide right side--->
-			  <div class="sidebar-nav">
+			  
+			<!----ends---->     
+         </div>
+        </div>
+        </div>
+		
+		
+        <!-- /#sidebar-wrapper -->
+                <div pageslide ps-open="checked" ps-side="right" ps-squeeze="true">
+                    <div style="padding:20px" id="demo-right">
+                        
+                        <a ng-click="toggle()" data-toggle="offcanvas" class="button" >Close</a>
+						
+						<div class="sidebar-nav">
 			  <form name="myForm">
                 <div class="form-group">
 				
@@ -80,7 +96,7 @@
                     <textarea class="form-control" id="text" name="text" rows="5" id="comment" ng-model="commentDesc" required></textarea>
                     <h6 class="pull-right" id="count_message">
                   </div>
-                 <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "postComment(status.statusId)" ng-disabled="myForm.$invalid">POST</button>
+                  <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "addComment(selectedStatusId)" ng-disabled="myForm.$invalid">POST</button>
               </form>
 			</div>
                 <hr />
@@ -124,12 +140,12 @@
 			  
               </div>
 			</div>
-			<!----ends---->     
-         </div>
-        </div>
-        </div>
-        <!-- /#sidebar-wrapper -->
-
+          </div>
+       </div>
+         <!---end--->
+	
+	     
+		
 
     <div id="page-content-wrapper">
      <div class="container-fluid">
@@ -137,10 +153,7 @@
     <div class="content-wrapper">
          <!-- Main content -->
         <div class="content">
-       
-	
-	     
-	   
+		
          <!-- Page Content -->
                 <div class="wrapper">
                      <div class="top-header">
@@ -161,8 +174,13 @@
                              <div class="timeline-badge"></div>
                                <div class="timeline-panel">
             
+
                                  <div >
 								  <a class="edit-left-side" data-target="#menu-toggle" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle" ng-click="loadComment(status.statusId)"><img src="../../assets/img/comment.svg"></a>
+
+                                 <div class="edit-left-side">
+								  <a data-toggle="offcanvas" role="button" ng-click="openCommentSideBar(status.statusId); toggle()"><img src="../../assets/img/comment.svg"></a>
+
 								 
 								 </div>
 

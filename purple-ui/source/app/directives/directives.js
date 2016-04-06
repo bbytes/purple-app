@@ -57,5 +57,9 @@ rootApp.directive('validPasswordC', function() {
 	    }
 	  }
 	});
+	
+	
+	
+	
                              
                              

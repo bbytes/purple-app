@@ -2,6 +2,13 @@
  * 
  */
 rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window,$location,statusService, commentService) {
+	
+	
+    $scope.isActive = function(route) {
+        return route === $location.path();
+    }
+
+	
   $scope.usersstatusLoad = function(){
 	  $scope.updateData = {
 			  projectList :[],
@@ -28,9 +35,13 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
          $scope.usersstatusLoad();
      };
      
+	 $scope.openCommentSideBar = function(selectedStatusId) {
+		$scope.selectedStatusId = selectedStatusId; 
+	 };
 	
-	 //post reply
-     $scope.postComment = function(statusId) {
+	 //post comment
+     $scope.addComment = function(statusId) {
+		 
 		  $scope.commentData = {
 		 statusId : statusId,
 		 commentDesc : $scope.commentDesc
@@ -111,7 +122,7 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
             if (response.success) {
 				$scope.projectUsers = response.data.gridData[0].userList;
 				$scope.projectName = response.data.gridData[0].projectName
-				$scope.artists = response.data.gridData
+				//$scope.artists = response.data.gridData
 				$scope.updateData.projectList = [response.data.gridData[0].projectId];
 
                     statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
@@ -132,6 +143,7 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
             }
         });
     }
+
 	 
 	 $scope.loadUserMap = function(email){
 		 		$scope.updateData.projectList = [];
@@ -154,4 +166,15 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 				
     }
 	 
+
+	
+	
+	
+    $scope.selected = 0;
+
+    $scope.select= function(index) {
+       $scope.selected = index; 
+    };
+            
+
 });
