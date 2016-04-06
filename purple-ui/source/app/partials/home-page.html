@@ -33,9 +33,7 @@
       <div class="panel-body">
         <ul class="list-group">
            <li><a ng-click="usersstatusLoad()" >ALL</a></li>
-           <li  role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)">{{project.projectName}}</a></li>
-            <li><a ng-click="getAllTimelineStatus(project.projectList)" >ALL</a></li>
-           <li ng-repeat="project in userprojects" ng-click="select($index)" ng-class="{sel: $index == selected}" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)">{{project.projectName}}</a></li>
+		   <li ng-repeat="project in userprojects" ng-click="select($index)" ng-class="{sel: $index == selected}" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)">{{project.projectName}}</a></li>
                        
           </ul>
       </div>
@@ -53,7 +51,7 @@
     <div id="collapseTwo" class="panel-collapse collapse in">
       <div class="panel-body">
          <ul class="list-group"  ng-repeat="users in projectUsers">
-            <li><a ng-click="loadProjectMap(users.userName)">{{users.userName}}</a></li>
+            <li><a ng-click="loadUserMap(users.email)">{{users.userName}}</a></li>
         </ul>
       </div>
     </div>
