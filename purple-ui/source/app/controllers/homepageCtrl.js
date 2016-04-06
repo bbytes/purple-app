@@ -3,7 +3,7 @@
  */
 rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window,$location,statusService, commentService) {
 	
-	
+	 $scope.commentDesc = '';
     $scope.isActive = function(route) {
         return route === $location.path();
     }
@@ -35,33 +35,33 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
          $scope.usersstatusLoad();
      };
      
-	 $scope.openCommentSideBar = function(selectedStatusId) {
-		$scope.selectedStatusId = selectedStatusId; 
-	 };
 	
 	 //post comment
+	 $scope.formData = {};
      $scope.addComment = function(statusId) {
-		 
+		 console.log($scope.selectedStatusId);
+		 console.log(statusId);
 		  $scope.commentData = {
 		 statusId : statusId,
-		 commentDesc : $scope.commentDesc
+		 commentDesc : $scope.formData.commentDesc
 	 }
 		 commentService.postComment($scope.commentData).then(function (response) {
 			 if(response.success){
 				$scope.message = 'Commented Successfully';
+				$scope.formData.commentDesc = '';
 			 }
+			 
 		 });
+		  
 		 //$scope.commentDesc = !$scope.commentDesc;
-		 $scope.commentDesc = null
+		 //$scope.commentDesc = '';
 	 }
 	 
-	 //post reply to reply
-	 $scope.postReply = function(replyObj) {
-		//  $scope.replyObj = {
-		 //statusId : "57021aa67dba891b747bab9a",
-		// replyDesc : $scope.replyComment
-	// }
-		 commentService.postReply(replyObj).then(function (response) {
+	 //post comment reply
+	 $scope.postReply = function(replyObj, commentId) {
+		console.log(commentId)
+		console.log($scope.commentId)
+		 commentService.postReply(replyObj, commentId).then(function (response) {
 			 if(response.success){
 				$scope.message = 'Replied Successfully';
 			 } else {
@@ -69,11 +69,10 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 			 }
 		 });
 		 //$scope.commentDesc = !$scope.commentDesc;
-		 $scope.replyComment = null
+		 $scope.replyComment = '';
 	 }
    
      /* Method to get Loggedin user projects for status*/
-     
      $scope.loadUsersProjects = function(){
      	projectService.getUserproject().then(function (response) {
              if (response.success) {
@@ -82,18 +81,19 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
              }
          });
      }
-     $scope.initUserProjects = function() {
+    $scope.initUserProjects = function() {
          $scope.loadUsersProjects();
      };
      
      //get comments
-	 $scope.loadComment = function(statusId){
-    	commentService.getComment(statusId).then(function (response) {
+	 $scope.openCommentSideBar = function(selectedStatusId){
+		 $scope.selectedStatusId = selectedStatusId;
+    	commentService.getComment(selectedStatusId).then(function (response) {
             if (response.success) {
             	if (response) {
 					$scope.commentcount = response.data.length;
 				}
-            	$scope.commentsCount = response.data.gridData.usersCount;
+            	$scope.commentsCount = response.data.gridData.commentCount;
             	$scope.commentCount = response.data.comment_count;
 //            	 repeatSelect: null,
                 $scope.allcomments   =  response.data.gridData;
@@ -102,8 +102,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
     }
 	
 	 //get replies
-	 $scope.loadReply = function(){
-		 commentService.getReplies().then(function (response) {
+	 $scope.loadReply = function(statusId){
+		 commentService.getReplies(statusId).then(function (response) {
+			 $scope.commentId = commentId;
             if (response.success) {
             	if (response) {
 					$scope.replycount = response.data.length;
@@ -167,7 +168,12 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
     }
 	 
 
-	
+	            $scope.checked = false; // This will be binded using the ps-open attribute
+                $scope.toggle = function(){
+                $scope.checked = !$scope.checked
+					
+                }
+				
 	
 	
     $scope.selected = 0;
