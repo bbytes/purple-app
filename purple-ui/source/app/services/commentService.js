@@ -4,14 +4,14 @@
 
 rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
-	this.postComment = function(statusId) {
+	this.postComment = function(commentBody) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
 			url : $rootScope.baseUrl + 'api/v1/comment/add',
-			data : statusId,
+			data : commentBody,
 			headers : {
 				'Content-Type' : 'application/json',
 
@@ -40,7 +40,7 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + 'api/v1/comments?statusId='+ statusId,
+			url : $rootScope.baseUrl + 'api/v1/comments?statusId=' + statusId,
 			headers : {
 				'Content-Type' : 'application/json'
 			}
@@ -58,20 +58,20 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 	
 	
 	//reaply
-	this.postReply = function(status) {
+	this.postReply = function(replyPost, statusId) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + '/api/v1/comment/' +statusId +'/reply',
-			data : status,
+			url : $rootScope.baseUrl + 'api/v1/comment/' +statusId +'/reply',
+			data : replyPost,
 			headers : {
 				'Content-Type' : 'application/json',
 
 			}
 
-		}).success(function(response, status, headers, config) {
+		}).success(function(response, replyPost, headers, config) {
 
 			deferred.resolve(response);
 		}).error(function() {
@@ -94,7 +94,7 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + '/api/v1/comment/'+statusId+'/reply/all',
+			url : $rootScope.baseUrl + 'api/v1/comment/' + statusId + '/reply/all',
 			headers : {
 				'Content-Type' : 'application/json'
 			}
@@ -110,7 +110,7 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 	};
 	
-	
+	//maping
 	this.getProjectMap = function(projectId) {
 
 		var deferred = $q.defer();

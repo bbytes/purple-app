@@ -80,10 +80,10 @@
 		
 		
         <!-- /#sidebar-wrapper -->
-                <div pageslide ps-open="checked" ps-side="right" ps-squeeze="true">
+                <div pageslide ps-open="checked" ps-speed="2">
                     <div style="padding:20px" id="demo-right">
                         
-                        <a ng-click="toggle()" data-toggle="offcanvas" class="button" >Close</a>
+                        <a ng-click="toggle()" data-toggle="offcanvas" class="button" style="float:right;">X</a>
 						
 						<div class="sidebar-nav">
 			  <form name="myForm">
@@ -91,8 +91,10 @@
 				
 				  
                   <label for="comment">Comment:</label>
-                    <textarea class="form-control" id="text" name="text" rows="5" id="comment" ng-model="commentDesc" required></textarea>
-                    <h6 class="pull-right" id="count_message">
+                    <textarea class="form-control" id="text" name="text" rows="5" id="comment" ng-model="formData.commentDesc" required></textarea>
+                    
+					<h6 class="pull-right" id="count_message">
+					
                   </div>
                   <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "addComment(selectedStatusId)" ng-disabled="myForm.$invalid">POST</button>
               </form>
@@ -120,7 +122,6 @@
                 </div>
 					 </div>
                 </div>
-				
 				<!---reply--->
                  <h4 class="reaply" ><a href="#" ng-click="showDetails = ! showDetails">Reply</a></h4>
 				 
@@ -133,7 +134,7 @@
                     <textarea class="form-control" id="text" name="text" rows="5" id="replyDesc" ng-model="replyObj.replyDesc" required></textarea>
                     <h6 class="pull-right" id="count_message">
                   </div>
-                 <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "postReply(replyObj)" ng-disabled="myForm.$invalid">REPLY</button>
+                 <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "postReply(replyObj, comment.commentId)" ng-disabled="myForm.$invalid">REPLY</button>
               </form>
 			  
               </div>
@@ -151,6 +152,8 @@
     <div class="content-wrapper">
          <!-- Main content -->
         <div class="content">
+		
+		  
 		
          <!-- Page Content -->
                 <div class="wrapper">
@@ -171,10 +174,7 @@
                            <li ng-repeat="status in artist.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
                              <div class="timeline-badge"></div>
                                <div class="timeline-panel">
-            
-
-                                 <div >
-								  <a class="edit-left-side" data-target="#menu-toggle" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle" ng-click="loadComment(status.statusId)"><img src="../../assets/img/comment.svg"></a>
+           
 
                                  <div class="edit-left-side">
 								  <a data-toggle="offcanvas" role="button" ng-click="openCommentSideBar(status.statusId); toggle()"><img src="../../assets/img/comment.svg"></a>
@@ -217,7 +217,7 @@
                                     <li class="clearfix no-float"></li>
                              </ul>
   
-                        </div>
+                       
                     </div>
                 </div>
           </div>
