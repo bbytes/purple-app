@@ -26,9 +26,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
      
 	
 	 //post reply
-     $scope.postComment = function() {
+     $scope.postComment = function(statusId) {
 		  $scope.commentData = {
-		 statusId : "57021aa67dba891b747bab9a",
+		 statusId : statusId,
 		 commentDesc : $scope.commentDesc
 	 }
 		 commentService.postComment($scope.commentData).then(function (response) {
@@ -72,23 +72,24 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
      };
      
      //get comments
-	 $scope.loadComment = function(){
-    	commentService.getComment().then(function (response) {
+	 $scope.loadComment = function(statusId){
+    	commentService.getComment(statusId).then(function (response) {
             if (response.success) {
             	if (response) {
 					$scope.commentcount = response.data.length;
 				}
             	$scope.commentsCount = response.data.gridData.usersCount;
             	$scope.commentCount = response.data.comment_count;
-//            	 /repeatSelect: null,
+//            	 repeatSelect: null,
                 $scope.allcomments   =  response.data.gridData;
+				console.log(response.data.gridData)
             }
         });
     }
 	
 	 //get replies
 	 $scope.loadReply = function(){
-    	replyService.getReply().then(function (response) {
+		 commentService.getReplies().then(function (response) {
             if (response.success) {
             	if (response) {
 					$scope.replycount = response.data.length;
@@ -100,5 +101,36 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
             }
         });
     }
+	
+	 //get map
+	 $scope.loadProjectMap = function(projectId,userName){
+		 commentService.getProjectMap(projectId,userName).then(function (response) {
+            if (response.success) {
+				$scope.projectUsers = response.data.gridData[0].userList;
+				$scope.projectName = response.data.gridData[0].projectName
+				$scope.artists = response.data.gridData
+				$scope.updateData.projectList = [response.data.gridData[0].projectId];
+
+                    statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
+                     if (response.success) {
+                      $scope.artists = [];
+                      angular.forEach(response.data.gridData, function(value, key) {
+                      $scope.artists.push(value);
+                      });
+                      $scope.allstatus   =  response.data.gridData;
+                     }
+                  });
+				
+            	if (response) {
+					$scope.replyprojectcount = response.data.length;
+				}
+            	$scope.repliesprojectsCount = response.data.gridData.repliesprojectsCount;
+            	$scope.replyprojectCount = response.data.replyproject_count;
+//            	 /repeatSelect: null,
+                $scope.allrepliesprojects   =  response.data.gridData;
+            }
+        });
+    }
+	
 	 
 });

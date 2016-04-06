@@ -2,7 +2,11 @@
         body {
             font-family: 'Open Sans', sans-serif !important;
             letter-spacing: 1px;
+		
         }
+		body, html{
+				overflow:visible !important;
+		}
 
 .body-standalone{
     background: url(../img/bg.jpg) no-repeat fixed;
@@ -753,16 +757,44 @@ a{
     border-radius: 0px !important;
 }
 .project-active{
-    background: #7c6991;
+    background: #7c6991 !important;
     color:#fff !important;
     font-weight: bold;
+	border-radius:0px !important;
 }
 .project-active a:hover{
     background: #7c6991 !important;
     color:#fff !important;
 }
 .project-pro{
-    background: #cc95b5;
+    background: #cc95b5 !important;
+	border-radius:0px !important;
+	
+}
+.panel-title a{
+	color:#fff !important;
+	font-weight:bold !important;
+	border-bottom: 0px solid #e1e1e1 !important;
+	cursor:pointer;
+}
+.panel {
+	border:0px solid #ccc !important;
+}
+.list-group li{
+	list-style: none;
+    /* padding-bottom: 14px; */
+    font-weight: 400;
+    padding: 9px 31px;
+    border-bottom: 1px solid #ccc;
+}
+.panel-body {
+    padding: 0px !important;
+}
+.list-group a{
+	  border-bottom: 0px !important;
+}
+.panel-group .panel + .panel {
+    margin-top: 1px !important;
 }
 .projectx{
     background: #aa6489;
@@ -1141,6 +1173,12 @@ small img{
 .fc-today{
     background: :red !important;
  }
+ .list-group {
+    padding-left: 0;
+   
+    background: #ddd !important;
+    margin: 0;
+}
  .alert {
     border-radius: 0px !important;
     border: 0px solid #ccc;
@@ -1219,3 +1257,10 @@ ul.timeline > li:nth-child(odd) {
     background-color: transparent !important;
 }
 
+.active {
+  background: $button-active;
+}
+.disabled {
+  background: #eee;
+  color: #aaa;
+}

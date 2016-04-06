@@ -18,34 +18,46 @@
 	<!-- sidebar: style can be found in sidebar.less -->
 	<section class="sidebar">
 
-	   <ul class="sidebar-menu" ng-init="initUserProjects()">
-               
-        
-
-                <li class="treeview">
-                   <a href="#" class="project-pro" style="color:#fff; font-weight:bold;">
-                       <i class="fa fa-inbox"></i>
-                        <span>PROJECTS</span>
-						<i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="#">ALL</a></li>
-                        <li  role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a href="#">{{project.projectName}}</a></li>
+	       
+         	
+<div class="panel-group" id="accordion" ng-init="initUserProjects()">
+  <div class="panel panel-default">
+    <div class="panel-heading project-pro">
+      <h4 class="panel-title">
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseOne">
+          <i class="fa fa-inbox"></i>
+          <span>PROJECTS</span></a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <ul class="list-group">
+           <li><a ng-click="getAllTimelineStatus(project.projectList)" >ALL</a></li>
+           <li  role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)">{{project.projectName}}</a></li>
                        
-                    </ul>
-                </li>
-
-                <li class="treeview">
-                    <a href="#" class="project-active">
-                        <i class="fa fa-user"></i> <span>USERS</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu"  ng-repeat="status in allstatus">
-                        <li><a href="#">{{userName}}</a></li>
-                    </ul>
-                </li>
-            </ul>
-	
+          </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
+    <div class="panel-heading project-active">
+      <h4 class="panel-title">
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseTwo">
+          <i class="fa fa-user"></i> <span>USERS</span>
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse in">
+      <div class="panel-body">
+         <ul class="list-group"  ng-repeat="users in projectUsers">
+            <li><a ng-click="loadProjectMap(users.userName)">{{users.userName}}</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+ 
+</div>
 		<!-- Sidebar Menu -->
 		
 		<!-- /.sidebar-menu -->
@@ -59,15 +71,17 @@
         <div id="sidebar-wrapper">
          <div class="sidebar-wrapper-scroll">
           <div class="scroll-box">
-            <div class="sidebar-nav">
+            <!---slide right side--->
+			  <div class="sidebar-nav">
 			  <form name="myForm">
                 <div class="form-group">
-				  <input type="hidden" value="56fe6795055f8a080c01f67d" ng-model= "statusId"/>
+				
+				  
                   <label for="comment">Comment:</label>
                     <textarea class="form-control" id="text" name="text" rows="5" id="comment" ng-model="commentDesc" required></textarea>
                     <h6 class="pull-right" id="count_message">
                   </div>
-                 <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "postComment()" ng-disabled="myForm.$invalid">POST</button>
+                 <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "postComment(status.statusId)" ng-disabled="myForm.$invalid">POST</button>
               </form>
 			</div>
                 <hr />
@@ -82,6 +96,19 @@
 					{{comment.commentDesc}}
 					</p>
                 </div>
+				
+				<!---replied--->
+				 <div class="user-label">
+					<a href="#" ng-click="showreplyDetails = ! showreplyDetails">{{replyCount}} <img src="../../assets/img/reply.png" style="width: 20px;" title="Replied"></a>
+					 <div class="procedure-details" ng-show="showreplyDetails">
+					    <div class="user-label" ng-repeat="reply in allreplies">
+                   <h4>{{userName}}</h4>
+                    <p class="comment"><b>@Username </b>{{reply.replyDesc}}</p>
+                </div>
+					 </div>
+                </div>
+				
+				<!---reply--->
                  <h4 class="reaply" ><a href="#" ng-click="showDetails = ! showDetails">Reply</a></h4>
 				 
 				 <div class="procedure-details" ng-show="showDetails">
@@ -98,28 +125,7 @@
 			  
               </div>
 			</div>
-			<!----ends---->
-			
-			
-              <hr />
-
-              <div class="sidebar-nav"  ng-repeat="comment in allcomments">
-               <small> <ng-letter-avatar data="{{userName}}"
-						shape="round"></ng-letter-avatar>
-				</small>
-                 <div class="user-label">
-                   <h4>{{userName}}</h4>
-                    <p class="comment"><b> @ {{userName}} </b>{{comment.commentDesc}}</p>
-                </div>
-                 <h4 class="reaply">Replied</h4>
-				  <div class="user-label" ng-repeat="reply in allreplies">
-                   <h4>{{userName}}</h4>
-                    <p class="comment"><b>@Username </b>{{reply.replyDesc}}</p>
-                </div>
-            </div>
-            
-           
-         
+			<!----ends---->     
          </div>
         </div>
         </div>
@@ -133,7 +139,7 @@
          <!-- Main content -->
         <div class="content">
        
-	   
+	
 	     
 	   
          <!-- Page Content -->
@@ -142,47 +148,45 @@
 						<!--  <span class="project"><span class="hash"># </span>{{status.projectName}}</span> -->
 						 <span class="username"><span class="hash">@ </span>{{userName}}</span>
 					 </div>
-
-                     <ul class="timeline">
-                        <div class="date-time" ng-repeat="artist in artists">
+					 
+					 <!---timeline---->
+                      <ul class="timeline newid" ng-repeat="artist in artists">
+                        <div class="date-time">
                            <p>{{artist.date}}</p>
                          </div>
 						 
-                    
+                           <li ng-repeat="status in artist.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
+                             <div class="timeline-badge"></div>
+                               <div class="timeline-panel">
+            
+                                 <div class="edit-left-side">
+								  <a data-target="" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle" ng-click="loadComment(status.statusId)"><img src="../../assets/img/comment.svg"></a>
+								 
+								 </div>
+
+                                  <div class="timeline-heading">
+                                     <h4><span class="hash"># </span> {{status.projectName}} 
+									<!-- <span class="hash">@ </span> {{status.userName}}</h4> --> 
+                                   </div>
+								   
+                                  <div class="timeline-body worked-on">
+									 <h3>worked on</h3>
+										<p>{{status.workedOn}}</p>
+		                           </div>
+
+                                   <div class="timeline-body working-on">
+									  <h3>working on</h3>
+									   <p>{{status.workingOn}}</p>
+								   </div>
+
+                                   <div class="timeline-body blocker-on">
+									  <h3>blockers</h3>
+									  <p>{{status.blockers}}</p>
+								   </div>
+
+                              </div>
+                          </li>
     
-                          <li class="timeline-inverted">
-										<div class="timeline-badge"></div>
-										<div class="timeline-panel">
-
-											<div class="edit">
-												<a data-target="#menu-toggle" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle" ng-click="loadComment()"><img src="../../assets/img/comment.svg"></a>
-
-											</div>
-
-											<div class="timeline-heading">
-												<h4>
-													<span class="hash"># </span> {{status.projectName}} <span
-														class="hash">@ </span> {{status.userName}}
-												</h4>
-												<p>{{status.hours}}</p>
-											</div>
-											<div class="timeline-body worked-on">
-												<h3>worked on</h3>
-												<p>{{status.workedOn}}</p>
-											</div>
-
-											<div class="timeline-body working-on">
-												<h3>working on</h3>
-												<p>{{status.workingOn}}</p>
-											</div>
-
-											<div class="timeline-body blocker-on">
-												<h3>blockers</h3>
-												<p>{{status.blockers}}</p>
-											</div>
-
-										</div>
-									</li>
                                     <li class="clearfix no-float"></li>
                              </ul>
   
@@ -193,8 +197,7 @@
       </div>
 </div>
 
-		
-		
+
 
 <script>
 	$("#menu-toggle").click(function(e) {

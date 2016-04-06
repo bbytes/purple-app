@@ -32,15 +32,15 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
 	};
 	
-	//get reply
+	//get comment
 	
-	this.getComment = function() {
+	this.getComment = function(statusId) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + '/api/v1/comments?statusId=57021aa67dba891b747bab9a',
+			url : $rootScope.baseUrl + '/api/v1/comments?statusId=5703b7c67dba890a08ad4a64',
 			headers : {
 				'Content-Type' : 'application/json'
 			}
@@ -64,7 +64,7 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/comment/57021aec7dba891b747bab9b/reply',
+			url : $rootScope.baseUrl + '/api/v1/comment/5702a3559fb50424e849624f/reply',
 			data : status,
 			headers : {
 				'Content-Type' : 'application/json',
@@ -86,15 +86,15 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 
 	};
 	
-	//get reply to reply
+	//get comment to reply
 	
-	this.getReply = function() {
+	this.getReplies = function() {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + '/api/v1/comment/57021aec7dba891b747bab9b/reply/all',
+			url : $rootScope.baseUrl + '/api/v1/comment/5702a3559fb50424e849624f/reply/all',
 			headers : {
 				'Content-Type' : 'application/json'
 			}
@@ -108,6 +108,35 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 		});
 
 		return deferred.promise;
+	};
+	
+	
+	this.getProjectMap = function(projectId,userName) {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'POST',
+			url : $rootScope.baseUrl + 'api/v1/projects/users/all/map',
+			data : [projectId],
+			headers : {
+				'Content-Type' : 'application/json',
+
+			}
+
+		}).success(function(response, status, headers, config) {
+
+			deferred.resolve(response);
+		}).error(function() {
+			// Something went wrong.
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+
 	};
 	
 	
