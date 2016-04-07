@@ -1,5 +1,5 @@
 /**
- * 
+ * Home page controller to load status timeline
  */
 rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window,$location,statusService, commentService) {
 	
@@ -7,14 +7,13 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
     $scope.isActive = function(route) {
         return route === $location.path();
     }
-
-	
-  $scope.usersstatusLoad = function(){
+   /**
+    * Get all status timeline
+    */
+  $scope.loadStatusTimeline = function(){
 	  $scope.updateData = {
 			  projectList :[],
 			  userList : []
-			 
-			
 	  }
     	 statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
              if (response.success) {
@@ -30,13 +29,10 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
              }
          });
      }
-
-     
-     $scope.initStatus = function() {
-         $scope.usersstatusLoad();
-     };
-	 
-	 //post comment
+	
+	 /**
+	  * Post comment on status
+	  */
 	 $scope.formData = {};
      $scope.addComment = function(statusId) {
 		 console.log($scope.selectedStatusId);
@@ -55,7 +51,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 		  
 	 }
 	 
-	 //post comment reply
+	 /**
+	  * post reply on comment
+	  */
 	 $scope.postReply = function(replyObj, commentId) {
 		console.log(commentId)
 		console.log($scope.commentId)
@@ -70,8 +68,10 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 		 $scope.loadReply(commentId);
 	 }
    
-     /* Method to get Loggedin user projects for status*/
-     $scope.loadUsersProjects = function(){
+     /**
+      * Load all projects of logged in user
+      */
+     $scope.loadUserProjects = function(){
      	projectService.getUserproject().then(function (response) {
              if (response.success) {
             
@@ -79,7 +79,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
              }
          });
      }
-     //get comments
+    /**
+     * Get status 
+     */
 	 $scope.openCommentSideBar = function(selectedStatusId){
 		 $scope.selectedStatusId = selectedStatusId;
 		 
@@ -93,7 +95,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 		 
 		 $scope.getAllComments(selectedStatusId);
     }
-	 
+	 /**
+	  * Get all comments of status
+	  */
 	 $scope.getAllComments = function (selectedStatusId){
 		 commentService.getComment(selectedStatusId).then(function (response) {
 	            if (response.success) {
@@ -104,7 +108,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 		 
 	 }
 	
-	 //get replies
+	 /**
+	  * Get all replies of a comment
+	  */
 	 $scope.loadReply = function(commentId){
 		 commentService.getReplies(commentId).then(function (response) {
 			 $scope.commentId = commentId;
@@ -114,7 +120,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
         });
     }
 	
-	 //get map
+	/**
+	 * Load status timeline by project
+	 */
 	 $scope.loadProjectMap = function(projectId){
 		 commentService.getProjectMap(projectId).then(function (response) {
             if (response.success) {
@@ -140,7 +148,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
             }
         });
     }
-
+	 /**
+	  * Load status timeline by user
+	  */
 	 
 	 $scope.loadUserMap = function(email){
 		 		$scope.updateData.projectList = [];
@@ -161,22 +171,16 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
                      }
                   });
 				
-    }
-	 
-
+	 		}
 	            $scope.checked = false; // This will be binded using the ps-open attribute
                 $scope.toggle = function(){
                 $scope.checked = !$scope.checked
 					
-                }
-				
-	
-	
+      }
     $scope.selected = 0;
 
     $scope.select= function(index) {
        $scope.selected = index; 
     };
-            
 
 });

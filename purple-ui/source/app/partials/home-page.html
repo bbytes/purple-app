@@ -14,13 +14,13 @@
 
 
 <!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar left-side" ng-init="usersstatusLoad()">
+<aside class="main-sidebar left-side" ng-init="loadStatusTimeline()">
 	<!-- sidebar: style can be found in sidebar.less -->
 	<section class="sidebar">
 
 	       
          	
-<div class="panel-group" id="accordion" ng-init="loadUsersProjects()">
+<div class="panel-group" id="accordion" ng-init="loadUserProjects()">
   <div class="panel panel-default">
     <div class="panel-heading project-active">
       <h4 class="panel-title">
@@ -32,7 +32,7 @@
     <div id="collapseOne" class="panel-collapse collapse in">
       <div class="panel-body">
         <ul class="list-group">
-           <li><a ng-click="usersstatusLoad()" >ALL</a></li>
+           <li><a ng-click="loadStatusTimeline()" >ALL</a></li>
 		   <li ng-repeat="project in userprojects" ng-click="select($index)" ng-class="{sel: $index == selected}" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)">{{project.projectName}}</a></li>
                        
           </ul>

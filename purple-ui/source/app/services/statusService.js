@@ -1,8 +1,5 @@
 /**
- * 
- */
-/**
- * 
+ * Status Service
  */
 
 rootApp.service('statusService', function($rootScope, $http, $q, $window) {
@@ -56,15 +53,15 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 
 		return deferred.promise;
 	};
-	
+
 	this.deleteUser = function(email) {
 
 		var deferred = $q.defer();
 
 		$http({
-			method :'DELETE',
-			url : $rootScope.baseUrl + '/api/v1/admin/user/delete/' +email,
-			//data : admin,
+			method : 'DELETE',
+			url : $rootScope.baseUrl + '/api/v1/admin/user/delete/' + email,
+			// data : admin,
 			headers : {
 				'Content-Type' : 'application/json',
 
@@ -84,7 +81,7 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 
 	};
-	
+
 	this.getAllStatus = function() {
 
 		var deferred = $q.defer();
@@ -106,16 +103,15 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 
 		return deferred.promise;
 	};
-	
-	
+
 	this.deleteStatus = function(id) {
 
 		var deferred = $q.defer();
 
 		$http({
-			method :'DELETE',
-			url : $rootScope.baseUrl + 'api/v1/status/' +id,
-			//data : admin,
+			method : 'DELETE',
+			url : $rootScope.baseUrl + 'api/v1/status/' + id,
+			// data : admin,
 			headers : {
 				'Content-Type' : 'application/json',
 
@@ -135,15 +131,15 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 
 	};
-	
+
 	this.getStatusWithId = function(id) {
 
 		var deferred = $q.defer();
 
 		$http({
-			method :'GET',
-			url : $rootScope.baseUrl + 'api/v1/status/' +id,
-			//data : admin,
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/status/' + id,
+			// data : admin,
 			headers : {
 				'Content-Type' : 'application/json',
 
@@ -163,14 +159,14 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 
 	};
-	
-	this.updateStatus = function(data,id) {
+
+	this.updateStatus = function(data, id) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'PUT',
-			url : $rootScope.baseUrl + 'api/v1/status/update/'+id,
+			url : $rootScope.baseUrl + 'api/v1/status/update/' + id,
 			data : data,
 			headers : {
 				'Content-Type' : 'application/json',
@@ -191,16 +187,15 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 
 	};
-	
-	
+
 	this.getAllTimelineStatus = function(updateData) {
-		 
+
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
 			url : $rootScope.baseUrl + 'api/v1/status/project/user',
-			data:updateData,
+			data : updateData,
 			headers : {
 				'Content-Type' : 'application/json'
 			}
