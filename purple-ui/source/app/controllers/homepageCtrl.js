@@ -73,10 +73,18 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
       */
      $scope.loadUserProjects = function(){
      	projectService.getUserproject().then(function (response) {
+     			var	projectIds = [];
              if (response.success) {
-            
                  $scope.userprojects   =  response.data.gridData;
+                 angular.forEach(response.data.gridData, function(value, key) {
+                	 projectIds.push(value.projectId);
+                     });
              }
+     		 projectService.getprojectsUsers(projectIds).then(function (response) {
+     	            if (response.success) {
+     	            	$scope.projectUsers = response.data.gridData;
+     	            }
+     	            });
          });
      }
     /**
@@ -124,6 +132,7 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 	 * Load status timeline by project
 	 */
 	 $scope.loadProjectMap = function(projectId){
+		 
 		 commentService.getProjectMap(projectId).then(function (response) {
             if (response.success) {
 				$scope.projectUsers = response.data.gridData[0].userList;
@@ -148,6 +157,8 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
             }
         });
     }
+	 
+	 
 	 /**
 	  * Load status timeline by user
 	  */
