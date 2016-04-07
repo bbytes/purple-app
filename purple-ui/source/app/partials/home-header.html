@@ -14,13 +14,10 @@
 			</a>
 		</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse"
-			id="bs-example-navbar-collapse-1">
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="navCtrl">
 			<ul class="nav navbar-nav">
-				<li ng-class="{active:isActive('status')}"><a href="status"><img
-						src="../../assets/img/ic_compose.svg"></a></li>
-				<li ng-class="{active:isActive('home-page')}"><a href="home-page"><img
-						src="../../assets/img/ic_timeline.svg"> </a></li>
+				<li ng-class="{ active: isActive('/status') }"><a href="status"><img src="../../assets/img/ic_compose.svg"></a></li>
+				<li ng-class="{ active: isActive('/home-page') }"><a href="home-page"><img src="../../assets/img/ic_timeline.svg"> </a></li>
 
 				<li class="dropdown"><a class="btn dropdown-toggle"
 					data-toggle="dropdown" href="#"><img

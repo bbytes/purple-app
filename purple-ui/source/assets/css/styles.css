@@ -1275,6 +1275,7 @@ ul.timeline > li:nth-child(odd) {
     color: #fff !important;
     font-weight: bold;
     padding: 1px;
+	width:100%;
 }
 
 .ng-pageslide {
@@ -1320,4 +1321,27 @@ ul.timeline > li:nth-child(odd) {
 .panel-heading .accordion-toggle.collapsed:after {
     /* symbol for "collapsed" panels */
     content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+}
+
+
+/*add user scroll*/
+.comment-box {
+  width: 100%;
+  height: 25em;
+  overflow: auto;
+ 
+}
+.comment-box-content,
+.comment-box:hover {
+  visibility: visible;
+}
+
+.scrollbox_delayed {
+  transition: visibility 0.2s;
+}
+.scrollbox_delayed:hover {
+  transition: visibility 0s 0.2s;
+}
+.active{
+	background:red !important;
 }

@@ -80,7 +80,9 @@
 		
 		
         <!-- /#sidebar-wrapper -->
+
                 <div pageslide ps-open="checked" ps-speed="1">
+                <div pageslide ps-open="checked" ps-speed="1" class="panel-slide">
                     <div style="padding:20px" id="demo-right">
                         
                         <a ng-click="toggle()" data-toggle="offcanvas" class="button" style="float:right;">X</a>
@@ -122,8 +124,13 @@
               </form>
 			</div>
                 <hr />
+				
+				
            <!---reaply---->
+		    <div class="comment-box">
+			   <div class="comment-box--content">
             <div class="sidebar-nav" ng-repeat="comment in allcomments">
+			 
                <small> <ng-letter-avatar data="{{userName}}"
 						shape="round"></ng-letter-avatar>
 				</small>
@@ -162,6 +169,8 @@
               </div>
 			</div>
 			</div>
+			</div>
+
           </div>
        </div>
          <!---end--->

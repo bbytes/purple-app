@@ -35,6 +35,8 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
          $scope.usersstatusLoad();
      };
      
+	 
+
 	
 	 //post comment
 	 $scope.formData = {};

@@ -258,6 +258,8 @@ rootApp.config([
 
 			// $httpProvider.defaults.headers.common['Access-Control-Allow-Origin']
 			// = '*';
+			
+			
 		} ]);
 		
 		
