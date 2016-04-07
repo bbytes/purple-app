@@ -58,13 +58,13 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 	
 	
 	//reaply
-	this.postReply = function(replyPost, statusId) {
+	this.postReply = function(replyPost, commentId) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/comment/' +statusId +'/reply',
+			url : $rootScope.baseUrl + 'api/v1/comment/' +commentId +'/reply',
 			data : replyPost,
 			headers : {
 				'Content-Type' : 'application/json',
@@ -88,13 +88,13 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 	
 	//get comment to reply
 	
-	this.getReplies = function() {
+	this.getReplies = function(commentId) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'GET',
-			url : $rootScope.baseUrl + 'api/v1/comment/' + statusId + '/reply/all',
+			url : $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply/all',
 			headers : {
 				'Content-Type' : 'application/json'
 			}

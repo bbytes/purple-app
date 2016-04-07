@@ -88,30 +88,28 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
      //get comments
 	 $scope.openCommentSideBar = function(selectedStatusId){
 		 $scope.selectedStatusId = selectedStatusId;
+		 
+		 statusService.getStatusWithId(selectedStatusId).then(function (response) {
+            if (response.success) {
+            	console.log(response);
+                $scope.statusDate   =  response.data.gridData[0].date;
+                $scope.statusList   =  response.data.gridData[0].statusList;
+            }
+        });
+		 
     	commentService.getComment(selectedStatusId).then(function (response) {
             if (response.success) {
-            	if (response) {
-					$scope.commentcount = response.data.length;
-				}
-            	$scope.commentsCount = response.data.gridData.commentCount;
             	$scope.commentCount = response.data.comment_count;
-//            	 repeatSelect: null,
                 $scope.allcomments   =  response.data.gridData;
             }
         });
     }
 	
 	 //get replies
-	 $scope.loadReply = function(statusId){
-		 commentService.getReplies(statusId).then(function (response) {
+	 $scope.loadReply = function(commentId){
+		 commentService.getReplies(commentId).then(function (response) {
 			 $scope.commentId = commentId;
             if (response.success) {
-            	if (response) {
-					$scope.replycount = response.data.length;
-				}
-            	$scope.repliesCount = response.data.gridData.repliesCount;
-            	$scope.replyCount = response.data.reply_count;
-//            	 /repeatSelect: null,
                 $scope.allreplies   =  response.data.gridData;
             }
         });

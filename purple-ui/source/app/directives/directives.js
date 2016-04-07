@@ -91,7 +91,7 @@ pageslideDirective.directive('pageslide', [
                 var param = {};
                 param.side = attrs.pageslide || 'right';
                 param.speed = attrs.psSpeed || '0.5';
-                param.size = attrs.psSize || '50%';
+                param.size = attrs.psSize || '60%';
                 param.className = attrs.psClass || 'ng-pageslide';
 
                 /* DOM manipulation */

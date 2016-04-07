@@ -80,10 +80,32 @@
 		
 		
         <!-- /#sidebar-wrapper -->
-                <div pageslide ps-open="checked" ps-speed="2">
+                <div pageslide ps-open="checked" ps-speed="1">
                     <div style="padding:20px" id="demo-right">
                         
                         <a ng-click="toggle()" data-toggle="offcanvas" class="button" style="float:right;">X</a>
+						
+			  <div class="col-md-5">
+			     <div class="left-panel" ng-repeat = "status in statusList">
+			     # {{status.projectName}} @ {{status.userName}}
+			     {{status.hours}} hrs 
+			        <div class="timeline-body worked-on" >
+									 <h3>worked on</h3>
+										<p>{{status.workedOn}}</p>
+		                           </div>
+
+                                   <div class="timeline-body working-on">
+									  <h3>working on</h3>
+									   <p>{{status.workingOn}}</p>
+								   </div>
+
+                                   <div class="timeline-body blocker-on">
+									  <h3>blockers</h3>
+									  <p>{{status.blockers}}</p>
+								   </div>
+			     </div>
+			  </div>
+			    <div class="col-md-7">
 						
 						<div class="sidebar-nav">
 			  <form name="myForm">
@@ -114,11 +136,11 @@
 				
 				<!---replied--->
 				 <div class="user-label">
-					<a href="#" ng-click="showreplyDetails = ! showreplyDetails">{{replyCount}} <img src="../../assets/img/reply.png" style="width: 20px;" title="Replied"></a>
+					<a href="#" ng-click="showreplyDetails = ! showreplyDetails; loadReply(comment.commentId)">{{comment.replyCount}} <img src="../../assets/img/reply.png" style="width: 20px;" title="Replied"></a>
 					 <div class="procedure-details" ng-show="showreplyDetails">
 					    <div class="user-label" ng-repeat="reply in allreplies">
-                   <h4>{{userName}}</h4>
-                    <p class="comment"><b>@Username </b>{{reply.replyDesc}}</p>
+                   <h4>{{reply.userName}}</h4>
+                    <p class="comment">{{reply.replyDesc}}</p>
                 </div>
 					 </div>
                 </div>
@@ -138,6 +160,7 @@
               </form>
 			  
               </div>
+			</div>
 			</div>
           </div>
        </div>
