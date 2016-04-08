@@ -76,6 +76,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 				appNotifyService.success('Status has been deleted.');
 			}
 			$scope.allstatus.splice($index, 1);
+			$scope.usersstatusLoad();
 		});
 	}
 	/*Update */
