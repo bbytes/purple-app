@@ -16,6 +16,10 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
          	        $scope.artists.push(value);
          	    });
                  $scope.allstatus   =  response.data.gridData;
+                 $scope.isActive = true;
+                 $scope.isProject = false;
+                 $scope.isUser = false;
+                
              }
          });
      }
@@ -82,7 +86,6 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
             	$scope.commentCount = response.data.comment_count;
 //            	 repeatSelect: null,
                 $scope.allcomments   =  response.data.gridData;
-				console.log(response.data.gridData)
             }
         });
     }
@@ -103,8 +106,8 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
     }
 	
 	 //get map
-	 $scope.loadProjectMap = function(projectId,userName){
-		 commentService.getProjectMap(projectId,userName).then(function (response) {
+	 $scope.loadProjectMap = function(projectId){
+		 commentService.getProjectMap(projectId).then(function (response) {
             if (response.success) {
 				$scope.projectUsers = response.data.gridData[0].userList;
 				$scope.projectName = response.data.gridData[0].projectName
@@ -113,24 +116,42 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 
                     statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
                      if (response.success) {
+        
                       $scope.artists = [];
                       angular.forEach(response.data.gridData, function(value, key) {
                       $scope.artists.push(value);
                       });
                       $scope.allstatus   =  response.data.gridData;
+                      
+                      $scope.selected = $scope.allstatus[0].statusList[0];
+                      $scope.isProject = true;
+                      $scope.isActive = false;
+                      $scope.isUser = false;
                      }
                   });
-				
-            	if (response) {
-					$scope.replyprojectcount = response.data.length;
-				}
-            	$scope.repliesprojectsCount = response.data.gridData.repliesprojectsCount;
-            	$scope.replyprojectCount = response.data.replyproject_count;
-//            	 /repeatSelect: null,
-                $scope.allrepliesprojects   =  response.data.gridData;
             }
         });
     }
-	
+	 
+	 $scope.loadUserMap = function(email){
+		 		$scope.updateData.projectList = [];
+				$scope.updateData.userList = [email];
+
+                    statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
+                     if (response.success) {
+        
+                      $scope.artists = [];
+                      angular.forEach(response.data.gridData, function(value, key) {
+                      $scope.artists.push(value);
+                      });
+                      $scope.allstatus   =  response.data.gridData;
+                      $scope.selected = $scope.allstatus[0].statusList[0];
+                      $scope.isUser = true;
+                      $scope.isProject = false;
+                      $scope.isActive = false;
+                     }
+                  });
+				
+    }
 	 
 });

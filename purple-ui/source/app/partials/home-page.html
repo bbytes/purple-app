@@ -32,7 +32,7 @@
     <div id="collapseOne" class="panel-collapse collapse in">
       <div class="panel-body">
         <ul class="list-group">
-           <li><a ng-click="getAllTimelineStatus(project.projectList)" >ALL</a></li>
+           <li><a ng-click="usersstatusLoad()" >ALL</a></li>
            <li  role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)">{{project.projectName}}</a></li>
                        
           </ul>
@@ -51,8 +51,7 @@
     <div id="collapseTwo" class="panel-collapse collapse in">
       <div class="panel-body">
          <ul class="list-group"  ng-repeat="users in projectUsers">
-            <li><a ng-click="loadProjectMap(users.userName)">{{users.userName}}</a></li>
-        </ul>
+            <li><a ng-click="loadUserMap(users.email)">{{users.userName}}</a></li>
       </div>
     </div>
   </div>
@@ -146,7 +145,10 @@
                 <div class="wrapper">
                      <div class="top-header">
 						<!--  <span class="project"><span class="hash"># </span>{{status.projectName}}</span> -->
-						 <span class="username"><span class="hash">@ </span>{{userName}}</span>
+						
+					<span ng-if="isActive == true" class="username" ><span class="hash" ># </span>All Projects</span> 
+					<span ng-if="isProject == true" class="username" ><span class="hash" ># </span>{{selected.projectName}}</span> 
+					<span ng-if="isUser == true" class="username" ><span class="hash" >@ </span>{{selected.userName}}</span> 
 					 </div>
 					 
 					 <!---timeline---->
@@ -159,14 +161,23 @@
                              <div class="timeline-badge"></div>
                                <div class="timeline-panel">
             
-                                 <div class="edit-left-side">
-								  <a data-target="" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle" ng-click="loadComment(status.statusId)"><img src="../../assets/img/comment.svg"></a>
+                                 <div >
+								  <a class="edit-left-side" data-target="#menu-toggle" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="menu-toggle" ng-click="loadComment(status.statusId)"><img src="../../assets/img/comment.svg"></a>
 								 
 								 </div>
 
                                   <div class="timeline-heading">
-                                     <h4><span class="hash"># </span> {{status.projectName}} 
-									<!-- <span class="hash">@ </span> {{status.userName}}</h4> --> 
+                                  
+                                     <h4 ng-show="{{isActive}}"><span class="hash"># </span> {{status.projectName}} <span class="hash">@ </span> {{status.userName}}
+                                     <span  style="float:right"> {{status.time}}</span>
+									</h4>
+                                     <h4 ng-show="{{isProject}}"><span class="hash">@ </span> {{status.userName}}
+                                     <span  style="float:right"> {{status.time}}</span>
+									</h4>
+                                     <h4 ng-show="{{isUser}}"><span class="hash"># </span> {{status.projectName}}
+                                     <span  style="float:right"> {{status.time}}</span>
+									</h4>
+									<p>{{status.hours}}hrs</p> 
                                    </div>
 								   
                                   <div class="timeline-body worked-on">

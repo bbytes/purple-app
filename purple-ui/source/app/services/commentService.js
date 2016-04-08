@@ -111,7 +111,7 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 	};
 	
 	
-	this.getProjectMap = function(projectId,userName) {
+	this.getProjectMap = function(projectId) {
 
 		var deferred = $q.defer();
 
