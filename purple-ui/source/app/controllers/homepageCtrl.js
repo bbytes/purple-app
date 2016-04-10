@@ -30,14 +30,12 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
              }
          });
      }
+
      
      $scope.initStatus = function() {
          $scope.usersstatusLoad();
      };
-     
 	 
-
-	
 	 //post comment
 	 $scope.formData = {};
      $scope.addComment = function(statusId) {
@@ -52,11 +50,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 				$scope.message = 'Commented Successfully';
 				$scope.formData.commentDesc = '';
 			 }
-			 
+			 $scope.getAllComments(statusId); 
 		 });
 		  
-		 //$scope.commentDesc = !$scope.commentDesc;
-		 //$scope.commentDesc = '';
 	 }
 	 
 	 //post comment reply
@@ -70,8 +66,8 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 				 $scope.message = "Reply failed";
 			 }
 		 });
-		 //$scope.commentDesc = !$scope.commentDesc;
 		 $scope.replyComment = '';
+		 $scope.loadReply(commentId);
 	 }
    
      /* Method to get Loggedin user projects for status*/
@@ -83,10 +79,6 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
              }
          });
      }
-    $scope.initUserProjects = function() {
-         $scope.loadUsersProjects();
-     };
-     
      //get comments
 	 $scope.openCommentSideBar = function(selectedStatusId){
 		 $scope.selectedStatusId = selectedStatusId;
@@ -99,13 +91,18 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
             }
         });
 		 
-    	commentService.getComment(selectedStatusId).then(function (response) {
-            if (response.success) {
-            	$scope.commentCount = response.data.comment_count;
-                $scope.allcomments   =  response.data.gridData;
-            }
-        });
+		 $scope.getAllComments(selectedStatusId);
     }
+	 
+	 $scope.getAllComments = function (selectedStatusId){
+		 commentService.getComment(selectedStatusId).then(function (response) {
+	            if (response.success) {
+	            	$scope.commentCount = response.data.comment_count;
+	                $scope.allcomments   =  response.data.gridData;
+	            }
+	        });
+		 
+	 }
 	
 	 //get replies
 	 $scope.loadReply = function(commentId){
@@ -123,7 +120,6 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
             if (response.success) {
 				$scope.projectUsers = response.data.gridData[0].userList;
 				$scope.projectName = response.data.gridData[0].projectName
-				//$scope.artists = response.data.gridData
 				$scope.updateData.projectList = [response.data.gridData[0].projectId];
 
                     statusService.getAllTimelineStatus($scope.updateData).then(function (response) {

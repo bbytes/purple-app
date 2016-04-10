@@ -19,7 +19,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionSt
         	 if (response.success = true) {
         		// $scope.loadUsers();
         		 $scope.status = '';
-        		 $window.location.reload();
+        		 $scope.usersstatusLoad();
         		// $scope.artists.push(value,1);
           		
             } else {
@@ -31,7 +31,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionSt
             //Login failed. Showing error notification
             appNotifyService.error(error.msg, 'Invite unsuccesfull.');
         });
-        
+      
     };
     
     $scope.usersstatusLoad = function(){
@@ -48,10 +48,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,$sessionSt
             }
         });
     }
-    
-   
-    
-    $scope.initStatus = function() {
+   $scope.initStatus = function() {
         $scope.usersstatusLoad();
     };
     
