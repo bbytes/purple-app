@@ -38,20 +38,6 @@
       </div>
   
 
-  <div class="panel panel-default">
-    <div class="panel-heading project-active">
-      <h4 class="panel-title">
-        <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseTwo">
-          <i class="fa fa-user"></i> <span>USERS</span>
-        </a>
-      </h4>
-    </div>
-    <div id="collapseTwo" class="panel-collapse collapse in">
-      <div class="panel-body">
-         <ul class="list-group"  ng-repeat="users in projectUsers | orderBy:'userName'">
-            <li><a ng-click="loadUserMap(users.email)">{{users.userName}}</a></li>
-        </ul>
-
       <div class="panel panel-default">
          <div class="panel-heading project-active">
             <h4 class="panel-title">
