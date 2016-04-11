@@ -27,15 +27,9 @@
 				<div class="timeline-badge"></div>
 				<div class="timeline-panel">
 					<div class="edit">
-						<a href="#" ng-click="showUpdatePage(status.statusId)"
-							class="navbar-toggle collapse in icon-menu"
-							data-toggle="collapse" id="menu-toggle-2"><img
-							src="../../assets/img/edit.svg"></a> <a href="#"
-							ng-click="deleteStatus(status.statusId,$index)"
-							ng-confirm-click="Are you sure want to delete??"
-							class="navbar-toggle collapse in icon-menu"
-							data-toggle="collapse" id="menu-toggle-2"><img
-							src="../../assets/img/delete.svg"></a>
+						<a href="#" ng-click="showUpdatePage(status.statusId)" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a> 
+						
+						<a href="#" ng-click="deleteStatus(status.statusId,$index)" confirm="Are you sure want to delete??" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
 					</div>
 
 					<div class="timeline-heading">
@@ -78,15 +72,13 @@
 			<div class="col-md-9" ng-controller="projectCtrl"
 				ng-init="initUserProjects()">
 				<div class="form-sidebar">
+				
 					<div class="form-group">
-						<select class="form-control" name="project"
-							ng-model="$parent.status.projectId" required>
-							<option ng-repeat="project in userprojects"
-								value="{{project.projectId}}">{{project.projectName}}</option>
-
-
-						</select> <span style="color: red" ng-show="myForm.project.$error.required"></span>
+						<select class="form-control" name="project" ng-model="$parent.status.projectId" required>
+							<option ng-repeat="project in userprojects" value="{{project.projectId}}">{{project.projectName}}</option>
+						</select> <span style="color: red" ng-show="myForm.project.$error.required"></span>						
 					</div>
+					
 				</div>
 			</div>
 

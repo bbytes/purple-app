@@ -70,7 +70,6 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 	}
 
 	$scope.deleteStatus = function(id, $index) {
-
 		statusService.deleteStatus(id).then(function(response) {
 			if (response.success = true) {
 				appNotifyService.success('Status has been deleted.');
@@ -100,6 +99,8 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		});
 
 	}
+	
+	//ends
 
 	$scope.updateStatus = function(id, newsatus) {
 

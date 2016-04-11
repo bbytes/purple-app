@@ -1,7 +1,7 @@
 // Define Angular Module with dependencies 
 var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
 		'ngAnimate', 'templates-main', 'toaster', 'ngStorage', 'angular-md5',
-		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav','pageslide-directive']);
+		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav','pageslide-directive','ngMaterial','angular-confirm']);
 
 // Defining global variables
 rootApp.run([

@@ -15,31 +15,29 @@
 
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar left-side" ng-init="loadStatusTimeline()">
-	<!-- sidebar: style can be found in sidebar.less -->
-	<section class="sidebar">
+  <section class="sidebar">
+     <div class="panel-group" id="accordion" ng-init="loadUserProjects()">
+       <div class="panel panel-default">
+         <div class="panel-heading project-active">
+           <h4 class="panel-title">
+            <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseOne">
+             <i class="fa fa-inbox"></i>
+             <span>PROJECTS</span></a>
+           </h4>
+         </div>
+		 
+       <div id="collapseOne" class="panel-collapse collapse in">
+         <div class="panel-body">
+           <ul class="list-group">
+              <li class="sel"><a ng-click="loadStatusTimeline()" >ALL</a></li>
+		      <li role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)" >{{project.projectName}}</a></li>        
+            </ul>
+          </div>
+       </div>
 
-	       
-         	
-<div class="panel-group" id="accordion" ng-init="loadUserProjects()">
-  <div class="panel panel-default">
-    <div class="panel-heading project-active">
-      <h4 class="panel-title">
-        <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseOne">
-          <i class="fa fa-inbox"></i>
-          <span>PROJECTS</span></a>
-      </h4>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse in">
-      <div class="panel-body">
-        <ul class="list-group">
-           <li><a ng-click="loadStatusTimeline();loadUserProjects() " >ALL</a></li>
-		   <li ng-repeat="project in userprojects | orderBy:'projectName'" ng-click="select($index)" ng-class="{sel: $index == selected}" role="menu" aria-labelledby="dropdownMenu"><a ng-click="loadProjectMap(project.projectId)">{{project.projectName}}</a></li>
-                       
-          </ul>
       </div>
-    </div>
-  </div>
   
+
   <div class="panel panel-default">
     <div class="panel-heading project-active">
       <h4 class="panel-title">
@@ -53,42 +51,50 @@
          <ul class="list-group"  ng-repeat="users in projectUsers | orderBy:'userName'">
             <li><a ng-click="loadUserMap(users.email)">{{users.userName}}</a></li>
         </ul>
-      </div>
-    </div>
-  </div>
- 
-</div>
-		<!-- Sidebar Menu -->
-		
-		<!-- /.sidebar-menu -->
-	</section>
-	<!-- /.sidebar -->
-</aside>
 
-	<div id="wrapper" class="toggled">
+      <div class="panel panel-default">
+         <div class="panel-heading project-active">
+            <h4 class="panel-title">
+              <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseTwo">
+               <i class="fa fa-user"></i> <span>USERS</span>
+              </a>
+            </h4>
+          </div>
+      <div id="collapseTwo" class="panel-collapse collapse in">
+         <div class="panel-body">
+            <ul class="list-group"  ng-repeat="users in projectUsers">
+              <li><a ng-click="loadUserMap(users.email)">{{users.userName}}</a></li>
+            </ul>
+          </div>
+
+      </div>
+     </div>
+  </div>
+ </section>
+</aside>
+	<!-- /.sidebar ends -->
+	
+    <div id="page-content-wrapper">
+     <div class="container-fluid">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+         <!-- Main content -->
+        <div class="content">
 		
-      <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-         <div class="sidebar-wrapper-scroll">
-          <div class="scroll-box">
-            <!---slide right side--->
-			  
-			<!----ends---->     
-         </div>
-        </div>
-        </div>
 		
-		
-        <!-- /#sidebar-wrapper -->
+        <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="left"> 
+         
+         <md-content layout-padding=""> 
                
-                <div pageslide ps-open="checked" ps-speed="1">
-                    <div style="padding:20px" id="demo-right">
-                        
-                        <a ng-click="toggle()" data-toggle="offcanvas" class="button" style="float:right;">X</a>
-			  <div class="col-md-5">
+			   <div class="col-md-5">
 			     <div class="left-panel" ng-repeat = "status in statusList">
-			     # {{status.projectName}} @ {{status.userName}}
-			     {{status.hours}} hrs 
+				 <div class="header-title">
+				      <small> 
+				         <ng-letter-avatar data="{{userName}}" shape="round"></ng-letter-avatar>
+				      </small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			             <h4># {{status.projectName}} @ {{status.userName}}</h4>
+			             <p style="margin-left:60px; font-weight: 600; color: #bcbcbc; font-size: 13px;">{{status.hours}} hrs </p>
+				 </div>
 			        <div class="timeline-body worked-on" >
 									 <h3>worked on</h3>
 										<p>{{status.workedOn}}</p>
@@ -105,8 +111,10 @@
 								   </div>
 			     </div>
 			  </div>
-			    <div class="col-md-7">
-						
+			    <div class="col-md-7 comment-side">
+						  <md-button class="md-icon-button" aria-label="Close Side Panel" ng-click="closeSideNavPanel()"> 
+           <md-tooltip>Close Side Panel</md-tooltip> 
+           <md-icon class="md-default-theme" class="material-icons">X</md-icon> </md-button>
 						<div class="sidebar-nav">
 			  <form name="myForm">
                 <div class="form-group">
@@ -127,7 +135,7 @@
            <!---reaply---->
 		    <div class="comment-box">
 			   <div class="comment-box--content">
-            <div class="sidebar-nav" ng-repeat="comment in allcomments">
+            <div class="sidebar-nav comment-list-group" ng-repeat="comment in allcomments">
 			 
                <small> <ng-letter-avatar data="{{userName}}"
 						shape="round"></ng-letter-avatar>
@@ -141,48 +149,48 @@
 				
 				<!---replied--->
 				 <div class="user-label">
-					<a href="#" ng-click="showreplyDetails = ! showreplyDetails; loadReply(comment.commentId)">{{comment.replyCount}} <img src="../../assets/img/reply.png" style="width: 20px;" title="Replied"></a>
+				 
+				  <div class="comment-link">
+					<a href="#" ng-click="showreplyDetails = ! showreplyDetails; loadReply(comment.commentId)">{{comment.replyCount}} Replies</a>
+					
+					<h4 class="reaply"><a href="#" ng-click="showDetails = ! showDetails"><img src="../../assets/img/reply.png" style="width: 20px;" title="Replied"></a></h4>
+					</div>
+					
 					 <div class="procedure-details" ng-show="showreplyDetails">
 					    <div class="user-label" ng-repeat="reply in allreplies">
                    <h4>{{reply.userName}}</h4>
                     <p class="comment">{{reply.replyDesc}}</p>
                 </div>
 					 </div>
-                </div>
-				<!---reply--->
-                 <h4 class="reaply" ><a href="#" ng-click="showDetails = ! showDetails">Reply</a></h4>
-				 
-				 <div class="procedure-details" ng-show="showDetails">
+					 
+					  <div class="procedure-details" ng-show="showDetails">
                    <form name="myForm">
 				   
                 <div class="form-group">
 				<input type="hidden" ng-model= "commentId"/>
-                  <label for="comment">Reply Comment:</label>
-                    <textarea class="form-control" id="text" name="text" rows="5" id="replyDesc" ng-model="replyObj.replyDesc" required></textarea>
+                  <label for="comment">Reply Comment: <span><a href="#" ng-click="showDetails = ! showDetails" style="float:right;">close</a></span></label>
+                    <textarea class="form-control" id="text" name="text" rows="5" id="replyDesc" ng-model="replyObj.replyDesc" requiredclear-input></textarea>
                     <h6 class="pull-right" id="count_message">
                   </div>
                  <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "postReply(replyObj, comment.commentId)" ng-disabled="myForm.$invalid">REPLY</button>
               </form>
 			  
               </div>
+                </div>
+				<!---reply--->
+				
 			</div>
 			</div>
 			</div>
            </div>
-		   </div>
-          </div>
-       </div>
-         <!---end--->
-	</div>
-		
+			  
+          </md-content> 
+         </md-sidenav> 
 
-    <div id="page-content-wrapper">
-     <div class="container-fluid">
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-         <!-- Main content -->
-        <div class="content">
-		
+
+
+</div>
+
 		  
 		
          <!-- Page Content -->
@@ -207,7 +215,7 @@
            
 
                                  <div class="edit-left-side">
-								  <a data-toggle="offcanvas" role="button" ng-click="openCommentSideBar(status.statusId); toggle()"><img src="../../assets/img/comment.svg"></a>
+								  <a role="button" ng-click="openCommentSideBar(status.statusId); openSideNavPanel()"><img src="../../assets/img/comment.svg"></a>
 
 								 
 								 </div>
@@ -257,16 +265,6 @@
 
 
 <script>
-	$("#menu-toggle").click(function(e) {
-		e.preventDefault();
-		
-		$("#wrapper").toggleClass("toggled");
-	});
-	$("#menu-toggle1").click(function(e) {
-		e.preventDefault();
-		
-		$("#wrapper").toggleClass("toggled");
-	});
 
 	var text_max = 200;
 	$('#count_message').html(text_max + ' /200');

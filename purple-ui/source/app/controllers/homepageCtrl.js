@@ -1,7 +1,7 @@
 /**
  * Home page controller to load status timeline
  */
-rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, projectService,appNotifyService,$window,$location,statusService, commentService) {
+rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, $mdSidenav, projectService,appNotifyService,$window,$location,statusService, commentService) {
 	
 	 $scope.commentDesc = '';
     $scope.isActive = function(route) {
@@ -54,16 +54,20 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
 	 /**
 	  * post reply on comment
 	  */
+	  
 	 $scope.postReply = function(replyObj, commentId) {
 		console.log(commentId)
 		console.log($scope.commentId)
 		 commentService.postReply(replyObj, commentId).then(function (response) {
+			 console.log($scope);
 			 if(response.success){
+				replyObj.replyDesc = '';
 				$scope.message = 'Replied Successfully';
+				$scope.openCommentSideBar($scope.selectedStatusId)
 			 } else {
 				 $scope.message = "Reply failed";
 			 }
-		 });
+		 }.bind(this));
 		 $scope.replyComment = '';
 		 $scope.loadReply(commentId);
 	 }
@@ -194,4 +198,22 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, project
        $scope.selected = index; 
     };
 
+	$scope.showMobileMainHeader = true;
+	$scope.openSideNavPanel = function() {
+		$mdSidenav('left').open();
+	};
+	$scope.closeSideNavPanel = function() {
+		$mdSidenav('left').close();
+	};
+	
+	$scope.select= function(item) {
+        $scope.selected = item; 
+ };
+
+ $scope.isActive = function(item) {
+        return $scope.selected === item;
+ };
+ 
+ 
+	
 });

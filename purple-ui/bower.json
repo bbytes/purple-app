@@ -25,7 +25,9 @@
     "ng-scrollbars": "^0.0.10",
     "angular-sticky-navigation-directive": "ng-sticky#^0.0.7",
     "angular-snap": "^1.8.5",
-    "pageslide": "*"
+    "pageslide": "*",
+    "angular-aside": "^1.3.2",
+    "angular-material": "^1.0.7"
   },
   "devDependencies": {},
   "resolutions": {
