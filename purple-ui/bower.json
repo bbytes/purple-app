@@ -27,5 +27,9 @@
     "angular-snap": "^1.8.5",
     "pageslide": "*"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "resolutions": {
+    "angular": "^1.5.0",
+    "fullcalendar": "^2.6.1"
+  }
 }
