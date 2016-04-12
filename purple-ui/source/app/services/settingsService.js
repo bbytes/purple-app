@@ -4,14 +4,14 @@
 
 rootApp.service('settingsService', function($rootScope, $http, $q, $window) {
 
-	this.updatePassword = function(password,newpassword) {
+	this.updatePassword = function(newpassword) {
 
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
 			url : $rootScope.baseUrl + 'api/v1/user/setting/password',
-			data : password,newpassword,
+			data:newpassword,
 			headers : {
 				'Content-Type' : 'application/json',
 

@@ -47,11 +47,21 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v0.10.36</nodeVersion>
-							<npmVersion>2.4.1</npmVersion>
+							<nodeVersion>v5.6.0</nodeVersion>
+							<npmVersion>3.6.0</npmVersion>
 						</configuration>
 					</execution>
 
+					<execution>
+						<id>install grunt-cli and bower</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments> install grunt-cli bower</arguments>
+						</configuration>
+					</execution>
+					
 					<execution>
 						<id>npm install</id>
 						<goals>
@@ -78,7 +88,7 @@
 							<goal>grunt</goal>
 						</goals>
 						<configuration>
-							<arguments>build</arguments>
+							<arguments>prod</arguments>
 						</configuration>
 					</execution>
 
