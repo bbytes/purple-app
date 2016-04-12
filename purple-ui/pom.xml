@@ -14,7 +14,6 @@
 	<description>The frontend angular js ui for purple app</description>
 
 	<build>
-		<finalName>${artifact.name}</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/javascript</directory>
@@ -23,7 +22,6 @@
 		</resources>
 
 		<plugins>
-
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>

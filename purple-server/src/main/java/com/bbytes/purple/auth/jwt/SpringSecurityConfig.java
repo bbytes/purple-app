@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,10 +25,10 @@ import com.bbytes.purple.service.UserService;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private AuthUserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
@@ -39,6 +40,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private TenantResolverService tenantResolverService;
+
+	@Override
+	public void configure(WebSecurity webSecurity) throws Exception {
+		webSecurity.ignoring()
+				// All of Spring Security will ignore the requests
+				.antMatchers("/").antMatchers("/index.html").antMatchers("/resources/**").antMatchers("/assets/**").antMatchers("/favicon.ico")
+				.antMatchers("/**/*.html").antMatchers("/resources/**").antMatchers("/**/*.css")
+				.antMatchers("/**/*.js");
+	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -54,9 +64,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.exceptionHandling().and().servletApi().and().authorizeRequests()
 
-				// Allow anonymous resource requests
-				.antMatchers("/").permitAll().antMatchers("/favicon.ico").permitAll().antMatchers("/**/*.html")
-				.permitAll().antMatchers("/**/*.css").permitAll().antMatchers("/**/*.js").permitAll()
+//				// Allow anonymous resource requests
+//				.antMatchers("/").permitAll().antMatchers("/index.html").permitAll().antMatchers("/favicon.ico")
+//				.permitAll().antMatchers("/**/*.html").permitAll().antMatchers("/**/*.css").permitAll()
+//				.antMatchers("/**/*.js").permitAll()
 
 				// Allow logins urls
 				.antMatchers("/auth/**").permitAll()
@@ -66,11 +77,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				// Custom Token based authentication based on the header
 				// previously given to the client
-
 				.addFilterAfter(new StatelessAuthenticationFilter("/auth/**", tokenAuthenticationProvider),
 						UsernamePasswordAuthenticationFilter.class)
-				.addFilterBefore(new StatelessLoginFilter("/auth/login", userService, dataModelToDTOConversionService, tokenAuthenticationProvider, userDetailsService,
-						tenantResolverService, authenticationManager), StatelessAuthenticationFilter.class)
+				.addFilterBefore(new StatelessLoginFilter("/auth/login", userService, dataModelToDTOConversionService,
+						tokenAuthenticationProvider, userDetailsService, tenantResolverService, authenticationManager),
+						StatelessAuthenticationFilter.class)
 				.headers().cacheControl().and();
 
 	}
