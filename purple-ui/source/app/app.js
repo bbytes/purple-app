@@ -67,13 +67,13 @@ rootApp.config([
 			$urlRouterProvider.otherwise('/home');
 
 			$stateProvider.state('login', {
-				url : '/web/login',
+				url : '/login',
 				controller : 'loginCtrl',
 				templateUrl : 'app/partials/login.html'
 
 			}).state('home', {
 
-				url : '/web/home',
+				url : '/home',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home.html'
@@ -87,7 +87,7 @@ rootApp.config([
 					}
 				}
 			}).state('signup', {
-				url : '/web/signup',
+				url : '/signup',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/signup.html',
@@ -97,7 +97,7 @@ rootApp.config([
 				}
 			
 			}).state('home-page', {
-				url : '/web/home-page',
+				url : '/home-page',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home.html'
@@ -115,7 +115,7 @@ rootApp.config([
 					}
 				}
 			}).state('status', {
-				url : '/web/status',
+				url : '/status',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home.html'
@@ -139,7 +139,7 @@ rootApp.config([
 		                redirectTo: 'login'
 		            }
 			}).state('projects', {
-				url : '/web/projects',
+				url : '/projects',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home.html'
@@ -161,7 +161,7 @@ rootApp.config([
 	                redirectTo: 'login'
 	            }
 			}).state('settings', {
-				url : '/web/settings',
+				url : '/settings',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home.html'
@@ -183,7 +183,7 @@ rootApp.config([
 		                redirectTo: 'login'
 		            }
 			}).state('settings-user', {
-				url : '/web/settings-user',
+				url : '/settings-user',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home.html',
@@ -201,7 +201,7 @@ rootApp.config([
 					}
 				}
 			}).state('user-mgr', {
-				url : '/web/user-mgr',
+				url : '/user-mgr',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home.html',
@@ -245,11 +245,11 @@ rootApp.config([
 					}
 				}
 			}).state('activate', {
-				url : '/web/activateAccount?token',
+				url : '/activateAccount?token',
 				templateUrl : 'app/partials/activateAccount.html',
 				controller : 'activateAccountCtrl'
 			}).state('useractivate', {
-				url : '/web/activateUserAccount?token',
+				url : '/activateUserAccount?token',
 				templateUrl : 'app/partials/activateUserAccount.html',
 				controller : 'activateUserAccountCtrl'
 			}).state('accountactivate', {
