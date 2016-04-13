@@ -44,8 +44,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity webSecurity) throws Exception {
 		webSecurity.ignoring()
-				// All of Spring Security will ignore the requests
-				.antMatchers("/").antMatchers("/web/**").antMatchers("/index.html").antMatchers("/resources/**")
+				// All of Spring Security will ignore the requests. '/{[path:[^\\.]*}' is to avoid all the angualr internal urls 
+				.antMatchers("/").antMatchers("/{[path:[^\\.]*}").antMatchers("/resources/**")
 				.antMatchers("/assets/**").antMatchers("/favicon.ico").antMatchers("/**/*.html")
 				.antMatchers("/resources/**").antMatchers("/**/*.css").antMatchers("/**/*.js");
 	}
@@ -64,16 +64,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.exceptionHandling().and().servletApi().and().authorizeRequests()
 
-				// // Allow anonymous resource requests
-				// .antMatchers("/").permitAll().antMatchers("/index.html").permitAll().antMatchers("/favicon.ico")
-				// .permitAll().antMatchers("/**/*.html").permitAll().antMatchers("/**/*.css").permitAll()
-				// .antMatchers("/**/*.js").permitAll()
-
 				// Allow logins urls
 				.antMatchers("/auth/**").permitAll()
-
-				// All other request need to be authenticated
-				.anyRequest().authenticated().and()
+				.antMatchers("/api/**").authenticated().and()
 
 				// Custom Token based authentication based on the header
 				// previously given to the client
