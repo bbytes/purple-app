@@ -45,9 +45,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity webSecurity) throws Exception {
 		webSecurity.ignoring()
 				// All of Spring Security will ignore the requests
-				.antMatchers("/").antMatchers("/index.html").antMatchers("/resources/**").antMatchers("/assets/**").antMatchers("/favicon.ico")
-				.antMatchers("/**/*.html").antMatchers("/resources/**").antMatchers("/**/*.css")
-				.antMatchers("/**/*.js");
+				.antMatchers("/").antMatchers("/web/**").antMatchers("/index.html").antMatchers("/resources/**")
+				.antMatchers("/assets/**").antMatchers("/favicon.ico").antMatchers("/**/*.html")
+				.antMatchers("/resources/**").antMatchers("/**/*.css").antMatchers("/**/*.js");
 	}
 
 	@Override
@@ -64,10 +64,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.exceptionHandling().and().servletApi().and().authorizeRequests()
 
-//				// Allow anonymous resource requests
-//				.antMatchers("/").permitAll().antMatchers("/index.html").permitAll().antMatchers("/favicon.ico")
-//				.permitAll().antMatchers("/**/*.html").permitAll().antMatchers("/**/*.css").permitAll()
-//				.antMatchers("/**/*.js").permitAll()
+				// // Allow anonymous resource requests
+				// .antMatchers("/").permitAll().antMatchers("/index.html").permitAll().antMatchers("/favicon.ico")
+				// .permitAll().antMatchers("/**/*.html").permitAll().antMatchers("/**/*.css").permitAll()
+				// .antMatchers("/**/*.js").permitAll()
 
 				// Allow logins urls
 				.antMatchers("/auth/**").permitAll()
