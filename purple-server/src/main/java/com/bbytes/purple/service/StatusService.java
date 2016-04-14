@@ -114,21 +114,25 @@ public class StatusService extends AbstractService<Status, String> {
 		}
 	}
 
-	public Status updateStatus(String statusId, StatusDTO status, User user) throws PurpleException {
+	public Status updateStatus(String statusId, StatusDTO status) throws PurpleException {
 
-		Status updatedStatus = null;
+		Status newStatus = null;
 		if (!statusIdExist(statusId))
 			throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
 		try {
+			Project project = projectService.findByProjectName(status.getProjectName());
 			Status updateStatus = getStatusbyId(statusId);
 			updateStatus.setWorkedOn(status.getWorkedOn());
 			updateStatus.setWorkingOn(status.getWorkingOn());
 			updateStatus.setBlockers(status.getBlockers());
-			updatedStatus = statusRepository.save(updateStatus);
+			updateStatus.setHours(status.getHours());
+			updateStatus.setDateTime(new Date());
+			updateStatus.setProject(project);
+			newStatus = statusRepository.save(updateStatus);
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_PROJECT_FAILED);
 		}
-		return updatedStatus;
+		return newStatus;
 
 	}
 

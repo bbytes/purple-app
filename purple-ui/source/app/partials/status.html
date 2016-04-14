@@ -113,7 +113,6 @@
 							<option>12</option>
 
 						</select>
-
 					</div>
 				</div>
 			</div>
@@ -123,17 +122,12 @@
 			<label for="comment">WORKED ON</label>
 			<textarea class="form-control" rows="5" name="myName" id="comment"
 				ng-model="status.workedOn" required></textarea>
-			<span style="color: red"
-				ng-show="myForm.myName.$touched && myForm.myName.$invalid">This
-				field is required.</span>
 		</div>
 
 		<div class="form-group">
 			<label for="comment">WORKING ON</label>
 			<textarea class="form-control" rows="5" name="nextName" id="comment"
 				ng-model="status.workingOn" required></textarea>
-			<span style="color: red"
-				ng-show="myForm.nextName.$touched && myForm.nextName.$invalid"></span>
 		</div>
 
 		<div class="form-group">
@@ -148,7 +142,7 @@
 </div>
 <!-- Update -->
 <div ng-show="showeditpage == true">
-<div class="col-md-8" ng-init="initStatus()">
+<div class="col-md-8" ng-init="usersstatusLoad()">
 
 
 	<div class="wrapper" >
@@ -213,20 +207,17 @@
 </div>
 
 <section sticky-nav="ng-sticky-fixed">
-<form name="myForm">
-	<div class="col-md-4 side" ng-repeat="newsatus in allstatus">
+<form name="editForm" ng-submit="updateStatus()">
+	<div class="col-md-4 side">
 
 		<div class="row">
-			<div class="col-md-9">
+			<div class="col-md-9" >
 				<div class="form-sidebar">
 					<div class="form-group">
-						<select class="form-control" name="project"
-							ng-model="newsatus.projectName" value="{{newsatus.projectName}}" readonly required>
-							<option 
-								value="{{project.projectId}}">{{newsatus.projectName}}</option>
-
-
-						</select>
+						<select class="form-control" name="project" ng-model="project" 
+						ng-options="project.projectName as project.projectName for project in allprojects"
+						required>
+						</select> <span style="color: red" ng-show="myForm.project.$error.required"></span>		
 					</div>
 				</div>
 			</div>
@@ -234,36 +225,9 @@
 			<div class="col-md-3">
 				<div class="form-sidebar">
 					<div class="form-group">
-					
 						<select class="form-control turnintodropdown" name="time"
-							ng-model="newsatus.hours"  id="sel1" required>
-							<option>{{newsatus.hours}}</option>
-							<option>1</option>
-							<option>1.5</option>
-							<option>2</option>
-							<option>2.5</option>
-							<option>3</option>
-							<option>3.5</option>
-							<option>4</option>
-							<option>4.5</option>
-							<option>5</option>
-							<option>5.5</option>
-							<option>6</option>
-							<option>6.5</option>
-							<option>7</option>
-							<option>7.5</option>
-							<option>8</option>
-							<option>8.5</option>
-							<option>9</option>
-							<option>9.5</option>
-							<option>10</option>
-							<option>10.5</option>
-							<option>11</option>
-							<option>11.5</option>
-							<option>12</option>
-
+							ng-model="hours" ng-options="hours for hours in selectables" required>
 						</select>
-
 					</div>
 				</div>
 			</div>
@@ -272,27 +236,22 @@
 		<div class="form-group">
 			<label for="comment">WORKED ON</label>
 			<textarea class="form-control" rows="5" name="myName" id="comment"
-				ng-model="newsatus.workedOn" required></textarea>
-			<span style="color: red"
-				ng-show="myForm.myName.$touched && myForm.myName.$invalid">This
-				field is required.</span>
+				ng-model="workedOn" required></textarea>
 		</div>
 
 		<div class="form-group">
 			<label for="comment">WORKING ON</label>
 			<textarea class="form-control" rows="5" name="nextName" id="comment"
-				ng-model="newsatus.workingOn" required></textarea>
-			<span style="color: red"
-				ng-show="myForm.nextName.$touched && myForm.nextName.$invalid"></span>
+				ng-model="workingOn" required></textarea>
 		</div>
 
 		<div class="form-group">
 			<label for="comment">BLOCKERS</label>
 			<textarea class="form-control" rows="5" id="comment"
-				ng-model="newsatus.blockers" required></textarea>
+				ng-model="blockers" required></textarea>
 		</div>
-		<button type="button" class="btn btn-default submit"
-			ng-click="updateStatus(newsatus.statusId,newsatus)">update</button>
+		<button type="submit" class="btn btn-default submit"
+			>update</button>
 	</div>
 </form>
 </div>

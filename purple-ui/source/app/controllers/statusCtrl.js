@@ -4,16 +4,10 @@
 rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$sessionStorage, statusService, projectService, appNotifyService,
 		$window, $location) {
-	$rootScope.bodyClass = 'body-standalone1';
-
-	$scope.showeditpage = false;
+			
+		$rootScope.bodyClass = 'body-standalone1';
+		$scope.showeditpage = false;
 	$scope.submitStatus = function() {
-
-		/* if (!isValid) {
-		 	appNotifyService.error('Please enter email and username', 'Invalid inputs');
-		     return false;
-		 }*/
-		// Validating  form
 
 		// Calling login service
 		statusService.submitStatus($scope.status).then(function(response) {
@@ -32,7 +26,6 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			//Login failed. Showing error notification
 			appNotifyService.error(error.msg, 'Invite unsuccesfull.');
 		});
-
 	};
 
 	$scope.usersstatusLoad = function() {
@@ -45,26 +38,15 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 
 					$scope.allstatus = value.statusList;
 				});
-
 			}
 		});
 	}
-	$scope.initStatus = function() {
-		$scope.usersstatusLoad();
-	};
-
-	$scope.initProjects = function() {
-		$scope.loadUsers();
-	};
-	$scope.loadUsers = function() {
+	
+	$scope.loadProjects = function() {
 		projectService.getAllprojects().then(function(response) {
 			if (response.success) {
-				if (response) {
-					$scope.userscount = response.data.length;
-				}
-				//$scope.joinedCount = response.data.joined_count ;
-				//$scope.pendingCount = response.data.pending_count;
-				$scope.allprojects = response.data;
+				
+				$scope.allprojects = response.data.gridData;
 			}
 		});
 	}
@@ -86,38 +68,45 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			if (response.success = true) {
 
 				$scope.statusdata = response.data.gridData;
-				$scope.newstatus = [];
+				$scope.selectables = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12];
+				
 				angular.forEach(response.data.gridData, function(value, key) {
-					$scope.newstatus.push(value);
 
 					$scope.allstatus = value.statusList;
+					$scope.project = $scope.allstatus[0].projectName;
+					$scope.hours = $scope.allstatus[0].hours;
+					$scope.workingOn = $scope.allstatus[0].workingOn;
+					$scope.workedOn = $scope.allstatus[0].workedOn;
+					$rootScope.statusId = $scope.allstatus[0].statusId;
+					$scope.blockers = $scope.allstatus[0].blockers;
 					$scope.showeditpage = true;
+					$scope.loadProjects();	
 				});
-
 			}
-
 		});
-
 	}
-	
 	//ends
 
-	$scope.updateStatus = function(id, newsatus) {
-
-		/* if (!isValid) {
-		 	appNotifyService.error('Please enter email and username', 'Invalid inputs');
-		     return false;
-		 }*/
-		// Validating  form
-
+	$scope.updateStatus = function() {
+		
+		var id = $rootScope.statusId;
+		var newstatus =new Object();
+		newstatus.projectName = $scope.project;
+		newstatus.hours = $scope.hours;
+		newstatus.workingOn = $scope.workingOn;
+		newstatus.workedOn = $scope.workedOn;
+		newstatus.blockers = $scope.blockers;
+		
 		// Calling login service
-		statusService.updateStatus(newsatus, id).then(function(response) {
+		statusService.updateStatus(newstatus, id).then(function(response) {
 			if (response.success = true) {
-				// $scope.loadUsers();
-				$scope.status = '';
-				$window.location.reload();
-				// $scope.artists.push(value,1);
-
+		
+				$scope.project = '';
+				$scope.hours = '';
+				$scope.workingOn = '';
+				$scope.workedOn = '';
+				$scope.blockers = '';
+				$scope.usersstatusLoad();
 			} else {
 				//Login failed. Showing error notification
 				appNotifyService.error(response.data, 'Invite unsuccesfull.');
@@ -126,13 +115,6 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		}, function(error) {
 			//Login failed. Showing error notification
 			appNotifyService.error(error.msg, 'Invite unsuccesfull.');
-		});
-
+		});		
 	};
-
-	$scope.isActive = function(viewLocation) {
-		var active = (viewLocation === $location.path());
-		return active;
-	};
-
 });
