@@ -209,14 +209,14 @@ rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 	};
 	
 	
-	this.getMoreUsersToAdd = function(projid) {
+	this.getMoreUsersToAdd = function(projectId) {
 
 		var deferred = $q.defer();
-
+		
 		$http({
 			method : 'GET',
 			url : $rootScope.baseUrl + 'api/v1/admin/users/project',
-			params:projid,
+			params: {projectId : projectId},
 			headers : {
 				'Content-Type' : 'application/json'
 			}
