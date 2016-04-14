@@ -1,5 +1,6 @@
 package com.bbytes.purple.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class User {
 	private Organization organization;
 
 	@DBRef(lazy = true)
-	private List<Project> projects = Collections.<Project> emptyList();
+	private List<Project> projects = new ArrayList<>();
 
 	// embedded
 	private UserRole userRole = UserRole.NORMAL_USER_ROLE;

@@ -1,5 +1,6 @@
 package com.bbytes.purple.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class Project {
 	private Organization organization;
 
 	@DBRef(lazy = true)
-	private List<User> user = Collections.<User> emptyList();
+	private List<User> user = new ArrayList<>();
 
 	@Field("time_preference")
 	private String timePreference;
