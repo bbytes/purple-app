@@ -2,7 +2,6 @@ package com.bbytes.purple.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -160,7 +159,7 @@ public class DataModelToDTOConversionService {
 
 	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses) {
 
-		Map<String, List<StatusDTO>> statusMap = new HashMap<String, List<StatusDTO>>();
+		Map<String, List<StatusDTO>> statusMap = new LinkedHashMap<String, List<StatusDTO>>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 		for (Status status : statusses) {
 			String date = simpleDateFormat.format(status.getDateTime());
