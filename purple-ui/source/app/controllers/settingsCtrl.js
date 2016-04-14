@@ -17,7 +17,7 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
     	settingsService.updatePassword($scope.user).then(function (response) {
         	 if (response.success = true) {
         		 appNotifyService.success('yes', 'Your password has been changed.');
-        		 $scope.clearProjectText(user,confirmPassword);
+        		 $scope.clearPasswordText(user,confirmPassword);
         		 
             } else {
                 //Login failed. Showing error notification
@@ -59,10 +59,11 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
     };
 
 
-      $scope.clearProjectText = function(user,confirmPassword){
+      $scope.clearPasswordText = function(user,confirmPassword){
     	
-	   user.oldPassword = '';
-	   user.newPassword = '';
+		user.oldPassword = '';
+		$scope.confirmPassword = '';
+		user.newPassword = '';
     	project.users.length = 0;
     }
       

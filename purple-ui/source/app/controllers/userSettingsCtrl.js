@@ -18,6 +18,7 @@ rootApp.controller('userSettingsCtrl', function ($scope, $rootScope, $state, set
         	 if (response.success = true) {
         		 $scope.user ='';
         		 appNotifyService.success('yes', 'Your password has been changed.');
+				 $scope.clearPasswordText(user,confirmPassword);
         		
         		 
             } else {
@@ -78,6 +79,11 @@ rootApp.controller('userSettingsCtrl', function ($scope, $rootScope, $state, set
       }
     };
 
-
+	$scope.clearPasswordText = function(user,confirmPassword){
+    	
+	   user.oldPassword = '';
+	   user.newPassword = '';
+    	project.users.length = 0;
+    }
    
 });

@@ -55,11 +55,12 @@ public class SettingController {
 	public RestResponse resetPassword(@RequestBody PasswordDTO passwordDTO) throws PurpleException {
 
 		// we assume angular side will take care for password validation
+		final String PASSWORD_RESET_SUCCESS_MSG = "Successfully updated user's timezone";
 		User user = userService.getLoggedinUser();
 		settingService.resetPassword(passwordDTO, user);
 
 		logger.debug("User with email  '" + user.getEmail() + "' is reset password successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, user, SuccessHandler.RESET_PASSWORD);
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, PASSWORD_RESET_SUCCESS_MSG, SuccessHandler.RESET_PASSWORD);
 
 		return userReponse;
 	}

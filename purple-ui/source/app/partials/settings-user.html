@@ -80,11 +80,11 @@
 					<div class="col-md-6">
 						<label class="settings">REPEAT NEW PASSWORD</label> <input
 							type="password" class="form-control" id="password_c"
-							name="confirmPassword" ng-model="password_c" required /> <span
+							name="confirmPassword" ng-model="user.repeatPassword" required /> <span
 							class="label label-danger"
 							ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Password
 							required.</span> <span class="label label-danger"
-							ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (user.newPassword != password_c)">Password
+							ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (user.newPassword != user.repeatPassword)">Password
 							mismatch </span>
 					</div>
 
