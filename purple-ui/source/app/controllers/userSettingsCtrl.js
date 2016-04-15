@@ -4,22 +4,19 @@
 
 rootApp.controller('userSettingsCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService) {
 
+
     $scope.updatePassword = function (isValid) {
     	   if (!isValid) {
     	        appNotifyService.error('Please enter valid passwords', 'Invalid inputs');
     	           console.log('Please enter username and password', 'Invalid inputs');
     	            return false;
     	        }
-
-  
       
         // Calling login service
     	settingsService.updatePassword($scope.user).then(function (response) {
         	 if (response.success = true) {
         		 $scope.user ='';
         		 appNotifyService.success('yes', 'Your password has been changed.');
-				 $scope.clearPasswordText(user,confirmPassword);
-        		
         		 
             } else {
                 //Login failed. Showing error notification
@@ -78,12 +75,4 @@ rootApp.controller('userSettingsCtrl', function ($scope, $rootScope, $state, set
         eventResize: $scope.alertOnResize
       }
     };
-
-	$scope.clearPasswordText = function(user,confirmPassword){
-    	
-	   user.oldPassword = '';
-	   user.newPassword = '';
-    	project.users.length = 0;
-    }
-   
 });

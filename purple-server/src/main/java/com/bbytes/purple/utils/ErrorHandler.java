@@ -16,6 +16,8 @@ public class ErrorHandler {
 
 	public static final String AUTH_FAILURE = "authentication_failure";
 
+	public static final String ACCOUNT_ACTIVATION_FAILURE = "account_inactive";
+
 	public static final String USER_NOT_FOUND = "user_not_found";
 
 	public static final String PASSWORD_MISMATCH = "password_mistach";
@@ -27,7 +29,7 @@ public class ErrorHandler {
 	public static final String COMMENT_NOT_FOUND = "comment_not_found";
 
 	public static final String REPLY_NOT_FOUND = "reply_not_found";
-	
+
 	public static final String NOTIFICATION_FAILED = "notification_failed";
 
 	public static final String ADD_USER_FAILED = "add_user_failed";
@@ -51,7 +53,7 @@ public class ErrorHandler {
 	public static final String GET_STATUS_FAILED = "get_status_failed";
 
 	public static final String GET_COMMENT_FAILED = "get_comment_failed";
-	
+
 	public static final String DELETE_COMMENT_FAILED = "delete_comment_failed";
 
 	public static final String UPDATE_STATUS_FAILED = "update_status_failed";

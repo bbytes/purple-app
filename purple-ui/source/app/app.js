@@ -45,7 +45,6 @@ rootApp.run([
 
 		} ]);
 
-
 // Angular ui-router route definitions
 rootApp.config([
 		'$stateProvider',
@@ -56,11 +55,6 @@ rootApp.config([
 		function($stateProvider, $urlRouterProvider, $locationProvider,
 				$httpProvider) {
 		
-		
-			   
-
-			   // $httpProvider.defaults.headers.post['X-AUTH-TOKEN'] =  sessionStorage.token;
-			
 			// Remove # tag from URL
 			$locationProvider.html5Mode(true);
 
@@ -94,6 +88,14 @@ rootApp.config([
 						controller : 'signupCtrl',
 					}
 
+				}
+				}).state('forgot-password', {
+				url : '/forgot-password',
+				views : {
+					'' : {
+						templateUrl : 'app/partials/forgot-password.html',
+						controller : 'forgotPasswordCtrl',
+					}
 				}
 			
 			}).state('home-page', {
@@ -252,15 +254,14 @@ rootApp.config([
 				url : '/activateUserAccount?token',
 				templateUrl : 'app/partials/activateUserAccount.html',
 				controller : 'activateUserAccountCtrl'
+			}).state('forgotpassword', {
+				url : '/forgotPassword?token',
+				templateUrl : 'app/partials/reset-password.html',
+				controller : 'resetPasswordCtrl'
 			}).state('accountactivate', {
 				controller : 'activateAccountCtrl'
-			});
-
-			// $httpProvider.defaults.headers.common['Access-Control-Allow-Origin']
-			// = '*';
-			
-			
-		} ]);
+			});		
+} ]);
 		
 		
 		
