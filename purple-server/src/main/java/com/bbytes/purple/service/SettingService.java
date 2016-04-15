@@ -92,11 +92,11 @@ public class SettingService {
 	public User forgotPassword(String email) throws PurpleException {
 		User user = null;
 		if (email != null && !email.isEmpty()) {
-			if (!userService.userEmailExist(email) || !tenantResolverService.emailExist(email))
+			String orgId = tenantResolverService.findTenantIdForUserEmail(email);
+			TenancyContextHolder.setTenant(orgId);
+			if (!userService.userEmailExist(email))
 				throw new PurpleException("Error while forgetting password", ErrorHandler.USER_NOT_FOUND);
 			try {
-				String orgId = tenantResolverService.findTenantIdForUserEmail(email);
-				TenancyContextHolder.setTenant(orgId);
 				user = userService.getUserByEmail(email);
 				if (!user.isAccountInitialise())
 					throw new Exception();
