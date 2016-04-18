@@ -1,7 +1,6 @@
 /**
  * User seeting controller
  */
-
 rootApp.controller('userSettingsCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService) {
 
     // Reset password for user

@@ -1,5 +1,5 @@
 /**
- * 
+ * Status Controller
  */
 rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$sessionStorage, statusService, projectService, appNotifyService,

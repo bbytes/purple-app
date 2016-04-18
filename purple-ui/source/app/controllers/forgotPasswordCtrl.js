@@ -20,7 +20,7 @@ rootApp.controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, f
            
         }, function (error) {
             if(error.reason =="account_inactive") {       
-                appNotifyService.error('Please first activate you account');
+                appNotifyService.error('Please first activate your account');
              }
              else{
                 appNotifyService.error('This email id is not registered with purple App');

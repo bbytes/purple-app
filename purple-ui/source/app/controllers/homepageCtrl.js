@@ -160,8 +160,7 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, $mdSide
                   });
             }
         });
-    }
-	 
+    } 
 	 
 	 /**
 	  * Load status timeline by user
@@ -212,8 +211,5 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, $mdSide
 
  $scope.isActive = function(item) {
         return $scope.selected === item;
- };
- 
- 
-	
+ };	
 });

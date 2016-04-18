@@ -1,11 +1,9 @@
 /**
- * 
+ *  Activate Account Controller
  */
 rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state,$q,$http,$window,$sessionStorage,appNotifyService) {
 	
-	
 	$scope.init = function (){
-		console.log($state.params)
 		$window.sessionStorage.token = $state.params.token;
       
          $rootScope.authToken = $state.params.token;
@@ -19,13 +17,13 @@ rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state,$
      		
      			headers : {
      				'Content-Type' : 'application/json',
-
      			}
 
      		}).success(function(response, status, headers, config) {
 
+                $rootScope.userRole = response.data.userRole.id;
      			deferred.resolve(response);
-     			if(response.data.accountInitialise = true && response.data.userRole.id == "NORMAL")
+     			if(response.data.accountInitialise = true && $rootScope.userRole == "NORMAL")
      				{
      				 appNotifyService.success('Your account activated successfully..redirecting to settings page');
      				 $state.go("settings-user");
@@ -35,7 +33,6 @@ rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state,$
     				 $state.go("user-mgr");
      			}
      		}).error(function() {
-     			// Something went wrong.
      			deferred.reject({
      				'success' : false,
      				'msg' : 'Oops! Something went wrong. Please try again later.'
@@ -43,28 +40,5 @@ rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state,$
      		});
 
      		return deferred.promise;
-
-     	
-         
-       /*  $scope.activateAccount = function (tokenstored) {
-         	
-          // var token = $rootScope.authToken;
-         
-             // Calling login service
-        	 activateAccountService.activate(tokenstored).then(function (response) {
-             	 if (response.success) {
-             		 console.log("jayyaa");
-             		// $scope.loadUsers();
-                 } else {
-                     //Login failed. Showing error notification
-                     appNotifyService.error(response.data, 'Invite unsuccesfull.');
-                 }
-
-             }, function (error) {
-                 //Login failed. Showing error notification
-                 appNotifyService.error(error.msg, 'Invite unsuccesfull.');
-             });
-             
-         };*/
 	}
 });

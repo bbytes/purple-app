@@ -38,8 +38,6 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                     appLocaleService.setLocale(response.data.locale);
                 }
 */
-            
-           
                 $rootScope.showWelcomeMessage = true;
                 
                 $state.go('status');

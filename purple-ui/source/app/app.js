@@ -250,10 +250,6 @@ rootApp.config([
 				url : '/activateAccount?token',
 				templateUrl : 'app/partials/activateAccount.html',
 				controller : 'activateAccountCtrl'
-			}).state('useractivate', {
-				url : '/activateUserAccount?token',
-				templateUrl : 'app/partials/activateUserAccount.html',
-				controller : 'activateUserAccountCtrl'
 			}).state('forgotpassword', {
 				url : '/forgotPassword?token',
 				templateUrl : 'app/partials/reset-password.html',
