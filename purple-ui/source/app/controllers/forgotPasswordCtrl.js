@@ -25,7 +25,7 @@ rootApp.controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, f
                 appNotifyService.error('Please first activate you account');
              }
              else{
-                appNotifyService.error('You are not registered with purple application');
+                appNotifyService.error('This email id is not registered with purple App');
              }
     });
     };  
