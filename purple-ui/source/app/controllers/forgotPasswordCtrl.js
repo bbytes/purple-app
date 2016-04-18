@@ -21,19 +21,12 @@ rootApp.controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, f
             } 
            
         }, function (error) {
-            console.log(error);
-             if(error.reason =="user_not_found") {
-                 //Login failed. Showing error notification
-                 appNotifyService.error('You are not registered with purple application');
-             }
-              else if(error.reason =="account_inactive") {
-                 //Login failed. Showing error notification
-                 appNotifyService.error('Please first activate you account');
+            if(error.reason =="account_inactive") {       
+                appNotifyService.error('Please first activate you account');
              }
              else{
-            //Login failed. Showing error notification
-            appNotifyService.error(error.msg, 'Forgot password Failed.');
-        }
+                appNotifyService.error('You are not registered with purple application');
+             }
     });
     };  
 });

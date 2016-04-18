@@ -20,12 +20,8 @@ rootApp.service('settingsService', function($rootScope, $http, $q, $window) {
 		}).success(function(response, status, headers, config) {
 
 			deferred.resolve(response);
-		}).error(function() {
-			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
+		}).error(function(response) {
+				 deferred.reject(response);
 		});
 
 		return deferred.promise;
