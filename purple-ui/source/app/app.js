@@ -224,10 +224,6 @@ rootApp.config([
 		                authorization: 'User Manager',
 		                redirectTo: 'login'
 		            }
-			}).state('home.myalerts', {
-				url : '/myalerts',
-				templateUrl : 'app/partials/home-myalerts.html',
-				controller : 'myAlertsCtrl'
 			}).state('admin', {
 				url : '/admin',
 				controller : 'adminCtrl',

@@ -17,8 +17,8 @@ rootApp.controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, f
              appNotifyService.success('Your reset password form has been sent to your email.');
                 $state.go('login');   
             } 
-           
         }, function (error) {
+
             if(error.reason =="account_inactive") {       
                 appNotifyService.error('Please first activate your account');
              }
