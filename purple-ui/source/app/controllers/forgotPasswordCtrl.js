@@ -6,10 +6,8 @@ rootApp.controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, f
     $rootScope.bodyClass = 'body-standalone';
     
     $scope.submitForgotPasswordForm = function (isValid) {
-        if (!isValid) {
-            
+        if (!isValid) {     
             appNotifyService.error('Please enter valid inputs', 'Invalid inputs');
-               console.log('Please enter username and password', 'Invalid inputs');
                 return false;
             }
         
@@ -27,6 +25,6 @@ rootApp.controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, f
              else{
                 appNotifyService.error('This email id is not registered with purple App');
              }
-    });
+        });
     };  
 });
