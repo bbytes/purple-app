@@ -1,9 +1,12 @@
+/**
+ *  Login Controller
+ */
 rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginService,appNotifyService,$sessionStorage,$window) {
 
     $rootScope.bodyClass = 'body-standalone';
     
     $scope.submitLoginForm = function (isValid) {
-   console.log("message");
+
         // Validating login form
         if (!isValid) {
         appNotifyService.error('Please enter username and password', 'Invalid inputs');

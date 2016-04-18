@@ -1,3 +1,7 @@
+/*
+* Login Service
+*/
+
 rootApp.service('loginService', function ($rootScope, $http, $q) {
 
     return {
@@ -16,7 +20,6 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
 
                 this.userName = userName;
 
-          
                 var result = {};
 
                 result.data = response.data;
@@ -30,8 +33,8 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
             });
 
             return deferred.promise;
-
         },
+
         logout: function () {
             var result = {};
             var deferred = $q.defer();
