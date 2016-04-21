@@ -14,15 +14,21 @@ public class GlobalConstants {
 
 	public static final String EMAIL_INVITE_SUBJECT = "Invitation for Purple App";
 
+	public static final String SCHEDULER_SUBJECT = "Stand-up Remider for purple APP";
+
 	public static final String FORGOT_PASSWORD_SUBJECT = "Forgot password for Purple APP";
 
 	public static final String EMAIL_ACTIVATION_TEMPLATE = "email-text-only.html";
 
 	public static final String EMAIL_INVITE_TEMPLATE = "email-text-invite-user.html";
 
+	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
+
 	public static final String EMAIL_FORGOT_PASSWORD_TEMPLATE = "email-text-forgot-password.html";
 
 	public static final String USER_NAME = "name";
+
+	public static final String PROJECT_NAME = "projectName";
 
 	public static final String SUBSCRIPTION_DATE = "subscriptionDate";
 
@@ -37,6 +43,10 @@ public class GlobalConstants {
 	public static final String DATE_FORMAT = "MMM d, yyyy";
 
 	public static final String DATE_HOLIDAY_FORMAT = "dd/MM/yyyy";
+
+	public static final String SCHEDULER_TIME_FORMAT = "HH:mm";
+
+	public static final String SCHEDULER_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
 
 	public static final String DEFAULT_PASSWORD = "purple123";
 

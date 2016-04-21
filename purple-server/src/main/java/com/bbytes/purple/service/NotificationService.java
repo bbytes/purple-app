@@ -18,8 +18,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import com.bbytes.purple.utils.StringUtils;
-
 import flowctrl.integration.slack.SlackClientFactory;
 import flowctrl.integration.slack.webapi.SlackWebApiClient;
 
@@ -53,8 +51,11 @@ public class NotificationService {
 
 		MimeMessage mail = javaMailSender.createMimeMessage();
 		try {
+			String[] recipients = new String[toEmailList.size()];
+			toEmailList.toArray(recipients);
+
 			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-			helper.setTo(StringUtils.commaSeparate(toEmailList));
+			helper.setTo(recipients);
 			helper.setFrom(fromEmail);
 			helper.setSubject(subject);
 			if (emailBodyIsHTML)
@@ -73,9 +74,11 @@ public class NotificationService {
 		return true;
 	}
 
-	public boolean sendTemplateEmail(List<String> toEmailList, String subject, String emailTemplateName, Map<String, Object> templateVariableMap) {
-		String emailHTMLContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine,emailTemplateName, "UTF-8", templateVariableMap);
-		return sendEmail(toEmailList, subject, emailHTMLContent,true);
+	public boolean sendTemplateEmail(List<String> toEmailList, String subject, String emailTemplateName,
+			Map<String, Object> templateVariableMap) {
+		String emailHTMLContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine, emailTemplateName,
+				"UTF-8", templateVariableMap);
+		return sendEmail(toEmailList, subject, emailHTMLContent, true);
 	}
 
 	/**
