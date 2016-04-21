@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
@@ -126,7 +127,6 @@ public class StatusService extends AbstractService<Status, String> {
 			updateStatus.setWorkingOn(status.getWorkingOn());
 			updateStatus.setBlockers(status.getBlockers());
 			updateStatus.setHours(status.getHours());
-			updateStatus.setDateTime(new Date());
 			updateStatus.setProject(project);
 			newStatus = statusRepository.save(updateStatus);
 		} catch (Throwable e) {
