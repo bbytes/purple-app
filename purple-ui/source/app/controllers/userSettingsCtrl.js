@@ -15,6 +15,7 @@ rootApp.controller('userSettingsCtrl', function ($scope, $rootScope, $state, set
              if (response.success = true) {
                  appNotifyService.success('Your password has been changed.');
                  $scope.clearPasswordText(user,confirmPassword);
+                 $scope.isFormSubmitted = true;
             } 
         }, function (error) {
             if(error.reason == 'password_mistach')

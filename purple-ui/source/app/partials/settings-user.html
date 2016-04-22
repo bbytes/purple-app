@@ -74,7 +74,7 @@
 							required /> <span class="label label-danger"
 							ng-show="signupForm.password.$dirty && signupForm.password.$error.minlength">use
 							atleast 8 characters</span> <span class="label label-danger"
-							ng-show="signupForm.password.$dirty && signupForm.password.$error.required">Password
+							ng-show="!isFormSubmitted && signupForm.password.$dirty && signupForm.password.$error.required">Password
 							required.</span>
 					</div>
 					<div class="col-md-6">
@@ -82,7 +82,7 @@
 							type="password" class="form-control" id="password_c"
 							name="confirmPassword" ng-model="confirmPassword" required /> <span
 							class="label label-danger"
-							ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Password
+							ng-show="!isFormSubmitted &&  signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Password
 							required.</span> <span class="label label-danger"
 							ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (user.newPassword != confirmPassword)">Password
 							mismatch </span>

@@ -104,14 +104,14 @@
 							class="label label-danger"
 							ng-show="signupForm.newpassword.$dirty && signupForm.newpassword.$error.minlength">use
 							atleast 8 characters</span> <span class="label label-danger"
-							ng-show="signupForm.newpassword.$dirty && signupForm.newpassword.$error.required">Password
+							ng-show="!isFormSubmitted && signupForm.newpassword.$dirty && signupForm.newpassword.$error.required">Password
 							required.</span>
 					</div>
 					<div class="col-md-6">
 						<label class="settings">REPEAT NEW PASSWORD</label> <input
 							type="password" class="form-control" name="confirmPassword"
 							ng-model="confirmPassword" required /> <span class="label label-danger"
-						ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required"></span> <span class="label label-danger"
+						ng-show="!isFormSubmitted && signupForm.confirmPassword.$dirty && confirmPassword.$error.required"></span> <span class="label label-danger"
 						ng-show="(signupForm.newpassword.$dirty && signupForm.confirmPassword.$dirty) && (user.newPassword != confirmPassword)">Password
 						mismatch </span> 
 					</div>

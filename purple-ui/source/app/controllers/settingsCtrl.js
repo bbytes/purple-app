@@ -13,8 +13,9 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
       
     	settingsService.updatePassword($scope.user).then(function (response) {
         	 if (response.success = true) {
-        		 appNotifyService.success('Your password has been changed.');
-        		 $scope.clearPasswordText(user,confirmPassword);
+        		appNotifyService.success('Your password has been changed.');
+        		$scope.clearPasswordText(user,confirmPassword);
+                $scope.isFormSubmitted = true;
             } 
         }, function (error) {
             if(error.reason == 'password_mistach')
@@ -52,6 +53,5 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
 		user.oldPassword = '';
 		$scope.confirmPassword = '';
 		user.newPassword = '';
-    	project.users.length = 0;
     }      
 });

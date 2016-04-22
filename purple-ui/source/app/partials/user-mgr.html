@@ -36,7 +36,7 @@
 							type="email" name="email" ng-model="admin.email"
 							class="form-control" required> <span style="color: red"
 							ng-show="myForm.email.$dirty && myForm.email.$invalid"> <span
-							ng-show="myForm.email.$error.required">Email is required.</span>
+							ng-show=" !isSubmitted && myForm.email.$error.required">Email is required.</span>
 							<span ng-show="myForm.email.$error.email">Invalid email
 								address.</span>
 						</span>
@@ -47,11 +47,11 @@
 					<div class="form-group">
 						<label for="comment" class="settings">USERNAME</label> <input
 							type="text" ng-model="admin.userName" name="myName"
-							class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
+							class="form-control" ng-pattern="/^[a-zA-Z0-9]*$/" required>
 						<span style="color: red"
-							ng-show="myForm.myName.$touched && myForm.myName.$invalid">The
+							ng-show="!isSubmitted && myForm.myName.$dirty && myForm.myName.$error.required">The
 							name is required.</span> <span style="color: red"
-							ng-show="myForm.myName.$touched && myForm.myName.$invalid">name
+							ng-show="myForm.myName.$dirty && myForm.myName.$error.pattern">name
 							is invalid</span>
 					</div>
 				</div>
