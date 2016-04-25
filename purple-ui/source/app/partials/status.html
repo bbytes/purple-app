@@ -43,17 +43,17 @@
 					</div>
 					<div class="timeline-body worked-on">
 						<h3>worked on</h3>
-						<p>{{status.workedOn}}</p>
+						<p ng-bind-html="status.workedOn">{{status.workedOn}}</p>
 					</div>
 
 					<div class="timeline-body working-on">
 						<h3>working on</h3>
-						<p>{{status.workingOn}}</p>
+						<p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
 					</div>
 
 					<div class="timeline-body blocker-on">
 						<h3>blockers</h3>
-						<p>{{status.blockers}}</p>
+						<p ng-bind-html="status.blockers">{{status.blockers}}</p>
 					</div>
 					
 				</div>
@@ -64,16 +64,16 @@
 	</div>
 </div>
 
-<section sticky-nav="ng-sticky-fixed">
+<!-- <section sticky-nav="ng-sticky-fixed"> -->
 <form name="myForm">
 	<div class="col-md-4 side">
 
-		<div class="row">
+		<div class="row" >
 			<div class="col-md-9" ng-controller="projectCtrl"
 				ng-init="initUserProjects()">
 				<div class="form-sidebar">
 				
-					<div class="form-group">
+					<div class="form-group" >
 						<select class="form-control" name="project" ng-model="$parent.status.projectId" required>
 							<option ng-repeat="project in userprojects" value="{{project.projectId}}">{{project.projectName}}</option>
 						</select> <span style="color: red" ng-show="myForm.project.$error.required"></span>						
@@ -120,21 +120,37 @@
 
 		<div class="form-group">
 			<label for="comment">WORKED ON</label>
-			<textarea class="form-control" rows="5" name="myName" id="comment"
-				ng-model="status.workedOn" required></textarea>
+
+	 <div text-angular-toolbar class="toolbar" name="workedOn" ta-toolbar="[['h3','h4','p','bold','italics'],['ul', 'ol','indent', 'outdent']]">
+ 		</div>
+		<div class="status-text">
+   			 <div text-angular ta-target-toolbars="workedOn" ng-model="status.workedOn" name="workedOn" id="workedOn"></div>
+		</div>
+
 		</div>
 
 		<div class="form-group">
 			<label for="comment">WORKING ON</label>
-			<textarea class="form-control" rows="5" name="nextName" id="comment"
-				ng-model="status.workingOn" required></textarea>
+
+				 <div text-angular-toolbar class="toolbar" name="workingOn" ta-toolbar="[['h3','h4','p','bold','italics'],['ul', 'ol','indent', 'outdent']]">
+ 		</div>
+		<div class="status-text">
+   			 <div text-angular ta-target-toolbars="workingOn" ng-model="status.workingOn" name="workingOn" id="workingOn"></div>
 		</div>
 
+</div>
+
+			
 		<div class="form-group">
 			<label for="comment">BLOCKERS</label>
-			<textarea class="form-control" rows="5" id="comment"
-				ng-model="status.blockers" required></textarea>
+
+				<div text-angular-toolbar class="toolbar" name="blockers" ta-toolbar="[['h3','h4','p','bold','italics'],['ul', 'ol','indent', 'outdent']]">
+ 		</div>
+		<div class="status-text">
+   			 <div text-angular ta-target-toolbars="blockers" ng-model="status.blockers" name="blockers" id="blockers"></div>
 		</div>
+
+		</div>	 	
 		<button type="button" class="btn btn-default submit"
 			ng-click="submitStatus()">submit</button>
 	</div>
@@ -184,17 +200,17 @@
 					</div>
 					<div class="timeline-body worked-on">
 						<h3>worked on</h3>
-						<p>{{status.workedOn}}</p>
+						<p ng-bind-html="status.workedOn">{{status.workedOn}}</p>
 					</div>
 
 					<div class="timeline-body working-on">
 						<h3>working on</h3>
-						<p>{{status.workingOn}}</p>
+						<p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
 					</div>
 
 					<div class="timeline-body blocker-on">
 						<h3>blockers</h3>
-						<p>{{status.blockers}}</p>
+						<p ng-bind-html="status.blockers">{{status.blockers}}</p>
 					</div>
 					
 				</div>
@@ -206,7 +222,7 @@
 	</div>
 </div>
 
-<section sticky-nav="ng-sticky-fixed">
+<!-- <section sticky-nav="ng-sticky-fixed"> -->
 <form name="editForm" ng-submit="updateStatus()">
 	<div class="col-md-4 side">
 
@@ -235,20 +251,33 @@
 
 		<div class="form-group">
 			<label for="comment">WORKED ON</label>
-			<textarea class="form-control" rows="5" name="myName" id="comment"
-				ng-model="workedOn" required></textarea>
+			 <div text-angular-toolbar class="toolbar" name="editworkedOn" ta-toolbar="[['h3','h4','p','bold','italics'],['ul', 'ol','indent', 'outdent']]">
+ 		</div>
+		<div class="status-text">
+   			 <div text-angular ta-target-toolbars="editworkedOn" ng-model="workedOn" name="editworkedOn" id="editworkedOn"></div>
+		</div>
+
 		</div>
 
 		<div class="form-group">
 			<label for="comment">WORKING ON</label>
-			<textarea class="form-control" rows="5" name="nextName" id="comment"
-				ng-model="workingOn" required></textarea>
+
+				 <div text-angular-toolbar class="toolbar" name="editworkingOn" ta-toolbar="[['h3','h4','p','bold','italics'],['ul', 'ol','indent', 'outdent']]">
+ 		</div>
+		<div class="status-text">
+   			 <div text-angular ta-target-toolbars="editworkingOn" ng-model="workingOn" name="editworkingOn" id="editworkingOn"></div>
+		</div>
+
 		</div>
 
 		<div class="form-group">
 			<label for="comment">BLOCKERS</label>
-			<textarea class="form-control" rows="5" id="comment"
-				ng-model="blockers" required></textarea>
+
+				 <div text-angular-toolbar class="toolbar" name="editblockers" ta-toolbar="[['h3','h4','p','bold','italics'],['ul', 'ol','indent', 'outdent']]">
+ 		</div>
+		<div class="status-text">
+   			 <div text-angular ta-target-toolbars="editblockers" ng-model="blockers" name="editblockers" id="editblockers"></div>
+		</div>
 		</div>
 		<button type="submit" class="btn btn-default submit"
 			>update</button>
