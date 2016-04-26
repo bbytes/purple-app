@@ -27,7 +27,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.NotificationService;
+import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.PasswordHashService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -55,12 +55,12 @@ public class AdminController {
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
-
-	@Autowired
-	private NotificationService notificationService;
 	
 	@Autowired
 	private PasswordHashService passwordHashService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -75,6 +75,9 @@ public class AdminController {
 	@RequestMapping(value = "/api/v1/admin/user/add", method = RequestMethod.POST)
 	public RestResponse addUser(@RequestBody UserDTO userDTO) throws PurpleException {
 
+		final String subject = GlobalConstants.EMAIL_INVITE_SUBJECT;
+		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
+		
 		Organization org = userService.getLoggedinUser().getOrganization();
 		User addUser = new User(userDTO.getUserName(), userDTO.getEmail().toLowerCase());
 		addUser.setOrganization(org);
@@ -91,8 +94,8 @@ public class AdminController {
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
 		emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
-		notificationService.sendTemplateEmail(emailList, GlobalConstants.EMAIL_INVITE_SUBJECT,
-				GlobalConstants.EMAIL_INVITE_TEMPLATE, emailBody);
+		
+		emailService.sendEmail(emailList, emailBody, subject, template);
 
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 		logger.debug("User with email  '" + userDTO.getEmail() + "' are added successfully");

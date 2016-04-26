@@ -25,7 +25,7 @@ import com.bbytes.purple.rest.dto.models.NotificationResponseDTO;
 import com.bbytes.purple.rest.dto.models.PasswordDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.NotificationService;
+import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.SettingService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -55,7 +55,7 @@ public class SettingController {
 	private UserService userService;
 
 	@Autowired
-	private NotificationService notificationService;
+	private EmailService emailService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -139,6 +139,8 @@ public class SettingController {
 	public RestResponse forgotPassword(@RequestParam String email) throws PurpleException {
 
 		final String FORGOT_PASSWORD_SUCCESS_MSG = "Forgot password link is successfully sent to your register email address";
+		final String subject = GlobalConstants.FORGOT_PASSWORD_SUBJECT;
+		final String template = GlobalConstants.EMAIL_FORGOT_PASSWORD_TEMPLATE;
 
 		User user = settingService.forgotPassword(email);
 		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
@@ -148,8 +150,8 @@ public class SettingController {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.FORGOT_PASSWORD_URL + xauthToken);
-		notificationService.sendTemplateEmail(emailList, GlobalConstants.FORGOT_PASSWORD_SUBJECT,
-				GlobalConstants.EMAIL_FORGOT_PASSWORD_TEMPLATE, emailBody);
+		
+		emailService.sendEmail(emailList, emailBody, subject, template);
 
 		logger.debug("Forgot password is done successfully");
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, FORGOT_PASSWORD_SUCCESS_MSG,

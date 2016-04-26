@@ -23,7 +23,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.NotificationService;
+import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.RegistrationService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -49,7 +49,7 @@ public class SignUpController {
 	private UserService userService;
 
 	@Autowired
-	private NotificationService notificationService;
+	private EmailService emailService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
@@ -70,6 +70,8 @@ public class SignUpController {
 		// we assume the angular layer will do empty/null org name , user email
 		// etc.. validation
 		final String SIGN_UP_SUCCESS_MSG = "Activation link is successfully sent to your register email address";
+		final String subject = GlobalConstants.EMAIL_ACTIVATION_SUBJECT;
+		final String template = GlobalConstants.EMAIL_ACTIVATION_TEMPLATE;
 
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
 
@@ -91,9 +93,9 @@ public class SignUpController {
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
-		notificationService.sendTemplateEmail(emailList, GlobalConstants.EMAIL_ACTIVATION_SUBJECT,
-				GlobalConstants.EMAIL_ACTIVATION_TEMPLATE, emailBody);
-
+		
+		emailService.sendEmail(emailList, emailBody, subject, template);
+		
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 
 		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, SIGN_UP_SUCCESS_MSG,
