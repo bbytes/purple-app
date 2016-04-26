@@ -68,7 +68,7 @@ public class AdminService {
 		List<User> userList = new LinkedList<User>();
 		try {
 			if (projectId == null || projectId.isEmpty()) {
-				List<User> users = userService.getUserByRoleName(UserRole.NORMAL_USER_ROLE);
+				List<User> users = userService.findAll();
 				for (User user : users) {
 					if (user.getStatus().equals(User.JOINED))
 						userList.add(user);
@@ -77,7 +77,7 @@ public class AdminService {
 				if (!projectService.projectIdExist(projectId))
 					throw new PurpleException("Error while getting users list", ErrorHandler.PROJECT_NOT_FOUND);
 				List<User> usersOfProject = projectService.getAllUsers(projectId);
-				List<User> users = userService.getUserByRoleName(UserRole.NORMAL_USER_ROLE);
+				List<User> users = userService.findAll();
 				for (User user : users) {
 					if (user.getStatus().equals(User.JOINED))
 						userList.add(user);
