@@ -97,7 +97,8 @@
 		<div class="row">
 			<div class="main-title">
 				<h4>
-					projects <span class="list-member">{{projectCount}} project</span>
+					projects <span class="list-member" ng-if="projectCount >1 ">{{projectCount}} Projects</span> 
+					<span class="list-member" ng-if="projectCount == 1 ">{{projectCount}} Project</span>
 				</h4>
 			</div>
 			<div class="project-table" ng-init="loadAllProjects()">

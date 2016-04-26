@@ -46,7 +46,6 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 				}
 				$scope.usersCount = response.data.gridData.usersCount;
 				$scope.projectCount = response.data.project_count;
-				//            	 /repeatSelect: null,
 				$scope.allprojects = response.data.gridData;
 			}
 		});
@@ -214,6 +213,7 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 				appNotifyService.success('Project has been deleted.');
 			}
 			$scope.allprojects.splice($index, 1);
+			$scope.loadAllProjects();
 		});
 	}
 
