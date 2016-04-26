@@ -117,10 +117,10 @@ public class StatusService extends AbstractService<Status, String> {
 	public Status updateStatus(String statusId, StatusDTO status) throws PurpleException {
 
 		Status newStatus = null;
-		if (!statusIdExist(statusId))
+		if ((!statusIdExist(statusId) || (status.getProjectId() == null || status.getProjectId().isEmpty())))
 			throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
 		try {
-			Project project = projectService.findByProjectName(status.getProjectName());
+			Project project = projectService.findByProjectId(status.getProjectId());
 			Status updateStatus = getStatusbyId(statusId);
 			updateStatus.setWorkedOn(status.getWorkedOn());
 			updateStatus.setWorkingOn(status.getWorkingOn());

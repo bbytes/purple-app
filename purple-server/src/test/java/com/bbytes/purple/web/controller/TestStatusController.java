@@ -354,6 +354,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		requestStatusDTO.setWorkedOn("Testing");
 		requestStatusDTO.setWorkingOn("Will do testing");
 		requestStatusDTO.setBlockers("Testing issue");
+		requestStatusDTO.setProjectId(project.getProjectId());
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);

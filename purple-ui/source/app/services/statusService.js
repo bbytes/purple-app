@@ -24,7 +24,7 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 			// Something went wrong.
 			deferred.reject({
 				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
+				'msg' : 'Please select the project'
 			});
 		});
 
@@ -177,15 +177,13 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 
 			deferred.resolve(response);
 		}).error(function() {
-			// Something went wrong.
 			deferred.reject({
 				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
+				'msg' : 'Please select the project'
 			});
 		});
 
 		return deferred.promise;
-
 	};
 
 	this.getAllTimelineStatus = function(updateData) {

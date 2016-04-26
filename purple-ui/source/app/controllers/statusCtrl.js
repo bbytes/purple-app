@@ -5,26 +5,25 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$sessionStorage, statusService, projectService, appNotifyService,
 		$window, $location) {
 			
-		$rootScope.bodyClass = 'body-standalone1';
-		$scope.showeditpage = false;
+	$rootScope.bodyClass = 'body-standalone1';
+	$scope.isSubmit = true;
 	$scope.submitStatus = function() {
 
-		// Calling login service
-		statusService.submitStatus($scope.status).then(function(response) {
+		var status = new Object();
+		status.projectId = $scope.project;
+		status.hours = $scope.hours;
+		status.workingOn = $scope.workingOn;
+		status.workedOn = $scope.workedOn;
+		status.blockers = $scope.blockers;
+		statusService.submitStatus(status).then(function(response) {
 			if (response.success = true) {
-				// $scope.loadUsers();
-				$scope.status = '';
-				$scope.usersstatusLoad();
-				// $scope.artists.push(value,1);
 
-			} else {
-				//Login failed. Showing error notification
-				appNotifyService.error(response.data, 'Invite unsuccesfull.');
+				$scope.clearStatus();
+				$scope.usersstatusLoad();
 			}
 
 		}, function(error) {
-			//Login failed. Showing error notification
-			appNotifyService.error(error.msg, 'Invite unsuccesfull.');
+			appNotifyService.error(error.msg);
 		});
 	};
 
@@ -37,15 +36,16 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 					$scope.artists.push(value);
 
 					$scope.allstatus = value.statusList;
+
 				});
 			}
 		});
 	}
 	
 	$scope.loadProjects = function() {
-		projectService.getAllprojects().then(function(response) {
+		projectService.getUserproject().then(function(response) {
 			if (response.success) {
-				
+				$scope.selectables = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12];
 				$scope.allprojects = response.data.gridData;
 			}
 		});
@@ -73,13 +73,14 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 				angular.forEach(response.data.gridData, function(value, key) {
 
 					$scope.allstatus = value.statusList;
-					$scope.project = $scope.allstatus[0].projectName;
+					$scope.project = $scope.allstatus[0].projectId;
 					$scope.hours = $scope.allstatus[0].hours;
 					$scope.workingOn = $scope.allstatus[0].workingOn;
 					$scope.workedOn = $scope.allstatus[0].workedOn;
 					$rootScope.statusId = $scope.allstatus[0].statusId;
 					$scope.blockers = $scope.allstatus[0].blockers;
-					$scope.showeditpage = true;
+					$scope.isUpdate = true;
+					$scope.isSubmit = false;
 					$scope.loadProjects();	
 				});
 			}
@@ -91,30 +92,32 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		
 		var id = $rootScope.statusId;
 		var newstatus =new Object();
-		newstatus.projectName = $scope.project;
+		newstatus.projectId = $scope.project;
 		newstatus.hours = $scope.hours;
 		newstatus.workingOn = $scope.workingOn;
 		newstatus.workedOn = $scope.workedOn;
 		newstatus.blockers = $scope.blockers;
-		
-		// Calling login service
+		$scope.isSubmit = true;
+		$scope.isUpdate = false;
+
 		statusService.updateStatus(newstatus, id).then(function(response) {
 			if (response.success = true) {
 		
-				$scope.project = '';
-				$scope.hours = '';
-				$scope.workingOn = '';
-				$scope.workedOn = '';
-				$scope.blockers = '';
+				$scope.clearStatus();
 				$scope.usersstatusLoad();
-			} else {
-				//Login failed. Showing error notification
-				appNotifyService.error(response.data, 'Invite unsuccesfull.');
-			}
+			} 
 
 		}, function(error) {
-			//Login failed. Showing error notification
-			appNotifyService.error(error.msg, 'Invite unsuccesfull.');
+			appNotifyService.error(error.msg);
 		});		
 	};
+
+	$scope.clearStatus = function(){
+
+			$scope.project = '';
+			$scope.hours = '';
+			$scope.workingOn = '';
+			$scope.workedOn = '';
+			$scope.blockers = '';
+	}
 });

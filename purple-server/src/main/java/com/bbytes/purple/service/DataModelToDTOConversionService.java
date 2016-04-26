@@ -105,6 +105,7 @@ public class DataModelToDTOConversionService {
 
 		StatusDTO statusDTO = new StatusDTO();
 		statusDTO.setStatusId(status.getStatusId());
+		statusDTO.setProjectId(status.getProject().getProjectId());
 		statusDTO.setProjectName(status.getProject().getProjectName());
 		statusDTO.setUserName(status.getUser().getName());
 		statusDTO.setWorkedOn(status.getWorkedOn());
@@ -176,7 +177,7 @@ public class DataModelToDTOConversionService {
 		notificationResponseDTO.setCaptureHours(notificationSetting.isCaptureHours());
 		notificationResponseDTO.setWeekendNotification(notificationSetting.isWeekendNotification());
 		notificationResponseDTO.setStatusEnable(notificationSetting.getStatusEnable());
-		
+
 		for (Holiday holiday : notificationSetting.getHolidays()) {
 			HolidayDTO holidayDTO = new HolidayDTO();
 			holidayDTO.setHolidayId(holiday.getHolidayId().toString());

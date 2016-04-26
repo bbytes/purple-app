@@ -60,6 +60,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
     			appNotifyService.success( 'User has been deleted.');
     	}
     		$scope.allusers.splice($index, 1);
+            $scope.loadUsers();
     });
     }
 });
