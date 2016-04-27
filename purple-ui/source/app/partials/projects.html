@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="create-project">
-		<form name="myForm" ng-submit="submitForm(userForm.$valid)" novalidate>
+		<form name="myForm" novalidate>
 			<div class="row">
 				<div class="col-md-5">
 					<div class="form-group">
@@ -114,7 +114,7 @@
 							data-toggle="tab" ng-click="showEditPage(project.projectId)"><img
 								src="../../assets/img/edit.png"></a><a href="#"
 							ng-click="deleteProject(project.projectId,$index)"
-							ng-confirm-click="Are you sure want to delete??"> <img
+							confirm="Are you sure want to delete??"> <img
 								src="../../assets/img/delete.png"></a></td>
 					</tr>
 
@@ -207,8 +207,7 @@
 		</div>
 	</div>
 
-	<button type="button" class="btn btn-default create"
-		ng-click="updateProject(data)">update project</button>
+	<button type="button" class="btn btn-default create" ng-click="updateProject(data)">update project</button>
 
 
 	<div class="col-md-12">
@@ -231,8 +230,9 @@
 							data-toggle="tab" ng-click="showEditPage(project.projectId)"><img
 								src="../../assets/img/edit.png"></a><a href="#"
 							ng-click="deleteProject(project.projectId,$index)"
-							ng-confirm-click="Are you sure want to delete??"> <img
+							confirm="Are you sure want to delete??"> <img
 								src="../../assets/img/delete.png"></a></td>
+							
 					</tr>
 
 				</table>

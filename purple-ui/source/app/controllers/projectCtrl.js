@@ -15,6 +15,18 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 	// Method is used to create project
 	$scope.createProject = function(project) {
 
+		if (!project) {
+        	appNotifyService.error('Please enter Project and TimePreference');
+            return false;
+        }
+        else if(!project.projectName){
+        	appNotifyService.error('Please enter Project');
+            return false;
+        }
+        else if(!project.timePreference){
+        	appNotifyService.error('Please add TimePreference');
+            return false;
+        }
 		$scope.userEmailsList = [];
 		angular.forEach($scope.newList, function(user) {
 			$scope.userEmailsList.push(user.email);
@@ -175,8 +187,12 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 	}
 
 	// Update the project
-	$scope.updateProject = function() {
+	$scope.updateProject = function(project) {
 
+		if(!project.timePreference){
+        	appNotifyService.error('Please add TimePreference');
+            return false;
+        }
 		$scope.updateuserEmailsList = [];
 		angular.forEach($scope.orgUserList, function(user) {
 			$scope.updateuserEmailsList.push(user.email);
