@@ -12,6 +12,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,6 +63,7 @@ public class AdminService {
 		String cvsSplitBy = ",";
 		Map<String, String> maps = new LinkedHashMap<String, String>();
 		List<User> bulkUsers = new LinkedList<User>();
+		InternetAddress emailAddr;
 
 		try {
 
@@ -80,8 +84,15 @@ public class AdminService {
 				addUser.setPassword(passwordHashService.encodePassword(GlobalConstants.DEFAULT_PASSWORD));
 				addUser.setStatus(User.PENDING);
 
-				if (!userService.userEmailExist(addUser.getEmail())
-						|| !tenantResolverService.emailExist(addUser.getEmail())) {
+				boolean result = true;
+				try {
+					emailAddr = new InternetAddress(addUser.getEmail());
+					emailAddr.validate();
+				} catch (AddressException e) {
+					result = false;
+				}
+				if ((!userService.userEmailExist(addUser.getEmail())
+						|| !tenantResolverService.emailExist(addUser.getEmail())) && result) {
 					try {
 						User user = userService.save(addUser);
 						bulkUsers.add(user);

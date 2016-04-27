@@ -70,14 +70,19 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
          var fd = new FormData();
             fd.append('file', file);
               adminService.bulkupload(fd).then(function (response) {
+                var len = response.data.length;
          if (response.success) {
-                 appNotifyService.success('Activation link has been sent to added  email.');
-                 $scope.loadUsers();
-                 
+
+                if(len > 0){
+                 appNotifyService.success('Activation link has been sent to '+len+' users.');
+                }
+                else{
+                    appNotifyService.success('All users are already exist');
+                }
+                 $scope.loadUsers();        
             } 
 
         }, function (error) {
-            console.log(error);
              if(error.reason =="add_user_failed") {
                  appNotifyService.error('Some of users are already exist');
              }
