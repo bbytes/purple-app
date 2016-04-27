@@ -79,4 +79,22 @@ rootApp.service('adminService', function($rootScope, $http, $q, $window) {
 
 	};
 
+	this.bulkupload = function(file) {
+
+		var deferred = $q.defer();
+	  $http.post($rootScope.baseUrl + 'api/v1/admin/user/bulkupload', file, {
+                  
+                  transformRequest: angular.identity,
+                  headers: {'Content-Type': undefined}
+              
+		}).success(function(response, status, headers, config) {
+
+			deferred.resolve(response);
+		}).error(function(response) {
+			deferred.reject(response);
+		});
+
+		return deferred.promise;
+	};
+
 });

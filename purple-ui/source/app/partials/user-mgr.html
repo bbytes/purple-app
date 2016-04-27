@@ -22,7 +22,7 @@
 		<div class="upload">
 			<label for="file-upload" class="custom-file-upload"> <img
 				src="../../assets/img/upload.png"> BULCK UPLOAD
-			</label> <input id="file-upload" type="file" />
+			</label> <input id="file-upload" file-model = "myFile" type="file" onchange="angular.element(this).scope().bulkupload(this)"/>
 		</div>
 	</div>
 

@@ -1,17 +1,28 @@
 package com.bbytes.purple.service;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class AdminService {
@@ -25,6 +36,9 @@ public class AdminService {
 	@Autowired
 	private TenantResolverService tenantResolverService;
 
+	@Autowired
+	private PasswordHashService passwordHashService;
+
 	public User addUsers(User user) throws PurpleException {
 
 		if (user != null) {
@@ -37,6 +51,60 @@ public class AdminService {
 			}
 		}
 		return user;
+	}
+
+	public List<User> bulkUsers(Organization org, MultipartFile file) throws PurpleException {
+
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		Map<String, String> maps = new LinkedHashMap<String, String>();
+		List<User> bulkUsers = new LinkedList<User>();
+
+		try {
+
+			byte[] content = file.getBytes();
+			InputStream is = new ByteArrayInputStream(content);
+			br = new BufferedReader(new InputStreamReader(is));
+
+			while ((line = br.readLine()) != null) {
+
+				// use comma as separator
+				String[] users = line.split(cvsSplitBy);
+				maps.put(users[0], users[1]);
+			}
+			for (Map.Entry<String, String> entry : maps.entrySet()) {
+
+				User addUser = new User(entry.getValue(), entry.getKey().toLowerCase());
+				addUser.setOrganization(org);
+				addUser.setPassword(passwordHashService.encodePassword(GlobalConstants.DEFAULT_PASSWORD));
+				addUser.setStatus(User.PENDING);
+
+				if (!userService.userEmailExist(addUser.getEmail())
+						|| !tenantResolverService.emailExist(addUser.getEmail())) {
+					try {
+						User user = userService.save(addUser);
+						bulkUsers.add(user);
+					} catch (Throwable e) {
+						throw new PurpleException(e.getMessage(), ErrorHandler.ADD_USER_FAILED);
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.getMessage();
+		} catch (IOException e) {
+			e.getMessage();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.getMessage();
+				}
+			}
+		}
+
+		return bulkUsers;
 	}
 
 	public void deleteUser(String email) throws PurpleException {

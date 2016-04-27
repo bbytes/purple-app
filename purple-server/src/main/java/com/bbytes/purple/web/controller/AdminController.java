@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Organization;
@@ -55,10 +56,10 @@ public class AdminController {
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
-	
+
 	@Autowired
 	private PasswordHashService passwordHashService;
-	
+
 	@Autowired
 	private EmailService emailService;
 
@@ -77,7 +78,7 @@ public class AdminController {
 
 		final String subject = GlobalConstants.EMAIL_INVITE_SUBJECT;
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
-		
+
 		Organization org = userService.getLoggedinUser().getOrganization();
 		User addUser = new User(userDTO.getUserName(), userDTO.getEmail().toLowerCase());
 		addUser.setOrganization(org);
@@ -94,11 +95,49 @@ public class AdminController {
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
 		emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
-		
+
 		emailService.sendEmail(emailList, emailBody, subject, template);
 
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 		logger.debug("User with email  '" + userDTO.getEmail() + "' are added successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.ADD_USER_SUCCESS);
+
+		return userReponse;
+	}
+
+	/**
+	 * The bulk upload users method is used to upload list of users from csv
+	 * file.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/admin/user/bulkupload", method = RequestMethod.POST)
+	public RestResponse bulkUploadUsers(@RequestParam("file") MultipartFile file) throws PurpleException {
+
+		final String subject = GlobalConstants.EMAIL_INVITE_SUBJECT;
+		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
+
+		Organization org = userService.getLoggedinUser().getOrganization();
+		List<User> users = adminService.bulkUsers(org, file);
+
+		for (User user : users) {
+			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
+			List<String> emailList = new ArrayList<String>();
+			emailList.add(user.getEmail());
+			Map<String, Object> emailBody = new HashMap<>();
+			emailBody.put(GlobalConstants.USER_NAME, user.getName());
+			emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
+			emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
+			emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
+
+			emailService.sendEmail(emailList, emailBody, subject, template);
+		}
+
+		List<UserDTO> responseDTO = dataModelToDTOConversionService.convertUsers(users);
+		logger.debug(responseDTO.size() + "' User are added successfully");
+
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.ADD_USER_SUCCESS);
 
 		return userReponse;

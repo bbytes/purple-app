@@ -33,7 +33,7 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 								'error while creating project.');
 					}
 				}, function(error) {
-					appNotifyService.error(error.msg, 'Invite unsuccesfull.');
+					appNotifyService.error(error.msg);
 				});
 	};
 
@@ -202,7 +202,7 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 					}
 
 				}, function(error) {
-					appNotifyService.error(error.msg, 'Invite unsuccesfull.');
+					appNotifyService.error(error.msg);
 				});
 	};
 	

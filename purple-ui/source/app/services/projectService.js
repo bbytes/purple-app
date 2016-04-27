@@ -105,7 +105,7 @@ rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 			// Something went wrong.
 			deferred.reject({
 				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
+				'msg' : 'Add project or TimePreference'
 			});
 		});
 
@@ -133,7 +133,7 @@ rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 			// Something went wrong.
 			deferred.reject({
 				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
+				'msg' : 'Add project or TimePreference'
 			});
 		});
 
