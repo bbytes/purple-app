@@ -74,8 +74,9 @@
 				
 					<div class="form-group" >
 						<select class="form-control" name="project" ng-model="project" 
-						ng-options="project.projectId as project.projectName for project in allprojects"
 						required>
+						 <option value="">--- Select Project ---</option>
+                        <option ng-repeat="project in allprojects" value="{{project.projectId}}" >{{project.projectName}}</option>
 						</select> <span style="color: red" ng-show="myForm.project.$error.required"></span>		
 					</div>
 					
@@ -87,6 +88,7 @@
 					<div class="form-group">
 						<select class="form-control turnintodropdown" name="time"
 							ng-model="hours" ng-options="hours for hours in selectables" required>
+						 <option value="">Hrs</option>	
 						</select>
 					</div>
 				</div>

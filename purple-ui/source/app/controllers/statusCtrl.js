@@ -15,6 +15,15 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		status.workingOn = $scope.workingOn;
 		status.workedOn = $scope.workedOn;
 		status.blockers = $scope.blockers;
+		if(!status.projectId){
+			appNotifyService.error('Please select project');
+            return false;
+		}
+		else if(!status.hours){
+			appNotifyService.error('Please select hours');
+            return false;
+		}
+
 		statusService.submitStatus(status).then(function(response) {
 			if (response.success = true) {
 
@@ -97,14 +106,15 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		newstatus.workingOn = $scope.workingOn;
 		newstatus.workedOn = $scope.workedOn;
 		newstatus.blockers = $scope.blockers;
-		$scope.isSubmit = true;
-		$scope.isUpdate = false;
+		
 
 		statusService.updateStatus(newstatus, id).then(function(response) {
 			if (response.success = true) {
 		
 				$scope.clearStatus();
 				$scope.usersstatusLoad();
+				$scope.isSubmit = true;
+				$scope.isUpdate = false;
 			} 
 
 		}, function(error) {
