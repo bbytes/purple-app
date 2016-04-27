@@ -76,6 +76,8 @@ public class ErrorHandler {
 
 	public static final String UPDATE_COMMENT_FAILED = "update_comment_failed";
 
+	public static final String HOURS_EXCEEDED = "hours_exceeded";
+
 	public static String resolveAuthError(AuthenticationException authEx) {
 		try {
 			RestResponse errorResponse;

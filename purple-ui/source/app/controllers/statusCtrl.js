@@ -32,7 +32,13 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			}
 
 		}, function(error) {
-			appNotifyService.error(error.msg);
+			if(error.response = "hours_exceeded"){
+				appNotifyService.error('Hours are exceeded');
+			}
+			else{
+				appNotifyService.error('Invalid Inputs');
+			}
+			
 		});
 	};
 
@@ -118,7 +124,12 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			} 
 
 		}, function(error) {
-			appNotifyService.error(error.msg);
+			if(error.response = "hours_exceeded"){
+				appNotifyService.error('Hours are exceeded');
+			}
+			else{
+				appNotifyService.error('Invalid Inputs');
+			}
 		});		
 	};
 

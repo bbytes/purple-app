@@ -144,7 +144,9 @@ public class StatusController {
 	public RestResponse updateStatus(@PathVariable("statusid") String statusId, @RequestBody StatusDTO statusDTO)
 			throws PurpleException {
 
-		Status status = statusService.updateStatus(statusId, statusDTO);
+		// We will get current logged in user
+		User user = userService.getLoggedinUser();
+		Status status = statusService.updateStatus(statusId, statusDTO, user);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
 		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);

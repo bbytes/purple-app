@@ -1,10 +1,14 @@
 package com.bbytes.purple.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +20,10 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.StatusRepository;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
+import com.bbytes.purple.rest.dto.models.StatusResponseDTO;
 import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class StatusService extends AbstractService<Status, String> {
@@ -29,6 +35,9 @@ public class StatusService extends AbstractService<Status, String> {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
 	@Autowired
 	public StatusService(StatusRepository statusRepository) {
@@ -57,6 +66,23 @@ public class StatusService extends AbstractService<Status, String> {
 		return state;
 	}
 
+	public double findStatusHours(List<Status> statusList, Date dateTime) {
+		double hours = 0;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		String date = simpleDateFormat.format(dateTime);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
+		List<StatusResponseDTO> linkedList = (LinkedList<StatusResponseDTO>) statusMap.get("gridData");
+		for (StatusResponseDTO statusDTO : linkedList) {
+			if (date.equals(statusDTO.getDate())) {
+				for (StatusDTO status : statusDTO.getStatusList()) {
+					hours = hours + status.getHours();
+				}
+				break;
+			}
+		}
+		return hours;
+	}
+
 	public Status create(StatusDTO status, User user) throws PurpleException {
 		Status savedStatus = null;
 		if (status != null && status.getProjectId() != null && !status.getProjectId().isEmpty()) {
@@ -66,6 +92,10 @@ public class StatusService extends AbstractService<Status, String> {
 				Status addStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(),
 						new Date());
 				Project project = projectService.findByProjectId(status.getProjectId());
+				double hours = findStatusHours(getAllStatus(user), new Date());
+				double newHours = hours + status.getHours();
+				if (newHours > 24)
+					throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
 				addStatus.setProject(project);
 				addStatus.setUser(user);
 				addStatus.setBlockers(status.getBlockers());
@@ -114,7 +144,7 @@ public class StatusService extends AbstractService<Status, String> {
 		}
 	}
 
-	public Status updateStatus(String statusId, StatusDTO status) throws PurpleException {
+	public Status updateStatus(String statusId, StatusDTO status, User user) throws PurpleException {
 
 		Status newStatus = null;
 		if ((!statusIdExist(statusId) || (status.getProjectId() == null || status.getProjectId().isEmpty())))
@@ -122,6 +152,11 @@ public class StatusService extends AbstractService<Status, String> {
 		try {
 			Project project = projectService.findByProjectId(status.getProjectId());
 			Status updateStatus = getStatusbyId(statusId);
+			Date statusDate = updateStatus.getDateTime();
+			double hours = findStatusHours(getAllStatus(user),statusDate);
+			double newHours = hours + (status.getHours() - updateStatus.getHours());
+			if (newHours > 24)
+				throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
 			updateStatus.setWorkedOn(status.getWorkedOn());
 			updateStatus.setWorkingOn(status.getWorkingOn());
 			updateStatus.setBlockers(status.getBlockers());
@@ -141,7 +176,6 @@ public class StatusService extends AbstractService<Status, String> {
 		List<Project> projectList = new ArrayList<Project>();
 		List<User> userList = new ArrayList<User>();
 		Set<User> allUsers = new HashSet<User>();
-		Set<Project> projects = new HashSet<Project>();
 		try {
 			if (userAndProject.getProjectList().isEmpty() && userAndProject.getUserList().isEmpty()) {
 				projectList = userService.getProjects(currentUser);

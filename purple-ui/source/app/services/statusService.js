@@ -20,12 +20,8 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 		}).success(function(response, status, headers, config) {
 
 			deferred.resolve(response);
-		}).error(function() {
-			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Please select the project'
-			});
+		}).error(function(response) {
+			deferred.reject(response);
 		});
 
 		return deferred.promise;
@@ -176,11 +172,9 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 		}).success(function(response, status, headers, config) {
 
 			deferred.resolve(response);
-		}).error(function() {
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Please select the project'
-			});
+		}).error(function(response) {
+			
+				deferred.reject(response);
 		});
 
 		return deferred.promise;
