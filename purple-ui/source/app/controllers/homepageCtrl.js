@@ -23,7 +23,7 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, $mdSide
          	    });
                  $scope.allstatus   =  response.data.gridData;
                  $scope.isActive = true;
-                 $scope.isProject = false;
+               	$scope.isProject = false;
                  $scope.isUser = false;
                 
              }
@@ -35,8 +35,6 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, $mdSide
 	  */
 	 $scope.formData = {};
      $scope.addComment = function(statusId) {
-		 console.log($scope.selectedStatusId);
-		 console.log(statusId);
 		  $scope.commentData = {
 		 statusId : statusId,
 		 commentDesc : $scope.formData.commentDesc
@@ -135,28 +133,29 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, $mdSide
 	/**
 	 * Load status timeline by project
 	 */
-	 $scope.loadProjectMap = function(projectId){
+	 $scope.loadProjectMap = function(project){
 		 
-		 commentService.getProjectMap(projectId).then(function (response) {
+		 commentService.getProjectMap(project.projectId).then(function (response) {
             if (response.success) {
 				$scope.projectUsers = response.data.gridData[0].userList;
 				$scope.projectName = response.data.gridData[0].projectName
 				$scope.updateData.projectList = [response.data.gridData[0].projectId];
+				$scope.updateData.userList = [];
 
                     statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
                      if (response.success) {
         
+        			//	if(response.data.gridData.length > 0){
                       $scope.artists = [];
                       angular.forEach(response.data.gridData, function(value, key) {
                       $scope.artists.push(value);
                       });
-                      $scope.allstatus   =  response.data.gridData;
                       
-                      $scope.selected = $scope.allstatus[0].statusList[0];
+                      $scope.selected = project;
                       $scope.isProject = true;
                       $scope.isActive = false;
-                      $scope.isUser = false;
-                     }
+                      $scope.isUser = false;                     
+                 }
                   });
             }
         });
@@ -165,20 +164,19 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, $mdSide
 	 /**
 	  * Load status timeline by user
 	  */
-	 
-	 $scope.loadUserMap = function(email){
+	 $scope.loadUserMap = function(user){
+
 		 		$scope.updateData.projectList = [];
-				$scope.updateData.userList = [email];
+				$scope.updateData.userList = [user.email];
 
                     statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
                      if (response.success) {
-        
+        			
                       $scope.artists = [];
                       angular.forEach(response.data.gridData, function(value, key) {
                       $scope.artists.push(value);
                       });
-                      $scope.allstatus   =  response.data.gridData;
-                      $scope.selected = $scope.allstatus[0].statusList[0];
+                  	$scope.selected = user;
                       $scope.isUser = true;
                       $scope.isProject = false;
                       $scope.isActive = false;

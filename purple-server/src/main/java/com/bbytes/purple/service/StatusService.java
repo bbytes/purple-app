@@ -181,10 +181,7 @@ public class StatusService extends AbstractService<Status, String> {
 						User user = userService.getUserByEmail(email);
 						userList.add(user);
 					}
-					for (User userOfProject : userList) {
-						projects.addAll(userOfProject.getProjects());
-					}
-					projectList.addAll(projects);
+					projectList = userService.getProjects(currentUser);
 					for (Project projectsOfCurrentUser : projectList) {
 						for (User userOfProjects : userList) {
 							statuses.addAll(findByProjectAndUser(projectsOfCurrentUser, userOfProjects));

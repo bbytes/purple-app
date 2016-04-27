@@ -29,8 +29,8 @@
        <div id="collapseOne" class="panel-collapse collapse in">
          <div class="panel-body">
            <ul class="list-group">
-              <li class="sel"><a ng-click="loadStatusTimeline()" >ALL</a></li>
-		      <li role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects"><a ng-click="loadProjectMap(project.projectId)" >{{project.projectName}}</a></li>        
+              <li class="sel"><a ng-click="loadStatusTimeline();loadUserProjects()" >ALL</a></li>
+		      <li role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'"><a ng-click="loadProjectMap(project)" >{{project.projectName}}</a></li>        
             </ul>
           </div>
        </div>
@@ -48,8 +48,8 @@
           </div>
       <div id="collapseTwo" class="panel-collapse collapse in">
          <div class="panel-body">
-            <ul class="list-group"  ng-repeat="users in projectUsers">
-              <li><a ng-click="loadUserMap(users.email)">{{users.userName}}</a></li>
+            <ul class="list-group"  ng-repeat="users in projectUsers  | orderBy:'userName'">
+              <li><a ng-click="loadUserMap(users)">{{users.userName}}</a></li>
             </ul>
           </div>
 
@@ -186,9 +186,9 @@
                      <div class="top-header">
 						<!--  <span class="project"><span class="hash"># </span>{{status.projectName}}</span> -->
 						
-					<span ng-if="isActive == true" class="username" ><span class="hash" ># </span>All Projects</span> 
-					<span ng-if="isProject == true" class="username" ><span class="hash" ># </span>{{selected.projectName}}</span> 
-					<span ng-if="isUser == true" class="username" ><span class="hash" >@ </span>{{selected.userName}}</span> 
+					<span ng-show="isActive" class="username" ><span class="hash" ># </span>All Projects</span> 
+					<span ng-show="isProject" class="username" ><span class="hash" ># </span>{{selected.projectName}}</span> 
+					<span ng-show="isUser" class="username" ><span class="hash" >@ </span>{{selected.userName}}</span> 
 					 </div>
 					 
 					 <!---timeline---->
@@ -210,13 +210,13 @@
 
                                   <div class="timeline-heading">
                                   
-                                     <h4 ng-show="{{isActive}}"><span class="hash"># </span> {{status.projectName}} <span class="hash">@ </span> {{status.userName}}
+                                     <h4 ng-show="isActive"><span class="hash"># </span> {{status.projectName}} <span class="hash">@ </span> {{status.userName}}
                                      <span  style="float:right"> {{status.time}}</span>
 									</h4>
-                                     <h4 ng-show="{{isProject}}"><span class="hash">@ </span> {{status.userName}}
+                                     <h4 ng-show="isProject"><span class="hash">@ </span> {{status.userName}}
                                      <span  style="float:right"> {{status.time}}</span>
 									</h4>
-                                     <h4 ng-show="{{isUser}}"><span class="hash"># </span> {{status.projectName}}
+                                     <h4 ng-show="isUser"><span class="hash"># </span> {{status.projectName}}
                                      <span  style="float:right"> {{status.time}}</span>
 									</h4>
 									<p>{{status.hours}}hrs</p> 
