@@ -47,7 +47,7 @@
 					<div class="form-group">
 						<label for="comment" class="settings">USERNAME</label> <input
 							type="text" ng-model="admin.userName" name="myName"
-							class="form-control" ng-pattern="/^[a-zA-Z0-9]*$/" required>
+							class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
 						<span style="color: red"
 							ng-show="!isSubmitted && myForm.myName.$dirty && myForm.myName.$error.required">The
 							name is required.</span> <span style="color: red"
