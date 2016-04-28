@@ -1,7 +1,6 @@
 /*
 * All User Modal Controller
 */
-
 rootApp.controller('allusersModalCtrl', function ($scope,$rootScope,adminService,options,$uibModalInstance,$uibModal) {
 
 	$scope.selection =[];

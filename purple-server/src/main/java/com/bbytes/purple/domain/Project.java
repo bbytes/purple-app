@@ -31,7 +31,7 @@ public class Project {
 	@Indexed(unique = true)
 	private String projectName;
 
-	@DBRef(lazy = true)
+	@DBRef
 	private Organization organization;
 
 	@DBRef(lazy = true)

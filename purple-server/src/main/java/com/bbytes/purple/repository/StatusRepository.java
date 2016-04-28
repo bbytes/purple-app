@@ -10,10 +10,10 @@ import com.bbytes.purple.domain.User;
 
 public interface StatusRepository extends MongoRepository<Status, String> {
 
-	Status findByProject(Project project);
+	List<Status> findByProject(Project project);
 
 	List<Status> findByUser(User user);
 
 	List<Status> findByProjectAndUser(Project project, User user);
-
+	
 }

@@ -1,48 +1,36 @@
+/*
+* Sign Up Controller
+*/
 rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupService,appNotifyService,$sessionStorage) {
   
     $rootScope.bodyClass = 'body-standalone';
     
     $scope.submitSignUp = function (isValid) {
     	if (!isValid) {
-            appNotifyService.error('Please enter valid inputs', 'Invalid inputs');
-               console.log('Please enter username and password', 'Invalid inputs');
-                return false;
+            appNotifyService.error('Please enter valid inputs');
+            return false;
             }
 
         // Validating login form
-    	
         signupService.submitSignUp($scope.user).then(function (response) {
          if (response.success == true) {
                 
-        	/*   $rootScope.authToken = response.data;
-        	   var userInfo = {
-                       authToken: response.data,
-                       id: $rootScope.loggedIn,
-                       //name: $rootScope.userName,
-                      // userRoles: response.data.userRoles,
-                      // permissions: response.data.permissions,
-                      // viewMode:$rootScope.viewMode
-                   };
-                   
-                   
-                 $sessionStorage.userInfo = userInfo;*/
-        	 appNotifyService.success('Activation link has been sent your registered mail.');
+                appNotifyService.success('An email has been sent to your registered email-id for activation. Please check!');
                 $state.go('login');
-                
             } 
            
         }, function (error) {
         	 if(error.reason =="organization_not_unique") {
                  //Login failed. Showing error notification
-                 appNotifyService.error('Oops!!..Organization is already exist.');
+                 appNotifyService.error('Looks like somebody has already signed-up from your Organization!');
              }
         	 else if(error.reason =="email_not_unique") {
                  //Login failed. Showing error notification
-                 appNotifyService.error('Email is already exist.Please enter new email ');
+                 appNotifyService.error('Looks like this email is already registered with us.');
              }
         	 else{
             //Login failed. Showing error notification
-            appNotifyService.error(error.msg, 'Registration  Failed.');
+            appNotifyService.error(error.msg, 'Oops!! Registration has Failed. Please try after sometime!');
         }
     });
     };

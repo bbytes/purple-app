@@ -1,5 +1,5 @@
-/**
- * 
+/*
+ * Logout Controller
  */
 rootApp.controller('logoutCtrl', function ($scope, $rootScope, $state, logoutService,$location,$sessionStorage,$window) {
 	
@@ -7,10 +7,5 @@ rootApp.controller('logoutCtrl', function ($scope, $rootScope, $state, logoutSer
 		  delete $window.sessionStorage.token;
 		  $sessionStorage.$reset();
 		  $state.go("login");
-	    /*	logoutService.logout().then(function (response) {
-				
-					$location.path("login");
-				
-			});*/
 		};
 });

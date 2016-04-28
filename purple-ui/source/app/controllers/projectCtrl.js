@@ -16,15 +16,15 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 	$scope.createProject = function(project) {
 
 		if (!project) {
-        	appNotifyService.error('Please enter Project and TimePreference');
+        	appNotifyService.error('Please enter a valid Project name and TimePreference');
             return false;
         }
         else if(!project.projectName){
-        	appNotifyService.error('Please enter Project');
+        	appNotifyService.error('Please enter a valid Project name');
             return false;
         }
         else if(!project.timePreference){
-        	appNotifyService.error('Please add TimePreference');
+        	appNotifyService.error('Please select your TimePreference for reminder emails.');
             return false;
         }
 		$scope.userEmailsList = [];
@@ -190,7 +190,7 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 	$scope.updateProject = function(project) {
 
 		if(!project.timePreference){
-        	appNotifyService.error('Please add TimePreference');
+        	appNotifyService.error('Please select a valid TimePreference');
             return false;
         }
 		$scope.updateuserEmailsList = [];
@@ -226,7 +226,7 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 	$scope.deleteProject = function(id, $index) {
 		projectService.deleteProject(id).then(function(response) {
 			if (response.success = true) {
-				appNotifyService.success('Project has been deleted.');
+				appNotifyService.success('Project has been successfully deleted.');
 			}
 			$scope.allprojects.splice($index, 1);
 			$scope.loadAllProjects();

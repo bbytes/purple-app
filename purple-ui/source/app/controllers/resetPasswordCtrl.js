@@ -20,12 +20,9 @@ rootApp.controller('resetPasswordCtrl', function ($scope, $rootScope, $state, $w
         		 $scope.user ='';
         		 appNotifyService.success('Your password has been reset'); 
                    $state.go('login');  		 
-            } else {
-
-                appNotifyService.error(response.data, 'Enter valid passwords.');
             }
         }, function (error) {
-            appNotifyService.error(error.msg, 'Enter valid passwords.');
+            appNotifyService.error('Enter valid passwords.');
         });
     };
 });

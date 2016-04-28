@@ -54,10 +54,9 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, $mdSide
 	  */
 	  
 	 $scope.postReply = function(replyObj, commentId) {
-		console.log(commentId)
-		console.log($scope.commentId)
+
 		 commentService.postReply(replyObj, commentId).then(function (response) {
-			 console.log($scope);
+
 			 if(response.success){
 				replyObj.replyDesc = '';
 				$scope.message = 'Replied Successfully';
@@ -97,7 +96,6 @@ rootApp.controller('homepageCtrl', function ($scope, $rootScope, $state, $mdSide
 		 
 		 statusService.getStatusWithId(selectedStatusId).then(function (response) {
             if (response.success) {
-            	console.log(response);
                 $scope.statusDate   =  response.data.gridData[0].date;
                 $scope.statusList   =  response.data.gridData[0].statusList;
             }

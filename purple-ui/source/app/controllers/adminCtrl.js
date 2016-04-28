@@ -6,24 +6,24 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
 	 $rootScope.bodyClass = 'body-standalone1';
     $scope.invite = function (isValid) {
         if (!isValid) {
-        	appNotifyService.error('Please enter email and username');
+        	appNotifyService.error('Please enter a valid email and username.');
             return false;
         }
         
     	if($scope.admin == null){
-    		appNotifyService.error('Please enter email or username ', 'Not entered inputs');
+    		appNotifyService.error('Please enter a valid email and username.');
     	}
         else{
         adminService.inviteUser($scope.admin).then(function (response) {
        
         	 if (response.success) {
-        		 appNotifyService.success('Activation link has been sent to added  email.');
+        		 appNotifyService.success('Activation link has been sent to your registered email.');
         		 $scope.loadUsers();
                  $scope.admin = '';
                 $scope.isSubmitted = true;
         		 
             } else {
-                appNotifyService.error(response.data, 'Invite unsuccesfull.');
+                appNotifyService.error('Invite unsuccesfull. Please check back again!');
             }
 
         }, function (error) {
@@ -31,7 +31,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
                  appNotifyService.error('Username or Email already exist');
              }
         	 else{
-              appNotifyService.error(error.msg, 'Error while adding users..');
+              appNotifyService.error('Error while adding users. Please check back again!');
         	 }
         });
         }
@@ -57,7 +57,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
     $scope.deleteUser =function(email, $index){
     	adminService.deleteUser(email).then(function (response) {
     		if (response.success) {
-    			appNotifyService.success( 'User has been deleted.');
+    			appNotifyService.success( 'User has been sucessfully deleted.');
     	}
     		$scope.allusers.splice($index, 1);
             $scope.loadUsers();
@@ -77,14 +77,14 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
                  appNotifyService.success('Activation link has been sent to '+len+' users.');
                 }
                 else{
-                    appNotifyService.success('All users are already exist');
+                    appNotifyService.success('All users are already exist. Please check!');
                 }
                  $scope.loadUsers();        
             } 
 
         }, function (error) {
              if(error.reason =="add_user_failed") {
-                 appNotifyService.error('Some of users are already exist');
+                 appNotifyService.error('Some of users already exist.');
              }
              else{
               appNotifyService.error('Invalid file format');

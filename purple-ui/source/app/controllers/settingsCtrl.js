@@ -13,7 +13,7 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
       
     	settingsService.updatePassword($scope.user).then(function (response) {
         	 if (response.success = true) {
-        		appNotifyService.success('Your password has been changed.');
+        		appNotifyService.success('Your password has been successfully changed.');
         		$scope.clearPasswordText(user,confirmPassword);
                 $scope.isFormSubmitted = true;
             } 
@@ -26,7 +26,7 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
     	appNotifyService.error('Password mismatch.');	
     }
     else{
-    	appNotifyService.error('Please enter current password');
+    	appNotifyService.error('Please enter your current password');
     }
     };
     

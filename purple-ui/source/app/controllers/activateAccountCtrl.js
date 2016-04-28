@@ -24,11 +24,11 @@
          			deferred.resolve(response);
          			if(response.data.accountInitialise = true && $rootScope.userRole == "NORMAL")
          				{
-         				 appNotifyService.success('Your account activated successfully..redirecting to settings page');
+         				 appNotifyService.success('Your account has been activated successfully. Redirecting to settings.');
          				 $state.go("settings-user");
          				}
          			else{
-         				appNotifyService.success('Your account activated successfully..redirecting to add users page');
+         				appNotifyService.success('Your account has been activated successfully. Why dont you invite users?');
         				 $state.go("user-mgr");
          			}
          		}).error(function() {

@@ -49,7 +49,7 @@ public class StatusService extends AbstractService<Status, String> {
 		return statusRepository.findOne(statusId);
 	}
 
-	public Status getStatusByProject(Project project) {
+	public List<Status> getStatusByProject(Project project) {
 		return statusRepository.findByProject(project);
 	}
 

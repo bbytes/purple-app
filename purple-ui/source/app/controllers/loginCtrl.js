@@ -9,10 +9,9 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
 
         // Validating login form
         if (!isValid) {
-        appNotifyService.error('Please enter username and password', 'Invalid inputs');
+        appNotifyService.error('Please enter username and password');
             return false;
         }
-
         // Calling login service
         loginService.login($scope.username, $scope.password).then(function (response) {
         	 if (response.headers["x-auth-token"] && response.data.accountInitialise == true) {
@@ -22,7 +21,6 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                $rootScope.userRole = response.data.userRole.id;
                $rootScope.userName = response.data.userName;
                 $rootScope.authToken = response.headers["x-auth-token"];
-               // $rootScope.permissions = response.data.permissions;
 
                var userInfo = {
                     authToken: response.headers["x-auth-token"],
@@ -38,15 +36,13 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
             } else {
             	  // Erase the token if the user fails to log in
             	 delete $window.sessionStorage.token;
-            	 //delete  $sessionStorage.userInfo;
                 //Login failed. Showing error notification
-                appNotifyService.error('Please activate your account to login.');
+                appNotifyService.error('Please activate your account before login. Check your email for activation link.');
             }
 
         }, function (error) {
             //Login failed. Showing error notification
-            console.log(error);
-            appNotifyService.error(error.msg, 'Login Failed.');
+            appNotifyService.error('Invalid Username or Password');
         });
     };
     
@@ -57,7 +53,6 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
     	loginService.logout().then(function (response) {
 			
 				$location.path("login");
-			
 		});
 	};
 });

@@ -1,5 +1,5 @@
 /**
- * User seeting controller
+ * User setting controller
  */
 rootApp.controller('userSettingsCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService) {
 
@@ -13,7 +13,7 @@ rootApp.controller('userSettingsCtrl', function ($scope, $rootScope, $state, set
       
         settingsService.updatePassword($scope.user).then(function (response) {
              if (response.success = true) {
-                 appNotifyService.success('Your password has been changed.');
+                 appNotifyService.success('Your password has been successfully changed.');
                  $scope.clearPasswordText(user,confirmPassword);
                  $scope.isFormSubmitted = true;
             } 
@@ -26,32 +26,25 @@ rootApp.controller('userSettingsCtrl', function ($scope, $rootScope, $state, set
         appNotifyService.error('Password mismatch.');   
     }
     else{
-        appNotifyService.error('Please enter current password');
+        appNotifyService.error('Please enter your current password');
     }
 
     };
     
     $scope.updateTime= function (isValid) {
  	   if (!isValid) {
- 	        appNotifyService.error('Please enter valid passwords', 'Invalid inputs');
- 	           console.log('Please enter username and password', 'Invalid inputs');
+ 	        appNotifyService.error('Please select a valid Timezone');
  	            return false;
  	        }
    
  	settingsService.updateTimezone($scope.time).then(function (response) {
      	 if (response.success = true) {
      		 $scope.time ='';
-     		 appNotifyService.success('Timezone has been updated.');
-     		
-     		 
-         } else {
-             //Login failed. Showing error notification
-             appNotifyService.error(response.data, 'Enter valid passwords.');
-         }
+     		 appNotifyService.success('Timezone has been successfully updated.');   		 
+         } 
 
      }, function (error) {
-         //Login failed. Showing error notification
-         appNotifyService.error(error.msg, 'Enter valid passwords.');
+         appNotifyService.error('Please select a valid Timezone');
      });
 
  };

@@ -176,12 +176,13 @@ public class AdminService {
 			if (projectService.projectNameExist(project.getProjectName()))
 				throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
-				List<Project> projectList = new ArrayList<Project>();
-				projectService.save(project);
-				project = projectService.findByProjectId(project.getProjectId());
+				project = projectService.save(project);
 				for (User user : users) {
-					projectList = user.getProjects();
+					List<Project> projectList = new ArrayList<Project>();
+					List<Project> list = new ArrayList<Project>();
+					list = user.getProjects();
 					projectList.add(project);
+					projectList.addAll(list);
 					user.setProjects(projectList);
 					userService.save(user);
 				}
@@ -239,6 +240,15 @@ public class AdminService {
 				updateProject.setTimePreference(project.getTimePreference());
 				updateProject.setUser(project.getUser());
 				updatedProject = projectService.save(updateProject);
+				for (User user : updatedProject.getUser()) {
+					List<Project> projectList = new ArrayList<Project>();
+					List<Project> list = new ArrayList<Project>();
+					list = user.getProjects();
+					projectList.add(updatedProject);
+					list.addAll(projectList);
+					user.setProjects(list);
+					userService.save(user);
+				}
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_PROJECT_FAILED);
 			}

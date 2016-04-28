@@ -16,11 +16,11 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		status.workedOn = $scope.workedOn;
 		status.blockers = $scope.blockers;
 		if(!status.projectId){
-			appNotifyService.error('Please select project');
+			appNotifyService.error('Please select a valid project');
             return false;
 		}
 		else if(!status.hours){
-			appNotifyService.error('Please select hours');
+			appNotifyService.error('Please fill in the hours for the selected project.');
             return false;
 		}
 
@@ -32,13 +32,12 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			}
 
 		}, function(error) {
-			if(error.response = "hours_exceeded"){
-				appNotifyService.error('Hours are exceeded');
+			if(error.response == "hours_exceeded"){
+				appNotifyService.error('You have already logged in 24hrs for the day!');
 			}
 			else{
-				appNotifyService.error('Invalid Inputs');
-			}
-			
+				appNotifyService.error('Error while submitting status');
+			}	
 		});
 	};
 
@@ -48,10 +47,9 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 
 				$scope.artists = [];
 				angular.forEach(response.data.gridData, function(value, key) {
+					
 					$scope.artists.push(value);
-
 					$scope.allstatus = value.statusList;
-
 				});
 			}
 		});
@@ -69,14 +67,14 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 	$scope.deleteStatus = function(id, $index) {
 		statusService.deleteStatus(id).then(function(response) {
 			if (response.success = true) {
-				appNotifyService.success('Status has been deleted.');
+				appNotifyService.success('Status has been successfully deleted.');
 			}
 			$scope.allstatus.splice($index, 1);
 			$scope.usersstatusLoad();
 		});
 	}
-	/*Update */
 
+	/*Update */
 	$scope.showUpdatePage = function(id) {
 
 		statusService.getStatusWithId(id).then(function(response) {
@@ -113,7 +111,14 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		newstatus.workedOn = $scope.workedOn;
 		newstatus.blockers = $scope.blockers;
 		
-
+		if(!newstatus.projectId){
+			appNotifyService.error('Please select a valid project');
+            return false;
+		}
+		else if(!newstatus.hours){
+				appNotifyService.error('Please fill in the hours for the selected project.');
+				return false;
+		}
 		statusService.updateStatus(newstatus, id).then(function(response) {
 			if (response.success = true) {
 		
@@ -124,15 +129,16 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			} 
 
 		}, function(error) {
-			if(error.response = "hours_exceeded"){
-				appNotifyService.error('Hours are exceeded');
+			if(error.response == "hours_exceeded"){
+				appNotifyService.error('You have already logged in 24hrs for the day!');
 			}
 			else{
-				appNotifyService.error('Invalid Inputs');
+				appNotifyService.error('Error while updating status');
 			}
 		});		
 	};
 
+	// Clearing the text area for status page
 	$scope.clearStatus = function(){
 
 			$scope.project = '';
