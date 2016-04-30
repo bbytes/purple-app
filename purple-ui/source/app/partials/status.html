@@ -28,7 +28,7 @@
 					<div class="edit">
 						<a href="#" ng-click="showUpdatePage(status.statusId)" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a> 
 						
-						<a href="#" ng-click="deleteStatus(status.statusId,$index)" confirm="Are you sure want to delete??" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
+						<a href="#" ng-click="deleteStatus(status.statusId,$index)" confirm="Are you sure you want to delete the item?" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
 					</div>
 
 					<div class="timeline-heading">
@@ -130,6 +130,7 @@
 			ng-click="submitStatus()" ng-show="isSubmit">submit</button>
 		<button type="button" class="btn btn-default submit"
 			ng-click="updateStatus()" ng-show="isUpdate">Update</button>
+
 	</div>
 </form>
 </div>
