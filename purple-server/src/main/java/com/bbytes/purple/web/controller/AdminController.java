@@ -202,6 +202,25 @@ public class AdminController {
 	}
 
 	/**
+	 * The updateUserRole method is used to assigning role to user
+	 * 
+	 * @param userId
+	 * @param role
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/admin/user/role", method = RequestMethod.POST)
+	public RestResponse updateUserRole(@RequestParam String userId, @RequestParam String role) throws PurpleException {
+
+		User user = adminService.updateUserRole(userId, role);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
+		logger.debug("User role is updated successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.GET_USER_SUCCESS);
+
+		return userReponse;
+	}
+
+	/**
 	 * The create project method is used to add project in to tenant
 	 * 
 	 * @param projectDTO

@@ -165,6 +165,42 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":false")));
 	}
 
+	// Test cases for update userRole
+
+	@Test
+	public void testUpdateUserRoleFailed() throws Exception {
+
+		String userId = "sdcdscdscdscdscds55555";
+		String role = "NORMAL";
+		mockMvc.perform(post("/api/v1/admin/user/role").param("userId", userId).param("role", role))
+				.andExpect(status().is4xxClientError()).andDo(print());
+
+	}
+
+	@Test
+	public void testUpdateUserRolePasses() throws Exception {
+
+		String userId = adminUser.getUserId();
+		String role = "NORMAL";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(post("/api/v1/admin/user/role").param("userId", userId).param("role", role)
+				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true")));
+	}
+	
+	@Test
+	public void testUpdateUserRoleFailedWithNotExistUser() throws Exception {
+
+		String userId = "cdcdc555222";
+		String role = "NORMAL";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(post("/api/v1/admin/user/role").param("userId", userId).param("role", role)
+				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)).andExpect(status().is5xxServerError()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":false")));
+	}
+
 	// Test cases for get all users
 
 	@Test

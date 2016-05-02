@@ -50,6 +50,26 @@ rootApp.service('adminService', function($rootScope, $http, $q, $window) {
 
 		return deferred.promise;
 	};
+
+	this.updateUserRole = function(userId,role) {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'POST',
+			url : $rootScope.baseUrl + 'api/v1/admin/user/role',
+			params:{userId,role},
+			headers : {
+				'Content-Type' : 'application/json'
+			}
+		}).success(function(response, status, headers, config) {
+			deferred.resolve(response);
+		}).error(function(response) {
+			deferred.reject(response);
+		});
+
+		return deferred.promise;
+	};
 	
 	this.deleteUser = function(email) {
 

@@ -43,6 +43,13 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
             	if (response) {
 					$scope.userscount = response.data.length;
 				}
+                $scope.roles = [];
+                angular.forEach(response.data.gridData, function(value, key) {
+                    if ($scope.roles.indexOf(value.userRole.value) == -1) {
+                        $scope.roles.push(value.userRole.value);
+                    }
+                });
+                console.log($scope.roles);
             	$scope.joinedCount = response.data.joined_count ;
             	$scope.pendingCount = response.data.pending_count;
                 $scope.allusers   =  response.data.gridData;
@@ -61,6 +68,23 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
     	}
     		$scope.allusers.splice($index, 1);
             $scope.loadUsers();
+    });
+    }
+    
+    // Method is used to assigning user role
+
+    $scope.roleChange = function(user,userRole){
+
+        var userId = user.id;
+        console.log(userId);
+       adminService.updateUserRole(userId,userRole).then(function (response) {
+            if (response.success) {
+                appNotifyService.success( 'Users role has been sucessfully changed.');
+        }
+    },
+        function (error) {
+              appNotifyService.error('Error while assigning users role. Please check back again!');
+             
     });
     }
 
@@ -91,4 +115,5 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
              }
         });
      }
+
 });

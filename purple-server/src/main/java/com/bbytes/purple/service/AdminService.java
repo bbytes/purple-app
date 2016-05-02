@@ -134,7 +134,7 @@ public class AdminService {
 
 		List<User> users = new ArrayList<User>();
 		try {
-			users = userService.getUserByRoleName(UserRole.NORMAL_USER_ROLE);
+			users = userService.findAll();
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
 		}
@@ -168,6 +168,22 @@ public class AdminService {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
 		}
 		return userList;
+	}
+
+	public User updateUserRole(String userId, String role) throws PurpleException {
+
+		User user = null;
+		if (!userService.exists(userId))
+			throw new PurpleException("Error while assigning role", ErrorHandler.USER_NOT_FOUND);
+		try {
+			user = userService.getUserById(userId);
+			user.setUserRole(new UserRole(role));
+			user = userService.save(user);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_USERROLE_FAILED);
+		}
+
+		return user;
 	}
 
 	public Project createProject(Project project, List<User> users) throws PurpleException {

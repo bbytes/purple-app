@@ -49,5 +49,7 @@ public class SuccessHandler {
 	public static final String UPDATE_COMMENT_SUCCESS = "update_comment_success";
 
 	public static final String ADD_REPLY_SUCCESS = "add_reply_success";
+	
+	public static final String UPDATE_USERROLE_SUCCESS = "update_userrole_success";
 
 }
