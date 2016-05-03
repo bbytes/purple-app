@@ -87,10 +87,10 @@
 						<td><img src="../../assets/img/pending.png">
 							{{user.status}}</td>
 						<td>
-
-						<select class="form-control turnintodropdown" ng-model="userRole" ng-change="roleChange(user,userRole)">
-						 <option ng-repeat="role in roles" ng-selected="{{role == user.userRole.value}}" >{{role}}</option>
-						</select></td>
+						<select class="form-control" ng-init="userRole = user.userRole.value" ng-model="userRole" ng-change="roleChange(userRole,user)">
+						 <option ng-repeat="roles in userRoles" value="{{roles.value}}">{{roles.value}}</option> 
+						</select>
+						</td>
 						<td style="float: right;">
 							<div ng-click="deleteUser(user.email, $index)"
 								confirm="Are you sure you want to delete the user?">

@@ -38,15 +38,25 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
     };
     
     $scope.loadUsers = function(){
+      $scope.userRoles = [ 
+                    {
+                      id:"NORMAL", 
+                      value:"NORMAL"
+                    },
+                    {
+                      id:'ADMIN', 
+                      value:'ADMIN'
+                    }
+                ];
+
     	adminService.getAllusers().then(function (response) {
             if (response.success) {
             	if (response) {
 					$scope.userscount = response.data.length;
 				}
-                $scope.roles = ["ADMIN","NORMAL"];
             	$scope.joinedCount = response.data.joined_count ;
             	$scope.pendingCount = response.data.pending_count;
-                $scope.allusers   =  response.data.gridData;
+                $scope.allusers   =  response.data.gridData; 
             }
         });
     }
@@ -67,10 +77,9 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
     
     // Method is used to assigning user role
 
-    $scope.roleChange = function(user,userRole){
+    $scope.roleChange = function(userRole,user){
 
         var userId = user.id;
-        console.log(userId);
        adminService.updateUserRole(userId,userRole).then(function (response) {
             if (response.success) {
                 appNotifyService.success( 'Users role has been sucessfully changed.');
