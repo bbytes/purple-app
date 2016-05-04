@@ -1,5 +1,6 @@
 package com.bbytes.purple.database;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,12 +16,13 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
 @Configuration
 @EnableMongoRepositories(basePackages = "com.bbytes.purple")
 @EnableMongoAuditing
-@Profile({"saas","!test"})
+@Profile({ "saas", "!test" })
 public class MongoDatabaseSaasConfig extends AbstractMongoConfiguration {
 
 	@Value("${spring.data.mongodb.host}")
@@ -32,11 +34,14 @@ public class MongoDatabaseSaasConfig extends AbstractMongoConfiguration {
 	@Value("${spring.data.mongodb.database}")
 	private String database;
 
-//	@Value("${spring.data.mongodb.username}")
-//	private String username;
-//
-//	@Value("${spring.data.mongodb.password}")
-//	private String password;
+	@Value("${spring.data.mongodb.username}")
+	private String username;
+
+	@Value("${spring.data.mongodb.password}")
+	private String password;
+
+	@Value("${spring.data.mongodb.auth.database}")
+	private String authDatabase;
 
 	@Override
 	protected String getMappingBasePackage() {
@@ -61,7 +66,14 @@ public class MongoDatabaseSaasConfig extends AbstractMongoConfiguration {
 	@Override
 	@Bean
 	public Mongo mongo() throws Exception {
-		return new MongoClient(Collections.singletonList(new ServerAddress(host, port)));
+		if (username == null || username.isEmpty() || authDatabase == null || authDatabase.isEmpty() || password == null
+				|| password.isEmpty()) {
+			return new MongoClient(Collections.singletonList(new ServerAddress(host, port)));
+		} else {
+			MongoCredential credential = MongoCredential.createCredential(username, authDatabase,
+					password.toCharArray());
+			return new MongoClient(Collections.singletonList(new ServerAddress(host, port)), Arrays.asList(credential));
+		}
 	}
 
 	@Bean
