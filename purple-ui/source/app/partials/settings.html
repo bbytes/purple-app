@@ -33,12 +33,8 @@
 				<br />
 				<br />
 				<br /> <label class="settings">STATUS ENABLE FOR</label> <select
-					class="form-control turnintodropdown" id="statusEnable" ng-model="statusEnable">
+					class="form-control turnintodropdown" id="statusEnable" ng-model="statusEnable" ng-options="days.value as days.id for days in days">
 					<option value="">-- Select Days --</option>
-					<option value="2">2 DAYS</option>
-					<option value="3">3 DAYS</option>
-					<option value="4">4 DAYS</option>
-					<option value="5">5 DAYS</option>
 				</select> <br />
 				<br />
 				<button type="button" class="btn btn-default submit" ng-click="configSetting()">save</button>
