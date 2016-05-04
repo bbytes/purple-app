@@ -3,7 +3,7 @@
  */
 rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$sessionStorage, statusService, projectService, appNotifyService,
-		$window, $location) {
+		$window, $location,settingsService,$filter) {
 			
 	$rootScope.bodyClass = 'body-standalone1';
 	$scope.isSubmit = true;
@@ -42,10 +42,26 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 	};
 
 	$scope.usersstatusLoad = function() {
+
+		settingsService.getConfigSetting().then(function(response){
+         if (response.success = true) 
+             $rootScope.statusEnable = response.data.statusEnable;
+       }, function(error){
+       });
+
 		statusService.getAllStatus().then(function(response) {
 			if (response.success) {
 
 				$scope.artists = [];
+				$rootScope.dateArr = [];
+
+				var dateResult,statusEnable,i;
+				statusEnable = $rootScope.statusEnable;
+					
+				for(i=0;i<=statusEnable;i++){
+					dateResult = $filter('date')(new Date().setDate(new Date().getDate()-i));	
+					$scope.dateArr.push(dateResult);
+				}
 				angular.forEach(response.data.gridData, function(value, key) {
 					
 					$scope.artists.push(value);
@@ -54,7 +70,15 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			}
 		});
 	}
-	
+	$scope.showEditIcon = function(date){
+		var result = false;
+		angular.forEach($rootScope.dateArr,function(value)
+		{
+			if(date.valueOf() == value.valueOf())
+				result = true;
+		});
+		return result;
+	};
 	$scope.loadProjects = function() {
 		projectService.getUserproject().then(function(response) {
 			if (response.success) {
@@ -95,6 +119,8 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 					$scope.isUpdate = true;
 					$scope.isSubmit = false;
 					$scope.loadProjects();	
+
+
 				});
 			}
 		});

@@ -19,7 +19,7 @@ import lombok.Data;
 
 @Data
 @Document
-public class NotificationSetting {
+public class ConfigSetting {
 
 	@Id
 	private String notificationId;

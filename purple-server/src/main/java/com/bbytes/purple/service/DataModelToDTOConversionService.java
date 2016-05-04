@@ -11,16 +11,16 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Comment;
+import com.bbytes.purple.domain.ConfigSetting;
 import com.bbytes.purple.domain.Holiday;
-import com.bbytes.purple.domain.NotificationSetting;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Reply;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
+import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
 import com.bbytes.purple.rest.dto.models.HolidayDTO;
-import com.bbytes.purple.rest.dto.models.NotificationResponseDTO;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.ReplyDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
@@ -168,12 +168,12 @@ public class DataModelToDTOConversionService {
 		return getResponseMapWithGridDataAndReply(replyCount, ReplyDTOList);
 	}
 
-	public NotificationResponseDTO getResponseMapWithGridDataAndNotification(NotificationSetting notificationSetting) {
+	public ConfigSettingResponseDTO getResponseMapWithGridDataAndNotification(ConfigSetting notificationSetting) {
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_HOLIDAY_FORMAT);
 		List<HolidayDTO> holidays = new ArrayList<HolidayDTO>();
 
-		NotificationResponseDTO notificationResponseDTO = new NotificationResponseDTO();
+		ConfigSettingResponseDTO notificationResponseDTO = new ConfigSettingResponseDTO();
 		notificationResponseDTO.setCaptureHours(notificationSetting.isCaptureHours());
 		notificationResponseDTO.setWeekendNotification(notificationSetting.isWeekendNotification());
 		notificationResponseDTO.setStatusEnable(notificationSetting.getStatusEnable());

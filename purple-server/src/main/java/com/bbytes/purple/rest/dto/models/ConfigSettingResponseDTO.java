@@ -12,7 +12,7 @@ import lombok.Data;
  *
  */
 @Data
-public class NotificationResponseDTO implements Serializable {
+public class ConfigSettingResponseDTO implements Serializable {
 
 	private static final long serialVersionUID = 3260691808422324878L;
 

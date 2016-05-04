@@ -16,14 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
-import com.bbytes.purple.domain.NotificationSetting;
+import com.bbytes.purple.domain.ConfigSetting;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
-import com.bbytes.purple.rest.dto.models.NotificationDTO;
-import com.bbytes.purple.rest.dto.models.NotificationResponseDTO;
+import com.bbytes.purple.rest.dto.models.ConfigSettingDTO;
+import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
 import com.bbytes.purple.rest.dto.models.PasswordDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.SettingService;
@@ -44,6 +45,9 @@ public class SettingController {
 
 	@Autowired
 	private SettingService settingService;
+
+	@Autowired
+	private ConfigSettingService configSettingService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
@@ -106,26 +110,46 @@ public class SettingController {
 	}
 
 	/**
-	 * The notificationSetting method is used to get all notification settings
+	 * The notificationSetting method is used to update config settings
 	 * 
 	 * @param notificationSettingDTO
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/notificationSetting", method = RequestMethod.POST)
-	public RestResponse notificationSetting(@RequestBody NotificationDTO notificationSettingDTO)
-			throws PurpleException {
+	@RequestMapping(value = "/api/v1/admin/configSetting/update", method = RequestMethod.POST)
+	public RestResponse updateConfigSetting(@RequestBody ConfigSettingDTO configSettingDTO) throws PurpleException {
 
 		Organization organization = userService.getLoggedinUser().getOrganization();
-		NotificationSetting notificationSetting = settingService.saveNotification(notificationSettingDTO, organization);
-		NotificationResponseDTO notificationMap = dataModelToDTOConversionService
+		ConfigSetting notificationSetting = configSettingService.saveNotification(configSettingDTO, organization);
+		ConfigSettingResponseDTO notificationMap = dataModelToDTOConversionService
 				.getResponseMapWithGridDataAndNotification(notificationSetting);
 
-		logger.debug("Notification settings are saved successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, notificationMap,
+		logger.debug("Config settings are saved successfully");
+		RestResponse settingMap = new RestResponse(RestResponse.SUCCESS, notificationMap,
 				SuccessHandler.NOTIFICATION_SUCCESS);
 
-		return userReponse;
+		return settingMap;
+	}
+
+	/**
+	 * The notificationSetting method is used to get all config settings
+	 * 
+	 * @param notificationSettingDTO
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/admin/configSetting", method = RequestMethod.GET)
+	public RestResponse getConfigSetting() throws PurpleException {
+
+		Organization organization = userService.getLoggedinUser().getOrganization();
+		ConfigSetting notificationSetting = configSettingService.getConfigSetting(organization);
+		ConfigSettingResponseDTO notificationMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndNotification(notificationSetting);
+		logger.debug("Config settings is fetched successfully");
+		RestResponse settingMap = new RestResponse(RestResponse.SUCCESS, notificationMap,
+				SuccessHandler.NOTIFICATION_SUCCESS);
+
+		return settingMap;
 	}
 
 	/**
