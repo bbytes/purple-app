@@ -1,7 +1,7 @@
 /**
  * Admin Controller
  */
-rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminService,appNotifyService,$window) {
+rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminService,dropdownListService,appNotifyService,$window) {
 	
 	 $rootScope.bodyClass = 'body-standalone1';
     $scope.invite = function (isValid) {
@@ -38,17 +38,10 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
     };
     
     $scope.loadUsers = function(){
-      $scope.userRoles = [ 
-                    {
-                      id:'NORMAL', 
-                      value:'NORMAL'
-                    },
-                    {
-                      id:'ADMIN', 
-                      value:'ADMIN'
-                    }
-                ];
-
+ 
+        dropdownListService.getRole().then(function(response){
+                 $scope.userRoles = response.data;
+            });
     	adminService.getAllusers().then(function (response) {
             if (response.success) {
             	if (response) {

@@ -3,7 +3,7 @@
  */
 rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$sessionStorage, statusService, projectService, appNotifyService,
-		$window, $location,settingsService,$filter) {
+		$window, $location,settingsService,dropdownListService,$filter) {
 			
 	$rootScope.bodyClass = 'body-standalone1';
 	$scope.isSubmit = true;
@@ -82,9 +82,12 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 	$scope.loadProjects = function() {
 		projectService.getUserproject().then(function(response) {
 			if (response.success) {
-				$scope.selectables = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12];
+				//$scope.selectables = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12];
 				$scope.allprojects = response.data.gridData;
 			}
+		});
+		dropdownListService.getHours().then(function(response){
+			$scope.selectables = response.data;
 		});
 	}
 

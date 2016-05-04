@@ -86,8 +86,8 @@
 			<div class="col-md-3">
 				<div class="form-sidebar">
 					<div class="form-group">
-						<select class="form-control turnintodropdown" name="time"
-							ng-model="hours" ng-options="hours for hours in selectables" required>
+						<select class="form-control turnintodropdown" name="hours"
+							ng-model="hours" ng-options="hours.value for hours in selectables" required>
 						 <option value="">Hrs</option>	
 						</select>
 					</div>

@@ -1,7 +1,7 @@
 /**
  * Setting controller
  */
-rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService) {
+rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, settingsService,dropdownListService,appNotifyService) {
 
     // Reset password for admin
     $scope.updatePassword = function (user,confirmPassword) {
@@ -31,6 +31,10 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
     };
 
     $scope.loadSetting = function (){
+
+        dropdownListService.getStatusEnable().then(function(response){
+            $scope.days = response.data;
+        });
 
         settingsService.getConfigSetting().then(function(response){
          if (response.success = true) 
