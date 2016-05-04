@@ -58,7 +58,7 @@ rootApp.service('adminService', function($rootScope, $http, $q, $window) {
 		$http({
 			method : 'POST',
 			url : $rootScope.baseUrl + 'api/v1/admin/user/role',
-			params:{userId,role},
+			params:{"userId":userId,"role":role},
 			headers : {
 				'Content-Type' : 'application/json'
 			}

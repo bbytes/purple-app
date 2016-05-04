@@ -40,8 +40,8 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
     $scope.loadUsers = function(){
       $scope.userRoles = [ 
                     {
-                      id:"NORMAL", 
-                      value:"NORMAL"
+                      id:'NORMAL', 
+                      value:'NORMAL'
                     },
                     {
                       id:'ADMIN', 

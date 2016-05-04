@@ -210,7 +210,7 @@ public class AdminController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/admin/user/role", method = RequestMethod.POST)
-	public RestResponse updateUserRole(@RequestParam String userId, @RequestParam String role) throws PurpleException {
+	public RestResponse updateUserRole(@RequestParam(value="userId") String userId, @RequestParam(value="role") String role) throws PurpleException {
 
 		User user = adminService.updateUserRole(userId, role);
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
