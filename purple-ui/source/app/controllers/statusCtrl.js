@@ -108,13 +108,12 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			if (response.success = true) {
 
 				$scope.statusdata = response.data.gridData;
-				$scope.selectables = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12];
 				
 				angular.forEach(response.data.gridData, function(value, key) {
 
 					$scope.allstatus = value.statusList;
 					$scope.project = $scope.allstatus[0].projectId;
-					$scope.hours = $scope.allstatus[0].hours;
+					$scope.hours = $scope.allstatus[0].hours.toString();
 					$scope.workingOn = $scope.allstatus[0].workingOn;
 					$scope.workedOn = $scope.allstatus[0].workedOn;
 					$rootScope.statusId = $scope.allstatus[0].statusId;
@@ -122,7 +121,6 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 					$scope.isUpdate = true;
 					$scope.isSubmit = false;
 					$scope.loadProjects();	
-
 
 				});
 			}

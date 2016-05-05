@@ -87,8 +87,10 @@
 				<div class="form-sidebar">
 					<div class="form-group">
 						<select class="form-control turnintodropdown" name="hours"
-							ng-model="hours" ng-options="hours.value for hours in selectables" required>
-						 <option value="">Hrs</option>	
+							ng-model="hours">
+							<option value="">Hrs</option>		
+							<option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
+						 
 						</select>
 					</div>
 				</div>
