@@ -61,8 +61,6 @@ rootApp.service('dropdownListService', function($rootScope, $http, $q, $window) 
 			}
 
 		}).success(function(response, status, headers, config) {
-
-			console.log(response);
 			deferred.resolve(response);
 		}).error(function(response) {
 				 deferred.reject(response);

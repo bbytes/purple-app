@@ -2,7 +2,7 @@
  * Setting controller
  */
 
-rootApp.controller('settingsCtrl','TimezoneSelectCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService) {
+rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, dropdownListService,settingsService,appNotifyService) {
 
 
     // Reset password for admin
@@ -87,5 +87,4 @@ rootApp.controller('settingsCtrl','TimezoneSelectCtrl', function ($scope, $rootS
 		$scope.confirmPassword = '';
 		user.newPassword = '';
     }  
-    $scope.country = 'IN';    
 });
