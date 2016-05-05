@@ -11,7 +11,6 @@ rootApp.run([
 		function($rootScope, $state,appAuthenticationService,ENV) {
 
 			$rootScope.bodyClass = '';
-			console.log(ENV);
         	$rootScope.baseUrl = ENV;
 			$rootScope.apiUrl = 'api/v1';
 			$rootScope.loggedStatus = false;

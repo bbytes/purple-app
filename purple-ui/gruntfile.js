@@ -21,6 +21,29 @@ module.exports = function(grunt) {
 						}
 					}
 				},
+
+				ngconstant: {
+						  options: {
+						    name: 'server-url',
+						    wrap: '"use strict";\n\n{%= __ngModule %}'
+						  },
+						  dev: {
+						  	options: {
+     							 dest: 'source/assets/js/lib/server-url.js'
+    						},
+						    constants: {
+						      ENV: 'http://localhost:9999/'
+						    }
+						  },
+						  prod: {
+						  	options: {
+     							 dest: 'source/assets/js/lib/server-url.js'
+    						},
+						    constants: {
+						      ENV: '/'
+						    }
+						  }
+						},
 				shell : {
 					options : {
 						stderr : false,
@@ -43,7 +66,9 @@ module.exports = function(grunt) {
 								'source/assets/js/lib/calendar.js',
 								'source/assets/js/lib/velocity.min.js',
 								'source/assets/js/lib/s-next.js',
-								'source/assets/js/lib/index.js'
+								'source/assets/js/lib/index.js',
+								'source/assets/js/lib/server-url.js'
+								
 						],
 						dest : '<%= grunt.config.get("buildPath") %>/assets/js/_lib.js'
 					},
@@ -244,10 +269,11 @@ module.exports = function(grunt) {
 
 	// Dev build
 	grunt.registerTask('default', [ 'config:dev',
-			'clean', 'concat', 'bower_concat', 'copy', 'html2js', 'connect',
+			'clean', 'ngconstant:dev','concat', 'bower_concat', 'copy', 'html2js', 'connect',
 			'watch' ]);
 
 	// Production Build
-	grunt.registerTask('prod', [ 'config:prod', 'clean', 'concat',
-			'bower_concat', 'copy', 'html2js', 'ngAnnotate:app', 'uglify', 'cachebreaker' ]);
+	grunt.registerTask('prod', [ 'config:prod', 'clean', 'ngconstant:prod','concat',
+			'bower_concat', 'copy', 'html2js', 'ngAnnotate:app', 'uglify',
+		 'cachebreaker' ]);
 };
