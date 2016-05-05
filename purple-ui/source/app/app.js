@@ -1,17 +1,18 @@
 // Define Angular Module with dependencies 
 var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
-		'ngAnimate', 'templates-main', 'toaster', 'ngStorage', 'angular-md5',
-		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav','pageslide-directive','ngMaterial','angular-confirm','textAngular','angular-timezone-select']);
+		'ngAnimate', 'templates-main', 'toaster', 'ngStorage' ,'angular-md5',
+		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav','pageslide-directive','ngMaterial','angular-confirm','textAngular','angular-timezone-select','server-url']);
 
 // Defining global variables
 rootApp.run([
 		'$rootScope',
 		'$state',
-		'appAuthenticationService',
-		function($rootScope, $state,appAuthenticationService) {
+		'appAuthenticationService','ENV',
+		function($rootScope, $state,appAuthenticationService,ENV) {
 
 			$rootScope.bodyClass = '';
-        $rootScope.baseUrl = 'http://localhost:9999/';
+			console.log(ENV);
+        	$rootScope.baseUrl = ENV;
 			$rootScope.apiUrl = 'api/v1';
 			$rootScope.loggedStatus = false;
 			$rootScope.authToken = '';
