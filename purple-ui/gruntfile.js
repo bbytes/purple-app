@@ -249,6 +249,5 @@ module.exports = function(grunt) {
 
 	// Production Build
 	grunt.registerTask('prod', [ 'config:prod', 'clean', 'concat',
-			'bower_concat', 'copy', 'html2js', 'ngAnnotate:app', 'uglify',
-			'cssmin', 'cachebreaker' ]);
+			'bower_concat', 'copy', 'html2js', 'ngAnnotate:app', 'uglify', 'cachebreaker' ]);
 };
