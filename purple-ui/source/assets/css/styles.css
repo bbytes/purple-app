@@ -344,7 +344,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     background: #c7bcd1;
     left: 50%;
     margin-left: -1.5px;
-    z-index: 0;
+    z-index: -1;
 }
 .timeline > li {
     margin-bottom: 20px;
@@ -1533,8 +1533,76 @@ label {
  
 .status-text{
     overflow: auto; 
-    width: 100%; height: 100%; 
+    width: 100%; 
+	height: 100%; 
     max-width: 700px; 
-    max-height: 120px; 
+    max-height: 125px; 
     background-color: #FFFFFF
+}
+
+.timezone-select {
+        min-width: 100%;
+      }
+.select2-container .select2-choice .select2-arrow b {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: url('../img/select2.png') no-repeat 0 1px !important;
+}
+.select2-container .select2-choice {
+    display: block;
+    height: 34px !important;
+    padding: 0px 0 0px 8px !important;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #aaa;
+    white-space: nowrap;
+    line-height: 32px !important;
+    color: #444;
+    text-decoration: none;
+    border-radius: 0px !important;
+    background-clip: padding-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #fff;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.5, #fff));
+    background-image: -webkit-linear-gradient(center bottom, #eee 0%, #fff 50%);
+    background-image: -moz-linear-gradient(center bottom, #eee 0%, #fff 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#eeeeee', GradientType = 0);
+     background-image: linear-gradient(to top, #eee 0%, #fff 50%); 
+}
+.select2-container .select2-choice .select2-arrow {
+    display: inline-block;
+    width: 18px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 4px !important;
+     border-left: 0px solid #aaa !important;
+    border-radius: 0 4px 4px 0;
+    background-clip: padding-box;
+    background: #fff;
+     background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.5, #fff));
+    background-image: -webkit-linear-gradient(center bottom, #eee 0%, #fff 50%);
+    background-image: -moz-linear-gradient(center bottom, #eee 0%, #fff 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#eeeeee', GradientType = 0);
+     background-image: linear-gradient(to top, #eee 0%, #fff 50%);
+}
+.select2-drop{
+	width: 494px !important;
+}
+.ta-editor {
+  min-height: 120px !important;
+  height: auto !important;
+  overflow: auto !important;
+  font-family: inherit !important;
+  font-size: 100% !important;
+}
+.ta-scroll-window > .ta-bind {
+    height: auto;
+    min-height: 120px !important;
+    padding: 6px 12px;
 }

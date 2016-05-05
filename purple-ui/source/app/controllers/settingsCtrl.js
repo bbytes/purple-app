@@ -1,7 +1,9 @@
 /**
  * Setting controller
  */
-rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService) {
+
+rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, dropdownListService,settingsService,appNotifyService) {
+
 
     // Reset password for admin
     $scope.updatePassword = function (user,confirmPassword) {
@@ -29,6 +31,37 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
     	appNotifyService.error('Please enter your current password');
     }
     };
+
+    $scope.loadSetting = function (){
+
+        dropdownListService.getStatusEnable().then(function(response){
+            $scope.days = response.data;
+        });
+
+        settingsService.getConfigSetting().then(function(response){
+         if (response.success = true) 
+             $rootScope.statusEnable = response.data.statusEnable;
+       }, function(error){
+       });
+    };
+    // config setting method to save admin setting information
+    $scope.configSetting = function(){
+        var admin = new Object();
+        admin.statusEnable = $scope.statusEnable;
+        if(!admin.statusEnable){
+            appNotifyService.error('Please select valid input');   
+            return false;
+        }
+
+       settingsService.saveConfigSetting(admin).then(function(response){
+
+         if (response.success = true) 
+                 appNotifyService.success('Your Setting has been successfully saved.');
+             $scope.statusEnable = response.data.statusEnable;
+       }, function(error){
+            appNotifyService.error("Error while saving setting.");
+       });
+   };
     
 	$("[name='my-checkbox']").bootstrapSwitch();
 	
@@ -53,5 +86,5 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
 		user.oldPassword = '';
 		$scope.confirmPassword = '';
 		user.newPassword = '';
-    }      
+    }  
 });

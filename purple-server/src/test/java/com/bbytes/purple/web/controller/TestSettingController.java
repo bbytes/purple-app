@@ -15,7 +15,7 @@ import com.bbytes.purple.PurpleWebBaseApplicationTests;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
-import com.bbytes.purple.rest.dto.models.NotificationDTO;
+import com.bbytes.purple.rest.dto.models.ConfigSettingDTO;
 import com.bbytes.purple.rest.dto.models.PasswordDTO;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
@@ -125,7 +125,7 @@ public class TestSettingController extends PurpleWebBaseApplicationTests {
 		holidayDates.add("30/11/2016");
 		holidayDates.add("15/06/2016");
 
-		NotificationDTO requestNotification = new NotificationDTO();
+		ConfigSettingDTO requestNotification = new ConfigSettingDTO();
 		requestNotification.setCaptureHours(false);
 		requestNotification.setWeekendNotification(true);
 		requestNotification.setStatusEnable("3 Days");

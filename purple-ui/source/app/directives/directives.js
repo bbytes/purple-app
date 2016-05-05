@@ -256,9 +256,5 @@ pageslideDirective.directive('pageslide', [
         };
     }
 ]);
-
-
-  
-	
                              
                              

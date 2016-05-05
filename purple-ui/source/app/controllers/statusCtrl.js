@@ -3,7 +3,7 @@
  */
 rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$sessionStorage, statusService, projectService, appNotifyService,
-		$window, $location) {
+		$window, $location,settingsService,dropdownListService,$filter) {
 			
 	$rootScope.bodyClass = 'body-standalone1';
 	$scope.isSubmit = true;
@@ -42,10 +42,26 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 	};
 
 	$scope.usersstatusLoad = function() {
+
+		settingsService.getConfigSetting().then(function(response){
+         if (response.success = true) 
+             $rootScope.statusEnable = response.data.statusEnable;
+       }, function(error){
+       });
+
 		statusService.getAllStatus().then(function(response) {
 			if (response.success) {
 
 				$scope.artists = [];
+				$rootScope.dateArr = [];
+
+				var dateResult,statusEnable,i;
+				statusEnable = $rootScope.statusEnable;
+					
+				for(i=0;i<=statusEnable;i++){
+					dateResult = $filter('date')(new Date().setDate(new Date().getDate()-i));	
+					$scope.dateArr.push(dateResult);
+				}
 				angular.forEach(response.data.gridData, function(value, key) {
 					
 					$scope.artists.push(value);
@@ -54,13 +70,24 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			}
 		});
 	}
-	
+	$scope.showEditIcon = function(date){
+		var result = false;
+		angular.forEach($rootScope.dateArr,function(value)
+		{
+			if(date.valueOf() == value.valueOf())
+				result = true;
+		});
+		return result;
+	};
 	$scope.loadProjects = function() {
 		projectService.getUserproject().then(function(response) {
 			if (response.success) {
-				$scope.selectables = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12];
+				//$scope.selectables = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12];
 				$scope.allprojects = response.data.gridData;
 			}
+		});
+		dropdownListService.getHours().then(function(response){
+			$scope.selectables = response.data;
 		});
 	}
 
@@ -81,13 +108,12 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			if (response.success = true) {
 
 				$scope.statusdata = response.data.gridData;
-				$scope.selectables = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12];
 				
 				angular.forEach(response.data.gridData, function(value, key) {
 
 					$scope.allstatus = value.statusList;
 					$scope.project = $scope.allstatus[0].projectId;
-					$scope.hours = $scope.allstatus[0].hours;
+					$scope.hours = $scope.allstatus[0].hours.toString();
 					$scope.workingOn = $scope.allstatus[0].workingOn;
 					$scope.workedOn = $scope.allstatus[0].workedOn;
 					$rootScope.statusId = $scope.allstatus[0].statusId;
@@ -95,6 +121,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 					$scope.isUpdate = true;
 					$scope.isSubmit = false;
 					$scope.loadProjects();	
+
 				});
 			}
 		});
@@ -147,4 +174,5 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			$scope.workedOn = '';
 			$scope.blockers = '';
 	}
+	
 });
