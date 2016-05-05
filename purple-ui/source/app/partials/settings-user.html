@@ -24,26 +24,20 @@
 		<div class="row">
 			<div class="col-md-7">
 				<form name="timeForm">
-					<label class="settings">TIMEZONE</label> <select
-						class="form-control turnintodropdown" id="sel1"
-						ng-model="time.timeZone">
-						<option value="Asia/Kolkata">(GMT+05:30) Chennai,
-							Kolkata, Mumbai, New Delhi</option>
-						<option value="Pacific/Midway">(GMT-11:00) Midway Island,
-							Samoa</option>
-						<option value="America/Adak">(GMT-10:00) Hawaii-Aleutian</option>
-						<option value="Pacific/Marquesas">(GMT-09:30) Marquesas
-							Islands</option>
-						<option value="Pacific/Gambier">(GMT-09:00) Gambier
-							Islands</option>
-					</select>
+					<label class="settings">TIMEZONE</label>
+                       <div ng-init="translations.placeholder = 'SeLecT your timezone :)'">					
+					 <input class="timezone-select" timezone-select data-ng-model="timezone" country="country">
+					 </div>
 					<button type="button" class="btn btn-default create"
 						ng-click="updateTime(timeForm.$valid)"
 						style="float: left; width: 40.2%;">save</button>
 				</form>
+				
 			</div>
 
-			<div class="col-md-5"></div>
+			<div class="col-md-5">
+			
+			</div>
 
 		</div>
 	</div>

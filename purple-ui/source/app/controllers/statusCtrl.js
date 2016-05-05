@@ -176,4 +176,5 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			$scope.workedOn = '';
 			$scope.blockers = '';
 	}
+	
 });
