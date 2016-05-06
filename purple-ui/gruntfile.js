@@ -32,7 +32,7 @@ module.exports = function(grunt) {
      							 dest: 'source/assets/js/lib/server-url.js'
     						},
 						    constants: {
-						      ENV: 'http://localhost:9999/'
+						      BASE_URL: 'http://localhost:9999/'
 						    }
 						  },
 						  prod: {
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
      							 dest: 'source/assets/js/lib/server-url.js'
     						},
 						    constants: {
-						      ENV: '/'
+						      BASE_URL: '/'
 						    }
 						  }
 						},
@@ -228,7 +228,7 @@ module.exports = function(grunt) {
 						// Gets the port from the connect configuration
 						// path: 'http://localhost:<%=
 						// connect.server.options.port%>'
-						path : 'http://localhost:8080/'
+						path : 'http://localhost:9999/'
 					},
 					local : {
 						// Gets the port from the connect configuration

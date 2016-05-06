@@ -7,11 +7,11 @@ var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
 rootApp.run([
 		'$rootScope',
 		'$state',
-		'appAuthenticationService','ENV',
-		function($rootScope, $state,appAuthenticationService,ENV) {
+		'appAuthenticationService','BASE_URL',
+		function($rootScope, $state,appAuthenticationService,BASE_URL) {
 
 			$rootScope.bodyClass = '';
-        	$rootScope.baseUrl = ENV;
+        	$rootScope.baseUrl = BASE_URL;
 			$rootScope.apiUrl = 'api/v1';
 			$rootScope.loggedStatus = false;
 			$rootScope.authToken = '';
