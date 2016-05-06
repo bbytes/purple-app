@@ -45,6 +45,7 @@ public class DropdownListController {
 
 		List<String> userRole = new LinkedList<String>();
 		userRole.add("ADMIN");
+		userRole.add("MANAGER");
 		userRole.add("NORMAL");
 
 		List<BaseDTO> roles = dataModelToDTOConversionService.convertRolesToEntityDTOList(userRole);
