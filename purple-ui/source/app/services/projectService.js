@@ -13,7 +13,7 @@ rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + '/api/v1/admin/project/create',
+			url : $rootScope.baseUrl + 'api/v1/admin/project/create',
 			data : project,
 			headers : {
 				'Content-Type' : 'application/json',

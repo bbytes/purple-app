@@ -77,7 +77,7 @@ rootApp.service('adminService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method :'DELETE',
-			url : $rootScope.baseUrl + '/api/v1/admin/user/delete/' +email,
+			url : $rootScope.baseUrl + 'api/v1/admin/user/delete/' +email,
 			//data : admin,
 			headers : {
 				'Content-Type' : 'application/json',
