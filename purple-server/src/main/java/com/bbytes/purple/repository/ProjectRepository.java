@@ -10,6 +10,10 @@ import com.bbytes.purple.domain.User;
 public interface ProjectRepository extends MongoRepository<Project, String> {
 
 	Project findOneByProjectName(String projectName);
+	
+	List<Project> findByProjectNameIn(List<String> projectNames);
+	
+	List<Project> findByProjectIdIn(List<String> projectIds);
 
 	List<Project> findByUser(User user);
 

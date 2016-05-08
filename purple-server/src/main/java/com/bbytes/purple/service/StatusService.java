@@ -1,16 +1,11 @@
 package com.bbytes.purple.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +14,10 @@ import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.StatusRepository;
+import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
-import com.bbytes.purple.rest.dto.models.StatusResponseDTO;
 import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.utils.ErrorHandler;
-import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class StatusService extends AbstractService<Status, String> {
@@ -37,7 +31,7 @@ public class StatusService extends AbstractService<Status, String> {
 	private UserService userService;
 
 	@Autowired
-	private DataModelToDTOConversionService dataModelToDTOConversionService;
+	private UserRepository userRepository;
 
 	@Autowired
 	public StatusService(StatusRepository statusRepository) {
@@ -66,20 +60,18 @@ public class StatusService extends AbstractService<Status, String> {
 		return state;
 	}
 
-	public double findStatusHours(List<Status> statusList, Date dateTime) {
+	public double findStatusHours(User user, Date dateTime) {
 		double hours = 0;
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
-		String date = simpleDateFormat.format(dateTime);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
-		List<StatusResponseDTO> linkedList = (LinkedList<StatusResponseDTO>) statusMap.get("gridData");
-		for (StatusResponseDTO statusDTO : linkedList) {
-			if (date.equals(statusDTO.getDate())) {
-				for (StatusDTO status : statusDTO.getStatusList()) {
-					hours = hours + status.getHours();
-				}
-				break;
-			}
+		Date startDate = new DateTime(dateTime).withTime(0, 0, 0, 0).toDate();
+		Date endDate = new DateTime(dateTime).withTime(23, 59, 59, 999).toDate();
+		List<Status> statusList = statusRepository.findByDateTimeBetweenAndUser(startDate, endDate, user);
+		if (statusList == null || statusList.isEmpty())
+			return hours;
+
+		for (Status status : statusList) {
+			hours = hours + status.getHours();
 		}
+
 		return hours;
 	}
 
@@ -92,10 +84,12 @@ public class StatusService extends AbstractService<Status, String> {
 				Status addStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(),
 						new Date());
 				Project project = projectService.findByProjectId(status.getProjectId());
-				double hours = findStatusHours(getAllStatus(user), new Date());
+
+				double hours = findStatusHours(user, new Date());
 				double newHours = hours + status.getHours();
 				if (newHours > 24)
 					throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
+
 				addStatus.setProject(project);
 				addStatus.setUser(user);
 				addStatus.setBlockers(status.getBlockers());
@@ -104,16 +98,16 @@ public class StatusService extends AbstractService<Status, String> {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_STATUS_FAILED);
 			}
 		} else
-			throw new PurpleException("Can not add status with empty project", ErrorHandler.PROJECT_NOT_FOUND);
+			throw new PurpleException("Cannot add status with empty project", ErrorHandler.PROJECT_NOT_FOUND);
 		return savedStatus;
 	}
 
-	public Status getStatus(String statusid) throws PurpleException {
+	public Status getStatus(String statusId) throws PurpleException {
 		Status getStatus = null;
-		if (!statusIdExist(statusid))
+		if (!statusIdExist(statusId))
 			throw new PurpleException("Error while getting status", ErrorHandler.STATUS_NOT_FOUND);
 		try {
-			getStatus = statusRepository.findOne(statusid);
+			getStatus = statusRepository.findOne(statusId);
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
 		}
@@ -133,11 +127,11 @@ public class StatusService extends AbstractService<Status, String> {
 		return statuses;
 	}
 
-	public void deleteStatus(String statusid) throws PurpleException {
-		if (!statusIdExist(statusid))
+	public void deleteStatus(String statusId) throws PurpleException {
+		if (!statusIdExist(statusId))
 			throw new PurpleException("Error while deleting status", ErrorHandler.STATUS_NOT_FOUND);
 		try {
-			Status status = statusRepository.findOne(statusid);
+			Status status = statusRepository.findOne(statusId);
 			statusRepository.delete(status);
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
@@ -152,11 +146,13 @@ public class StatusService extends AbstractService<Status, String> {
 		try {
 			Project project = projectService.findByProjectId(status.getProjectId());
 			Status updateStatus = getStatusbyId(statusId);
+
 			Date statusDate = updateStatus.getDateTime();
-			double hours = findStatusHours(getAllStatus(user),statusDate);
+			double hours = findStatusHours(user, statusDate);
 			double newHours = hours + (status.getHours() - updateStatus.getHours());
 			if (newHours > 24)
 				throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
+
 			updateStatus.setWorkedOn(status.getWorkedOn());
 			updateStatus.setWorkingOn(status.getWorkingOn());
 			updateStatus.setBlockers(status.getBlockers());
@@ -170,85 +166,64 @@ public class StatusService extends AbstractService<Status, String> {
 
 	}
 
+
+
 	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser)
 			throws PurpleException {
-		List<Status> statuses = new ArrayList<Status>();
-		List<Project> projectList = new ArrayList<Project>();
-		List<User> userList = new ArrayList<User>();
-		Set<User> allUsers = new HashSet<User>();
-		try {
-			if (userAndProject.getProjectList().isEmpty() && userAndProject.getUserList().isEmpty()) {
-				projectList = userService.getProjects(currentUser);
-				for (Project project : projectList) {
-					allUsers.addAll(project.getUser());
-				}
-				userList.addAll(allUsers);
-				for (Project projectsOfCurrentUser : projectList) {
-					for (User userOfProjects : userList) {
-						statuses.addAll(findByProjectAndUser(projectsOfCurrentUser, userOfProjects));
-						Collections.sort(statuses, Collections.reverseOrder());
+		List<Status> result = new ArrayList<Status>();
+		List<Project> currentUserProjectList = userService.getProjects(currentUser);
+		List<String> projectIdStringQueryList = userAndProject.getProjectList();
+		List<String> userQueryEmailList = userAndProject.getUserList();
+		List<User> userQueryList = userRepository.findByEmailIn(userQueryEmailList);
+
+		List<Project> projectQueryList = new ArrayList<>();
+		// apply current user project list match filter to requested project
+		// list
+		if (currentUserProjectList != null) {
+			if (!projectIdStringQueryList.isEmpty()) {
+				for (Project project : currentUserProjectList) {
+					if (projectIdStringQueryList.contains(project.getProjectId())) {
+						projectQueryList.add(project);
 					}
 				}
-			} else if (!userAndProject.getProjectList().isEmpty() || !userAndProject.getUserList().isEmpty()) {
-				if (!userAndProject.getProjectList().isEmpty() && userAndProject.getUserList().isEmpty()) {
-					for (String projectid : userAndProject.getProjectList()) {
-						if (!projectService.projectIdExist(projectid))
-							throw new PurpleException("Error while getting status", ErrorHandler.PROJECT_NOT_FOUND);
-						Project project = projectService.findByProjectId(projectid);
-						projectList.add(project);
-					}
-					for (Project project : projectList) {
-						allUsers.addAll(project.getUser());
-					}
-					userList.addAll(allUsers);
-					for (Project projectsOfCurrentUser : projectList) {
-						for (User userOfProjects : userList) {
-							statuses.addAll(findByProjectAndUser(projectsOfCurrentUser, userOfProjects));
-							Collections.sort(statuses, Collections.reverseOrder());
-						}
-					}
-				}
-				if (userAndProject.getProjectList().isEmpty() && !userAndProject.getUserList().isEmpty()) {
-					for (String email : userAndProject.getUserList()) {
-						if (!userService.userEmailExist(email))
-							throw new PurpleException("Error while getting status", ErrorHandler.USER_NOT_FOUND);
-						User user = userService.getUserByEmail(email);
-						userList.add(user);
-					}
-					projectList = userService.getProjects(currentUser);
-					for (Project projectsOfCurrentUser : projectList) {
-						for (User userOfProjects : userList) {
-							statuses.addAll(findByProjectAndUser(projectsOfCurrentUser, userOfProjects));
-							Collections.sort(statuses, Collections.reverseOrder());
-						}
-					}
-				}
-				if (!userAndProject.getProjectList().isEmpty() && !userAndProject.getUserList().isEmpty()) {
-					for (String projectid : userAndProject.getProjectList()) {
-						if (!projectService.projectIdExist(projectid))
-							throw new PurpleException("Error while getting status", ErrorHandler.PROJECT_NOT_FOUND);
-						Project project = projectService.findByProjectId(projectid);
-						projectList.add(project);
-					}
-					for (String email : userAndProject.getUserList()) {
-						if (!userService.userEmailExist(email))
-							throw new PurpleException("Error while getting status", ErrorHandler.USER_NOT_FOUND);
-						User user = userService.getUserByEmail(email);
-						userList.add(user);
-					}
-					for (Project projectsOfCurrentUser : projectList) {
-						for (User userOfProjects : userList) {
-							statuses.addAll(findByProjectAndUser(projectsOfCurrentUser, userOfProjects));
-							Collections.sort(statuses, Collections.reverseOrder());
-						}
-					}
-				}
+			} else {
+				// if the project list in request empty then the user has
+				// selected 'All' option in ui so add all the
+				// currentUserProjectList to projectQueryList
+				projectQueryList = currentUserProjectList;
 			}
+
+		}
+
+		// both empty
+		if ((userQueryList == null || userQueryList.isEmpty())
+				&& (projectQueryList == null || projectQueryList.isEmpty())) {
+			return result;
+		}
+		// project list empty
+		else if (userQueryList != null && !userQueryList.isEmpty()
+				&& (projectQueryList == null || projectQueryList.isEmpty())) {
+			result = statusRepository.findByUserIn(userQueryList);
+		}
+		// user list empty
+		else if (projectQueryList != null && !projectQueryList.isEmpty()
+				&& (userQueryList == null || userQueryList.isEmpty())) {
+			result = statusRepository.findByProjectIn(projectQueryList);
+		}
+		// both the list not empty
+		else {
+			result = statusRepository.findByProjectInAndUserIn(projectQueryList, userQueryList);
+		}
+
+		try {
+
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
 		}
 
-		return statuses;
+		Collections.sort(result, Collections.reverseOrder());
+
+		return result;
 	}
 
 }
