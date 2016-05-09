@@ -98,21 +98,21 @@ rootApp.config([
 					}
 				}
 			
-			}).state('home-page', {
-				url : '/home-page',
+			}).state('dashboard', {
+				url : '/dashboard',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home.html'
 						
 					},
-					'header@home-page' : {
+					'header@dashboard' : {
 						templateUrl : 'app/partials/home-header.html'
 					},
-					'main@home-page' : {
-						templateUrl : 'app/partials/home-page.html',
-						controller : 'homepageCtrl'
+					'main@dashboard' : {
+						templateUrl : 'app/partials/dashboard.html',
+						controller : 'dashboardCtrl'
 					},
-					'footer@home-page' : {
+					'footer@dashboard' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				}
