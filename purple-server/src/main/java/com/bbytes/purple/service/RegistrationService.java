@@ -23,21 +23,21 @@ public class RegistrationService {
 
 	public void signUp(Organization org, User user) throws PurpleException {
 
-		TenancyContextHolder.setTenant(org.getOrgId());
-
 		if (org != null && user != null) {
-			if (orgService.orgIdExist(org.getOrgId()) || tenantResolverService.organizationExist(org.getOrgId()))
+
+			if (tenantResolverService.emailExist(user.getEmail()))
+				throw new PurpleException("Error while sign up", ErrorHandler.EMAIL_NOT_UNIQUE);
+
+			if (tenantResolverService.organizationExist(org.getOrgId()))
 				throw new PurpleException("Error while sign up", ErrorHandler.ORG_NOT_UNIQUE);
 
-			if (userService.userEmailExist(user.getEmail()) || tenantResolverService.emailExist(user.getEmail()))
-				throw new PurpleException("Error while sign up", ErrorHandler.EMAIL_NOT_UNIQUE);
 			try {
+				TenancyContextHolder.setTenant(org.getOrgId());
 				orgService.save(org);
 				userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
 			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.SIGN_UP_FAILED);
+				throw new PurpleException(e.getMessage(), ErrorHandler.SIGN_UP_FAILED, e);
 			}
-
 		}
 	}
 
