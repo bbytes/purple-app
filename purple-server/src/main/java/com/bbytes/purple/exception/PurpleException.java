@@ -6,7 +6,7 @@ public class PurpleException extends Exception {
 
 	private String errConstant;
 
-	public PurpleException(String message, String errConstant, Exception ex) {
+	public PurpleException(String message, String errConstant, Throwable ex) {
 		super(message,ex);
 		this.errConstant = errConstant;
 	}

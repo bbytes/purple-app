@@ -23,6 +23,8 @@ public interface StatusRepository extends MongoRepository<Status, String> {
 	
 	List<Status> findByProjectInAndUserIn(List<Project> project, List<User> user);
 	
+	List<Status> findByDateTimeBetweenAndProjectInAndUserIn(Date startDate, Date endDate ,List<Project> project, List<User> user);
+	
 	List<Status> findByDateTimeBetween(Date startDate, Date endDate);
 	
 	List<Status> findByDateTimeBetweenAndUserIn(Date startDate, Date endDate , List<User> user);

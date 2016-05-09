@@ -57,7 +57,7 @@ public class CommentService extends AbstractService<Comment, String> {
 				Comment comment = new Comment(commentDTO.getCommentDesc(), user, status);
 				addComment = commentRepository.save(comment);
 			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_COMMENT_FAILED);
+				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_COMMENT_FAILED,e);
 			}
 		}
 		return addComment;

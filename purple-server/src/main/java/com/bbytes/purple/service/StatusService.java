@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
+import com.bbytes.purple.domain.TimePeriod;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.StatusRepository;
@@ -143,30 +144,30 @@ public class StatusService extends AbstractService<Status, String> {
 		Status newStatus = null;
 		if ((!statusIdExist(statusId) || (status.getProjectId() == null || status.getProjectId().isEmpty())))
 			throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
+
+		Project project = projectService.findByProjectId(status.getProjectId());
+		Status updateStatus = getStatusbyId(statusId);
+
+		Date statusDate = updateStatus.getDateTime();
+		double hours = findStatusHours(user, statusDate);
+		double newHours = hours + (status.getHours() - updateStatus.getHours());
+		if (newHours > 24)
+			throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
+
+		updateStatus.setWorkedOn(status.getWorkedOn());
+		updateStatus.setWorkingOn(status.getWorkingOn());
+		updateStatus.setBlockers(status.getBlockers());
+		updateStatus.setHours(status.getHours());
+		updateStatus.setProject(project);
 		try {
-			Project project = projectService.findByProjectId(status.getProjectId());
-			Status updateStatus = getStatusbyId(statusId);
-
-			Date statusDate = updateStatus.getDateTime();
-			double hours = findStatusHours(user, statusDate);
-			double newHours = hours + (status.getHours() - updateStatus.getHours());
-			if (newHours > 24)
-				throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
-
-			updateStatus.setWorkedOn(status.getWorkedOn());
-			updateStatus.setWorkingOn(status.getWorkingOn());
-			updateStatus.setBlockers(status.getBlockers());
-			updateStatus.setHours(status.getHours());
-			updateStatus.setProject(project);
 			newStatus = statusRepository.save(updateStatus);
-		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_PROJECT_FAILED);
+		} catch (Exception e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_STATUS_FAILED,e);
 		}
+
 		return newStatus;
 
 	}
-
-
 
 	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser)
 			throws PurpleException {

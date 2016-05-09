@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -80,16 +81,19 @@ public class SchedulerService {
 			for (Project project : allProjects) {
 
 				String timePreference = project.getTimePreference();
+			
 				DateFormat outputFormat = new SimpleDateFormat(GlobalConstants.SCHEDULER_TIME_FORMAT);
 				DateFormat inputFormat = new SimpleDateFormat(GlobalConstants.SCHEDULER_DATE_FORMAT);
 
+				
 				Date date = inputFormat.parse(timePreference);
 				String outputTime = outputFormat.format(date);
 
-				LocalTime now = LocalTime.now();
+				DateTime now = DateTime.now();
 				LocalTime projectTime = new LocalTime(outputTime);
+				DateTime projectTimeDatetime = DateTime.now().withTime(projectTime);
 
-				if (now.isBefore(projectTime) && projectTime.isBefore(now.plusMinutes(30))) {
+				if (now.isBefore(projectTimeDatetime) && projectTimeDatetime.isBefore(now.plusMinutes(30))) {
 					String hours = new SimpleDateFormat("HH").format(date);
 					String minutes = new SimpleDateFormat("mm").format(date);
 					DateTime dateTime = new DateTime().withHourOfDay(Integer.parseInt(hours));
