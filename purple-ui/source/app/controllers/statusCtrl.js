@@ -32,7 +32,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			}
 
 		}, function(error) {
-			if(error.response == "hours_exceeded"){
+			if(error.reason == "hours_exceeded"){
 				appNotifyService.error('You have already logged in 24hrs for the day!');
 			}
 			else{
@@ -156,7 +156,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			} 
 
 		}, function(error) {
-			if(error.response == "hours_exceeded"){
+			if(error.reason == "hours_exceeded"){
 				appNotifyService.error('You have already logged in 24hrs for the day!');
 			}
 			else{

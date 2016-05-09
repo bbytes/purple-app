@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
-import com.bbytes.purple.domain.TimePeriod;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.StatusRepository;
@@ -81,22 +80,22 @@ public class StatusService extends AbstractService<Status, String> {
 		if (status != null && status.getProjectId() != null && !status.getProjectId().isEmpty()) {
 			if (!projectService.projectIdExist(status.getProjectId()))
 				throw new PurpleException("Error while adding status", ErrorHandler.PROJECT_NOT_FOUND);
+
+			Status addStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(), new Date());
+			Project project = projectService.findByProjectId(status.getProjectId());
+
+			double hours = findStatusHours(user, new Date());
+			double newHours = hours + status.getHours();
+			if (newHours > 24)
+				throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
+
+			addStatus.setProject(project);
+			addStatus.setUser(user);
+			addStatus.setBlockers(status.getBlockers());
 			try {
-				Status addStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(),
-						new Date());
-				Project project = projectService.findByProjectId(status.getProjectId());
-
-				double hours = findStatusHours(user, new Date());
-				double newHours = hours + status.getHours();
-				if (newHours > 24)
-					throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
-
-				addStatus.setProject(project);
-				addStatus.setUser(user);
-				addStatus.setBlockers(status.getBlockers());
 				savedStatus = statusRepository.save(addStatus);
 			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_STATUS_FAILED);
+				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_STATUS_FAILED, e);
 			}
 		} else
 			throw new PurpleException("Cannot add status with empty project", ErrorHandler.PROJECT_NOT_FOUND);
@@ -161,12 +160,11 @@ public class StatusService extends AbstractService<Status, String> {
 		updateStatus.setProject(project);
 		try {
 			newStatus = statusRepository.save(updateStatus);
-		} catch (Exception e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_STATUS_FAILED,e);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_STATUS_FAILED, e);
 		}
 
 		return newStatus;
-
 	}
 
 	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser)
