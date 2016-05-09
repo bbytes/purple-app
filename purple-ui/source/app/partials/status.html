@@ -128,12 +128,24 @@
    			 <div text-angular ta-target-toolbars="blockers" ng-model="blockers" name="blockers" id="blockers"></div>
 		</div>
 
-		</div>	 	
+		</div>	
+      
+	   
+        <div class="col-md-6">
+       <div class="row">	   
 		<button type="button" class="btn btn-default submit"
 			ng-click="submitStatus()" ng-show="isSubmit">submit</button>
 		<button type="button" class="btn btn-default submit"
 			ng-click="updateStatus()" ng-show="isUpdate">Update</button>
-
+         </div>
+       </div>
+		
+		
+		 <div class="col-md-6">
+       <div class="row">
+        <button type="reset" class="btn btn-default submit" ng-click="blockers = orightml; workingOn = orightml; workedOn = orightml; reset()">Reset</button>
+       </div>
+       </div>
 	</div>
 </form>
 </div>

@@ -174,5 +174,10 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			$scope.workedOn = '';
 			$scope.blockers = '';
 	}
+	//Reset status page
+	$scope.reset = function(){
 	
+		$scope.isSubmit = true;
+   		$scope.isUpdate = false;
+	}
 });
