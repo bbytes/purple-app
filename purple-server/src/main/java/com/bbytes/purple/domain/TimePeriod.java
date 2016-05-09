@@ -2,11 +2,11 @@ package com.bbytes.purple.domain;
 
 public enum TimePeriod {
 
-	WEEKLY(7);
-	
+	Today(1),Weekly(7),BiWeekly(15),Monthly(31),Quaterly(90),Yearly(365);
+
 	Integer days;
-	
-	TimePeriod(int days){
+
+	TimePeriod(int days) {
 		this.days = days;
 	}
 
@@ -18,11 +18,12 @@ public enum TimePeriod {
 	}
 
 	/**
-	 * @param days the days to set
+	 * @param days
+	 *            the days to set
 	 */
 	public void setDays(Integer days) {
 		this.days = days;
 	}
-	
-	
+
+
 }
