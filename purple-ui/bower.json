@@ -30,7 +30,8 @@
     "angular-material": "^1.0.7",
     "angular-confirm-modal": "^1.2.3",
     "textAngular": "^1.5.0",
-    "angular-timezone-select": "^1.0.5"
+    "angular-timezone-select": "^1.0.5",
+    "ng-inline-edit": "^0.7.0"
   },
   "devDependencies": {},
   "resolutions": {
