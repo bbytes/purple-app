@@ -115,7 +115,11 @@ rootApp.config([
 					'footer@dashboard' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
-				}
+				},
+				data: {
+		                authorization: 'dashboard',
+		                redirectTo: 'login'
+		            }
 			}).state('status', {
 				url : '/status',
 				views : {
@@ -159,7 +163,7 @@ rootApp.config([
 					}
 				},
 				data: {
-	                authorization: 'My Projects',
+	                authorization: 'projects',
 	                redirectTo: 'login'
 	            }
 			}).state('settings', {
@@ -181,7 +185,7 @@ rootApp.config([
 					}
 				},
 				 data: {
-		                authorization: 'My Settings',
+		                authorization: 'settings',
 		                redirectTo: 'login'
 		            }
 			}).state('settings-user', {
@@ -201,7 +205,11 @@ rootApp.config([
 					'footer@settings-user' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
-				}
+				},
+				 data: {
+		                authorization: 'user settings',
+		                redirectTo: 'login'
+		            }
 			}).state('user-mgr', {
 				url : '/user-mgr',
 				views : {
@@ -241,7 +249,11 @@ rootApp.config([
 					'footer@admin' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
-				}
+				},
+				 data: {
+		                authorization: 'admin',
+		                redirectTo: 'login'
+		            }
 			}).state('activate', {
 				url : '/activateAccount?token',
 				templateUrl : 'app/partials/activateAccount.html',
