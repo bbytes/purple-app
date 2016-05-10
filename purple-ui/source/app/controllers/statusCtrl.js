@@ -180,4 +180,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$scope.isSubmit = true;
    		$scope.isUpdate = false;
 	}
+	
+	//filter dropdown
+    $scope.names = ["Today", "Week", "Month", "Year"]; 
 });

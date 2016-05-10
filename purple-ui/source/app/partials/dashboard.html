@@ -11,9 +11,8 @@
 </nav>
 
 
-
-
 <!-- Left side column. contains the logo and sidebar -->
+<section sticky-nav="ng-sticky-fixed">
 <aside class="main-sidebar left-side" ng-init="loadStatusTimeline()">
   <section class="sidebar">
      <div class="panel-group" id="accordion" ng-init="loadUserProjects()">
@@ -30,7 +29,7 @@
          <div class="panel-body">
            <ul class="list-group">
               <li class="sel"><a ng-click="loadStatusTimeline();loadUserProjects()" >ALL</a></li>
-		      <li role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'"><a ng-click="loadProjectMap(project)" >{{project.projectName}}</a></li>        
+		      <li role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'"><a ng-click="loadProjectMap(project)" >{{project.projectName}}</a></li>		  
             </ul>
           </div>
        </div>
@@ -58,6 +57,7 @@
   </div>
  </section>
 </aside>
+<section>
 	<!-- /.sidebar ends -->
 	
     <div id="page-content-wrapper">
@@ -193,6 +193,12 @@
 		  
 		
          <!-- Page Content -->
+		    <div class="search-filter">
+			  <select>
+			   <option value="">Please Select</option>
+                  <option ng-repeat="x in names">{{x}}</option>
+             </select>
+			</div>
                 <div class="wrapper">
                      <div class="top-header">
 						<!--  <span class="project"><span class="hash"># </span>{{status.projectName}}</span> -->
