@@ -230,6 +230,9 @@ $scope.loadTimePeriod = function(){
  $scope.isActive = function(item) {
         return $scope.selected === item;
  };
- 
+
+  $scope.select= function(index) {
+       $scope.selected = index; 
+    };
 
 });
