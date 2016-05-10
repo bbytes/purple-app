@@ -44,6 +44,12 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 	$scope.usersstatusLoad = function() {
 
 	var	time = "Weekly";
+	
+	settingsService.getConfigSetting().then(function(response){
+         if (response.success = true) 
+             $rootScope.statusEnable = response.data.statusEnable;
+       }, function(error){
+       });
 
 	dropdownListService.getTimePeriod().then(function(response){
             $scope.timePeriod = response.data;
