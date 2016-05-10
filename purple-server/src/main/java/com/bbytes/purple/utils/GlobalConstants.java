@@ -14,7 +14,7 @@ public class GlobalConstants {
 
 	public static final String EMAIL_INVITE_SUBJECT = "Invitation for Purple App";
 
-	public static final String SCHEDULER_SUBJECT = "Stand-up Remider for purple APP";
+	public static final String SCHEDULER_SUBJECT = "Stand-up Reminder for purple App";
 
 	public static final String FORGOT_PASSWORD_SUBJECT = "Forgot password for Purple APP";
 
