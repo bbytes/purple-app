@@ -847,7 +847,7 @@ a{
 	padding-right:0;
 	padding-left:0;
 	display:inline-block;
-	
+	margin:0px 20px;
 	text-decoration:none;
 }
 tooltip, .avtive{
@@ -1756,4 +1756,17 @@ md-content {
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 	
+}
+.material-icons img{
+	width:90%;
+}
+md-icon.md-default-theme, md-icon {
+    color: transparent !important;
+}
+.md-button.md-icon-button {
+     width: 37px !important;
+    float: right !important;
+}
+md-icon {
+    width: 22px !important;
 }

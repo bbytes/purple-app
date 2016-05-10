@@ -101,7 +101,7 @@
 				<div class="sidebar-nav">
 							<md-button class="md-icon-button" aria-label="Close Side Panel" ng-click="closeSideNavPanel()"> 
 								<md-tooltip>Close Side Panel</md-tooltip> 
-								<md-icon class="md-default-theme" class="material-icons">X</md-icon> 
+								<md-icon class="md-default-theme" class="material-icons"><img src="../../assets/img/delete.svg"></md-icon> 
 							</md-button>
 						
 			  <form name="myForm">
@@ -134,11 +134,15 @@
 				</small>
                  <div class="user-label">
                    <h4>{{userName}}</h4>
-                    <p class="comment">
-					<a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>
-					<a href=""><i class="fa fa-pencil" aria-hidden="true"></i></a>
-					{{comment.commentDesc}}
-					</p>
+				    <md-content class="example-3 md-accent">
+                    <span
+                    inline-edit="comment.commentDesc"
+                    inline-edit-textarea
+                    inline-edit-validation="comment.commentDesc.validator(newValue)"
+                    inline-edit-btn-save="Save"
+                    inline-edit-btn-cancel="Cancel"></span>
+                  </md-content>
+                    
                 </div>
 				
 				<!---replied--->
@@ -153,10 +157,15 @@
 					 <div class="procedure-details" ng-show="showreplyDetails">
 					    <div class="user-label" ng-repeat="reply in allreplies">
                    <h4>{{reply.userName}}</h4>
-                    <p class="comment">
-					 <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>
-					<a href=""><i class="fa fa-pencil" aria-hidden="true"></i></a>
-					{{reply.replyDesc}}</p>
+				     <md-content class="example-3 md-accent">
+                    <span
+                    inline-edit="reply.replyDesc"
+                    inline-edit-textarea
+                    inline-edit-validation="reply.replyDesc.validator(newValue)"
+                    inline-edit-btn-save="Save"
+                    inline-edit-btn-cancel="Cancel"></span>
+                  </md-content>
+					
                 </div>
 					 </div>
 					 
