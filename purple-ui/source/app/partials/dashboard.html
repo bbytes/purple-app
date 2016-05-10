@@ -28,8 +28,8 @@
        <div id="collapseOne" class="panel-collapse collapse in">
          <div class="panel-body">
            <ul class="list-group">
-              <li class="sel"><a ng-click="loadStatusTimeline();loadUserProjects()" >ALL</a></li>
-		      <li role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'"><a ng-click="loadProjectMap(project)" >{{project.projectName}}</a></li>		  
+              <li ng-click="select($index)" ng-class="{sel: $index === selected}"><a ng-click="loadStatusTimeline();loadUserProjects()" >ALL</a></li>
+		      <li role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'"  ng-class="{sel: $index = selected}"><a ng-click="loadProjectMap(project)">{{project.projectName}}</a></li>		  
             </ul>
           </div>
        </div>

@@ -212,4 +212,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
  
    //filter dropdown
     $scope.names = ["Today", "Week", "Month", "Year"]; 
+	 $scope.select= function(index) {
+       $scope.selected = index; 
+    };
 });

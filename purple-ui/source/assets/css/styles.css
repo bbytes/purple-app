@@ -1307,7 +1307,7 @@ ul.timeline > li:nth-child(odd) {
   color: #aaa;
 }
 
-.sel {
+.sel{
     background: #cc95b5 !important;
 }
 
@@ -1769,4 +1769,9 @@ md-icon.md-default-theme, md-icon {
 }
 md-icon {
     width: 22px !important;
+}
+
+.list-group li:focus{
+	outline: none !important;
+
 }
