@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbytes.purple.domain.TimePeriod;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
@@ -129,4 +130,25 @@ public class DropdownListController {
 		return hoursResponse;
 	}
 
+	/**
+	 * The method getTimePeriodDropdownList is used to populate all time-period
+	 * enum values
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/timeperiod", method = RequestMethod.GET)
+	public RestResponse getTimePeriodDropdownList() {
+
+		List<String> listPeriods = new ArrayList<String>();
+		for (TimePeriod tp : TimePeriod.values()) {
+			listPeriods.add(tp.toString());
+		}
+		List<BaseDTO> timePeriod = dataModelToDTOConversionService.convertRolesToEntityDTOList(listPeriods);
+
+		logger.debug("Getting timePeriod successfully");
+		RestResponse timePeriodResponse = new RestResponse(RestResponse.SUCCESS, timePeriod,
+				SuccessHandler.DROPDOWNLIST_SUCCESS);
+
+		return timePeriodResponse;
+	}
 }

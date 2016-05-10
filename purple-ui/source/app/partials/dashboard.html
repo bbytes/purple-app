@@ -13,7 +13,7 @@
 
 <!-- Left side column. contains the logo and sidebar -->
 <section sticky-nav="ng-sticky-fixed">
-<aside class="main-sidebar left-side" ng-init="loadStatusTimeline()">
+<aside class="main-sidebar left-side" ng-init="loadTimePeriod();loadStatusTimeline()">
   <section class="sidebar">
      <div class="panel-group" id="accordion" ng-init="loadUserProjects()">
        <div class="panel panel-default">
@@ -47,8 +47,8 @@
           </div>
       <div id="collapseTwo" class="panel-collapse collapse in">
          <div class="panel-body">
-            <ul class="list-group"  ng-repeat="users in projectUsers  | orderBy:'userName'">
-              <li><a ng-click="loadUserMap(users)">{{users.userName}}</a></li>
+            <ul class="list-group"  ng-model = "users" ng-repeat="users in projectUsers  | orderBy:'userName'">
+              <li><a ng-click="loadUserMap(users, mytime)">{{users.userName}}</a></li>
             </ul>
           </div>
 
@@ -203,9 +203,7 @@
 		
          <!-- Page Content -->
 		    <div class="search-filter">
-			  <select>
-			   <option value="">Please Select</option>
-                  <option ng-repeat="x in names">{{x}}</option>
+			  <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timeChange(mytime)">
              </select>
 			</div>
                 <div class="wrapper">

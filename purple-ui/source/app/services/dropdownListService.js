@@ -66,5 +66,26 @@ rootApp.service('dropdownListService', function($rootScope, $http, $q, $window) 
 		return deferred.promise;
 
 	};
+
+	// Method is used to get timeperiod
+	this.getTimePeriod = function() {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/dropdownList/timeperiod',
+			headers : {
+				'Content-Type' : 'application/json',
+			}
+
+		}).success(function(response, status, headers, config) {
+			deferred.resolve(response);
+		}).error(function(response) {
+				 deferred.reject(response);
+		});
+		return deferred.promise;
+
+	};
 	
 });

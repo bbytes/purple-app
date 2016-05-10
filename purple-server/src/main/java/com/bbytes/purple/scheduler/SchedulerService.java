@@ -15,7 +15,6 @@ import javax.annotation.PostConstruct;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -1,7 +1,7 @@
 /**
  * Dashboard controller to load status timeline
  */
-rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, projectService,appNotifyService,$window,$location,statusService, commentService) {
+rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,statusService, commentService) {
 	
 	 $scope.commentDesc = '';
     $scope.isActive = function(route) {
@@ -11,12 +11,26 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
     * Get all status timeline
     */
     
-  $scope.loadStatusTimeline = function(){
+$scope.loadTimePeriod = function(){
+
+	dropdownListService.getTimePeriod().then(function(response){
+            $scope.timePeriod = response.data;
+           	$scope.mytime = response.data[1].value;
+          
+              }, function(error){
+        });
+}
+
+  $scope.loadStatusTimeline = function(itemSelected,time){
+
+  	if(time == null || time == 'undefined')
+  			time = "Weekly";
 	  $scope.updateData = {
 			  projectList :[],
 			  userList : []
 	  }
-    	 statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
+
+    	 statusService.getAllTimelineStatus($scope.updateData,time).then(function (response) {
              if (response.success) {
             	 $scope.artists = [];
          	    angular.forEach(response.data.gridData, function(value, key) {
@@ -26,11 +40,21 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
                  $scope.isActive = true;
                	$scope.isProject = false;
                  $scope.isUser = false;
-                
              }
          });
      }
-	
+     // method for pulling status by changing time period
+     $scope.timeChange = function(timePeriod) {
+
+		var itemSelected = $rootScope.itemChoose;
+		if($scope.isActive)
+			$scope.loadStatusTimeline(itemSelected,timePeriod);
+		else if($scope.isProject)
+		 	$scope.loadProjectMap(itemSelected,timePeriod);
+		 else if($scope.isUser)
+			 $scope.loadUserMap(itemSelected,timePeriod);
+	}
+
 	 /**
 	  * Post comment on status
 	  */
@@ -132,16 +156,14 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
 	/**
 	 * Load status timeline by project
 	 */
-	 $scope.loadProjectMap = function(project){
+	 $scope.loadProjectMap = function(project, time){
 		 
-		 commentService.getProjectMap(project.projectId).then(function (response) {
-            if (response.success) {
-				$scope.projectUsers = response.data.gridData[0].userList;
-				$scope.projectName = response.data.gridData[0].projectName
-				$scope.updateData.projectList = [response.data.gridData[0].projectId];
+		 $rootScope.itemChoose = project;
+
+				$scope.updateData.projectList = [project.projectId];
 				$scope.updateData.userList = [];
 
-                    statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
+                    statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
                      if (response.success) {
         
         			//	if(response.data.gridData.length > 0){
@@ -153,22 +175,21 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
                       $scope.selected = project;
                       $scope.isProject = true;
                       $scope.isActive = false;
-                      $scope.isUser = false;                     
+                      $scope.isUser = false;                  
                  }
                   });
-            }
-        });
     } 
 	 
 	 /**
 	  * Load status timeline by user
 	  */
-	 $scope.loadUserMap = function(user){
+	 $scope.loadUserMap = function(user, time){
 
+	 			$rootScope.itemChoose = user;
 		 		$scope.updateData.projectList = [];
 				$scope.updateData.userList = [user.email];
 
-                    statusService.getAllTimelineStatus($scope.updateData).then(function (response) {
+                    statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
                      if (response.success) {
         			
                       $scope.artists = [];
@@ -178,7 +199,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
                   	$scope.selected = user;
                       $scope.isUser = true;
                       $scope.isProject = false;
-                      $scope.isActive = false;
+                      $scope.isActive = false;  
                      }
                   });
 				
@@ -210,9 +231,5 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
         return $scope.selected === item;
  };
  
-   //filter dropdown
-    $scope.names = ["Today", "Week", "Month", "Year"]; 
-	 $scope.select= function(index) {
-       $scope.selected = index; 
-    };
+
 });

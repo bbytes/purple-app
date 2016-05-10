@@ -114,10 +114,13 @@ public class StatusService extends AbstractService<Status, String> {
 		return getStatus;
 	}
 
-	public List<Status> getAllStatus(User user) throws PurpleException {
+	public List<Status> getAllStatus(User user, int timePeriod) throws PurpleException {
 		List<Status> statuses = new ArrayList<Status>();
 		try {
-			statuses = statusRepository.findByUser(user);
+			Date endDate = new DateTime(new Date()).toDate();
+			Date startDate = new DateTime(new Date()).minusDays(timePeriod).withTime(0, 0, 0, 0).toDate();
+			// statuses = statusRepository.findByUser(user);
+			statuses = statusRepository.findByDateTimeBetweenAndUser(startDate, endDate, user);
 			Collections.sort(statuses, Collections.reverseOrder());
 
 		} catch (Throwable e) {
@@ -167,13 +170,16 @@ public class StatusService extends AbstractService<Status, String> {
 		return newStatus;
 	}
 
-	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser)
-			throws PurpleException {
+	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser,
+			Integer timePeriodValue) throws PurpleException {
 		List<Status> result = new ArrayList<Status>();
 		List<Project> currentUserProjectList = userService.getProjects(currentUser);
 		List<String> projectIdStringQueryList = userAndProject.getProjectList();
 		List<String> userQueryEmailList = userAndProject.getUserList();
 		List<User> userQueryList = userRepository.findByEmailIn(userQueryEmailList);
+
+		Date endDate = new DateTime(new Date()).toDate();
+		Date startDate = new DateTime(new Date()).minusDays(timePeriodValue).withTime(0, 0, 0, 0).toDate();
 
 		List<Project> projectQueryList = new ArrayList<>();
 		// apply current user project list match filter to requested project
@@ -202,16 +208,17 @@ public class StatusService extends AbstractService<Status, String> {
 		// project list empty
 		else if (userQueryList != null && !userQueryList.isEmpty()
 				&& (projectQueryList == null || projectQueryList.isEmpty())) {
-			result = statusRepository.findByUserIn(userQueryList);
+			result = statusRepository.findByDateTimeBetweenAndUserIn(startDate, startDate, userQueryList);
 		}
 		// user list empty
 		else if (projectQueryList != null && !projectQueryList.isEmpty()
 				&& (userQueryList == null || userQueryList.isEmpty())) {
-			result = statusRepository.findByProjectIn(projectQueryList);
+			result = statusRepository.findByDateTimeBetweenAndProjectIn(startDate, endDate, projectQueryList);
 		}
 		// both the list not empty
 		else {
-			result = statusRepository.findByProjectInAndUserIn(projectQueryList, userQueryList);
+			result = statusRepository.findByDateTimeBetweenAndProjectInAndUserIn(startDate, endDate, projectQueryList,
+					userQueryList);
 		}
 
 		try {

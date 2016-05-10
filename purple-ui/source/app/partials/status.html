@@ -7,13 +7,11 @@
 	</div>
 </div>
 
-<div ng-init="usersstatusLoad()">
-<div class="col-md-8"  >
+<div ng-init="usersstatusLoad(mytime)">
+<div class="col-md-8" >
 	<div class="wrapper" >
 	  <div class="search-status">
-			  <select>
-			   <option value="">Please Select</option>
-                  <option ng-repeat="x in names">{{x}}</option>
+			  <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timePeriodChange(mytime)" >
              </select>
 			</div>
 		<div class="top-header" style="margin-top: 24px;">

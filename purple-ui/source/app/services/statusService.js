@@ -78,13 +78,14 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 
 	};
 
-	this.getAllStatus = function() {
+	this.getAllStatus = function(time) {
 
 		var deferred = $q.defer();
-
+		var timePeriod = time;
 		$http({
 			method : 'GET',
 			url : $rootScope.baseUrl + 'api/v1/status',
+			params : {"timePeriod" : timePeriod},
 			headers : {
 				'Content-Type' : 'application/json'
 			}
@@ -180,14 +181,16 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 	};
 
-	this.getAllTimelineStatus = function(updateData) {
+	this.getAllTimelineStatus = function(updateData, time) {
 
 		var deferred = $q.defer();
+		var timePeriod = time;
 
 		$http({
 			method : 'POST',
 			url : $rootScope.baseUrl + 'api/v1/status/project/user',
 			data : updateData,
+			params : {"timePeriod" : timePeriod},
 			headers : {
 				'Content-Type' : 'application/json'
 			}

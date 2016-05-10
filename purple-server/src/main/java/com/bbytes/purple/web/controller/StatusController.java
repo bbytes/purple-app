@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.domain.Status;
+import com.bbytes.purple.domain.TimePeriod;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
@@ -97,11 +99,12 @@ public class StatusController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/status", method = RequestMethod.GET)
-	public RestResponse getAllStatus() throws PurpleException {
+	public RestResponse getAllStatus(@RequestParam("timePeriod") String timePeriod) throws PurpleException {
 
 		// We will get current logged in user
+		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
 		User user = userService.getLoggedinUser();
-		List<Status> statusList = statusService.getAllStatus(user);
+		List<Status> statusList = statusService.getAllStatus(user, timePeriodValue);
 		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
 		logger.debug("All status are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
@@ -165,11 +168,13 @@ public class StatusController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/status/project/user", method = RequestMethod.POST)
-	public RestResponse getAllStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO)
-			throws PurpleException {
+	public RestResponse getAllStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO,
+			@RequestParam("timePeriod") String timePeriod) throws PurpleException {
 
 		User user = userService.getLoggedinUser();
-		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user);
+		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
+		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user,
+				timePeriodValue);
 		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
 		logger.debug("All status are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
