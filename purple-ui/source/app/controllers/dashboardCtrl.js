@@ -21,7 +21,7 @@ $scope.loadTimePeriod = function(){
         });
 }
 
-  $scope.loadStatusTimeline = function(itemSelected,time){
+  $scope.loadStatusTimeline = function(time){
 
   	if(time == null || time == 'undefined')
   			time = "Weekly";
@@ -48,7 +48,7 @@ $scope.loadTimePeriod = function(){
 
 		var itemSelected = $rootScope.itemChoose;
 		if($scope.isActive)
-			$scope.loadStatusTimeline(itemSelected,timePeriod);
+			$scope.loadStatusTimeline(timePeriod);
 		else if($scope.isProject)
 		 	$scope.loadProjectMap(itemSelected,timePeriod);
 		 else if($scope.isUser)
