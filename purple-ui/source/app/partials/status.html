@@ -33,9 +33,9 @@
 
 				<div class="timeline-panel">
 					<div class="edit">
-						<a ng-show ="showEditIcon(artist.date)" href="#" ng-click="showUpdatePage(status.statusId)" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"></a> 
+						<a ng-show ="showEditIcon(artist.date)" href="#" ng-click="showUpdatePage(status.statusId)" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2" tooltips tooltip-template="Edit"><img src="../../assets/img/edit.svg"></a> 
 						
-						<a href="#" ng-click="deleteStatus(status.statusId,$index)" confirm="Are you sure you want to delete the item?" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"></a>
+						<a href="#" ng-click="deleteStatus(status.statusId,$index)" confirm="Are you sure you want to delete the item?" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2" tooltips tooltip-template="Delete"><img src="../../assets/img/delete.svg"></a>
 					</div>
 					<div class="timeline-heading">
 						<h4>

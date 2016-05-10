@@ -841,20 +841,34 @@ a{
 .timeline-panel:hover .edit {
     display: block;
 }
-
-.edit {
-    padding-top: 7px;   
-    padding-right: 7px;
-    position: absolute;
-    right: 0;
+.edit a{
+	padding-top: 0px;
+	padding-bottom:0;
+	padding-right:0;
+	padding-left:0;
+	display:inline-block;
+	
+	text-decoration:none;
+}
+tooltip, .avtive{
+	border-bottom:0px solid #ccc !important;
+}
+.edit{
+       
+    padding-right: 25%;
+    position: absolute;  
     top: 0;
     display: none;
-    background: rgba(34, 34, 34, 0.79);
-    width:21%;
-    height:100%;
+    
+    width:100%;
+   
     text-align: center;
 }
-
+.edit img{
+	margin-top:10px;
+	width:60%;
+	height:60%;
+}
 .timeline-panel:hover .edit-left-side {
     display: block;
 }
@@ -1697,7 +1711,7 @@ md-content {
 .search-filter{
 	right:0;
 	padding-right: 5%;
-	position:fixed;
+	position:absolute;
 }
 .search-filter select{
 	border:1px solid #ccc;
@@ -1719,8 +1733,8 @@ md-content {
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 .search-status{
-	right: 36.5%;
-	position:fixed;
+	right: 4.5%;
+	position:absolute;
 	
 }
 .search-status select{
