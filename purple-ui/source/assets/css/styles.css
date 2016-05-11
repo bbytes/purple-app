@@ -1307,11 +1307,6 @@ ul.timeline > li:nth-child(odd) {
   color: #aaa;
 }
 
-.sel{
-    background: #cc95b5 !important;
-}
-
-
 .ng-pageslide {
                 background: #eee;
 				z-index:9999 !important;
@@ -1705,7 +1700,7 @@ md-content {
 	background:transparent !important;
 }
 .button-toolbar .btn{
-	padding: 3px 7px !important;
+	padding: 3px 8.1px !important;
 	font-size:12px !important;
 }
 .search-filter{
@@ -1774,6 +1769,13 @@ md-icon {
 .list-group li:focus{
 	outline: none !important;
 
+}
+.selected {
+  background-color: #cc95b5;
+}
+.selected a{
+  color: #fff;
+  font-weight:bold;
 }
 md-sidenav ul {
     list-style: initial !important;

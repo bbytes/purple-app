@@ -209,11 +209,7 @@ $scope.loadTimePeriod = function(){
                 $scope.checked = !$scope.checked
 					
       }
-    $scope.selected = 0;
-
-    $scope.select= function(index) {
-       $scope.selected = index; 
-    };
+   
 
 	$scope.showMobileMainHeader = true;
 	$scope.openSideNavPanel = function() {
@@ -231,8 +227,15 @@ $scope.loadTimePeriod = function(){
         return $scope.selected === item;
  };
 
-  $scope.select= function(index) {
-       $scope.selected = index; 
-    };
-
+  	//nav active
+     $scope.setClickedRow = function(index){  //function that sets the value of selectedRow to current index
+     $scope.selectedRow = index;
+	 $scope.selectedUser = null;
+  }
+  
+  $scope.setClickedUser = function(index){  //function that sets the value of selectedRow to current index
+     $scope.selectedUser = index;
+	 $scope.selectedRow = null;
+  };
+   
 });
