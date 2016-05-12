@@ -202,7 +202,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     left: 36%;
     top: 11%;
     color: #7f7f7f;
-    font-size: 1.3vw;
+    font-size: 1.3em;
 }
 .standup{
     font-weight:bold;
@@ -847,7 +847,7 @@ a{
 	padding-right:0;
 	padding-left:0;
 	display:inline-block;
-	margin:0px 20px;
+	margin:0px 5px;
 	text-decoration:none;
 }
 tooltip, .avtive{
@@ -855,19 +855,18 @@ tooltip, .avtive{
 }
 .edit{
        
-    padding-right: 25%;
+    padding-right: 0%;
     position: absolute;  
-    top: 0;
+    top: 20px;
     display: none;
-    
-    width:100%;
-   
     text-align: center;
+	right:116px;
+	
 }
 .edit img{
-	margin-top:10px;
-	width:60%;
-	height:60%;
+	margin-top:12px;
+	width:40%;
+	height:40%;
 }
 .timeline-panel:hover .edit-left-side {
     display: block;
@@ -1416,6 +1415,7 @@ ul.timeline > li:nth-child(odd) {
   }
 }
 
+/*
 .overlay {
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
@@ -1427,6 +1427,7 @@ ul.timeline > li:nth-child(odd) {
   opacity: 0;
   transition: opacity .2s ease-in-out 1s;
 }
+*/
 .overlay.active {
   opacity: 1;
   display: block;
@@ -1780,3 +1781,53 @@ md-icon {
 md-sidenav ul {
     list-style: initial !important;
 }
+
+/*notification icon*/
+.angular-notifications-icon.overlay {
+    position: absolute;
+    z-index: 99;
+    display: initial !important;
+}
+.angular-notifications-container {
+    position: relative;
+    display: table-cell;
+    width: 100%;
+    top: 16px;
+}
+.angular-notifications-icon {
+    right: 25px  !important;
+    top: -6px  !important;
+    border-radius: 50%;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 3px;
+    min-width: 15px  !important;
+    height: 15px  !important;
+    background: red;
+    color: white;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+/*media query*/
+@media only screen and (max-width: 850px) {
+    .login-content{
+        width: 90%;
+    }
+}
+@media only screen and (min-width: 850px) {
+    .notification-mob{
+        display: none;
+		float:right;
+    }
+}
+@media only screen and (max-width: 810px) {
+    .notification{
+        display: none;
+    }
+}
+

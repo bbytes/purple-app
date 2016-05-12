@@ -32,7 +32,8 @@
     "textAngular": "^1.5.0",
     "angular-timezone-select": "^1.0.5",
     "ng-inline-edit": "^0.7.0",
-    "angular-tooltips": "^1.0.10"
+    "angular-tooltips": "^1.0.10",
+    "angular-notification-icons": "^0.4.3"
   },
   "devDependencies": {},
   "resolutions": {

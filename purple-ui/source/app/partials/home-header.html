@@ -12,10 +12,25 @@
 				src="../../assets/img/logo.png" alt=""> <span
 				class="logo-text">online <b>standup</b></span>
 			</a>
+			<!---
+			 <div class="notification-mob">
+				<notification-icon count="vm.autoPending[0]">
+				<a href=""><i class="fa fa-bell" aria-hidden="true" style="color:#fff; font-size:22px; margin-right:30px;"></i></a>
+				</notification-icon>
+				</div>
+				--->
 		</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="navCtrl">
 			<ul class="nav navbar-nav">
+			
+			  <!---
+			    <li class="notification">
+				<notification-icon count="vm.autoPending[0]">
+				<a href=""><i class="fa fa-bell" aria-hidden="true" style="color:#fff; font-size:22px; margin-right:30px;"></i></a>
+				</notification-icon>
+				</li>
+				--->
 				<li ng-class="{ active: isActive('/status') }"><a href="status"><img src="../../assets/img/ic_compose.svg"></a></li>
 				<li ng-class="{ active: isActive('/dashboard') }"><a href="dashboard"><img src="../../assets/img/ic_timeline.svg"> </a></li>
 
