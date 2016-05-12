@@ -5,11 +5,8 @@
 rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $location,$window) {
     return {
         request: function (config) {
-        	//config.headers['Content-Type'] = 'application/json';
             config.headers = config.headers || {};
             if ($window.sessionStorage.token) {
-                //config.headers.Authorization = $window.sessionStorage.token;
-                console.log(config.headers.Authorization);
                 config.headers['x-auth-token'] = $window.sessionStorage.token;
             }
             if (!$rootScope.authToken && $sessionStorage.userInfo) {
@@ -18,14 +15,11 @@ rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $l
                     $rootScope.authToken = userInfo.accessToken;
                     $rootScope.loggedInUser=userInfo.email;
                     $rootScope.userName=userInfo.name;
-                    $rootScope.userRole= userInfo.userRoles;
-                  
+                    $rootScope.userRole= userInfo.userRoles;           
                 }
             }
-            return config;
-            
+            return config;          
         },
-        
         response: function (response) {
             
             if(response.status === 200){                
@@ -49,6 +43,5 @@ rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $l
 });
 
 rootApp.config(['$httpProvider', function ($httpProvider) {
-      // $httpProvider.interceptors.push('headerInterceptor');
         $httpProvider.interceptors.push('authInterceptor');
     }]);

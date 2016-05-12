@@ -22,6 +22,14 @@
                     $rootScope.userName = response.data.userName;
                     $rootScope.userRole = response.data.userRole.id;
 
+                    var userInfo = {
+                    email: $rootScope.loggedInUser,
+                    name: $rootScope.userName,
+                    userRoles:  $rootScope.userRole,
+                   };
+              
+                 $sessionStorage.userInfo =  userInfo;
+
                     deferred.resolve(response);
                 }).error(function(response) {
                     deferred.reject(response);
