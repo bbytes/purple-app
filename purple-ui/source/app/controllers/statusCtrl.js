@@ -15,6 +15,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		status.workingOn = $scope.workingOn;
 		status.workedOn = $scope.workedOn;
 		status.blockers = $scope.blockers;
+		status.dateTime =  $rootScope.statusDate;
 		if(!status.projectId){
 			appNotifyService.error('Please select a valid project');
             return false;
@@ -34,6 +35,12 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		}, function(error) {
 			if(error.reason == "hours_exceeded"){
 				appNotifyService.error('You have exceeded 24 hours in a day!');
+			}
+			else if (error.reason == "pass_duedate_status_edit"){
+				appNotifyService.error('You are not allow to enter status pass due date');
+			}
+			else if (error.reason == "future_date_status_edit"){
+				appNotifyService.error('Can not allow to enter status for future date');
 			}
 			else{
 				appNotifyService.error('Error while submitting status');

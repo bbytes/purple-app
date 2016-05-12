@@ -1,5 +1,7 @@
 package com.bbytes.purple.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -9,6 +11,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bbytes.purple.domain.ConfigSetting;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
@@ -18,6 +21,7 @@ import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class StatusService extends AbstractService<Status, String> {
@@ -32,6 +36,9 @@ public class StatusService extends AbstractService<Status, String> {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private ConfigSettingService configSettingService;
 
 	@Autowired
 	public StatusService(StatusRepository statusRepository) {
@@ -75,13 +82,31 @@ public class StatusService extends AbstractService<Status, String> {
 		return hours;
 	}
 
-	public Status create(StatusDTO status, User user) throws PurpleException {
+	public Status create(StatusDTO status, User user) throws PurpleException, ParseException {
 		Status savedStatus = null;
+		SimpleDateFormat sdf = new SimpleDateFormat(GlobalConstants.DATE_STATUS_FORMAT);
+
+		ConfigSetting configSetting = configSettingService.getConfigSetting(user.getOrganization());
+		String statusEnableDate = configSetting.getStatusEnable();
+
 		if (status != null && status.getProjectId() != null && !status.getProjectId().isEmpty()) {
 			if (!projectService.projectIdExist(status.getProjectId()))
 				throw new PurpleException("Error while adding status", ErrorHandler.PROJECT_NOT_FOUND);
 
-			Status addStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(), new Date());
+			if (status.getDateTime() == null || status.getDateTime().isEmpty()) {
+				savedStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(), new Date());
+			} else {
+				Date statusDate = sdf.parse(status.getDateTime());
+				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate))
+						.withTime(0, 0, 0, 0).toDate();
+				if (statusDate.before(backDate))
+					throw new PurpleException("Error for edit pass due date", ErrorHandler.PASS_DUEDATE_STATUS_EDIT);
+				if (statusDate.after(new Date()))
+					throw new PurpleException("Error for future date status edit",
+							ErrorHandler.FUTURE_DATE_STATUS_EDIT);
+				savedStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(), statusDate);
+			}
+
 			Project project = projectService.findByProjectId(status.getProjectId());
 
 			double hours = findStatusHours(user, new Date());
@@ -89,11 +114,11 @@ public class StatusService extends AbstractService<Status, String> {
 			if (newHours > 24)
 				throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
 
-			addStatus.setProject(project);
-			addStatus.setUser(user);
-			addStatus.setBlockers(status.getBlockers());
+			savedStatus.setProject(project);
+			savedStatus.setUser(user);
+			savedStatus.setBlockers(status.getBlockers());
 			try {
-				savedStatus = statusRepository.save(addStatus);
+				savedStatus = statusRepository.save(savedStatus);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_STATUS_FAILED, e);
 			}
@@ -119,7 +144,6 @@ public class StatusService extends AbstractService<Status, String> {
 		try {
 			Date endDate = new DateTime(new Date()).toDate();
 			Date startDate = new DateTime(new Date()).minusDays(timePeriod).withTime(0, 0, 0, 0).toDate();
-			// statuses = statusRepository.findByUser(user);
 			statuses = statusRepository.findByDateTimeBetweenAndUser(startDate, endDate, user);
 			Collections.sort(statuses, Collections.reverseOrder());
 

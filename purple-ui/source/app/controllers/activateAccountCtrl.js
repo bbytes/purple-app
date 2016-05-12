@@ -21,8 +21,15 @@
          		}).success(function(response, status, headers, config) {
 
                     $rootScope.userRole = response.data.userRole.id;
+
+                     var userInfo = {
+                    name: $rootScope.userName,
+                    userRoles:  $rootScope.userRole,
+                };
+              
+                $sessionStorage.userInfo =  userInfo;
          			deferred.resolve(response);
-         			if(response.data.accountInitialise = true && $rootScope.userRole == "NORMAL")
+         			if(response.data.accountInitialise = true && $sessionStorage.userInfo.userRoles == "NORMAL")
          				{
          				 appNotifyService.success('Your account has been activated successfully. Redirecting to settings.');
          				 $state.go("settings-user");

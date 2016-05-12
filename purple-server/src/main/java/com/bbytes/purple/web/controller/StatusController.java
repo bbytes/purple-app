@@ -1,5 +1,6 @@
 package com.bbytes.purple.web.controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +53,10 @@ public class StatusController {
 	 * @param statusDTO
 	 * @return
 	 * @throws PurpleException
+	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/api/v1/status/add", method = RequestMethod.POST)
-	public RestResponse addStatus(@RequestBody StatusDTO statusDTO) throws PurpleException {
+	public RestResponse addStatus(@RequestBody StatusDTO statusDTO) throws PurpleException, ParseException {
 
 		// We will get current logged in user
 		User user = userService.getLoggedinUser();

@@ -17,6 +17,7 @@ import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.SuccessHandler;
@@ -60,6 +61,24 @@ public class UserController {
 	}
 
 	/**
+	 * Method is used to get current user info
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/currentUser", method = RequestMethod.GET)
+	public RestResponse getCurrentUser() throws PurpleException {
+
+		User user = userService.getLoggedinUser();
+		UserDTO currentUserMap = dataModelToDTOConversionService.convertUser(user);
+		logger.debug("Current user are fetched successfully");
+		RestResponse currentUserReponse = new RestResponse(RestResponse.SUCCESS, currentUserMap,
+				SuccessHandler.GET_USER_SUCCESS);
+
+		return currentUserReponse;
+	}
+
+	/**
 	 * The getUsersByProjects method is used to fetched all user which are part
 	 * of projects in user
 	 * 
@@ -79,7 +98,7 @@ public class UserController {
 
 		return projectReponse;
 	}
-	
+
 	@RequestMapping(value = "/api/v1/projects/users/all/map", method = RequestMethod.POST)
 	public RestResponse getUsersByProjectsMap(@RequestBody List<String> projectList) throws PurpleException {
 
@@ -87,7 +106,8 @@ public class UserController {
 		Map<String, Object> projectMap = dataModelToDTOConversionService
 				.getResponseMapWithGridDataAndProjectCount(projects);
 		logger.debug("Projects are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap, SuccessHandler.GET_PROJECT_SUCCESS);
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap,
+				SuccessHandler.GET_PROJECT_SUCCESS);
 
 		return projectReponse;
 	}
