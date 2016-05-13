@@ -113,6 +113,7 @@ public class DataModelToDTOConversionService {
 		statusDTO.setHours(status.getHours());
 		statusDTO.setBlockers(status.getBlockers());
 		statusDTO.setTime(simpleDateFormat.format(status.getDateTime()).toString());
+		statusDTO.setCommentCount(status.getCommentCount());
 		return statusDTO;
 	}
 

@@ -76,7 +76,6 @@ public class SignUpController {
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
 
 		Organization organization = new Organization(orgId, signUpRequestDTO.getOrgName().trim());
-		organization.setBusinessArea(signUpRequestDTO.getBusinessArea());
 
 		User user = new User(orgId, signUpRequestDTO.getEmail());
 		user.setEmail(signUpRequestDTO.getEmail().toLowerCase());

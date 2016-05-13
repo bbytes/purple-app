@@ -29,9 +29,6 @@ public class Organization {
 	@Field("org_name")
 	private String orgName;
 	
-	@Field("business_area")
-	private String businessArea;
-	
 	@Field("time_preference")
 	private String timePreference;
 	

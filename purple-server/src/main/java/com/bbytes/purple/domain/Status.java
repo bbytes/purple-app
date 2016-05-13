@@ -37,6 +37,9 @@ public class Status implements Comparable<Status> {
 	@Field("hours")
 	private double hours;
 	
+	@Field("comment_count")
+	private int commentCount;
+	
 	@Field("date_time")
 	private Date dateTime;
 	

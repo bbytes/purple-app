@@ -34,5 +34,7 @@ public class StatusDTO implements Serializable {
 	private String dateTime;
 	
 	private String time;
+	
+	private int commentCount;
 
 }

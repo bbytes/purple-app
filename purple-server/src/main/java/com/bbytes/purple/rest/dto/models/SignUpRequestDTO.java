@@ -12,8 +12,6 @@ public class SignUpRequestDTO {
 
 	private String orgName;
 
-	private String businessArea;
-
 	private String email;
 
 	private String password;

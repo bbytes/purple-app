@@ -61,7 +61,6 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 		organizationService.deleteAll();
 
 		SignUpRequestDTO requestDTO = new SignUpRequestDTO();
-		requestDTO.setBusinessArea("IT");
 		requestDTO.setEmail("test@anc.com");
 		requestDTO.setPassword("Test123");
 		requestDTO.setOrgName(orgName);
@@ -87,7 +86,6 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 		userService.deleteAll();
 
 		SignUpRequestDTO requestDTO = new SignUpRequestDTO();
-		requestDTO.setBusinessArea("IT");
 		requestDTO.setEmail("akshay.nag@beyondbytes.co.in");
 		requestDTO.setPassword("Test123");
 		requestDTO.setOrgName(orgName);

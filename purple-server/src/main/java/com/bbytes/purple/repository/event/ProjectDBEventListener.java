@@ -19,7 +19,7 @@ import com.mongodb.DBObject;
 
 @Component
 @Profile("saas")
-public class ProjectDBEvrntListener extends AbstractMongoEventListener<Project> {
+public class ProjectDBEventListener extends AbstractMongoEventListener<Project> {
 
 	@Autowired
 	private ProjectRepository projectRepository;
