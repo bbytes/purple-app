@@ -75,7 +75,7 @@
 			</div>
 			<div class="project-table" ng-init="initUser()">
 				<table>
-					<tr ng-repeat="user in allusers">
+					<tr ng-repeat="user in allusers | orderBy:'userName'">
 						<td class="table-user"><small> <ng-letter-avatar
 									data="{{user.userName}}" shape="round"></ng-letter-avatar>
 						</small>
