@@ -67,7 +67,9 @@ module.exports = function(grunt) {
 								'source/assets/js/lib/velocity.min.js',
 								'source/assets/js/lib/s-next.js',
 								'source/assets/js/lib/index.js',
-								'source/assets/js/lib/server-url.js'
+								'source/assets/js/lib/server-url.js',
+								'source/assets/js/lib/theia-sticky-sidebar.js',
+								'source/assets/js/lib/test.js'
 								
 						],
 						dest : '<%= grunt.config.get("buildPath") %>/assets/js/_lib.js'

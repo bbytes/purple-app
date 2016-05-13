@@ -601,6 +601,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     border-bottom: 2px solid #7c6991;
    
 }
+
 .main-title h4{
      text-transform: uppercase;
      font-weight: bold;
