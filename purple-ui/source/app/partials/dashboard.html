@@ -23,7 +23,7 @@
 		 
        <div id="collapseOne" class="panel-collapse collapse in">
          <div class="panel-body">
-           <ul class="list-group">
+           <ul class="list-group project-nav">
               <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
 			  <a ng-click="loadStatusTimeline(mytime);loadUserProjects()" >ALL</a>
 			  </li>
@@ -48,7 +48,7 @@
           </div>
       <div id="collapseTwo" class="panel-collapse collapse in">
          <div class="panel-body">
-            <ul class="list-group">
+            <ul class="list-group project-nav">
               <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers  | orderBy:'userName'" >
 			  <a ng-click="loadUserMap(users, mytime)">{{users.userName}}</a>
 			  </li>
@@ -235,7 +235,7 @@
                                      <h4 ng-show="isUser"><span class="hash"># </span> {{status.projectName}}
                                      <span  style="float:right"> {{status.time}}</span>
 									</h4>
-									<p>{{status.hours}}hrs, {{artist.date}}, {{commentCount}}<a href="">3 Comments</a></p> 
+									<p>{{status.hours}}hrs, {{artist.date}}, <a href="#">{{status.commentCount}} Comments</a></p> 
                                    </div>
 								   
                                   <div class="timeline-body worked-on">
