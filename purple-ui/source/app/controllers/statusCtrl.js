@@ -222,5 +222,4 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$scope.isSubmit = true;
    		$scope.isUpdate = false;
 	}
-
 });

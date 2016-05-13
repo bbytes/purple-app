@@ -1,4 +1,4 @@
-
+<div id="main">
 <div class="login-content signup">
 	<img class="logo-img" src="../../assets/img/logo.png"></img>
 	<h5 class="online online1">
@@ -13,13 +13,7 @@
 					<h5>Company Name</h5>
 					<input type="text" name="compnayname" id="orgName"
 						ng-model="user.orgName" capitalize required />
-					<h5>Business Area</h5>
-					<select id="businessArea" name="businessArea"
-						ng-model="user.businessArea" required>
-						<option value="">---Please select---</option>
-						<option value="Services">Services</option>
-						<option value="Products">Products</option>
-					</select>
+					
 					<h5>Email</h5>
 					<input type="text" name="email" ng-model="user.email"
 						ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required /> <span
@@ -55,4 +49,5 @@
 	<center>
 		<p>BY SIGNING UP YOU AGREE TO T & C</p>
 	</center>
+</div>
 </div>

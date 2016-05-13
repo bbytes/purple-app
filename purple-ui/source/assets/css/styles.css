@@ -23,8 +23,11 @@
 .wrapper{
     padding: 0 15px;
 }
+header{
+	padding-bottom:53px;
+}
 .navbar {
-    position: relative;
+    position: fixed;
     min-height: 53px !important;
     margin-bottom: 0px;
     border: 1px solid transparent;
@@ -119,12 +122,12 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     border: 1px solid #ccc;
     font-size: 14px;
     width: 100%;
-	padding: 10px;    
-    margin: 0 0 15px 0;
+	padding: 5px;    
+    margin: 0 0 5px 0;
     }
 	#container input.submit{
     width: 100%;
-    padding: 16px 0;
+    padding: 8px 0;
     font-weight: 500;
     font-size: 18px;
 	margin: 0;
@@ -137,6 +140,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
 	-moz-transition:0.5s all;
 	-o-transition:0.5s all;
 	-ms-transition:0.5s all;
+	margin-top:15px;
     }
 	#container input.submit:hover {
 	background: #7c6991;
@@ -177,8 +181,8 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
         width: 270px;
     }
 	.form{
-	     width: 60%;
-         margin: 36px auto;
+	     width: 75%;
+         margin: 0px auto;
          margin-bottom: 0;
 	}
 	
@@ -193,6 +197,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
 	font-size:12px;
 	font-weight:bold;
 	letter-spacing:2px;
+	margin-bottom: 3px;
 }
 .content p{
    
@@ -222,6 +227,8 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     background: #3f3f3f !important;
     z-index: 999;
     border-radius: 0;
+	position:absolute;
+	width:100%;
 }
 .current-page{
     padding: 13px 15px;
@@ -257,6 +264,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     min-height: 100%;
     position: absolute;
     right: 0;
+	margin-top: 35px;
 }
 .ng-sticky-fixed{
     bottom:0;
@@ -313,7 +321,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
 	background-color:#7c6991 !important;
 }
 .submit{
-    width:98% !important;
+    width:100% !important;
     background: #7c6991 !important;
     color:#fff;
     font-weight: bold;
@@ -322,7 +330,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     padding:20px !important;
 }
 .submit:hover{
-    width:98% !important;
+    width:100% !important;
     background: #7c6991 !important;
     color:#fff;
     font-weight: bold;
@@ -847,21 +855,20 @@ a{
 	padding-right:0;
 	padding-left:0;
 	display:inline-block;
-	margin:0px 5px;
+	padding:0px;
 	text-decoration:none;
+	margin: -8px !important;
 }
 tooltip, .avtive{
 	border-bottom:0px solid #ccc !important;
 }
 .edit{
-       
-    padding-right: 0%;
-    position: absolute;  
-    top: 20px;
+   padding-right: 0%;
+    position: absolute;
+    top: 30px;
     display: none;
     text-align: center;
-	right:116px;
-	
+    right: 12px;
 }
 .edit img{
 	margin-top:12px;
@@ -883,6 +890,13 @@ tooltip, .avtive{
     width:21%;
     height:100%;
     text-align: center;
+}
+.comment-icon a{
+	color:lightblue;
+}
+.comment-icon a:hover{
+	color:lightblue;
+	text-decoration:underline !important;
 }
 .form-control:focus{border-color: #7c6991 !important;  box-shadow: none; -webkit-box-shadow: none;} 
 .has-error .form-control:focus{box-shadow: none; -webkit-box-shadow: none;}
@@ -991,7 +1005,7 @@ input[type="file"] {
 }
 
 .main-sidebar, .left-side {
-    position: absolute;
+    position: fixed;
     z-index: 9;
     top: 0;
     left: 0;
@@ -1566,7 +1580,7 @@ label {
     width: 100%; 
 	height: 100%; 
     max-width: 700px; 
-    max-height: 95px; 
+    max-height: 85px; 
     background-color: #FFFFFF
 }
 
@@ -1625,7 +1639,7 @@ label {
 	width: 494px !important;
 }
 .ta-editor {
-  min-height: 90px !important;
+  min-height: 80px !important;
   height: auto !important;
   overflow: auto !important;
   font-family: inherit !important;
@@ -1633,14 +1647,14 @@ label {
 }
 .ta-scroll-window > .ta-bind {
     height: auto;
-    min-height: 90px !important;
+    min-height: 80px !important;
     padding: 6px 12px;
 }
 
 /* example-3 */
 .example-3 .ng-inline-edit__input {
   border: 1px solid #ccc;
-  width: 78%;
+  width: 100%;
 }
 
 .example-3 .ng-inline-edit--validating:after {
@@ -1683,18 +1697,33 @@ label {
 }
 
 .example-3 .ng-inline-edit__button--edit:after {
-  content: "\270E";
-  color: #00f;
+	display: inline-block;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+    content: "";
+    background: url("../img/edit.png") no-repeat 0 0;
+    background-size: 100%;
 }
 
 .example-3 .ng-inline-edit__button--save:after {
-  content: "\2714";
-  color: #0f0;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+    content: "";
+    background: url("../img/join.png") no-repeat 0 0;
+    background-size: 100%;
 }
 
 .example-3 .ng-inline-edit__button--cancel:after {
-  content: "\2716";
-  color: #f00;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+    content: "";
+    background: url("../img/delete.png") no-repeat 0 0;
+    background-size: 100%;
 }
 md-content {
     padding: 10px;
@@ -1708,6 +1737,7 @@ md-content {
 	right:0;
 	padding-right: 5%;
 	position:absolute;
+	margin-top:-5px;
 }
 .search-filter select{
 	border:1px solid #ccc;
@@ -1731,6 +1761,7 @@ md-content {
 .search-status{
 	right: 4.5%;
 	position:absolute;
+	margin-top:-5px;
 	
 }
 .search-status select{
@@ -1831,3 +1862,37 @@ md-sidenav ul {
     }
 }
 
+#main{
+	overflow:hidden;
+}
+
+
+.content {
+	width: 75%;
+   float: left;
+  position: relative;
+  z-index:0;
+  margin-top:53px;
+}
+
+
+.leftSidebar {
+	width: 25%;
+	float: left;
+	padding: 0 30px 0 0;
+	position: relative;
+	margin-top:45px;
+}
+
+md-backdrop{
+	position:fixed !important;
+}
+
+
+.side-slide-panel label{
+	margin-bottom:0px !important;
+}
+.side-slide-panel{
+	margin-bottom:5px !important;
+}			
+		
