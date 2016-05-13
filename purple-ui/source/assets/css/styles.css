@@ -597,7 +597,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     font-size: 12px;
 }
 .main-title{
-    margin:30px auto;
+    margin:80px auto;
     border-bottom: 2px solid #7c6991;
    
 }
