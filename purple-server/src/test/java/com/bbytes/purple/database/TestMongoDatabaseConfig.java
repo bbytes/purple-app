@@ -50,13 +50,13 @@ public class TestMongoDatabaseConfig {
 	@Value("${spring.data.mongodb.database}")
 	private String database;
 
-	@Value("${spring.data.mongodb.username}")
+	@Value("${spring.data.mongodb.username:}")
 	private String username;
 
-	@Value("${spring.data.mongodb.password}")
+	@Value("${spring.data.mongodb.password:}")
 	private String password;
 
-	@Value("${spring.data.mongodb.auth.database}")
+	@Value("${spring.data.mongodb.auth.database:}")
 	private String authDatabase;
 
 	@Bean(destroyMethod = "close")
@@ -64,8 +64,7 @@ public class TestMongoDatabaseConfig {
 		Net net = mongod().getConfig().net();
 		properties.setHost(net.getServerAddress().getHostName());
 		properties.setPort(net.getPort());
-		// return properties.createMongoClient(this.options,env);
-		return new MongoClient(net.getServerAddress().getHostName());
+		return properties.createMongoClient(this.options, env);
 	}
 
 	@Bean(destroyMethod = "stop")

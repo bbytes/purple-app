@@ -35,13 +35,13 @@ public class MongoDatabaseEnterpriseConfig extends AbstractMongoConfiguration {
 	@Value("${spring.data.mongodb.database}")
 	protected String database;
 
-	@Value("${spring.data.mongodb.username}")
+	@Value("${spring.data.mongodb.username:}")
 	private String username;
 
-	@Value("${spring.data.mongodb.password}")
+	@Value("${spring.data.mongodb.password:}")
 	private String password;
 
-	@Value("${spring.data.mongodb.auth.database}")
+	@Value("${spring.data.mongodb.auth.database:}")
 	private String authDatabase;
 
 	@Override
