@@ -41,6 +41,10 @@ public class CommentService extends AbstractService<Comment, String> {
 		return commentRepository.findByStatus(status);
 	}
 
+	public long getCountByStatus(Status status) {
+		return commentRepository.countByStatus(status);
+	}
+
 	public boolean commentIdExist(String commentId) {
 		boolean isExist = commentRepository.findOne(commentId) == null ? false : true;
 		return isExist;
@@ -57,7 +61,7 @@ public class CommentService extends AbstractService<Comment, String> {
 				Comment comment = new Comment(commentDTO.getCommentDesc(), user, status);
 				addComment = commentRepository.save(comment);
 			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_COMMENT_FAILED,e);
+				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_COMMENT_FAILED, e);
 			}
 		}
 		return addComment;

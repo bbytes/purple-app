@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
+import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.StatusService;
 
 @Component
@@ -27,6 +28,9 @@ public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 
 	@Autowired
 	private StatusService statusService;
+	
+	@Autowired
+	private CommentService commentService;
 	
 	@Autowired
 	MongoTemplate mongoTemplate;
@@ -38,14 +42,8 @@ public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 	public void onAfterSave(AfterSaveEvent<Comment> event) {
 		Comment commentSaved = event.getSource();
 		Status status = statusService.findOne(commentSaved.getStatus().getStatusId());
-		
-		Aggregation aggregation = newAggregation(match(Criteria.where("status").is(status)),group().count().as("commentCount"));
-
-		AggregationResults<StatusDTO> result = mongoTemplate.aggregate(aggregation, Comment.class,
-				StatusDTO.class);
-
-		List<StatusDTO> count = result.getMappedResults();
-		status.setCommentCount(count.get(0).getCommentCount());
+		long count = commentService.getCountByStatus(status);
+		status.setCommentCount(count);
 		statusService.save(status);
 
 	}
