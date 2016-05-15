@@ -102,6 +102,13 @@
 			<version>1.50.2</version>
 		</dependency>
 
+		<!-- http://mvnrepository.com/artifact/com.tapstream/rollbar-logback -->
+		<dependency>
+			<groupId>com.tapstream</groupId>
+			<artifactId>rollbar-logback</artifactId>
+			<version>0.1.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
