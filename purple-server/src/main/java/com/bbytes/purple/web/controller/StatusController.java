@@ -1,13 +1,16 @@
 package com.bbytes.purple.web.controller;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,7 @@ import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.service.UtilityService;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -43,6 +47,9 @@ public class StatusController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private UtilityService utilityService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
@@ -116,6 +123,25 @@ public class StatusController {
 	}
 
 	/**
+	 * The get csv for all status related to project for current user
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/status/csv", method = RequestMethod.GET)
+	public FileSystemResource getCSVForAllStatus(@RequestParam("timePeriod") String timePeriod) throws PurpleException {
+
+		// We will get current logged in user
+		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
+		User user = userService.getLoggedinUser();
+		List<Status> statusList = statusService.getAllStatus(user, timePeriodValue);
+		String fileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss")
+				+ ".csv";
+		File csv = utilityService.getCSV(fileName, statusList);
+		return new FileSystemResource(csv);
+	}
+
+	/**
 	 * The delete status method is used to delete particular status
 	 * 
 	 * @param statusId
@@ -183,5 +209,25 @@ public class StatusController {
 				SuccessHandler.GET_STATUS_SUCCESS);
 
 		return statusReponse;
+	}
+
+	/**
+	 * The get csv for all status related to project for current user
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/status/project/user/csv", method = RequestMethod.POST)
+	public FileSystemResource getCSVForAllStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO,
+			@RequestParam("timePeriod") String timePeriod) throws PurpleException {
+
+		User user = userService.getLoggedinUser();
+		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
+		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user,
+				timePeriodValue);
+		String fileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss")
+				+ ".csv";
+		File csv = utilityService.getCSV(fileName, statusList);
+		return new FileSystemResource(csv);
 	}
 }
