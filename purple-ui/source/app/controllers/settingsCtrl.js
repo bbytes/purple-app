@@ -4,7 +4,8 @@
 
 rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, dropdownListService,settingsService,appNotifyService) {
 
-
+    $rootScope.navClass = 'nav navbar-nav';
+	$rootScope.navstatusClass = 'right-nav-ct';
     // Reset password for admin
     $scope.updatePassword = function (user,confirmPassword) {
     	

@@ -6,6 +6,8 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$window, $location, settingsService, $filter) {
 			
 	$rootScope.bodyClass = 'body-standalone1';
+	$rootScope.navClass = 'nav-control';
+	$rootScope.navstatusClass = 'nav navbar-nav';
 	$scope.isSubmit = true;
 	$scope.submitStatus = function() {
 

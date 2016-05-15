@@ -3,6 +3,8 @@
  */
 rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminService,dropdownListService,appNotifyService,$window) {
 	
+	 $rootScope.navClass = 'nav navbar-nav';
+	 $rootScope.navstatusClass = 'right-nav-ct';
 	 $rootScope.bodyClass = 'body-standalone1';
     $scope.invite = function (isValid) {
         if (!isValid) {

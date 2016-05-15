@@ -30,7 +30,7 @@ header{
     position: fixed;
     min-height: 53px !important;
     margin-bottom: 0px;
-    border: 1px solid transparent;
+    border: 0px solid transparent;
 }
 .navbar-brand > img {
     display: block;
@@ -43,18 +43,35 @@ header{
     padding: 3px 15px !important;
     font-size: 18px;
     line-height: 20px;
-    width: 213px;
+    width: 80px;
+}
+.nav-control{
+	display:none;
+}
+.right-nav-ct{
+	display:none;
+}
+.nav-left .active{
+	background: url(../img/menu-line.png) no-repeat center; 
+    color: #fff !important;
+	border-bottom:0px Solid #ddd;
+	
 }
 @media (min-width: 768px){
 .navbar-nav {
-    float: right !important;
+    
     margin: 0;
 }
+}
+.navbar-default {
+    background-color: #222;
+    border-color: #e7e7e7;
 }
 .navbar-nav > li > a {
     padding-top: 10px;
     padding-bottom: 10px;
     line-height: 29px !important;
+	text-transform:uppercase;
 }
 .logo-text{
     display: inline-block;
@@ -202,6 +219,10 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
 .content p{
    
 }
+.containt{
+	margin-left: 20px;
+    margin-right: 20px;
+}
 .online{
     position: absolute;
     left: 36%;
@@ -262,9 +283,10 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     padding-left: 32px;
     padding-right: 32px;
     min-height: 100%;
-    position: absolute;
+    position: fixed;
     right: 0;
-	margin-top: 35px;
+	margin-top: 0px;
+	overflow:auto;
 }
 .ng-sticky-fixed{
     bottom:0;
@@ -597,7 +619,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
     font-size: 12px;
 }
 .main-title{
-    margin:80px auto;
+    margin:40px auto;
     border-bottom: 2px solid #7c6991;
    
 }
@@ -1876,7 +1898,7 @@ md-sidenav ul {
    float: left;
   position: relative;
   z-index:0;
-  margin-top:53px;
+  margin-top:10px;
 }
 
 
@@ -1885,7 +1907,7 @@ md-sidenav ul {
 	float: left;
 	padding: 0 30px 0 0;
 	position: relative;
-	margin-top:45px;
+	margin-top:0px;
 }
 
 md-backdrop{

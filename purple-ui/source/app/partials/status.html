@@ -1,12 +1,4 @@
 
-<div class="bottom-nav">
-	<div class="wrapper">
-		<div class="current-page">
-			<h5><a href="#" class="current-active">status</a></h5>
-		</div>
-	</div>
-</div>
-
 <div ng-init="usersstatusLoad(mytime)">
 <div class="col-md-8" >
 	<div class="wrapper" >
@@ -14,7 +6,7 @@
 			  <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timePeriodChange(mytime)" >
              </select>
 			</div>
-		<div class="top-header" style="margin-top: 60px;">
+		<div class="top-header" style="margin-top: 27px;">
 			<span class="project"><span
 					class="username"><span class="hash">@ </span>
 						{{userName}}</span></span>
@@ -69,7 +61,7 @@
 	</div>
 </div>
 
-<section sticky-nav="ng-sticky-fixed">
+
 <form name="myForm">
 	<div class="col-md-4 side">
 
@@ -150,7 +142,7 @@
 	
 	</div>
 </form>
-</section>
+
 
 <!---mobile---->
 

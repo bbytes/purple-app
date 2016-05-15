@@ -2,11 +2,12 @@
  * Dashboard controller to load status timeline
  */
 rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,statusService, commentService) {
-	
 	 $scope.commentDesc = '';
     $scope.isActive = function(route) {
         return route === $location.path();
     }
+	$rootScope.bodyClass = 'body-standalone1';
+	$rootScope.navClass = 'nav-control';
    /**
     * Get all status timeline
     */

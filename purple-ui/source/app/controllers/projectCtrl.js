@@ -9,6 +9,8 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 		return route === $location.path();
 	}
 
+	$rootScope.navClass = 'nav navbar-nav';
+	$rootScope.navstatusClass = 'right-nav-ct';
 	$rootScope.bodyClass = 'body-standalone1';
 	$scope.showpage = false;
 	
