@@ -190,7 +190,7 @@ public class AdminService {
 
 		if (project != null) {
 			if (projectService.projectNameExist(project.getProjectName()))
-				throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
+				throw new PurpleException("Project with given name '"+ project.getProjectName() +"' already exist", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				project = projectService.save(project);
 				for (User user : users) {
