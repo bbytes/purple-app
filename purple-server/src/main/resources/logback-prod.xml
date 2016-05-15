@@ -11,7 +11,7 @@
 	<!-- log file will be archived daily or the file size is larger than 10MB. -->
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>purple-prod.log</file>
+		<file>log/purple-prod.log</file>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
 				%d{dd MMM; HH:mm:ss.SSS} - %msg%n
@@ -20,7 +20,7 @@
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- rollover daily -->
-			<fileNamePattern>purple=prod.%d{yyyy-MM-dd}.%i.log
+			<fileNamePattern>log/purple=prod.%d{yyyy-MM-dd}.%i.log
 			</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
