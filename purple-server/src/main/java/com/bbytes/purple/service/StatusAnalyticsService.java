@@ -23,7 +23,7 @@ import com.bbytes.purple.domain.Status;
 public class StatusAnalyticsService {
 
 	@Autowired
-	MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
 
 	/**
 	 * Group by User , Project , day wise.

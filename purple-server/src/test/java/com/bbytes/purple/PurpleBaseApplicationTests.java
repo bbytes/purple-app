@@ -21,6 +21,7 @@ import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.service.UtilityService;
 import com.mongodb.MongoClient;
 
 public class PurpleBaseApplicationTests extends PurpleApplicationTests {
@@ -43,6 +44,9 @@ public class PurpleBaseApplicationTests extends PurpleApplicationTests {
 	@Autowired
 	protected CommentService commentService;
 
+	@Autowired
+	protected UtilityService utilityService;
+	
 	@Autowired
 	protected NotificationService notificationService;
 
