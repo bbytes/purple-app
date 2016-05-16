@@ -120,13 +120,17 @@
 				</small>
                  <div class="user-label">
                    <h4>{{userName}}</h4>
+				 
 				    <md-content class="example-3 md-accent">
                     <span
+					ng-click="showUpdatePage(comment.commentId)"
                     inline-edit="comment.commentDesc"
                     inline-edit-textarea
                     inline-edit-validation="comment.commentDesc.validator(newValue)"
                     inline-edit-btn-save="Save"
-                    inline-edit-btn-cancel="Cancel"></span>
+                    inline-edit-btn-cancel="Cancel"> </span>
+					<span class="delete-comment">
+					<a href="#"  confirm="Are you sure you want to delete the item?" ng-click="deleteComment(comment.commentId,$index)"><img src="../../assets/img/delete.png" style="width: 25px;" title="Replied"></a></span>
                   </md-content>
                     
                 </div>

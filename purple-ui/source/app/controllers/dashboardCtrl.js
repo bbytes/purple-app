@@ -8,6 +8,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
     }
 	$rootScope.bodyClass = 'body-standalone1';
 	$rootScope.navClass = 'nav-control';
+	$rootScope.navstatusClass = 'nav navbar-nav';
    /**
     * Get all status timeline
     */
@@ -238,5 +239,37 @@ $scope.loadTimePeriod = function(){
      $scope.selectedUser = index;
 	 $scope.selectedRow = null;
   };
+  
+  //update comment
+  $scope.showUpdatePage = function(commentId) {
+
+		commentService.getStatusWithId(commentId).then(function(response) {
+			if (response.success = true) {
+
+				$scope.statusdata = response.data.gridData;
+				
+				angular.forEach(response.data.gridData, function(value, key) {
+
+					$scope.allcomments = value.statusList;
+					$scope.isUpdate = true;
+					$scope.isSubmit = false;
+					$scope.loadProjects();	
+
+				});
+			}
+		});
+	}   
+   
+  
+  //delete comment
+  $scope.deleteComment = function(commentId, $index) {
+		commentService.deleteComment(commentId).then(function(response) {
+			if (response.success = true) {
+				appNotifyService.success('Comment has been successfully deleted.');
+			}
+			$scope.allcomments.splice($index, 1);
+			//$scope.usersstatusLoad();
+		});
+	}
   
 });
