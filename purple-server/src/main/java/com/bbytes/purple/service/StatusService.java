@@ -79,7 +79,7 @@ public class StatusService extends AbstractService<Status, String> {
 		return hours;
 	}
 
-	public Status create(StatusDTO status, User user) throws PurpleException {
+	public Status create(StatusDTO statusDTO, User user) throws PurpleException {
 		Status savedStatus = null;
 
 		cleanUpStatusText(statusDTO);
@@ -95,13 +95,13 @@ public class StatusService extends AbstractService<Status, String> {
 				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
 						new Date());
 			} else {
-				Date statusDate = new Date(Long.parseLong(status.getDateTime()));
+				Date statusDate = new Date(Long.parseLong(statusDTO.getDateTime()));
 				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate))
 						.withTime(0, 0, 0, 0).toDate();
 				if (statusDate.before(backDate))
-					throw new PurpleException("Error for edit pass due date", ErrorHandler.PASS_DUEDATE_STATUS_EDIT);
+					throw new PurpleException("Cannot add status past " +statusEnableDate + " days", ErrorHandler.PASS_DUEDATE_STATUS_EDIT);
 				if (statusDate.after(new Date()))
-					throw new PurpleException("Error for future date status edit",
+					throw new PurpleException("Cannot add status for future date",
 							ErrorHandler.FUTURE_DATE_STATUS_EDIT);
 				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
 						statusDate);
