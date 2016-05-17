@@ -82,21 +82,24 @@ public class StatusService extends AbstractService<Status, String> {
 		return hours;
 	}
 
-	public Status create(StatusDTO status, User user) throws PurpleException, ParseException {
+	public Status create(StatusDTO statusDTO, User user) throws PurpleException, ParseException {
 		Status savedStatus = null;
 		SimpleDateFormat sdf = new SimpleDateFormat(GlobalConstants.DATE_STATUS_FORMAT);
+
+		cleanUpStatusText(statusDTO);
 
 		ConfigSetting configSetting = configSettingService.getConfigSetting(user.getOrganization());
 		String statusEnableDate = configSetting.getStatusEnable();
 
-		if (status != null && status.getProjectId() != null && !status.getProjectId().isEmpty()) {
-			if (!projectService.projectIdExist(status.getProjectId()))
+		if (statusDTO != null && statusDTO.getProjectId() != null && !statusDTO.getProjectId().isEmpty()) {
+			if (!projectService.projectIdExist(statusDTO.getProjectId()))
 				throw new PurpleException("Error while adding status", ErrorHandler.PROJECT_NOT_FOUND);
 
-			if (status.getDateTime() == null || status.getDateTime().isEmpty()) {
-				savedStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(), new Date());
+			if (statusDTO.getDateTime() == null || statusDTO.getDateTime().isEmpty()) {
+				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
+						new Date());
 			} else {
-				Date statusDate = sdf.parse(status.getDateTime());
+				Date statusDate = sdf.parse(statusDTO.getDateTime());
 				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate))
 						.withTime(0, 0, 0, 0).toDate();
 				if (statusDate.before(backDate))
@@ -104,19 +107,20 @@ public class StatusService extends AbstractService<Status, String> {
 				if (statusDate.after(new Date()))
 					throw new PurpleException("Error for future date status edit",
 							ErrorHandler.FUTURE_DATE_STATUS_EDIT);
-				savedStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(), statusDate);
+				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
+						statusDate);
 			}
 
-			Project project = projectService.findByProjectId(status.getProjectId());
+			Project project = projectService.findByProjectId(statusDTO.getProjectId());
 
 			double hours = findStatusHours(user, new Date());
-			double newHours = hours + status.getHours();
+			double newHours = hours + statusDTO.getHours();
 			if (newHours > 24)
 				throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
 
 			savedStatus.setProject(project);
 			savedStatus.setUser(user);
-			savedStatus.setBlockers(status.getBlockers());
+			savedStatus.setBlockers(statusDTO.getBlockers());
 			try {
 				savedStatus = statusRepository.save(savedStatus);
 			} catch (Throwable e) {
@@ -125,6 +129,24 @@ public class StatusService extends AbstractService<Status, String> {
 		} else
 			throw new PurpleException("Cannot add status with empty project", ErrorHandler.PROJECT_NOT_FOUND);
 		return savedStatus;
+	}
+
+	/**
+	 * Strip Leading and Trailing Spaces From String
+	 * @param statusDTO
+	 */
+	private void cleanUpStatusText(StatusDTO statusDTO) {
+		if (statusDTO != null) {
+			if (statusDTO.getWorkedOn() != null)
+				statusDTO.setWorkedOn(statusDTO.getWorkedOn().trim());
+
+			if (statusDTO.getWorkingOn() != null)
+				statusDTO.setWorkingOn(statusDTO.getWorkingOn().trim());
+
+			if (statusDTO.getBlockers() != null)
+				statusDTO.setBlockers(statusDTO.getBlockers().trim());
+		}
+
 	}
 
 	public Status getStatus(String statusId) throws PurpleException {
@@ -165,25 +187,27 @@ public class StatusService extends AbstractService<Status, String> {
 		}
 	}
 
-	public Status updateStatus(String statusId, StatusDTO status, User user) throws PurpleException {
+	public Status updateStatus(String statusId, StatusDTO statusDTO, User user) throws PurpleException {
 
 		Status newStatus = null;
-		if ((!statusIdExist(statusId) || (status.getProjectId() == null || status.getProjectId().isEmpty())))
+		if ((!statusIdExist(statusId) || (statusDTO.getProjectId() == null || statusDTO.getProjectId().isEmpty())))
 			throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
 
-		Project project = projectService.findByProjectId(status.getProjectId());
+		cleanUpStatusText(statusDTO);
+		
+		Project project = projectService.findByProjectId(statusDTO.getProjectId());
 		Status updateStatus = getStatusbyId(statusId);
 
 		Date statusDate = updateStatus.getDateTime();
 		double hours = findStatusHours(user, statusDate);
-		double newHours = hours + (status.getHours() - updateStatus.getHours());
+		double newHours = hours + (statusDTO.getHours() - updateStatus.getHours());
 		if (newHours > 24)
 			throw new PurpleException("Exceeded the status hours", ErrorHandler.HOURS_EXCEEDED);
 
-		updateStatus.setWorkedOn(status.getWorkedOn());
-		updateStatus.setWorkingOn(status.getWorkingOn());
-		updateStatus.setBlockers(status.getBlockers());
-		updateStatus.setHours(status.getHours());
+		updateStatus.setWorkedOn(statusDTO.getWorkedOn());
+		updateStatus.setWorkingOn(statusDTO.getWorkingOn());
+		updateStatus.setBlockers(statusDTO.getBlockers());
+		updateStatus.setHours(statusDTO.getHours());
 		updateStatus.setProject(project);
 		try {
 			newStatus = statusRepository.save(updateStatus);
