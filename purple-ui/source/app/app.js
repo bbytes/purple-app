@@ -263,7 +263,7 @@ rootApp.config([
 				templateUrl : 'app/partials/reset-password.html',
 				controller : 'resetPasswordCtrl'
 			}).state('updatestatus', {
-				url : '/updatestatus?token&date',
+				url : '/updatestatus?token&sd',
 				controller : 'updateStatusCtrl'
 			}).state('accountactivate', {
 				controller : 'activateAccountCtrl'

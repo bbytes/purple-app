@@ -6,7 +6,7 @@
     		$window.sessionStorage.token = $state.params.token;
           
              $rootScope.authToken = $state.params.token;
-             $rootScope.statusDate = $state.params.date;
+             $rootScope.statusDate = $state.params.sd;
              
          		var deferred = $q.defer();
                

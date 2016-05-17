@@ -1,7 +1,5 @@
 package com.bbytes.purple.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -21,7 +19,6 @@ import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.utils.ErrorHandler;
-import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class StatusService extends AbstractService<Status, String> {
@@ -82,9 +79,8 @@ public class StatusService extends AbstractService<Status, String> {
 		return hours;
 	}
 
-	public Status create(StatusDTO status, User user) throws PurpleException, ParseException {
+	public Status create(StatusDTO status, User user) throws PurpleException {
 		Status savedStatus = null;
-		SimpleDateFormat sdf = new SimpleDateFormat(GlobalConstants.DATE_STATUS_FORMAT);
 
 		ConfigSetting configSetting = configSettingService.getConfigSetting(user.getOrganization());
 		String statusEnableDate = configSetting.getStatusEnable();
@@ -96,7 +92,7 @@ public class StatusService extends AbstractService<Status, String> {
 			if (status.getDateTime() == null || status.getDateTime().isEmpty()) {
 				savedStatus = new Status(status.getWorkingOn(), status.getWorkedOn(), status.getHours(), new Date());
 			} else {
-				Date statusDate = sdf.parse(status.getDateTime());
+				Date statusDate = new Date(Long.parseLong(status.getDateTime()));
 				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate))
 						.withTime(0, 0, 0, 0).toDate();
 				if (statusDate.before(backDate))

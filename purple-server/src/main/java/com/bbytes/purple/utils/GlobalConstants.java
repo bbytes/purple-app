@@ -38,7 +38,7 @@ public class GlobalConstants {
 
 	public static final String STATUS_URL = "/updatestatus?token=";
 
-	public static final String STATUS_DATE = "&date=";
+	public static final String STATUS_DATE = "&sd=";
 
 	public static final String FORGOT_PASSWORD_URL = "/forgotPassword?token=";
 
@@ -47,8 +47,6 @@ public class GlobalConstants {
 	public static final String DATE_FORMAT = "MMM d, yyyy";
 
 	public static final String DATE_HOLIDAY_FORMAT = "dd/MM/yyyy";
-
-	public static final String DATE_STATUS_FORMAT = "dd-MM-yyyy HH:mm";
 
 	public static final String SCHEDULER_TIME_FORMAT = "HH:mm";
 
