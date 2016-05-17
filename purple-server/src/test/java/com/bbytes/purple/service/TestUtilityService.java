@@ -54,6 +54,7 @@ public class TestUtilityService extends PurpleBaseApplicationTests {
 
 	}
 
+	@SuppressWarnings("resource")
 	@Test
 	public void testCSV() throws Exception {
 
@@ -70,9 +71,8 @@ public class TestUtilityService extends PurpleBaseApplicationTests {
 		
 		File csv = utilityService.getCSV(UUID.randomUUID().toString(), statusService.findAll());
 		Assert.assertTrue(csv.length() > 0);
-		BufferedReader br = new BufferedReader(new FileReader(csv));
-		 String line = null;
-		 while ((line = br.readLine()) != null) {
+		String line = null;
+		 while ((line = new BufferedReader(new FileReader(csv)).readLine()) != null) {
 		   System.out.println(line);
 		 }
 

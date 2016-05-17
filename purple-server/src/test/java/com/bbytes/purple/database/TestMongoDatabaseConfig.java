@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 
 import de.flapdoodle.embed.mongo.MongodExecutable;
