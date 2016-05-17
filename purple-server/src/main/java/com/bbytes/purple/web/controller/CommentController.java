@@ -45,10 +45,10 @@ public class CommentController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private StatusService statusService;
-	
+
 	@Autowired
 	private EmailService emailService;
 
@@ -58,13 +58,13 @@ public class CommentController {
 	@RequestMapping(value = "/api/v1/comment/add", method = RequestMethod.POST)
 	public RestResponse saveComment(@RequestBody CommentDTO commentDTO) throws PurpleException {
 
-		final String subject = GlobalConstants.EMAIL_STATUS_COMMENT_SUBJECT;
+		final String subject = GlobalConstants.EMAIL_COMMENT_SUBJECT;
 		final String template = GlobalConstants.COMMENT_EMAIL_TEMPLATE;
-		
+
 		User user = userService.getLoggedinUser();
 		Comment comment = commentService.addComment(commentDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
-		
+
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
 
@@ -74,7 +74,7 @@ public class CommentController {
 		emailBody.put("userName", user.getName());
 
 		emailService.sendEmail(emailList, emailBody, subject, template);
-		
+
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 
 		logger.debug(comment.getCommentDesc() + "' is added successfully");
