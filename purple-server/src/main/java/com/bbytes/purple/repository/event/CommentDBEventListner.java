@@ -18,10 +18,10 @@ public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 
 	@Autowired
 	private StatusService statusService;
-	
+
 	@Autowired
 	private CommentService commentService;
-	
+
 	@Autowired
 	MongoTemplate mongoTemplate;
 
@@ -30,6 +30,7 @@ public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 	 */
 	@Override
 	public void onAfterSave(AfterSaveEvent<Comment> event) {
+
 		Comment commentSaved = event.getSource();
 		Status status = statusService.findOne(commentSaved.getStatus().getStatusId());
 		long count = commentService.getCountByStatus(status);
@@ -37,5 +38,4 @@ public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 		statusService.save(status);
 
 	}
-
 }

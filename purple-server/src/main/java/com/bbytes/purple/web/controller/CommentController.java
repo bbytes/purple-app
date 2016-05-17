@@ -1,5 +1,7 @@
 package com.bbytes.purple.web.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +16,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.domain.Comment;
+import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
+import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -39,6 +45,12 @@ public class CommentController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private StatusService statusService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
@@ -46,8 +58,23 @@ public class CommentController {
 	@RequestMapping(value = "/api/v1/comment/add", method = RequestMethod.POST)
 	public RestResponse saveComment(@RequestBody CommentDTO commentDTO) throws PurpleException {
 
+		final String subject = GlobalConstants.EMAIL_STATUS_COMMENT_SUBJECT;
+		final String template = GlobalConstants.COMMENT_EMAIL_TEMPLATE;
+		
 		User user = userService.getLoggedinUser();
 		Comment comment = commentService.addComment(commentDTO, user);
+		Status status = statusService.findOne(comment.getStatus().getStatusId());
+		
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(status.getUser().getEmail());
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, status.getDateTime());
+		emailBody.put("userName", user.getName());
+
+		emailService.sendEmail(emailList, emailBody, subject, template);
+		
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 
 		logger.debug(comment.getCommentDesc() + "' is added successfully");

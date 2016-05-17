@@ -105,8 +105,6 @@ public class SchedulerService {
 				LocalTime projectTime = new LocalTime(outputTime);
 				DateTime projectTimeDatetime = DateTime.now().withTime(projectTime);
 
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_STATUS_FORMAT);
-
 				if (now.isBefore(projectTimeDatetime) && projectTimeDatetime.isBefore(now.plusMinutes(30))) {
 					String hours = new SimpleDateFormat("HH").format(date);
 					String minutes = new SimpleDateFormat("mm").format(date);
@@ -116,7 +114,7 @@ public class SchedulerService {
 						List<String> emailList = new ArrayList<String>();
 						final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
 
-						String currentDate = simpleDateFormat.format(new Date());
+						long currentDate = new Date().getTime();
 						int validHours = Integer.parseInt(configSettingService
 								.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable()) * 24;
 
