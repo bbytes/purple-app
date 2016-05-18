@@ -5,9 +5,9 @@
 		
         }
 		body, html{
-				overflow:visible !important;
+				overflow:visible ;
 				background:initial ;
-				position:static !important;
+				position:static;
 		}
 
 
@@ -102,7 +102,7 @@ header{
 }
 
 input[type="submit"]::-moz-focus-inner, input[type="button"]::-moz-focus-inner { border : none; } 
-input[type="submit"]:focus, input[type="button"]:focus { outline : none; }
+input[type="submit"]:focus, input[type="button"]:focus { outline : none !important; }
 
 .clear { clear: both; }
 
@@ -1561,15 +1561,13 @@ md-sidenav {
 }
 md-sidenav{
     box-sizing: border-box;
-    position: fixed !important;
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
     z-index: 9999 !important;
-    width: 720px !important;
-    max-width: 320px;
+    width: 720px !important;   
     bottom: 0;
-    overflow: hidden;
+    overflow: auto;
     -webkit-overflow-scrolling: touch;
 }
 .content {
@@ -1709,7 +1707,7 @@ label {
 
 /* example-3 */
 .example-3 .ng-inline-edit__input {
-  border: 1px solid #ccc;
+  border: 1px solid #red;
   width: 100%;
 }
 
@@ -1756,10 +1754,12 @@ label {
 	display: inline-block;
     width: 25px;
     height: 25px;
-    margin-right: 5px;
+    margin-right: 32px;
     content: "";
     background: url("../img/edit.png") no-repeat 0 0;
     background-size: 100%;
+	position:absolute;
+	right: 0;
 }
 
 .example-3 .ng-inline-edit__button--save:after {
@@ -1924,7 +1924,7 @@ md-sidenav ul {
 
 
 .content {
-	width: 75%;
+	width: 100%;
    float: left;
   position: relative;
   z-index:0;
@@ -1940,31 +1940,27 @@ md-sidenav ul {
 	margin-top:0px;
 }
 
-md-backdrop{
-	position:fixed !important;
+md-sidenav, md-backdrop {
+position: fixed;
 }
+.isOpen{
+  overflow:hidden !important;
+} 
 
-
-.side-slide-panel label{
-	margin-bottom:0px !important;
-}
-.side-slide-panel{
-	margin-bottom:5px !important;
-}			
-		
-.user-label {
-	position: relative;
-	display: inline-block;
-}
-
-.user-label:hover .delete-comment {
+.example-3:hover .delete-comment {
 	display: block;
 }
+
 .delete-comment {
-	padding-top: 8px;	
-	padding-right: 0px;
+	padding-top: 7px;	
+	padding-right: 7px;
 	position: absolute;
 	right: 0;
-	top: 0;
 	display: none;
+	float:right;
+	bottom:0;
 }
+*:focus {
+    outline: none;
+}
+ 

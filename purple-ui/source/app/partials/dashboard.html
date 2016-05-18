@@ -1,6 +1,7 @@
 
-		
-<div class="leftSidebar">
+
+  
+    <div class="leftSidebar">
 	 <div class="theiaStickySidebar" ng-init="loadTimePeriod();loadStatusTimeline()">
 	    <div class="panel-group" id="accordion" ng-init="loadUserProjects()">
           <div class="panel panel-default">
@@ -43,6 +44,16 @@
               <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers  | orderBy:'userName'" >
 			  <a ng-click="loadUserMap(users, mytime)">{{users.userName}}</a>
 			  </li>
+			  <li>sdds</li>
+			  <li>sdds</li>
+			  <li>sdds</li>
+			  <li>sdds</li>
+			  <li>sdds</li>
+			  <li>sdds</li>
+			  <li>sdds</li>
+			  <li>sdds</li>
+			  <li>sdds</li>
+			  <li>sdds</li>
             </ul>
           </div>
 
@@ -51,10 +62,11 @@
   </div>
 </div>
 </div>
- 
- 
-		
-        <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="left"> 
+  
+
+
+<div class="col-md-9">
+   <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="left"> 
          
          <md-content layout-padding=""> 
                
@@ -111,8 +123,8 @@
 				
 				
            <!--reaply-->
-		    <div class="comment-box">
-			   <div class="comment-box--content">
+		  
+			
             <div class="sidebar-nav comment-list-group" ng-repeat="comment in allcomments">
 			 
                <small> <ng-letter-avatar data="{{userName}}"
@@ -120,19 +132,19 @@
 				</small>
                  <div class="user-label">
                    <h4>{{userName}}</h4>
-				 
-				    <md-content class="example-3 md-accent">
+				     <md-content class="example-3 md-accent">
                     <span
-					ng-click="showUpdatePage(comment.commentId)"
                     inline-edit="comment.commentDesc"
+					ng-click="updateComment(comment.commentDesc, comment.commentId)"
                     inline-edit-textarea
-                    inline-edit-validation="comment.commentDesc.validator(newValue)"
+                    inline-edit-validation="comment.commentDesc.validator(comment.commentDesc)"
                     inline-edit-btn-save="Save"
-                    inline-edit-btn-cancel="Cancel"> </span>
-					<span class="delete-comment">
-					<a href="#"  confirm="Are you sure you want to delete the item?" ng-click="deleteComment(comment.commentId,$index)"><img src="../../assets/img/delete.png" style="width: 25px;" title="Replied"></a></span>
+                    inline-edit-btn-cancel="Cancel"> 
+					
+					</span>
+					 <a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deleteComment(comment.commentId,$index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a>
                   </md-content>
-                    
+				   
                 </div>
 				
 				<!--replied-->
@@ -151,7 +163,7 @@
                     <span
                     inline-edit="reply.replyDesc"
                     inline-edit-textarea
-                    inline-edit-validation="reply.replyDesc.validator(newValue)"
+                    inline-edit-validation="reply.replyDesc.validator(reply.replyDesc)"
                     inline-edit-btn-save="Save"
                     inline-edit-btn-cancel="Cancel"></span>
                   </md-content>
@@ -178,8 +190,8 @@
 				<!--reply-->
 				
 			</div>
-			</div>
-			</div>
+		
+		
            </div>
 			  
           </md-content> 
@@ -267,3 +279,4 @@
 					});
 			});
 		</script>
+</div>

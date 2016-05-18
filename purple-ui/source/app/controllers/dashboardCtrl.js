@@ -1,7 +1,7 @@
 /**
  * Dashboard controller to load status timeline
  */
-rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,statusService, commentService) {
+rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,statusService, commentService, editableOptions, $mdSidenav) {
 	 $scope.commentDesc = '';
     $scope.isActive = function(route) {
         return route === $location.path();
@@ -9,6 +9,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
 	$rootScope.bodyClass = 'body-standalone1';
 	$rootScope.navClass = 'nav-control';
 	$rootScope.navstatusClass = 'nav navbar-nav';
+	
    /**
     * Get all status timeline
     */
@@ -241,19 +242,14 @@ $scope.loadTimePeriod = function(){
   };
   
   //update comment
-  $scope.showUpdatePage = function(commentId) {
-
-		commentService.getStatusWithId(commentId).then(function(response) {
+  $scope.updateComment = function(commentDesc, commentId) {
+		commentService.updateComment(commentDesc, commentId).then(function(response) {
 			if (response.success = true) {
-
-				$scope.statusdata = response.data.gridData;
-				
-				angular.forEach(response.data.gridData, function(value, key) {
-
-					$scope.allcomments = value.statusList;
+				    angular.forEach(response.data.gridData, function(value, key) {
+					$scope.allcomments = value.commentList;
 					$scope.isUpdate = true;
 					$scope.isSubmit = false;
-					$scope.loadProjects();	
+					//$scope.loadComments();	
 
 				});
 			}
