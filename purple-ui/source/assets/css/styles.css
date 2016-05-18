@@ -285,8 +285,8 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
 }
 .side{
     background: #ebebeb;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: 16px;
+    padding-right: 16px;
     min-height: 100%;
     position: fixed;
     right: 0;
