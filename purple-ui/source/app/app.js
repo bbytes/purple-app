@@ -2,7 +2,14 @@
 var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
 		'ngAnimate', 'templates-main', 'toaster', 'ngStorage' ,'angular-md5',
 		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav','ngMaterial','angular-confirm','textAngular','angular-timezone-select','server-url','angularInlineEdit','720kb.tooltips','angular-notification-icons', 'xeditable']);
-  
+ 
+ // avoid the spacing while copy paste in text angular 
+  rootApp.filter('htmlToPlaintext', function() {
+    return function(text) {
+      return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+    };
+  }
+);
 // Defining global variables
 rootApp.run([
 		'$rootScope',
@@ -166,11 +173,33 @@ rootApp.config([
 	                authorization: 'projects',
 	                redirectTo: 'login'
 	            }
+			}).state('admin-settings', {
+				url : '/admin-settings',
+				views : {
+					'' : {
+						templateUrl : 'app/partials/home.html'
+						
+					},
+					'header@admin-settings' : {
+						templateUrl : 'app/partials/home-header.html'
+					},
+					'main@admin-settings' : {
+						templateUrl : 'app/partials/admin-settings.html',
+						controller : 'adminSettingsCtrl'
+					},
+					'footer@admin-settings' : {
+						templateUrl : 'app/partials/home-footer.html'
+					}
+				},
+				 data: {
+		                authorization: 'settings',
+		                redirectTo: 'login'
+		            }
 			}).state('settings', {
 				url : '/settings',
 				views : {
 					'' : {
-						templateUrl : 'app/partials/home.html'
+						templateUrl : 'app/partials/home.html',
 						
 					},
 					'header@settings' : {
@@ -181,28 +210,6 @@ rootApp.config([
 						controller : 'settingsCtrl'
 					},
 					'footer@settings' : {
-						templateUrl : 'app/partials/home-footer.html'
-					}
-				},
-				 data: {
-		                authorization: 'settings',
-		                redirectTo: 'login'
-		            }
-			}).state('settings-user', {
-				url : '/settings-user',
-				views : {
-					'' : {
-						templateUrl : 'app/partials/home.html',
-						
-					},
-					'header@settings-user' : {
-						templateUrl : 'app/partials/home-header.html'
-					},
-					'main@settings-user' : {
-						templateUrl : 'app/partials/settings-user.html',
-						controller : 'userSettingsCtrl'
-					},
-					'footer@settings-user' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				},

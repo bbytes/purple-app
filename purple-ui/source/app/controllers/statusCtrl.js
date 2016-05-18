@@ -224,4 +224,9 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$scope.isSubmit = true;
    		$scope.isUpdate = false;
 	}
+
+	// avoid spacing while copy paste in text angular
+	$scope.stripFormat = function ($html) {
+  return $filter('htmlToPlaintext')($html);
+};
 });
