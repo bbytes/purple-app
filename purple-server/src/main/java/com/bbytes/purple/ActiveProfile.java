@@ -15,19 +15,16 @@ public class ActiveProfile implements EnvironmentAware, ApplicationListener<Embe
 
 	@Override
 	public void setEnvironment(Environment environment) {
-		logger.info("#### Active Profiles ####");
-		logger.info("# " + StringUtils.join(environment.getActiveProfiles(), ",") + " #");
-		logger.info("#########################");
-
-		
+		logger.info("\n#### Active Profiles #### \n" +
+					  "# " + StringUtils.join(environment.getActiveProfiles(), ",") + " # \n"  + 
+					  "######################### \n");
 	}
 
 	@Override
 	public void onApplicationEvent(EmbeddedServletContainerInitializedEvent event) {
-		logger.info("###### Tomcat port ######");
-		logger.info("# " + event.getEmbeddedServletContainer().getPort()+ " #");
-		logger.info("#########################");
-
-		
+		logger.info("\n####Tomcat port #### \n" +
+					  "# " + event.getEmbeddedServletContainer().getPort() + " # \n"  + 
+					  "#################### \n");
 	}
+	
 }
