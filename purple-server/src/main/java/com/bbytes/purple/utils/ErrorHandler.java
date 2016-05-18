@@ -23,7 +23,7 @@ public class ErrorHandler {
 	public static final String PASSWORD_MISMATCH = "password_mistach";
 
 	public static final String PROJECT_NOT_FOUND = "project_not_found";
-	
+
 	public static final String PROJECT_ALREADY_EXIST = "project_already_exist";
 
 	public static final String STATUS_NOT_FOUND = "status_not_found";
@@ -73,6 +73,8 @@ public class ErrorHandler {
 	public static final String ADD_COMMENT_FAILED = "add_comment_failed";
 
 	public static final String ADD_REPLY_FAILED = "add_reply_failed";
+
+	public static final String UPDATE_REPLY_FAILED = "update_reply_failed";
 
 	public static final String DELETE_REPLY_FAILED = "delete_reply_failed";
 

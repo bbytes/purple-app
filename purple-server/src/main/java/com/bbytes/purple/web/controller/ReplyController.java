@@ -117,6 +117,30 @@ public class ReplyController {
 	}
 
 	/**
+	 * The updateReply method is used to update the reply for a comment.
+	 * 
+	 * @param commentId
+	 * @param replyId
+	 * @param replyDTO
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/comment/{commentid}/reply/update/{replyid}", method = RequestMethod.PUT)
+	public RestResponse updateReply(@PathVariable("commentid") String commentId,
+			@PathVariable("replyid") String replyId, @RequestBody ReplyDTO replyDTO) throws PurpleException {
+
+		Comment comment = replyService.updateReply(commentId, replyId, replyDTO);
+
+		Map<String, Object> replyMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndReply(comment);
+
+		logger.debug("Reply for comment Id  '" + commentId + "' is updated successfully");
+		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyMap,
+				SuccessHandler.UPDATE_REPLY_SUCCESS);
+
+		return replyReponse;
+	}
+
+	/**
 	 * The getAllReply method is used to get all replies for a comment
 	 * 
 	 * @param commentId

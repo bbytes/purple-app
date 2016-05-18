@@ -138,7 +138,34 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 
 	};
-	
+	//update comments
+	this.updateComment = function(data, commentId) {
+	console.log(data);
+	console.log(commentId);
+		var comment = { 
+			"commentDesc": data
+		}
+		var deferred = $q.defer();
+
+		$http({
+			method : 'PUT',
+			url : $rootScope.baseUrl + 'api/v1/comment/update/' + commentId,
+			data : comment,
+			headers : {
+				'Content-Type' : 'application/json',
+
+			}
+
+		}).success(function(response, status, headers, config) {
+
+			deferred.resolve(response);
+		}).error(function(response) {
+			
+				deferred.reject(response);
+		});
+
+		return deferred.promise;
+	};
 	
 	//delete comment
 	this.deleteComment = function(commentId) {

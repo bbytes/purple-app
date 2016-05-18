@@ -38,6 +38,8 @@ public class SuccessHandler {
 
 	public static final String DELETE_REPLY_SUCCESS = "delete_reply_success";
 
+	public static final String UPDATE_REPLY_SUCCESS = "update_reply_success";
+
 	public static final String UPDATE_STATUS_SUCCESS = "update_status_success";
 
 	public static final String ADD_COMMENT_SUCCESS = "add_comment_success";
@@ -49,9 +51,9 @@ public class SuccessHandler {
 	public static final String UPDATE_COMMENT_SUCCESS = "update_comment_success";
 
 	public static final String ADD_REPLY_SUCCESS = "add_reply_success";
-	
+
 	public static final String UPDATE_USERROLE_SUCCESS = "update_userrole_success";
-	
+
 	public static final String DROPDOWNLIST_SUCCESS = "dropdownlist_success";
 
 }

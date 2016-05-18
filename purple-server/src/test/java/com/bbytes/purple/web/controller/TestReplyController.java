@@ -3,6 +3,7 @@ package com.bbytes.purple.web.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -145,6 +146,54 @@ public class TestReplyController extends PurpleWebBaseApplicationTests {
 						.contentType(APPLICATION_JSON_UTF8).content(requestJson))
 				.andExpect(status().is5xxServerError()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":false")));
+
+	}
+
+	/**
+	 * Test Cases for update reply on comment
+	 */
+
+	@Test
+	public void testUpdateReplyFailed() throws Exception {
+
+		String commentid = "sdcsdcsdcsdc";
+		String replyId = "sdcsdncdj";
+
+		mockMvc.perform(post("/api/v1/comment/{commentid}/reply/update/{replyid}", commentid, replyId))
+				.andExpect(status().is4xxClientError()).andDo(print());
+
+	}
+
+	@Test
+	public void testUpdateReplyPasses() throws Exception {
+
+		String commentid = comment.getCommentId();
+
+		List<Reply> replyList = new ArrayList<Reply>();
+		Reply reply1 = new Reply("previous reply1");
+		reply1.setUser(normalUser);
+		Reply reply2 = new Reply("previous reply2");
+		reply2.setUser(adminUser);
+		replyList.add(reply1);
+		replyList.add(reply2);
+		comment.setReplies(replyList);
+		commentService.save(comment);
+
+		String replyId = comment.getReplies().get(1).getReplyId().toString();
+
+		ReplyDTO requestReplyDTO = new ReplyDTO();
+		requestReplyDTO.setReplyDesc("New Reply");
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+		String requestJson = ow.writeValueAsString(requestReplyDTO);
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
+		mockMvc.perform(put("/api/v1/comment/{commentid}/reply/update/{replyid}", commentid, replyId)
+				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8)
+				.content(requestJson)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 	}
 
