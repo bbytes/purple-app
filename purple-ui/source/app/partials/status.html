@@ -128,14 +128,17 @@
 
 		</div>	
       
-	    <div class="row">
-          <div class="col-sm-8">      	   
-		    <button type="button" class="btn btn-default submit" ng-click="submitStatus()" ng-show="isSubmit">submit</button>
-		    <button type="button" class="btn btn-default submit" ng-click="updateStatus()" ng-show="isUpdate">Update</button>       
+	   
+          <div class="col-md-8"> 
+            <div class="row">		  
+		    <button type="button" class="btn btn-default status-submit" ng-click="submitStatus()" ng-show="isSubmit">submit</button>
+		    <button type="button" class="btn btn-default status-submit" ng-click="updateStatus()" ng-show="isUpdate">Update</button>       
           </div>
+		  </div>
 		
-		  <div class="col-sm-4"> 
-            <button type="reset" class="btn btn-default submit" ng-click="blockers = orightml; workingOn = orightml; workedOn = orightml; reset()">Cancel</button>
+		  <div class="col-md-4">
+           <div class="row">		  
+            <button type="reset" class="btn btn-default status-submit" ng-click="blockers = orightml; workingOn = orightml; workedOn = orightml; reset()">Cancel</button>
          </div>
         </div>
 	

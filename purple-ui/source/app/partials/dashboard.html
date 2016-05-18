@@ -152,10 +152,12 @@
 				     <md-content class="example-3 md-accent">
                     <span
                     inline-edit="reply.replyDesc"
+					ng-click="updateReply(reply.replyDesc,comment.commentId,reply.replyId)"
                     inline-edit-textarea
                     inline-edit-validation="reply.replyDesc.validator(reply.replyDesc)"
                     inline-edit-btn-save="Save"
                     inline-edit-btn-cancel="Cancel"></span>
+					<a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deletereplyComment(reply.replyId,commentId,$index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a>
                   </md-content>
 					
                 </div>

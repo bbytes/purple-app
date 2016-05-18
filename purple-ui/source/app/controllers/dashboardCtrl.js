@@ -255,7 +255,21 @@ $scope.loadTimePeriod = function(){
 			}
 		});
 	}   
-   
+ 
+ //update reply comment
+  $scope.updateReply = function(replyDesc, commentId, replyId) {
+		commentService.updateReply(replyDesc, commentId, replyId).then(function(response) {
+			if (response.success = true) {
+				    angular.forEach(response.data.gridData, function(value, key) {
+					//$scope.allreplies = value.replyList;
+					$scope.isUpdate = true;
+					$scope.isSubmit = false;
+					//$scope.loadComments();	
+
+				});
+			}
+		});
+	}  
   
   //delete comment
   $scope.deleteComment = function(commentId, $index) {
@@ -266,6 +280,21 @@ $scope.loadTimePeriod = function(){
 			$scope.allcomments.splice($index, 1);
 			//$scope.usersstatusLoad();
 		});
+	}
+	
+	 //delete reply comment
+  $scope.deletereplyComment = function(replyid, commentId, $index) {
+		commentService.deletereplyComment(replyid, commentId).then(function(response) {
+			if (response.success = true) {
+				appNotifyService.success('Reply has been successfully deleted.');
+				$scope.openCommentSideBar($scope.selectedStatusId)
+			}
+			$scope.loadReply.splice($index, 1);
+			//$scope.usersstatusLoad();
+			$scope.replyComment = '';
+		 $scope.loadReply(commentId);
+		});
+		
 	}
   
 });

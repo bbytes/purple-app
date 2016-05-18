@@ -167,6 +167,36 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 	};
 	
+	//update reply comments
+	this.updateReply = function(data, commentId, replyId) {
+	console.log(data);
+	console.log(commentId);
+	console.log(replyId);
+		var reply = { 
+			"replyDesc": data
+		}
+		var deferred = $q.defer();
+
+		$http({
+			method : 'PUT',
+			url : $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply/update/' + replyId,
+			data : reply,
+			headers : {
+				'Content-Type' : 'application/json',
+
+			}
+
+		}).success(function(response, status, headers, config) {
+
+			deferred.resolve(response);
+		}).error(function(response) {
+			
+				deferred.reject(response);
+		});
+
+		return deferred.promise;
+	};
+	
 	//delete comment
 	this.deleteComment = function(commentId) {
 
@@ -175,6 +205,35 @@ rootApp.service('commentService', function($rootScope, $http, $q, $window) {
 		$http({
 			method : 'DELETE',
 			url : $rootScope.baseUrl + 'api/v1/comment/delete/' + commentId,
+			// data : admin,
+			headers : {
+				'Content-Type' : 'application/json',
+
+			}
+
+		}).success(function(response, status, headers, config) {
+
+			deferred.resolve(response);
+		}).error(function() {
+			// Something went wrong.
+			deferred.reject({
+				'success' : false,
+				'msg' : 'Oops! Something went wrong. Please try again later.'
+			});
+		});
+
+		return deferred.promise;
+
+	};
+	
+	//delete reply comment
+	this.deletereplyComment = function(replyId, commentId) {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'DELETE',
+			url : $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply/' + replyId,
 			// data : admin,
 			headers : {
 				'Content-Type' : 'application/json',
