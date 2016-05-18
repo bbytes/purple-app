@@ -70,7 +70,7 @@ public class ReplyController {
 		final String template = GlobalConstants.REPLY_EMAIL_TEMPLATE;
 
 		// We will get current logged in user
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 
 		Comment comment = replyService.postReply(commentId, replyDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());

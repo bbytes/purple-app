@@ -61,7 +61,7 @@ public class CommentController {
 		final String subject = GlobalConstants.EMAIL_COMMENT_SUBJECT;
 		final String template = GlobalConstants.COMMENT_EMAIL_TEMPLATE;
 
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		Comment comment = commentService.addComment(commentDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
 

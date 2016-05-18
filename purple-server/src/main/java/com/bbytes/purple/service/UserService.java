@@ -100,7 +100,7 @@ public class UserService extends AbstractService<User, String> {
 	 * 
 	 * @return
 	 */
-	public String getLoggedUserEmail() {
+	public String getLoggedInUserEmail() {
 		final String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		return email;
 	}
@@ -110,7 +110,7 @@ public class UserService extends AbstractService<User, String> {
 	 * 
 	 * @return
 	 */
-	public User getLoggedinUser() {
+	public User getLoggedInUser() {
 		final String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = getUserByEmail(email);
 		return user;

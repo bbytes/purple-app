@@ -107,7 +107,7 @@ public class SignUpController {
 	@RequestMapping(value = "/api/v1/admin/activateAccount", method = RequestMethod.GET)
 	public RestResponse accountActivation() throws PurpleException {
 
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		User activeUser = registrationService.activateAccount(user);
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(activeUser);
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");

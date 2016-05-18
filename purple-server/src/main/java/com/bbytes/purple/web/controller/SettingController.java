@@ -78,7 +78,7 @@ public class SettingController {
 
 		// we assume angular side will take care for password validation
 		final String PASSWORD_RESET_SUCCESS_MSG = "Successfully reset password";
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		settingService.resetPassword(passwordDTO, user);
 
 		logger.debug("User with email  '" + user.getEmail() + "' is reset password successfully");
@@ -100,7 +100,7 @@ public class SettingController {
 	public RestResponse updateTimeZone(@RequestParam String timeZone) throws PurpleException {
 
 		final String TIMEZONE_SUCCESS_MSG = "Successfully updated user's timezone";
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		settingService.updateTimeZone(timeZone, user);
 		logger.debug(timeZone + " is updated successfully");
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, TIMEZONE_SUCCESS_MSG,
@@ -119,7 +119,7 @@ public class SettingController {
 	@RequestMapping(value = "/api/v1/admin/configSetting/update", method = RequestMethod.POST)
 	public RestResponse updateConfigSetting(@RequestBody ConfigSettingDTO configSettingDTO) throws PurpleException {
 
-		Organization organization = userService.getLoggedinUser().getOrganization();
+		Organization organization = userService.getLoggedInUser().getOrganization();
 		ConfigSetting notificationSetting = configSettingService.saveNotification(configSettingDTO, organization);
 		ConfigSettingResponseDTO notificationMap = dataModelToDTOConversionService
 				.getResponseMapWithGridDataAndNotification(notificationSetting);
@@ -141,7 +141,7 @@ public class SettingController {
 	@RequestMapping(value = "/api/v1/admin/configSetting", method = RequestMethod.GET)
 	public RestResponse getConfigSetting() throws PurpleException {
 
-		Organization organization = userService.getLoggedinUser().getOrganization();
+		Organization organization = userService.getLoggedInUser().getOrganization();
 		ConfigSetting notificationSetting = configSettingService.getConfigSetting(organization);
 		ConfigSettingResponseDTO notificationMap = dataModelToDTOConversionService
 				.getResponseMapWithGridDataAndNotification(notificationSetting);

@@ -66,7 +66,7 @@ public class StatusController {
 	public RestResponse addStatus(@RequestBody StatusDTO statusDTO) throws PurpleException {
 
 		// We will get current logged in user
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		Status status = statusService.create(statusDTO, user);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
@@ -112,7 +112,7 @@ public class StatusController {
 
 		// We will get current logged in user
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		List<Status> statusList = statusService.getAllStatus(user, timePeriodValue);
 		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
 		logger.debug("All status are fetched successfully");
@@ -133,7 +133,7 @@ public class StatusController {
 
 		// We will get current logged in user
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		List<Status> statusList = statusService.getAllStatus(user, timePeriodValue);
 		String fileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss")
 				+ ".csv";
@@ -176,7 +176,7 @@ public class StatusController {
 			throws PurpleException {
 
 		// We will get current logged in user
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		Status status = statusService.updateStatus(statusId, statusDTO, user);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
@@ -199,7 +199,7 @@ public class StatusController {
 	public RestResponse getAllStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO,
 			@RequestParam("timePeriod") String timePeriod) throws PurpleException {
 
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
 		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user,
 				timePeriodValue);
@@ -221,7 +221,7 @@ public class StatusController {
 	public FileSystemResource getCSVForAllStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO,
 			@RequestParam("timePeriod") String timePeriod) throws PurpleException {
 
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
 		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user,
 				timePeriodValue);

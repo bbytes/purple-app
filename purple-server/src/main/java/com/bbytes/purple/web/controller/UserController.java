@@ -49,7 +49,7 @@ public class UserController {
 	@RequestMapping(value = "/api/v1/user/projects", method = RequestMethod.GET)
 	public RestResponse getAllProjectsByUser() throws PurpleException {
 
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		List<Project> projects = userService.getProjects(user);
 		Map<String, Object> projectsMap = dataModelToDTOConversionService
 				.getResponseMapWithGridDataAndProjectList(projects);
@@ -69,7 +69,7 @@ public class UserController {
 	@RequestMapping(value = "/api/v1/currentUser", method = RequestMethod.GET)
 	public RestResponse getCurrentUser() throws PurpleException {
 
-		User user = userService.getLoggedinUser();
+		User user = userService.getLoggedInUser();
 		UserDTO currentUserMap = dataModelToDTOConversionService.convertUser(user);
 		logger.debug("Current user are fetched successfully");
 		RestResponse currentUserReponse = new RestResponse(RestResponse.SUCCESS, currentUserMap,

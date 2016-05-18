@@ -79,7 +79,7 @@ public class AdminController {
 		final String subject = GlobalConstants.EMAIL_INVITE_SUBJECT;
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
 
-		Organization org = userService.getLoggedinUser().getOrganization();
+		Organization org = userService.getLoggedInUser().getOrganization();
 		User addUser = new User(userDTO.getUserName(), userDTO.getEmail().toLowerCase());
 		addUser.setOrganization(org);
 		addUser.setPassword(passwordHashService.encodePassword(GlobalConstants.DEFAULT_PASSWORD));
@@ -119,7 +119,7 @@ public class AdminController {
 		final String subject = GlobalConstants.EMAIL_INVITE_SUBJECT;
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
 
-		Organization org = userService.getLoggedinUser().getOrganization();
+		Organization org = userService.getLoggedInUser().getOrganization();
 		List<User> users = adminService.bulkUsers(org, file);
 
 		for (User user : users) {
@@ -231,7 +231,7 @@ public class AdminController {
 	public RestResponse createProject(@RequestBody ProjectDTO projectDTO) throws PurpleException {
 
 		// we assume angular layer will do empty checks for project
-		Organization org = userService.getLoggedinUser().getOrganization();
+		Organization org = userService.getLoggedInUser().getOrganization();
 		Project addProject = new Project(projectDTO.getProjectName(), projectDTO.getTimePreference());
 		addProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();
@@ -315,7 +315,7 @@ public class AdminController {
 			throws PurpleException {
 
 		// we assume angular layer will do null checks for project object
-		Organization org = userService.getLoggedinUser().getOrganization();
+		Organization org = userService.getLoggedInUser().getOrganization();
 		Project updateProject = new Project(projectDTO.getProjectName(), projectDTO.getTimePreference());
 		updateProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();
