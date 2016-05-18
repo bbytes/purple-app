@@ -53,6 +53,30 @@ public class ReplyService extends AbstractService<Reply, String> {
 		return comment;
 	}
 
+	public Comment updateReply(String commentId, String replyId, ReplyDTO replyDTO) throws PurpleException {
+		Comment comment = null;
+		List<Reply> replyList = new ArrayList<Reply>();
+		if (!commentService.commentIdExist(commentId))
+			throw new PurpleException("Error while updating reply", ErrorHandler.COMMENT_NOT_FOUND);
+		if (replyDTO.getReplyDesc() != null) {
+			try {
+				comment = commentService.findByCommentId(commentId);
+
+				replyList = comment.getReplies();
+				for (Reply currentReply : replyList) {
+					if (currentReply.getReplyId().toString().equals(replyId)) {
+						currentReply.setReplyDesc(replyDTO.getReplyDesc());
+					}
+				}
+				comment.setReplies(replyList);
+				comment = commentService.save(comment);
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_REPLY_FAILED);
+			}
+		}
+		return comment;
+	}
+
 	public void deleteReply(String commentId, String replyId) throws PurpleException {
 		Comment comment = null;
 		List<Reply> replyList = new ArrayList<Reply>();

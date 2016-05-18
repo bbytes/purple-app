@@ -36,8 +36,6 @@ public class GlobalConstants {
 
 	public static final String USER_NAME = "name";
 
-	public static final String PROJECT_NAME = "projectName";
-
 	public static final String SUBSCRIPTION_DATE = "subscriptionDate";
 
 	public static final String ACTIVATION_LINK = "activationLink";
