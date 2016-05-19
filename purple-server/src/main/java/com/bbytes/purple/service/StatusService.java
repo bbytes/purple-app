@@ -1,6 +1,7 @@
 package com.bbytes.purple.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -96,15 +97,22 @@ public class StatusService extends AbstractService<Status, String> {
 						new Date());
 			} else {
 				Date statusDate = new Date(Long.parseLong(statusDTO.getDateTime()));
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(statusDate);
+				Date newTime = new DateTime(new Date())
+						.withDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH))
+						.toDate();
+
 				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate))
 						.withTime(0, 0, 0, 0).toDate();
 				if (statusDate.before(backDate))
-					throw new PurpleException("Cannot add status past " +statusEnableDate + " days", ErrorHandler.PASS_DUEDATE_STATUS_EDIT);
+					throw new PurpleException("Cannot add status past " + statusEnableDate + " days",
+							ErrorHandler.PASS_DUEDATE_STATUS_EDIT);
 				if (statusDate.after(new Date()))
 					throw new PurpleException("Cannot add status for future date",
 							ErrorHandler.FUTURE_DATE_STATUS_EDIT);
 				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
-						statusDate);
+						newTime);
 			}
 
 			Project project = projectService.findByProjectId(statusDTO.getProjectId());
@@ -129,6 +137,7 @@ public class StatusService extends AbstractService<Status, String> {
 
 	/**
 	 * Strip Leading and Trailing Spaces From String
+	 * 
 	 * @param statusDTO
 	 */
 	private void cleanUpStatusText(StatusDTO statusDTO) {
@@ -190,7 +199,7 @@ public class StatusService extends AbstractService<Status, String> {
 			throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
 
 		cleanUpStatusText(statusDTO);
-		
+
 		Project project = projectService.findByProjectId(statusDTO.getProjectId());
 		Status updateStatus = getStatusbyId(statusId);
 
