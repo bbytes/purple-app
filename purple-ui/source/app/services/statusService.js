@@ -219,7 +219,6 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 			}
 		}).success(function(response, status, headers, config) {
 			 var result = {};
-			 console.log(headers());
             result.fileName = headers('purple-file-name')|| 'statusData.csv';
             result.data = response;
 			deferred.resolve(result);

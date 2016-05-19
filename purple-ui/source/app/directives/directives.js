@@ -257,7 +257,7 @@ pageslideDirective.directive('pageslide', [
     }
 ]);
    // Directive for csv file download of status                          
-  angular.module('rootApp').directive('purpleCsvDownload', function($document, $timeout, statusService) {
+  rootApp.directive('purpleCsvDownload', function($document, $timeout, statusService) {
     return {
         restrict: 'AC',
         scope: {
@@ -303,7 +303,7 @@ pageslideDirective.directive('pageslide', [
 
 
 // Directive for csv file download of timeline
- angular.module('rootApp').directive('csvDownload', function($document, $timeout, statusService) {
+ rootApp.directive('csvDownload', function($document, $timeout, statusService) {
     return {
         restrict: 'AC',
         scope: {
