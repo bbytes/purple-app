@@ -368,7 +368,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
 .login-content a{
 	font-size:11px;
 }
-.search-status,.search-filter select:first-child, select#f {
+.search-status .search-filter select:first-child, select#f {
 	margin: 0px;
   color: #666666;
   -webkit-appearance: none;
@@ -1970,4 +1970,18 @@ position: fixed;
 }
 .status-submit:hover{
 	color:#fff;
+}
+
+.search-status li{
+    list-style: none;
+    display: inline-block;
+    margin-left: 10px;
+}
+.cvg{
+    width:70%;
+}
+.search-filter li{
+    list-style: none;
+    display: inline-block;
+    margin-left: 10px;
 }

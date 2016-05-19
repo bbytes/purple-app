@@ -58,6 +58,29 @@ $scope.loadTimePeriod = function(){
 			 $scope.loadUserMap(itemSelected,timePeriod);
 	}
 
+	 // method to download csv file for timeline
+     $scope.csvDownloadTimeline = function(timePeriod) {
+
+		var itemSelected = $rootScope.itemChoose;
+		if($scope.isActive){
+				$scope.updateData.projectList = [];
+				$scope.updateData.userList = [];
+		}
+			
+		else if($scope.isProject){
+				$scope.updateData.projectList = [itemSelected.projectId];
+				$scope.updateData.userList = [];
+		}
+		 else if($scope.isUser){
+		 		$scope.updateData.projectList = [];
+				$scope.updateData.userList = [itemSelected.email];
+		 }
+		 $scope.options = {
+    			value: $scope.updateData,
+     			timePeriod: timePeriod
+			}
+	}
+
 	 /**
 	  * Post comment on status
 	  */

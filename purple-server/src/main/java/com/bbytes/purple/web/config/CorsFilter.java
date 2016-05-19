@@ -29,7 +29,7 @@ public class CorsFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 
 		String accessControlAllowHeaders = GlobalConstants.HEADER_AUTH_TOKEN + "," + GlobalConstants.HEADER_TENANT_ID
-				+ "," + "Origin, X-Requested-With, Content-Type, Accept";
+				+ "," + "Origin, X-Requested-With, purple-file-name, Content-Type, Accept";
 
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 		response.addHeader("Access-Control-Allow-Origin", "*");

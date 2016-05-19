@@ -675,5 +675,33 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":true")));
 
 	}
+	
+	// Test Case for csv download status
+	@Test
+	public void testCSVDownloadPasses() throws Exception {
+
+		normalUser = new User("akshay", "akshay@gmail.com");
+		normalUser.setOrganization(org);
+		userService.save(normalUser);
+		userService.updatePassword("test123", normalUser);
+
+		Status status = new Status("test", "test", 3, new Date());
+		status.setBlockers("111");
+		status.setProject(project);
+		status.setUser(normalUser);
+		status = statusService.save(status);
+
+		Status status1 = new Status("hello", "hello", 4, new Date());
+		status1.setProject(project);
+		status1.setUser(normalUser);
+		statusService.save(status1);
+		
+		String timePeriod = "Weekly";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/status/csv").param("timePeriod", timePeriod).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(status().isOk());
+	}
 
 }

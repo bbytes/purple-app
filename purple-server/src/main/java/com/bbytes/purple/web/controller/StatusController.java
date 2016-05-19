@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -123,21 +126,51 @@ public class StatusController {
 	}
 
 	/**
+	 * The get csv for status by project and user
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/status/project/user/csv", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public FileSystemResource getCSVForStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO,
+			@RequestParam("timePeriod") String timePeriod, HttpServletResponse response) throws PurpleException {
+
+		// We will get current logged in user
+		User user = userService.getLoggedInUser();
+		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
+		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user,
+				timePeriodValue);
+		response.setContentType("text/csv");
+		String csvFileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss")
+				+ ".csv";
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", csvFileName));
+		response.setHeader("purple-file-name", csvFileName);
+
+		File csv = utilityService.getCSV(csvFileName, statusList);
+		return new FileSystemResource(csv);
+	}
+
+	/**
 	 * The get csv for all status related to project for current user
 	 * 
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/status/csv", method = RequestMethod.GET)
-	public FileSystemResource getCSVForAllStatus(@RequestParam("timePeriod") String timePeriod) throws PurpleException {
+	@RequestMapping(value = "/api/v1/status/csv", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public FileSystemResource getCSVForAllStatus(@RequestParam("timePeriod") String timePeriod,
+			HttpServletResponse response) throws PurpleException {
 
 		// We will get current logged in user
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
 		User user = userService.getLoggedInUser();
 		List<Status> statusList = statusService.getAllStatus(user, timePeriodValue);
-		String fileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss")
+		response.setContentType("text/csv");
+		String csvFileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss")
 				+ ".csv";
-		File csv = utilityService.getCSV(fileName, statusList);
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", csvFileName));
+		response.setHeader("purple-file-name", csvFileName);
+
+		File csv = utilityService.getCSV(csvFileName, statusList);
 		return new FileSystemResource(csv);
 	}
 
@@ -211,23 +244,4 @@ public class StatusController {
 		return statusReponse;
 	}
 
-	/**
-	 * The get csv for all status related to project for current user
-	 * 
-	 * @return
-	 * @throws PurpleException
-	 */
-	@RequestMapping(value = "/api/v1/status/project/user/csv", method = RequestMethod.POST)
-	public FileSystemResource getCSVForAllStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO,
-			@RequestParam("timePeriod") String timePeriod) throws PurpleException {
-
-		User user = userService.getLoggedInUser();
-		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
-		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user,
-				timePeriodValue);
-		String fileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss")
-				+ ".csv";
-		File csv = utilityService.getCSV(fileName, statusList);
-		return new FileSystemResource(csv);
-	}
 }

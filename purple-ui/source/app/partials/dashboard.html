@@ -195,8 +195,14 @@
 <div class="content">
     <!-- Page Content -->
 	  <div class="search-filter">
+	   <ul>
+			  <li>
 	   <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timeChange(mytime)">
              </select>
+             </li>
+
+			<li><a href="#" ng-click="csvDownloadTimeline(mytime)" csv-download="options"><img src="../../assets/img/csv.png" class="cvg"></a></li>
+	      </ul>
 			</div>
                 <div class="wrapper">
                      <div class="top-header">

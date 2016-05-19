@@ -206,4 +206,52 @@ rootApp.service('statusService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 	};
 
+	this.csvDownloadAllStatus = function(time) {
+
+		var deferred = $q.defer();
+		var timePeriod = time;
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/status/csv',
+			params : {"timePeriod" : timePeriod},
+			headers : {
+				    'Content-Type': 'text/csv'
+			}
+		}).success(function(response, status, headers, config) {
+			 var result = {};
+			 console.log(headers());
+            result.fileName = headers('purple-file-name')|| 'statusData.csv';
+            result.data = response;
+			deferred.resolve(result);
+		}).error(function(response) {
+			deferred.reject(response);
+		});
+
+		return deferred.promise;
+	};
+
+	this.csvDownloadByProjectAndUser = function(data) {
+
+		var deferred = $q.defer();
+		projectAndUserObj = data.value;
+		var timePeriod = data.timePeriod;
+		
+		$http({
+			method : 'POST',
+			url : $rootScope.baseUrl + 'api/v1/status/project/user/csv',
+			params : {"timePeriod" : timePeriod},
+			data : projectAndUserObj
+		}).success(function(response, status, headers, config) {
+			 var result = {};
+            result.fileName = headers('purple-file-name')|| 'statusData.csv';
+            result.data = response;
+			deferred.resolve(result);
+		}).error(function(response) {
+			deferred.reject(response);
+		});
+
+		return deferred.promise;
+	};
+
+
 });
