@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.ConfigSetting;
 import com.bbytes.purple.domain.Holiday;
 import com.bbytes.purple.domain.Project;
+import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.Reply;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
@@ -22,6 +24,8 @@ import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
 import com.bbytes.purple.rest.dto.models.HolidayDTO;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
+import com.bbytes.purple.rest.dto.models.ProjectUserCountStatsDTO;
+import com.bbytes.purple.rest.dto.models.ProjectUserCountStatsResponseDTO;
 import com.bbytes.purple.rest.dto.models.ReplyDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
@@ -37,6 +41,7 @@ public class DataModelToDTOConversionService {
 	public static final String PROJECT_COUNT = "project_count";
 	public static final String COMMENT_COUNT = "comment_count";
 	public static final String REPLY_COUNT = "reply_count";
+	public static final String DATELIST = "DateList";
 
 	public BaseDTO convertToBaseDTO(String value) {
 		BaseDTO baseDTO = new BaseDTO();
@@ -132,6 +137,16 @@ public class DataModelToDTOConversionService {
 		replyDTO.setUserName(reply.getUser().getName());
 		replyDTO.setReplyDesc(reply.getReplyDesc());
 		return replyDTO;
+	}
+
+	public ProjectUserCountStatsDTO convertProjectUserCountStats(ProjectUserCountStats projectUserCountStats) {
+
+		ProjectUserCountStatsDTO projectUserCountStatsDTO = new ProjectUserCountStatsDTO();
+
+		projectUserCountStatsDTO.setHours(projectUserCountStats.getHours());
+		projectUserCountStatsDTO.setMonth(projectUserCountStats.getMonth());
+		projectUserCountStatsDTO.setDate(projectUserCountStats.getDate());
+		return projectUserCountStatsDTO;
 	}
 
 	public Map<String, Object> getResponseMapWithGridDataAndUserStatusCount(List<User> users) {
@@ -239,6 +254,42 @@ public class DataModelToDTOConversionService {
 		responseData.put(REPLY_COUNT, replyCount);
 		responseData.put(RestResponse.GRID_DATA, gridData);
 		return responseData;
+	}
+
+	public Map<String, Object> getResponseMapWithStatusAnalytics(
+			List<ProjectUserCountStats> projectUserCountStatsList) {
+		Map<String, List<ProjectUserCountStatsDTO>> statusAnalyticsMap = new LinkedHashMap<String, List<ProjectUserCountStatsDTO>>();
+		Set<String> dateKeys = new TreeSet<String>();
+		for (ProjectUserCountStats projectUserCountStats : projectUserCountStatsList) {
+			String projectName = projectUserCountStats.getProject().getProjectName();
+			ProjectUserCountStatsDTO projectUserCountStatsDTO = convertProjectUserCountStats(projectUserCountStats);
+			dateKeys.add(projectUserCountStatsDTO.getDate());
+
+			if (statusAnalyticsMap.containsKey(projectName)) {
+				statusAnalyticsMap.get(projectName).add(projectUserCountStatsDTO);
+			} else {
+				List<ProjectUserCountStatsDTO> projectUserCountStatsDTOList = new LinkedList<ProjectUserCountStatsDTO>();
+				projectUserCountStatsDTOList.add(projectUserCountStatsDTO);
+				statusAnalyticsMap.put(projectName, projectUserCountStatsDTOList);
+			}
+		}
+		Map<String, Object> responseData = new LinkedHashMap<String, Object>();
+		responseData.put(DATELIST, dateKeys);
+		responseData.put(RestResponse.GRID_DATA, getStatusAnalyticsResponse(statusAnalyticsMap));
+		return responseData;
+	}
+
+	public List<ProjectUserCountStatsResponseDTO> getStatusAnalyticsResponse(
+			Map<String, List<ProjectUserCountStatsDTO>> statusAnalyticsMap) {
+		List<ProjectUserCountStatsResponseDTO> projectUserCountStatsResponseDTOList = new LinkedList<ProjectUserCountStatsResponseDTO>();
+		Set<String> keys = statusAnalyticsMap.keySet();
+		for (String key : keys) {
+			ProjectUserCountStatsResponseDTO projectUserCountStatsResponseDTO = new ProjectUserCountStatsResponseDTO();
+			projectUserCountStatsResponseDTO.setProjectName(key);
+			projectUserCountStatsResponseDTO.setProjectUserCountStatsDTOList(statusAnalyticsMap.get(key));
+			projectUserCountStatsResponseDTOList.add(projectUserCountStatsResponseDTO);
+		}
+		return projectUserCountStatsResponseDTOList;
 	}
 
 	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses) {

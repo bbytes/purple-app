@@ -30,25 +30,8 @@ public class StatusAnalyticsService {
 	 */
 	public Iterable<ProjectUserCountStats> getUserProjectPerDayCountHours() {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
-				project().and("dateTime").extractDayOfYear().as("dayOfYear") 
-						.and("hours").as("hours").and("user").as("user").and("project").as("project"),
-				group("project", "user", "dayOfYear").sum("hours").as("hours").count().as("status_count"),
-				sort(Direction.DESC, "status_count"));
-
-		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
-				ProjectUserCountStats.class);
-
-		return result;
-	}
-	
-	/**
-	 * Group by User , Project , day wise.
-	 */
-	public Iterable<ProjectUserCountStats> getUserProjectPerDayCountHours(Date startDate , Date endDate) {
-		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
-				match(Criteria.where("dateTime").gte(startDate).lte(endDate)),
-				project().and("dateTime").extractDayOfYear().as("dayOfYear")
-						.and("hours").as("hours").and("user").as("user").and("project").as("project"),
+				project().and("dateTime").extractDayOfYear().as("dayOfYear").and("hours").as("hours").and("user")
+						.as("user").and("project").as("project"),
 				group("project", "user", "dayOfYear").sum("hours").as("hours").count().as("status_count"),
 				sort(Direction.DESC, "status_count"));
 
@@ -59,13 +42,30 @@ public class StatusAnalyticsService {
 	}
 
 	/**
-	 * Group by User , day wise.
+	 * Group by User , Project , day wise with date filter.
 	 */
-	public Iterable<ProjectUserCountStats> getUserPerDayCountHours(Date startDate , Date endDate) {
+	public Iterable<ProjectUserCountStats> getUserProjectPerDayCountHours(Date startDate, Date endDate) {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate)),
-				project().and("dateTime").extractDayOfYear().as("dayOfYear") 
-						.and("hours").as("hours").and("user").as("user"),
+				project().and("dateTime").extractDayOfYear().as("dayOfYear").and("hours").as("hours").and("user")
+						.as("user").and("project").as("project"),
+				group("project", "user", "dayOfYear").sum("hours").as("hours").count().as("status_count"),
+				sort(Direction.DESC, "status_count"));
+
+		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
+				ProjectUserCountStats.class);
+
+		return result;
+	}
+
+	/**
+	 * Group by User , day wise with date filter.
+	 */
+	public Iterable<ProjectUserCountStats> getUserPerDayCountHours(Date startDate, Date endDate) {
+		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
+				match(Criteria.where("dateTime").gte(startDate).lte(endDate)),
+				project().and("dateTime").extractDayOfYear().as("dayOfYear").and("hours").as("hours").and("user")
+						.as("user"),
 				group("user", "dayOfYear").sum("hours").as("hours").count().as("status_count"),
 				sort(Direction.DESC, "status_count"));
 
@@ -75,7 +75,6 @@ public class StatusAnalyticsService {
 		return result;
 	}
 
-	
 	/**
 	 * Group by User , day wise.
 	 */
@@ -93,9 +92,9 @@ public class StatusAnalyticsService {
 	}
 
 	/**
-	 * Group by Project , day wise.
+	 * Group by Project , day wise with date filter.
 	 */
-	public Iterable<ProjectUserCountStats> getProjectPerDayCountHours(Date startDate , Date endDate) {
+	public Iterable<ProjectUserCountStats> getProjectPerDayCountHours(Date startDate, Date endDate) {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate)),
 				project().and("dateTime").extractDayOfYear().as("dayOfYear") //
@@ -108,7 +107,7 @@ public class StatusAnalyticsService {
 
 		return result;
 	}
-	
+
 	/**
 	 * Group by Project , day wise.
 	 */
@@ -126,9 +125,9 @@ public class StatusAnalyticsService {
 	}
 
 	/**
-	 * Group by Project and user wise
+	 * Group by Project and user wise with date filter.
 	 */
-	public Iterable<ProjectUserCountStats> getProjectUserCountHours(Date startDate , Date endDate) {
+	public Iterable<ProjectUserCountStats> getProjectUserCountHours(Date startDate, Date endDate) {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate)),
 				project().and("hours").as("hours").and("user").as("user").and("project").as("project"),
@@ -140,7 +139,7 @@ public class StatusAnalyticsService {
 
 		return result;
 	}
-	
+
 	/**
 	 * Group by Project and user wise
 	 */
@@ -157,13 +156,14 @@ public class StatusAnalyticsService {
 	}
 
 	/**
-	 * Group by Project hours
+	 * Group by Project hours by month wise with date filter.
 	 */
-	public Iterable<ProjectUserCountStats> getProjectPerMonthCountHours(Date startDate , Date endDate) {
+	public Iterable<ProjectUserCountStats> getProjectPerMonthCountHours(Date startDate, Date endDate) {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate)),
-				project().and("dateTime").extractMonth().as("month").and("hours").as("hours").and("project").as("project"),
-				group("project","month").sum("hours").as("hours").count().as("status_count"),
+				project().and("dateTime").extractMonth().as("month").and("hours").as("hours").and("project")
+						.as("project"),
+				group("project", "month").sum("hours").as("hours").count().as("status_count"),
 				sort(Direction.DESC, "status_count"));
 
 		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
@@ -171,14 +171,15 @@ public class StatusAnalyticsService {
 
 		return result;
 	}
-	
+
 	/**
-	 * Group by Project hours
+	 * Group by Project hours by month wise.
 	 */
 	public Iterable<ProjectUserCountStats> getProjectPerMonthCountHours() {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
-				project().and("dateTime").extractMonth().as("month").and("hours").as("hours").and("project").as("project"),
-				group("project","month").sum("hours").as("hours").count().as("status_count"),
+				project().and("dateTime").extractMonth().as("month").and("hours").as("hours").and("project")
+						.as("project"),
+				group("project", "month").sum("hours").as("hours").count().as("status_count"),
 				sort(Direction.DESC, "status_count"));
 
 		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
@@ -188,13 +189,13 @@ public class StatusAnalyticsService {
 	}
 
 	/**
-	 * Group by User hours
+	 * Group by User hours by month wise with date filter.
 	 */
-	public Iterable<ProjectUserCountStats> getUserPerMonthCountHours(Date startDate , Date endDate) {
+	public Iterable<ProjectUserCountStats> getUserPerMonthCountHours(Date startDate, Date endDate) {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate)),
 				project().and("dateTime").extractMonth().as("month").and("hours").as("hours").and("user").as("user"),
-				group("user","month").sum("hours").as("hours").count().as("status_count"),
+				group("user", "month").sum("hours").as("hours").count().as("status_count"),
 				sort(Direction.DESC, "status_count"));
 
 		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
@@ -202,14 +203,14 @@ public class StatusAnalyticsService {
 
 		return result;
 	}
-	
+
 	/**
-	 * Group by User hours
+	 * Group by User hours by month wise.
 	 */
 	public Iterable<ProjectUserCountStats> getUserPerMonthCountHours() {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				project().and("dateTime").extractMonth().as("month").and("hours").as("hours").and("user").as("user"),
-				group("user","month").sum("hours").as("hours").count().as("status_count"),
+				group("user", "month").sum("hours").as("hours").count().as("status_count"),
 				sort(Direction.DESC, "status_count"));
 
 		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,

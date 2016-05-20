@@ -1,6 +1,6 @@
 <div class="leftSidebar">
-	 <div class="theiaStickySidebar" ng-init="loadTimePeriod();loadStatusTimeline()">
-	    <div class="panel-group" id="accordion" ng-init="loadUserProjects()">
+	 <div class="theiaStickySidebar" ng-init="loadTimePeriod()">
+	    <div class="panel-group" id="accordion" ng-init="loadUserProjects();loadAllStatusGraph()">
           <div class="panel panel-default">
              <div class="panel-heading project-active">
                <h4 class="panel-title">
@@ -14,7 +14,7 @@
          <div class="panel-body">
            <ul class="list-group project-nav">
               <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
-			  <a ng-click="loadStatusTimeline(mytime);loadUserProjects()" >ALL</a>
+			  <a ng-click="loadAllStatusGraph()" >ALL</a>
 			  </li>
 			  
 		      <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'">
@@ -52,8 +52,16 @@
 
 <div class="col-md-9">
   <div class="content">
+    <div class="search-filter">
+     <ul>
+        <li>
+              <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod">
+             </select>
+             </li>
+        </ul>
+      </div>
        <canvas id="bar" class="chart chart-bar"
-       chart-data="data" chart-labels="labels"> chart-series="series"
+       chart-data="data" chart-labels="labels" chart-series="series">
        </canvas>
    </div>
 </div>

@@ -2010,3 +2010,8 @@ position: fixed;
 .modal-footer{
 	padding:15px !important;
 }
+
+.chart-container{
+    margin-top:30px;
+}
+

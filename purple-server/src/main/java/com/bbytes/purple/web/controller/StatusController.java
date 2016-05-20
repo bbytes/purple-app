@@ -3,6 +3,8 @@ package com.bbytes.purple.web.controller;
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TimePeriod;
 import com.bbytes.purple.domain.User;
@@ -29,6 +32,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
+import com.bbytes.purple.service.StatusAnalyticsService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.service.UtilityService;
@@ -47,6 +51,9 @@ public class StatusController {
 
 	@Autowired
 	private StatusService statusService;
+
+	@Autowired
+	private StatusAnalyticsService statusAnalyticsService;
 
 	@Autowired
 	private UserService userService;
@@ -238,6 +245,35 @@ public class StatusController {
 				timePeriodValue);
 		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
 		logger.debug("All status are fetched successfully");
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+				SuccessHandler.GET_STATUS_SUCCESS);
+
+		return statusReponse;
+	}
+
+	/**
+	 * The get status analytics for project and user.
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/statusAnalytics", method = RequestMethod.POST)
+	public RestResponse getStatusAnalytics(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO,
+			@RequestParam("timePeriod") String timePeriod) throws PurpleException {
+
+		User user = userService.getLoggedInUser();
+		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
+		Date endDate = new DateTime(new Date()).toDate();
+		Date startDate = new DateTime(new Date()).minusDays(timePeriodValue).withTime(0, 0, 0, 0).toDate();
+		Iterable<ProjectUserCountStats> result = statusAnalyticsService.getProjectPerDayCountHours(startDate, endDate);
+		List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
+		for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
+			ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
+			statusAnalyticsList.add(projectUserCountStats);
+		}
+		Map<String, Object> statusMap = dataModelToDTOConversionService
+				.getResponseMapWithStatusAnalytics(statusAnalyticsList);
+		logger.debug("All Status Analytics are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
 				SuccessHandler.GET_STATUS_SUCCESS);
 
