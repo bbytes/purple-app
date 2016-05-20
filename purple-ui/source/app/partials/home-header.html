@@ -23,15 +23,16 @@
 		  <ul ng-show="userRole == 'ADMIN'"  class="{{ navstatusClass }} nav-left"ng-controller="navCtrl">
 		   <li><a href="status" ng-class="{ active: isActive('/status') }">status</a></li>
 		   <li><a href="dashboard" ng-class="{ active: isActive('/dashboard') }">timeline</a></li>
+		   <li><a href="graph" ng-class="{ active: isActive('/graph') }">metrics</a></li>	
 		   <li><a href="settings" ng-class="{ active: isActive('/settings') }">settings</a></li>
-           <li><a href="graph" ng-class="{ active: isActive('/graph') }">matrix</a></li>		   
+     	   
           </ul>
 		  
 		  <ul ng-show="userRole == 'NORMAL'" class="{{ navstatusClass }} nav-left"ng-controller="navCtrl">
 		   <li><a href="status" ng-class="{ active: isActive('/status') }">status</a></li>
 		   <li><a href="dashboard" ng-class="{ active: isActive('/dashboard') }">timeline</a></li>
-           <li><a href="settings" ng-class="{ active: isActive('/settings') }">settings</a></li>
-           <li><a href="graph" ng-class="{ active: isActive('/graph') }">matrix</a></li>		   
+           <li><a href="graph" ng-class="{ active: isActive('/graph') }">metrics</a></li>	
+           <li><a href="settings" ng-class="{ active: isActive('/settings') }">settings</a></li>	   
           </ul>
 		  
 		  
