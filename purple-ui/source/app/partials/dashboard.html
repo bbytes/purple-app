@@ -130,7 +130,7 @@
                     inline-edit-btn-cancel="Cancel"> 
 					
 					</span>
-					 <a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deleteComment(comment.commentId,$index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a>
+					
                   </md-content>
 				   
                 </div>
@@ -199,7 +199,7 @@
              </select>
              </li>
 
-			<li><a href="#" ng-click="csvDownloadTimeline(mytime)" csv-download="options"><img src="../../assets/img/csv.png" class="cvg"></a></li>
+			<li><a href="#" ng-click="csvDownloadTimeline(mytime)" csv-download="options"><img src="../../assets/img/csv.png" class="cvg"tooltips tooltip-template="CSV Download" tooltip-side="bottom"></a></li>
 	      </ul>
 			</div>
                 <div class="wrapper">

@@ -368,7 +368,18 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
 .login-content a{
 	font-size:11px;
 }
-.search-status .search-filter select:first-child, select#f {
+.search-filter select:first-child, select#f {
+	margin: 0px;
+  color: #666666;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0px;
+  -moz-appearance: none;
+  appearance: none;
+  background: url('../img/down.png') no-repeat 97% 50% #ffffff;
+  background-size: 7px 7px;
+
+}
+.search-status select:first-child, select#f {
 	margin: 0px;
   color: #666666;
   -webkit-appearance: none;
@@ -1260,8 +1271,8 @@ small img{
 	font-weight:400;
 	letter-spacing:2px;
 }
-.modal-footer{
-	padding:0px !important;
+.add-user{
+	padding:0px;
 }
 
 /*calandar*/
@@ -1967,6 +1978,11 @@ position: fixed;
 	float:right;
 	bottom:0;
 }
+.delete-comment img::after {
+	
+	display: none !important;
+	
+}
 *:focus {
     outline: none !important;
 }
@@ -1989,4 +2005,8 @@ position: fixed;
     list-style: none;
     display: inline-block;
     margin-left: 10px;
+}
+
+.modal-footer{
+	padding:15px !important;
 }

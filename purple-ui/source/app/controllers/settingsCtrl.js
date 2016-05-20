@@ -2,7 +2,10 @@
  * User setting controller
  */
 rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService) {
-
+    
+	$rootScope.bodyClass = 'body-standalone1';
+	$rootScope.navClass = 'nav-control';
+	$rootScope.navstatusClass = 'nav navbar-nav';
     // Reset password for user
     $scope.updatePassword = function (user,confirmPassword) {
     	
@@ -47,6 +50,11 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
          appNotifyService.error('Please select a valid Timezone');
      });
 
+ };
+ 
+  $scope.setTime= function () {
+ 	   
+	   $scope.sharedDate = "1970-01-01T14:30:00.000Z";
  };
     
 	$("[name='my-checkbox']").bootstrapSwitch();
