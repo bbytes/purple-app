@@ -1607,12 +1607,20 @@ md-icon{
 	width:74px;
 }
 .comment-side{
-	background:#ccc;
-	padding-bottom:100%;
+	background: #ccc;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    overflow: auto;
 }
 .layout-padding{
 	padding:0 !important;
+	position: fixed;
+    height: 100%;
+    overflow: auto;
+	width:100%;
 }
+
 .comment-list-group{
 	border-bottom:1px solid #ddd;
 }
@@ -1945,9 +1953,6 @@ md-sidenav ul {
 md-sidenav, md-backdrop {
 position: fixed;
 }
-.isOpen{
-  overflow:hidden !important;
-} 
 
 .example-3:hover .delete-comment {
 	display: block;

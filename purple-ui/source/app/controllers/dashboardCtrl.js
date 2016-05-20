@@ -22,6 +22,7 @@ $scope.loadTimePeriod = function(){
           
               }, function(error){
         });
+		 
 }
 
   $scope.loadStatusTimeline = function(time){
@@ -183,7 +184,11 @@ $scope.loadTimePeriod = function(){
 	 * Load status timeline by project
 	 */
 	 $scope.loadProjectMap = function(project, time){
-		 
+		    $scope.delay = 0;
+	$scope.minDuration = 0;
+	$scope.message = 'Please Wait...';
+	$scope.backdrop = true;
+	$scope.promise = null;
 		 $rootScope.itemChoose = project;
 
 				$scope.updateData.projectList = [project.projectId];
@@ -312,7 +317,7 @@ $scope.loadTimePeriod = function(){
 				appNotifyService.success('Reply has been successfully deleted.');
 				$scope.openCommentSideBar($scope.selectedStatusId)
 			}
-			$scope.loadReply.splice($index, 1);
+			$scope.allreplies.splice($index, 1);
 			//$scope.usersstatusLoad();
 			$scope.replyComment = '';
 		 $scope.loadReply(commentId);

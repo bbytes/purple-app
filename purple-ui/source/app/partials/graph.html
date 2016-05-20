@@ -1,0 +1,59 @@
+<div class="leftSidebar">
+	 <div class="theiaStickySidebar" ng-init="loadTimePeriod();loadStatusTimeline()">
+	    <div class="panel-group" id="accordion" ng-init="loadUserProjects()">
+          <div class="panel panel-default">
+             <div class="panel-heading project-active">
+               <h4 class="panel-title">
+                <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseOne">
+                 <i class="fa fa-inbox"></i>
+                 <span>PROJECTS</span></a>
+                </h4>
+              </div>
+		 
+       <div id="collapseOne" class="panel-collapse collapse in">
+         <div class="panel-body">
+           <ul class="list-group project-nav">
+              <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
+			  <a ng-click="loadStatusTimeline(mytime);loadUserProjects()" >ALL</a>
+			  </li>
+			  
+		      <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'">
+			  <a ng-click="loadProjectMap(project,mytime)">{{project.projectName}}</a>
+			  </li>		  
+            </ul>
+          </div>
+       </div>
+
+      </div>
+  
+
+      <div class="panel panel-default">
+         <div class="panel-heading project-active">
+            <h4 class="panel-title">
+              <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseTwo">
+               <i class="fa fa-user"></i> <span>USERS</span>
+              </a>
+            </h4>
+          </div>
+      <div id="collapseTwo" class="panel-collapse collapse in">
+         <div class="panel-body">
+            <ul class="list-group project-nav">
+              <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers  | orderBy:'userName'" >
+			  <a ng-click="loadUserMap(users, mytime)">{{users.userName}}</a>
+			  </li>
+            </ul>
+          </div>
+
+      </div>
+     </div>
+  </div>
+</div>
+</div>
+
+<div class="col-md-9">
+  <div class="content">
+       <canvas id="bar" class="chart chart-bar"
+       chart-data="data" chart-labels="labels"> chart-series="series"
+       </canvas>
+   </div>
+</div>

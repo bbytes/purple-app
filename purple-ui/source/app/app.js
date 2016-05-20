@@ -1,7 +1,7 @@
 // Define Angular Module with dependencies 
 var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
 		'ngAnimate', 'templates-main', 'toaster', 'ngStorage' ,'angular-md5',
-		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav','ngMaterial','angular-confirm','textAngular','angular-timezone-select','server-url','angularInlineEdit','720kb.tooltips','angular-notification-icons', 'xeditable']);
+		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav','ngMaterial','angular-confirm','textAngular','angular-timezone-select','server-url','angularInlineEdit','720kb.tooltips','angular-notification-icons', 'xeditable','chart.js']);
  
  // avoid the spacing while copy paste in text angular 
   rootApp.filter('htmlToPlaintext', function() {
@@ -127,6 +127,28 @@ rootApp.config([
 		                authorization: 'dashboard',
 		                redirectTo: 'login'
 		            }
+			}).state('graph', {
+				url : '/graph',
+				views : {
+					'' : {
+						templateUrl : 'app/partials/home.html'
+						
+					},
+					'header@graph' : {
+						templateUrl : 'app/partials/home-header.html'
+					},
+					'main@graph' : {
+						templateUrl : 'app/partials/graph.html',
+						controller : 'graphCtrl'
+					},
+					'footer@graph' : {
+						templateUrl : 'app/partials/home-footer.html'
+					}
+				},
+				data: {
+		                authorization: 'graph',
+		                redirectTo: 'login'
+		            }
 			}).state('status', {
 				url : '/status',
 				views : {
@@ -191,6 +213,7 @@ rootApp.config([
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				},
+				
 				 data: {
 		                authorization: 'settings',
 		                redirectTo: 'login'
@@ -257,6 +280,8 @@ rootApp.config([
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				},
+				
+				
 				 data: {
 		                authorization: 'admin',
 		                redirectTo: 'login'
