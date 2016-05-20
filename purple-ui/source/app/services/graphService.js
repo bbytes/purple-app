@@ -11,7 +11,7 @@ rootApp.service('graphService', function($rootScope, $http, $q, $window) {
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/statusAnalytics',
+			url : $rootScope.baseUrl + 'api/v1/status/analytics',
 			data : updateData,
 			params : {"timePeriod" : timePeriod},
 			headers : {

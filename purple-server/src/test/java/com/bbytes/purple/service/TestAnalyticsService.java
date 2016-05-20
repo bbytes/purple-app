@@ -78,6 +78,7 @@ public class TestAnalyticsService extends PurpleBaseApplicationTests {
 		System.out.println("End Date " + DateTime.now().withTimeAtStartOfDay().toString("MM/dd/YYYY"));
 
 		Iterable<ProjectUserCountStats> result3 = analyticsService.getUserProjectPerDayCountHours(
+				projectService.findAll(), userService.findAll(),
 				DateTime.now().minusDays(1).withTimeAtStartOfDay().toDate(),
 				DateTime.now().withTimeAtStartOfDay().toDate());
 		System.out.println("User Project PerDay CountHours with date range ");

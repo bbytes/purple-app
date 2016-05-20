@@ -257,7 +257,7 @@ public class StatusController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/statusAnalytics", method = RequestMethod.POST)
+	@RequestMapping(value = "api/v1/status/analytics", method = RequestMethod.POST)
 	public RestResponse getStatusAnalytics(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO,
 			@RequestParam("timePeriod") String timePeriod) throws PurpleException {
 
@@ -265,7 +265,7 @@ public class StatusController {
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
 		Date endDate = new DateTime(new Date()).toDate();
 		Date startDate = new DateTime(new Date()).minusDays(timePeriodValue).withTime(0, 0, 0, 0).toDate();
-		Iterable<ProjectUserCountStats> result = statusAnalyticsService.getProjectPerDayCountHours(startDate, endDate);
+		Iterable<ProjectUserCountStats> result = statusAnalyticsService.getProjectPerDayCountHours(user.getProjects(),startDate, endDate);
 		List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
 		for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
 			ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
