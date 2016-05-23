@@ -251,19 +251,15 @@ module.exports = function(grunt) {
 						dest : '<%= grunt.config.get("buildPath") %>/app/partials/partials.js'
 					}
 				},
-				cachebreaker : {
-					dev : {
-						options : {
-							match : [ '_bower.css', 'styles.css', '_bower.js',
-									'_lib.js', 'app.js', 'controllers.js',
-									'services.js', 'filters.js',
-									'directives.js', 'partials.js' ],
-						},
-						files : {
-							src : [ '<%= grunt.config.get("buildPath") %>/index.html' ]
-						}
+				cacheBustPlus: {
+					options: {
+						deleteOriginals: true,
+						rename: true
+					},
+					files: {
+						src: ['<%= grunt.config.get("buildPath") %>/index.html']
 					}
-				}
+		        }
 			});
 
 	// Load all npm tasks
@@ -277,5 +273,5 @@ module.exports = function(grunt) {
 	// Production Build
 	grunt.registerTask('prod', [ 'config:prod', 'clean', 'ngconstant:prod','concat',
 			'bower_concat', 'copy', 'html2js', 'ngAnnotate:app', 'uglify',
-		 'cachebreaker' ]);
+		 'cacheBustPlus' ]);
 };
