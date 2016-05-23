@@ -11,14 +11,14 @@
 				<form name="timeForm">
 					<label class="settings">TIMEZONE</label>
                        <div ng-init="translations.placeholder = 'SeLecT your timezone :)'">					
-					 <input class="timezone-select" timezone-select="timezone" country="India">
+					 <input class="timezone-select" timezone-select="timezone">
 					 </div>
 					
 			</div>
 
 			<div class="col-md-5">
 			  <div class="form-group">
-						<label for="comment" class="settings">TIME PREFERENCE</label>
+						<label for="comment" class="settings">TIME TO RECEIVE REMIDER EMAIL</label>
 							 <input type="text" size="8" class="form-control"  ng-model="sharedDate" data-time-format="h:mm a" data-autoclose="1" placeholder="Time" bs-timepicker>
 			
 					</div>

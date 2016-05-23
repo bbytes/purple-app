@@ -30,7 +30,8 @@ rootApp.service('settingsService', function($rootScope, $http, $q, $window) {
 	
 	
 	this.updateTimezone = function(time) {
-
+       console.log(time);
+		
 		var deferred = $q.defer();
 
 		$http({

@@ -6,4 +6,8 @@ rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $locatio
 	 
 };
 
+ $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+        });
+
 }]);

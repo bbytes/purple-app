@@ -128,7 +128,7 @@
                     inline-edit-validation="comment.commentDesc.validator(comment.commentDesc)"
                     inline-edit-btn-save="Save"
                     inline-edit-btn-cancel="Cancel"> 
-					
+					<a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deletereplyComment(reply.replyId,commentId,$index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a>
 					</span>
 					
                   </md-content>
@@ -238,7 +238,7 @@
                                      <h4 ng-show="isUser"><span class="hash"># </span> {{status.projectName}}
                                      <span  style="float:right"> {{status.time}}</span>
 									</h4>
-									<p>{{status.hours}}hrs, {{artist.date}}, <a href="#">{{status.commentCount}} Comments</a></p> 
+									<p>{{status.hours}}hrs, {{artist.date}}, <a href="#" ng-click="openCommentSideBar(status.statusId); openSideNavPanel()">{{status.commentCount}} Comments</a></p> 
                                    </div>
 								   
                                   <div class="timeline-body worked-on">
