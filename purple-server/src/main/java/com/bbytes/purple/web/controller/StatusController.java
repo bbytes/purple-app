@@ -263,8 +263,12 @@ public class StatusController {
 
 		User user = userService.getLoggedInUser();
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
-		Date endDate = new DateTime(new Date()).toDate();
-		Date startDate = new DateTime(new Date()).minusDays(timePeriodValue).withTime(0, 0, 0, 0).toDate();
+		
+		Date[] startEndDates = statusService.getStartDateEndDate(timePeriodValue);
+		Date startDate = startEndDates[0];
+		Date endDate = startEndDates[1];
+		
+		
 		Iterable<ProjectUserCountStats> result = statusAnalyticsService.getProjectPerDayCountHours(user.getProjects(),startDate, endDate);
 		List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
 		for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {

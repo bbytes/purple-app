@@ -169,8 +169,10 @@ public class StatusService extends AbstractService<Status, String> {
 	public List<Status> getAllStatus(User user, int timePeriod) throws PurpleException {
 		List<Status> statuses = new ArrayList<Status>();
 		try {
-			Date endDate = new DateTime(new Date()).toDate();
-			Date startDate = new DateTime(new Date()).minusDays(timePeriod).withTime(0, 0, 0, 0).toDate();
+			Date[] startEndDates = getStartDateEndDate(timePeriod);
+			Date startDate = startEndDates[0];
+			Date endDate = startEndDates[1];
+			
 			statuses = statusRepository.findByDateTimeBetweenAndUser(startDate, endDate, user);
 			Collections.sort(statuses, Collections.reverseOrder());
 
@@ -231,8 +233,9 @@ public class StatusService extends AbstractService<Status, String> {
 		List<String> userQueryEmailList = userAndProject.getUserList();
 		List<User> userQueryList = userRepository.findByEmailIn(userQueryEmailList);
 
-		Date endDate = new DateTime(new Date()).toDate();
-		Date startDate = new DateTime(new Date()).minusDays(timePeriodValue).withTime(0, 0, 0, 0).toDate();
+		Date[] startEndDates = getStartDateEndDate(timePeriodValue);
+		Date startDate = startEndDates[0];
+		Date endDate = startEndDates[1];
 
 		List<Project> projectQueryList = new ArrayList<>();
 		// apply current user project list match filter to requested project
@@ -283,6 +286,27 @@ public class StatusService extends AbstractService<Status, String> {
 		Collections.sort(result, Collections.reverseOrder());
 
 		return result;
+	}
+
+	/**
+	 * @param noOfDays
+	 * @return
+	 */
+	public Date[] getStartDateEndDate(Integer noOfDays) {
+		Date[] startEndDates = new Date[2];
+
+		// start date set
+		startEndDates[0] = new DateTime(new Date()).minusDays(noOfDays).withTimeAtStartOfDay().toDate();
+		
+		//end date set
+		startEndDates[1] = DateTime.now().toDate();
+		
+		// in case of yesterday (noOfDays is 1) we set end date as today start datetime midnight 12  
+		if(noOfDays == 1)
+			startEndDates[1] = DateTime.now().withTimeAtStartOfDay().toDate();
+		
+
+		return startEndDates;
 	}
 
 }

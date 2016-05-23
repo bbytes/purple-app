@@ -18,7 +18,7 @@ $scope.loadTimePeriod = function(){
 
 	dropdownListService.getTimePeriod().then(function(response){
             $scope.timePeriod = response.data;
-           	$scope.mytime = response.data[1].value;
+           	$scope.mytime = response.data[2].value;
           
               }, function(error){
         });

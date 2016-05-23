@@ -62,7 +62,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 
 	dropdownListService.getTimePeriod().then(function(response){
             $scope.timePeriod = response.data;
-           	$scope.mytime = response.data[1].value;
+           	$scope.mytime = response.data[2].value;
           
               }, function(error){
         });
@@ -201,7 +201,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 
 		}, function(error) {
 			if(error.reason == "hours_exceeded"){
-				appNotifyService.error('YYou have exceeded 24 hours in a day!');
+				appNotifyService.error('You have exceeded 24 hours in a day!');
 			}
 			else{
 				appNotifyService.error('Error while updating status');
