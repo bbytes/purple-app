@@ -2034,3 +2034,31 @@ md-sidenav, md-backdrop {
 .glyphicon-chevron-up:before {
     content: "\f077";
 }
+
+.nav-left .status-nav{
+	display:none;
+}
+.nav-left .status-current{
+	display:block;
+}
+
+.nav-left .dashboard-nav{
+	display:none;
+}
+.nav-left .dashboard-current{
+	display:block;
+}
+
+.nav-left .setting-nav{
+	display:none;
+}
+.nav-left .setting-current{
+	display:block;
+}
+
+md-sidenav, md-backdrop {
+position: fixed;
+}
+.isOpen, md-backdrop{
+  overflow:hidden;
+} 

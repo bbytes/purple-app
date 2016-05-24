@@ -11,7 +11,7 @@
 				<form name="timeForm">
 					<label class="settings">TIMEZONE</label>
                        <div ng-init="translations.placeholder = 'SeLecT your timezone :)'">					
-					 <input class="timezone-select" timezone-select="timezone">
+					 <input class="timezone-select" timezone-select="timezone" ng-model="time">
 					 </div>
 					
 			</div>
@@ -26,7 +26,7 @@
 		</div>
 		<div class="col-md-5">
 		<div class="row">
-		 <button type="button" class="btn btn-default create" ng-click="updateTime(timeForm.$valid)" style="float: left; width: 55.2%;">save</button>
+		 <button type="button" class="btn btn-default create" ng-click="updateTime(time.$valid)" style="float: left; width: 55.2%;">save</button>
 				</form>
 			</div>	
 		</div>

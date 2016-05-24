@@ -6,6 +6,10 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
 	$rootScope.bodyClass = 'body-standalone1';
 	$rootScope.navClass = 'nav-control';
 	$rootScope.navstatusClass = 'nav navbar-nav';
+	
+	$rootScope.statusClass = 'status-nav';
+	$rootScope.dashboardClass = 'dashboard-nav';
+	$rootScope.settingClass = 'setting-current';
     // Reset password for user
     $scope.updatePassword = function (user,confirmPassword) {
     	

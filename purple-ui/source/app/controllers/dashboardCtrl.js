@@ -1,7 +1,7 @@
 /**
  * Dashboard controller to load status timeline
  */
-rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,statusService, commentService, editableOptions, $mdSidenav) {
+rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,statusService, commentService, editableOptions, $mdSidenav, $mdMedia) {
 	 $scope.commentDesc = '';
     $scope.isActive = function(route) {
         return route === $location.path();
@@ -9,6 +9,10 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
 	$rootScope.bodyClass = 'body-standalone1';
 	$rootScope.navClass = 'nav-control';
 	$rootScope.navstatusClass = 'nav navbar-nav';
+	
+	$rootScope.statusClass = 'status-nav';
+	$rootScope.dashboardClass = 'dashboard-current';
+	$rootScope.settingClass = 'setting-nav';
 	
    /**
     * Get all status timeline
@@ -242,21 +246,6 @@ $scope.loadTimePeriod = function(){
       }
    
 
-	$scope.showMobileMainHeader = true;
-	$scope.openSideNavPanel = function() {
-		$mdSidenav('left').open();
-	};
-	$scope.closeSideNavPanel = function() {
-		$mdSidenav('left').close();
-	};
-	
-	$scope.select= function(item) {
-        $scope.selected = item; 
- };
-
- $scope.isActive = function(item) {
-        return $scope.selected === item;
- };
 
   	//nav active
      $scope.setClickedRow = function(index){  //function that sets the value of selectedRow to current index
@@ -324,5 +313,21 @@ $scope.loadTimePeriod = function(){
 		});
 		
 	}
+	
+	 $rootScope.isOpen = false;
+	 $rootScope.closeSideNavPanel;
+	 $scope.openSideNavPanel = function () {
+     $mdSidenav('right').open();
+     $rootScope.isOpen= !$mdSidenav('right').isOpen();
+     $rootScope.isOpen= true;
+	
+	$rootScope.closeSideNavPanel = function() {
+		$mdSidenav('right').close();
+		$rootScope.isOpen = false;
+	};
+	
+	
+  };
   
+ 
 });

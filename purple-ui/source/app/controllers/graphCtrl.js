@@ -5,6 +5,10 @@
 	    $rootScope.navClass = 'nav-control';
 	    $rootScope.navstatusClass = 'nav navbar-nav';
 		 
+		$rootScope.statusClass = 'status-nav';
+	    $rootScope.dashboardClass = 'dashboard-current';
+	    $rootScope.settingClass = 'setting-nav';
+		 
 		 //grpg
 		/*$scope.labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Sept","Oct","Nov","Dec"];
         $scope.series = ['Series A', 'Series B'];
