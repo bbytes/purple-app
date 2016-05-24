@@ -2059,6 +2059,6 @@ md-sidenav, md-backdrop {
 md-sidenav, md-backdrop {
 position: fixed;
 }
-.isOpen, md-backdrop{
+.isOpen{
   overflow:hidden;
 } 
