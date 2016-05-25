@@ -317,17 +317,16 @@ $scope.loadTimePeriod = function(){
 	 $rootScope.isOpen = false;
 	 $rootScope.closeSideNavPanel;
 	 $scope.openSideNavPanel = function () {
-     $mdSidenav('right').open();
-     $rootScope.isOpen= !$mdSidenav('right').isOpen();
-     $rootScope.isOpen= true;
-	
-	$rootScope.closeSideNavPanel = function() {
-		$mdSidenav('right').close();
-		$rootScope.isOpen = false;
-	};
-	
-	
+		 $mdSidenav('right').open();
+		 $rootScope.isOpen= !$mdSidenav('right').isOpen();
+		 $rootScope.isOpen= true;
+		 $('body').on('click', '.md-sidenav-backdrop ', function(){
+			 $rootScope.isOpen = false;
+		 });
+		$rootScope.closeSideNavPanel = function() {
+			$mdSidenav('right').close();
+			$rootScope.isOpen = false;
+		};
   };
-  
  
 });

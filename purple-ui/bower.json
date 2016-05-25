@@ -35,7 +35,8 @@
     "angular-tooltips": "^1.0.10",
     "angular-notification-icons": "^0.4.3",
     "angular-xeditable": "^0.1.12",
-    "angular-chart.js": "^0.10.2"
+    "angular-chart.js": "^0.10.2",
+    "angular-pageslide-directive": "^1.2.2"
   },
   "devDependencies": {},
   "resolutions": {

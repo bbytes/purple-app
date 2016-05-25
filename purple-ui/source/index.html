@@ -44,11 +44,11 @@
         <script src="app/filters/filters.js"></script>
         <script src="app/directives/directives.js"></script>
         <script src="app/partials/partials.js"></script>
-        <!-- jquery ng-class="{isOpen : isOpen}" -->
+        <!-- jquery-->
        
    
     </head>
-    <body class="{{ bodyClass }}">    
+    <body class="{{ bodyClass }}" ng-class="{isOpen : isOpen}">    
         <toaster-container></toaster-container>
         <div ui-view></div>
 
