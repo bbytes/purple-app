@@ -2006,11 +2006,7 @@ md-sidenav ul {
 @media not all and (min-width: 590px) {
 	.ng-pageslide{
 		width:70%;
-	}
-	.desktop-version{
-		display:none;
-	}
-  
+	}  
 }
 .ng-pageslide{
 	top: 53px !important;
