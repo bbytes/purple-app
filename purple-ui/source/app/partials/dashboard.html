@@ -1,6 +1,63 @@
+    <a class="tiny button" href="" ng-click="toggle()"><i class="fa fa-list" aria-hidden="true"></i></a>
+       <div pageslide ps-open="checked" ps-speed="2">
+         <div style="padding:0px" id="demo-right">
+					
+		<div ng-init="loadTimePeriod();loadStatusTimeline()">
+	    <div class="panel-group" id="accordion" ng-init="loadUserProjects()">
+          <div class="panel panel-default">
+             <div class="panel-heading project-active">
+               <h4 class="panel-title">
+                <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseOne1">
+                 <i class="fa fa-inbox"></i>
+                 <span>PROJECTS</span></a>
+                </h4>
+              </div>
+		 
+       <div id="collapseOne1" class="panel-collapse collapse in">
+         <div class="panel-body">
+           <ul class="list-group project-nav">
+              <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
+			  <a ng-click="loadStatusTimeline(mytime);loadUserProjects();toggle()" >ALL</a>
+			  </li>
+			  
+		      <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'">
+			  <a ng-click="loadProjectMap(project,mytime);toggle()">{{project.projectName}}</a>
+			  </li>		  
+            </ul>
+          </div>
+       </div>
 
-
+      </div>
   
+
+      <div class="panel panel-default">
+         <div class="panel-heading project-active">
+            <h4 class="panel-title">
+              <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseTwo2">
+               <i class="fa fa-user"></i> <span>USERS</span>
+              </a>
+            </h4>
+          </div>
+      <div id="collapseTwo2" class="panel-collapse collapse in">
+         <div class="panel-body">
+            <ul class="list-group project-nav">
+              <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers  | orderBy:'userName'" >
+			  <a ng-click="loadUserMap(users, mytime);toggle()">{{users.userName}}</a>
+			  </li>
+            </ul>
+          </div>
+
+      </div>
+     </div>
+  </div>
+</div>
+						
+						
+                    </div>
+                </div>
+
+
+
     <div class="leftSidebar">
 	 <div class="theiaStickySidebar" ng-init="loadTimePeriod();loadStatusTimeline()">
 	    <div class="panel-group" id="accordion" ng-init="loadUserProjects()">
@@ -104,7 +161,8 @@
                   </div>
                   <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "addComment(selectedStatusId)" ng-disabled="myForm.$invalid">POST</button>
               </form>
-
+    
+	        
 			</div>
                 <hr />
 				
@@ -126,12 +184,13 @@
                     inline-edit-textarea
                     inline-edit-validation="comment.commentDesc.validator(comment.commentDesc)"
                     inline-edit-btn-save="Save"
+				
                     inline-edit-btn-cancel="Cancel"> 
 					<a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deletereplyComment(reply.replyId,commentId,$index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a>
 					</span>
 					
                   </md-content>
-				   
+		
                 </div>
 				
 				<!--replied-->
