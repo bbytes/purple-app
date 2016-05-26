@@ -253,6 +253,7 @@ module.exports = function(grunt) {
 				},
 				cacheBustPlus: {
 					options: {
+						algorithm: 'sha1',
 						deleteOriginals: true,
 						rename: true
 					},
