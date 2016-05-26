@@ -2,7 +2,7 @@
  * Graph Service
  */
 
-rootApp.service('graphService', function($rootScope, $http, $q, $window) {
+rootApp.service('metricsService', function($rootScope, $http, $q, $window) {
 
 	this.getAllStatusAnalytics = function(updateData, time) {
 

@@ -1,5 +1,5 @@
   
-    rootApp.controller('graphCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,graphService, commentService, editableOptions, $mdSidenav) {
+    rootApp.controller('metricsCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,metricsService, commentService, editableOptions, $mdSidenav) {
 		
     	$rootScope.bodyClass = 'body-standalone1';
 	    $rootScope.navClass = 'nav-control';
@@ -58,7 +58,7 @@
               projectList :[],
               userList : []
       }
-        graphService.getAllStatusAnalytics($scope.updateData,time).then(function (response) {
+        metricsService.getAllStatusAnalytics($scope.updateData,time).then(function (response) {
             
             $scope.labels = [];
             

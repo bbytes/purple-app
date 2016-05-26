@@ -127,26 +127,26 @@ rootApp.config([
 		                authorization: 'dashboard',
 		                redirectTo: 'login'
 		            }
-			}).state('graph', {
-				url : '/graph',
+			}).state('metrics', {
+				url : '/metrics',
 				views : {
 					'' : {
 						templateUrl : 'app/partials/home.html'
 						
 					},
-					'header@graph' : {
+					'header@metrics' : {
 						templateUrl : 'app/partials/home-header.html'
 					},
-					'main@graph' : {
-						templateUrl : 'app/partials/graph.html',
-						controller : 'graphCtrl'
+					'main@metrics' : {
+						templateUrl : 'app/partials/metrics.html',
+						controller : 'metricsCtrl'
 					},
-					'footer@graph' : {
+					'footer@metrics' : {
 						templateUrl : 'app/partials/home-footer.html'
 					}
 				},
 				data: {
-		                authorization: 'graph',
+		                authorization: 'metrics',
 		                redirectTo: 'login'
 		            }
 			}).state('status', {
