@@ -32,7 +32,7 @@
          			if(response.data.accountInitialise = true && $sessionStorage.userInfo.userRoles == "NORMAL")
          				{
          				 appNotifyService.success('Your account has been activated successfully. Redirecting to settings.');
-         				 $state.go("settings-user");
+         				 $state.go("settings");
          				}
          			else{
          				appNotifyService.success('Your account has been activated successfully. Why dont you invite users?');
