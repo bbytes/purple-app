@@ -32,11 +32,11 @@ public class CorsFilter implements Filter {
 				+ "," + "Origin, X-Requested-With, purple-file-name, Content-Type, Accept";
 
 		response.setHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
-		response.addHeader("Access-Control-Allow-Headers", accessControlAllowHeaders);
-		response.addHeader("Access-Control-Expose-Headers", accessControlAllowHeaders);
-		response.addHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
+		response.setHeader("Access-Control-Allow-Headers", accessControlAllowHeaders);
+		response.setHeader("Access-Control-Expose-Headers", accessControlAllowHeaders);
+		response.setHeader("Access-Control-Max-Age", "3600");
 
 		if ("OPTIONS".equals(((HttpServletRequest) request).getMethod()))
 			return;
