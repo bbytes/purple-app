@@ -87,7 +87,7 @@
 				</h4>
 			</div>
 			<div class="project-table" ng-init="loadAllProjects()">
-				<table ng-repeat="project in allprojects">
+				<table ng-repeat="project in allprojects  | orderBy:'projectName'">
 					<tr>
 						<td class="table-user">{{project.projectName}} <br /> <span
 							class="u-number">{{project.usersCount}} Users</span></td>
