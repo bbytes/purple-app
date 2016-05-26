@@ -30,12 +30,14 @@
                    };
               
                  $sessionStorage.userInfo =  userInfo;
-
+                 $state.go("settings");
                     deferred.resolve(response);
                 }).error(function(response) {
                     deferred.reject(response);
+                    appNotifyService.error('The link is expired');
+                     $state.go("login");
                 });
 
-                 $state.go("settings");
+                 
                  return deferred.promise;   
     });

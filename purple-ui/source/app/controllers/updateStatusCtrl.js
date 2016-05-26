@@ -19,7 +19,6 @@
                     }
                 }).success(function(response, status, headers, config) {
 
-                    console.log(response.data);
                     $rootScope.userName = response.data.userName;
                     $rootScope.userRole = response.data.userRole.id;
 
@@ -30,12 +29,15 @@
                    };
               
                  $sessionStorage.userInfo =  userInfo;
+                  $state.go("status");
 
                     deferred.resolve(response);
                 }).error(function(response) {
                     deferred.reject(response);
+                    appNotifyService.error('The link is expired');
+                     $state.go("login");
                 });
 
-                 $state.go("status");
+                
                  return deferred.promise;   
     });
