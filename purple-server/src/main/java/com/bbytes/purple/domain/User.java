@@ -39,12 +39,15 @@ public class User {
 
 	@Field("password")
 	private String password;
-	
+
 	@Field("account_initialise")
 	private boolean accountInitialise;
-	
+
 	@Field("time_zone")
 	private String timeZone;
+
+	@Field("time_preference")
+	private String timePreference;
 
 	@DBRef
 	private Organization organization;
@@ -65,6 +68,8 @@ public class User {
 		this.name = name;
 		this.email = email;
 	}
+
 	public static String PENDING = "Pending";
 	public static String JOINED = "Joined";
+	public static String DEFAULT_EMAIL_REMINDER_TIME = "1970-01-01T12:30:00.000Z";
 }

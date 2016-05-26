@@ -29,15 +29,16 @@ rootApp.service('settingsService', function($rootScope, $http, $q, $window) {
 	};
 	
 	
-	this.updateTimezone = function(time) {
-       console.log(time);
-		
+	this.updateSetting = function(settingObj) {
+       console.log(settingObj);
+		var timeZone = "IST";
+		var timePreference = settingObj.timePreference;
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/admin/setting/timezone',
-			params:time,
+			url : $rootScope.baseUrl + 'api/v1/setting',
+			params : {"timeZone" : timeZone, "timePreference" : timePreference},
 			headers : {
 				'Content-Type' : 'application/json',
 
@@ -46,12 +47,8 @@ rootApp.service('settingsService', function($rootScope, $http, $q, $window) {
 		}).success(function(response, status, headers, config) {
 
 			deferred.resolve(response);
-		}).error(function() {
-			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
+		}).error(function(response) {
+			deferred.reject(response);
 		});
 
 		return deferred.promise;

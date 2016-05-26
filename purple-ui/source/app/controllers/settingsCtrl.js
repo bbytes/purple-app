@@ -38,27 +38,28 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
 
     };
     
-    $scope.updateTime= function (isValid) {
- 	   if (!isValid) {
- 	        appNotifyService.error('Please select a valid Timezone');
- 	            return false;
- 	        }
-   
- 	settingsService.updateTimezone($scope.time).then(function (response) {
+    $scope.updateSetting= function () {
+    
+        var settingObj = new Object();
+        settingObj.timeZone = $scope.timeZone;
+        settingObj.timePreference = $scope.timePreference;
+
+ 	settingsService.updateSetting(settingObj).then(function (response) {
      	 if (response.success = true) {
-     		 $scope.time ='';
-     		 appNotifyService.success('Timezone has been successfully updated.');   		 
+
+            $rootScope.timePreference = response.data.timePreference;
+     		 appNotifyService.success('Preference has been successfully updated.');   		 
          } 
 
      }, function (error) {
-         appNotifyService.error('Please select a valid Timezone');
+         appNotifyService.error('Please set a valid setting');
      });
 
  };
  
   $scope.setTime= function () {
- 	   
-	   $scope.sharedDate = "1970-01-01T14:30:00.000Z";
+
+	   $scope.timePreference =  $rootScope.timePreference;
  };
     
 	$("[name='my-checkbox']").bootstrapSwitch();

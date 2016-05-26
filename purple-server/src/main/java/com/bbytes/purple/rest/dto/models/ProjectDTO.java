@@ -21,8 +21,6 @@ public class ProjectDTO implements Serializable {
 
 	private String projectName;
 
-	private String timePreference;
-
 	private List<String> users = Collections.<String> emptyList();
 
 	private List<UserDTO> userList = Collections.<UserDTO> emptyList();

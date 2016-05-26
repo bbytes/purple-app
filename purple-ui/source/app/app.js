@@ -297,6 +297,9 @@ rootApp.config([
 			}).state('updatestatus', {
 				url : '/updatestatus?token&sd',
 				controller : 'updateStatusCtrl'
+			}).state('updatesetting', {
+				url : '/updateSetting?token',
+				controller : 'updateSettingCtrl'
 			}).state('accountactivate', {
 				controller : 'activateAccountCtrl'
 			});		

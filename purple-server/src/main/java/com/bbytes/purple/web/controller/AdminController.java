@@ -84,6 +84,7 @@ public class AdminController {
 		addUser.setOrganization(org);
 		addUser.setPassword(passwordHashService.encodePassword(GlobalConstants.DEFAULT_PASSWORD));
 		addUser.setStatus(User.PENDING);
+		addUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
 
 		User user = adminService.addUsers(addUser);
 		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
@@ -210,7 +211,8 @@ public class AdminController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/admin/user/role", method = RequestMethod.POST)
-	public RestResponse updateUserRole(@RequestParam(value="userId") String userId, @RequestParam(value="role") String role) throws PurpleException {
+	public RestResponse updateUserRole(@RequestParam(value = "userId") String userId,
+			@RequestParam(value = "role") String role) throws PurpleException {
 
 		User user = adminService.updateUserRole(userId, role);
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
@@ -232,7 +234,7 @@ public class AdminController {
 
 		// we assume angular layer will do empty checks for project
 		Organization org = userService.getLoggedInUser().getOrganization();
-		Project addProject = new Project(projectDTO.getProjectName(), projectDTO.getTimePreference());
+		Project addProject = new Project(projectDTO.getProjectName());
 		addProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();
 		for (String i : projectDTO.getUsers()) {
@@ -316,7 +318,7 @@ public class AdminController {
 
 		// we assume angular layer will do null checks for project object
 		Organization org = userService.getLoggedInUser().getOrganization();
-		Project updateProject = new Project(projectDTO.getProjectName(), projectDTO.getTimePreference());
+		Project updateProject = new Project(projectDTO.getProjectName());
 		updateProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();
 		for (String i : projectDTO.getUsers()) {

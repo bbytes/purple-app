@@ -38,17 +38,22 @@ public class SettingService {
 		}
 	}
 
-	public void updateTimeZone(String timeZone, User user) throws PurpleException {
-		if (user != null && timeZone != null && !timeZone.isEmpty()) {
+	public User updateSetting(String timeZone,String timePreference, User user) throws PurpleException {
+		if (user != null) {
 			if (!userService.userEmailExist(user.getEmail()))
-				throw new PurpleException("Error while resetting password", ErrorHandler.USER_NOT_FOUND);
+				throw new PurpleException("Error while updating setting", ErrorHandler.USER_NOT_FOUND);
+			if (timeZone == null && timePreference == null)
+				throw new PurpleException("Error while updating setting", ErrorHandler.UPDATE_SETTING_FAILED);
+			
 			try {
 				user.setTimeZone(timeZone);
-				userService.save(user);
+				user.setTimePreference(timePreference);
+				user = userService.save(user);
 			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.PASSWORD_INCORRECT);
+				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_SETTING_FAILED);
 			}
 		}
+		return user;
 	}
 
 	public User forgotPassword(String email) throws PurpleException {

@@ -50,10 +50,10 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 		normalUser = new User("akshay", "akshay@gmail.com");
 		normalUser.setOrganization(org);
 
-		project1 = new Project("ABC", "5.00PM");
+		project1 = new Project("ABC");
 		project1.setOrganization(org);
 
-		project2 = new Project("XYZ", "6.00AM");
+		project2 = new Project("XYZ");
 		project2.setOrganization(org);
 
 		user1 = new User("john", "john@gmail.com");
@@ -93,12 +93,12 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 		userList.add(normalUser);
 		userList.add(user1);
 
-		Project project1 = new Project("web", "4pm");
+		Project project1 = new Project("web");
 		project1.setOrganization(org);
 		project1.setUser(userList);
 		projectService.save(project1);
 
-		Project project2 = new Project("reveal", "4pm");
+		Project project2 = new Project("reveal");
 		project2.setOrganization(org);
 		project2.setUser(userList);
 		projectService.save(project2);

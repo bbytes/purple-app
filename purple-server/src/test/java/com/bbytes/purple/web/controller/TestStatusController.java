@@ -54,7 +54,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		adminUser.setUserRole(UserRole.ADMIN_USER_ROLE);
 		adminUser.setOrganization(org);
 
-		project = new Project("purple", "4pm");
+		project = new Project("purple");
 		project.setOrganization(org);
 
 		TenancyContextHolder.setTenant(org.getOrgId());
@@ -437,12 +437,12 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		project.setUser(userList1);
 		projectService.save(project);
 
-		Project project1 = new Project("Project1", "12PM");
+		Project project1 = new Project("Project1");
 		project1.setOrganization(org);
 		project1.setUser(userList1);
 		projectService.save(project1);
 
-		Project project2 = new Project("Project2", "1PM");
+		Project project2 = new Project("Project2");
 		project2.setOrganization(org);
 		project2.setUser(userList2);
 		projectService.save(project2);
@@ -503,12 +503,12 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		project.setUser(userList1);
 		projectService.save(project);
 
-		Project project1 = new Project("Project1", "12PM");
+		Project project1 = new Project("Project1");
 		project1.setOrganization(org);
 		project1.setUser(userList1);
 		projectService.save(project1);
 
-		Project project2 = new Project("Project2", "1PM");
+		Project project2 = new Project("Project2");
 		project2.setOrganization(org);
 		project2.setUser(userList2);
 		projectService.save(project2);
@@ -552,11 +552,11 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 
 		projectService.save(project);
 
-		Project project1 = new Project("Project1", "12PM");
+		Project project1 = new Project("Project1");
 		project1.setOrganization(org);
 		projectService.save(project1);
 
-		Project project2 = new Project("Project2", "1PM");
+		Project project2 = new Project("Project2");
 		project2.setOrganization(org);
 		projectService.save(project2);
 
@@ -619,11 +619,11 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 
 		projectService.save(project);
 
-		Project project1 = new Project("Project1", "12PM");
+		Project project1 = new Project("Project1");
 		project1.setOrganization(org);
 		projectService.save(project1);
 
-		Project project2 = new Project("Project2", "1PM");
+		Project project2 = new Project("Project2");
 		project2.setOrganization(org);
 		projectService.save(project2);
 

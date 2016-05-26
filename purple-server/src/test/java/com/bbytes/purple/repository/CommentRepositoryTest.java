@@ -47,7 +47,7 @@ public class CommentRepositoryTest extends PurpleBaseApplicationTests {
 		user.setOrganization(abc);
 		userRepository.save(user);
 
-		project = new Project("purple-app", "5:00 PM");
+		project = new Project("purple-app");
 		projectRepository.save(project);
 
 		status = new Status("purple", "revil", 2, new Date());

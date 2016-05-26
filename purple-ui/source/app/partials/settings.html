@@ -11,7 +11,7 @@
 				<form name="timeForm">
 					<label class="settings">TIMEZONE</label>
                        <div ng-init="translations.placeholder = 'SeLecT your timezone :)'">					
-					 <input class="timezone-select" timezone-select="timezone" ng-model="time">
+					 <input class="timezone-select" timezone-select="timezone" ng-model="timeZone">
 					 </div>
 					
 			</div>
@@ -19,14 +19,14 @@
 			<div class="col-md-5">
 			  <div class="form-group">
 						<label for="comment" class="settings">EMAIL REMINDER TIME</label>
-							 <input type="text" size="8" class="form-control"  ng-model="sharedDate" data-time-format="h:mm a" data-autoclose="1" placeholder="Time" bs-timepicker>
+							 <input type="text" size="8" class="form-control"  ng-model="timePreference" data-time-format="h:mm a" data-autoclose="1" placeholder="Time" bs-timepicker>
 			
 					</div>
 			</div>
 		</div>
 		<div class="col-md-5">
 		<div class="row">
-		 <button type="button" class="btn btn-default create" ng-click="updateTime(time.$valid)" style="float: left; width: 55.2%;">save</button>
+		 <button type="button" class="btn btn-default create" ng-click="updateSetting()" style="float: left; width: 55.2%;">save</button>
 				</form>
 			</div>	
 		</div>
