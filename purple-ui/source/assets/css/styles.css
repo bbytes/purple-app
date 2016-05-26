@@ -1999,11 +1999,16 @@ md-sidenav ul {
 		font-size: 23px;
         color: #fff;
 	}
-	
+	.mobile-version{
+		display:none;
+	}
 }
 @media not all and (min-width: 590px) {
 	.ng-pageslide{
 		width:70%;
+	}
+	.desktop-version{
+		display:none;
 	}
   
 }
