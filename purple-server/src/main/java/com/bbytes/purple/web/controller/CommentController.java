@@ -71,6 +71,7 @@ public class CommentController {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, status.getDateTime());
+		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
 		emailBody.put("userName", user.getName());
 
 		emailService.sendEmail(emailList, emailBody, subject, template);

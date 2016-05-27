@@ -74,6 +74,8 @@ public class ReplyController {
 
 		Comment comment = replyService.postReply(commentId, replyDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
+		
+		int replySize = comment.getReplies().size();
 
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
@@ -82,6 +84,7 @@ public class ReplyController {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, comment.getCreationDate());
+		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize-1).getReplyDesc());
 
 		emailService.sendEmail(emailList, emailBody, subject, template);
 

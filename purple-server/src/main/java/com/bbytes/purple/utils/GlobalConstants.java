@@ -37,6 +37,10 @@ public class GlobalConstants {
 	public static final String USER_NAME = "name";
 
 	public static final String SUBSCRIPTION_DATE = "subscriptionDate";
+	
+	public static final String COMMENT_DESC = "comment_desc";
+	
+	public static final String REPLY_DESC = "reply_desc";
 
 	public static final String ACTIVATION_LINK = "activationLink";
 
