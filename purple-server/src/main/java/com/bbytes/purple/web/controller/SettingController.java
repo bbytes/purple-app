@@ -169,7 +169,7 @@ public class SettingController {
 		final String template = GlobalConstants.EMAIL_FORGOT_PASSWORD_TEMPLATE;
 
 		User user = settingService.forgotPassword(email);
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 168);
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(email);
 

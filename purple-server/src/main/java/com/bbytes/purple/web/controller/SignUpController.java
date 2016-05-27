@@ -86,7 +86,7 @@ public class SignUpController {
 
 		registrationService.signUp(organization, user);
 
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(signUpRequestDTO.getEmail().toLowerCase(), 30);
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(signUpRequestDTO.getEmail().toLowerCase(), 720);
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());

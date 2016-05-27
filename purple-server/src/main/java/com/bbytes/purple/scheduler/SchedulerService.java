@@ -120,11 +120,12 @@ public class SchedulerService {
 					dateTime = dateTime.withMinuteOfHour(Integer.parseInt(minutes));
 
 					List<String> emailList = new ArrayList<String>();
-					final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
-
+					
 					long currentDate = new Date().getTime();
-					int validHours = Integer.parseInt(configSettingService
+					Integer validHours = Integer.parseInt(configSettingService
 							.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable()) * 24;
+					
+					final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), validHours);
 
 					Map<String, Object> emailBody = new HashMap<>();
 					emailBody.put(GlobalConstants.USER_NAME, user.getName());

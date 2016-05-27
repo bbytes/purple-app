@@ -87,7 +87,7 @@ public class AdminController {
 		addUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
 
 		User user = adminService.addUsers(addUser);
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 720);
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(user.getEmail());
 
@@ -124,7 +124,7 @@ public class AdminController {
 		List<User> users = adminService.bulkUsers(org, file);
 
 		for (User user : users) {
-			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
+			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 720);
 			List<String> emailList = new ArrayList<String>();
 			emailList.add(user.getEmail());
 			Map<String, Object> emailBody = new HashMap<>();
