@@ -44,13 +44,14 @@
          });
      }
 
-      $scope.loadAllStatusGraph = function(){
+      $scope.loadAllStatusGraph = function(time){
 
-        time = "Weekly";
-         $scope.updateData = {
-              projectList :[],
-              userList : []
-      }
+        if(time == null || time == 'undefined')
+                 time = "Weekly";
+        $scope.updateData = {
+                projectList :[],
+                userList : []
+        }
         metricsService.getAllStatusAnalytics($scope.updateData,time).then(function (response) {
             
             $scope.labels = [];
@@ -66,6 +67,11 @@
              
          });
      }
+
+      $scope.timeChange = function(timePeriod) {
+
+            $scope.loadAllStatusGraph(timePeriod);
+    }
 	 
 	 	//nav active
      $scope.setClickedRow = function(index){  //function that sets the value of selectedRow to current index

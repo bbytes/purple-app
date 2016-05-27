@@ -56,6 +56,46 @@ public class DropdownListController {
 
 		return rolesResponse;
 	}
+	
+	/**
+	 * getProjectUserDropdownList method is used to return project and user field.
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/projectuser", method = RequestMethod.GET)
+	public RestResponse getProjectUserDropdownList() {
+
+		List<String> projectUser = new LinkedList<String>();
+		projectUser.add("Project");
+		projectUser.add("User");
+
+		List<BaseDTO> projectAndUser = dataModelToDTOConversionService.convertRolesToEntityDTOList(projectUser);
+
+		logger.debug("Getting project and user are successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, projectAndUser, SuccessHandler.DROPDOWNLIST_SUCCESS);
+
+		return response;
+	}
+	
+	/**
+	 * getStatusCountAndHourDropdownList method is used to return statusCount and statusHours field.
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/status/countandhour", method = RequestMethod.GET)
+	public RestResponse getStatusCountAndHourDropdownList() {
+
+		List<String> statusCountHours = new LinkedList<String>();
+		statusCountHours.add("Status Count");
+		statusCountHours.add("Status Hours");
+
+		List<BaseDTO> statusCountAndHours = dataModelToDTOConversionService.convertRolesToEntityDTOList(statusCountHours);
+
+		logger.debug("Getting statusCount and statusHours are successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, statusCountAndHours, SuccessHandler.DROPDOWNLIST_SUCCESS);
+
+		return response;
+	}
 
 	/**
 	 * getStatusEnableDropdownList method is used to return all status enable
