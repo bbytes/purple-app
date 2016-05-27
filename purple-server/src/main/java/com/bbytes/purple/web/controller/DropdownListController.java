@@ -86,8 +86,8 @@ public class DropdownListController {
 	public RestResponse getStatusCountAndHourDropdownList() {
 
 		List<String> statusCountHours = new LinkedList<String>();
-		statusCountHours.add("Status Count");
 		statusCountHours.add("Status Hours");
+		statusCountHours.add("Status Count");
 
 		List<BaseDTO> statusCountAndHours = dataModelToDTOConversionService.convertRolesToEntityDTOList(statusCountHours);
 

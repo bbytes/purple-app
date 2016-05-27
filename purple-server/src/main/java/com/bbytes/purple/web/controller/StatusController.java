@@ -5,8 +5,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TimePeriod;
@@ -277,7 +280,7 @@ public class StatusController {
 			statusAnalyticsList.add(projectUserCountStats);
 		}
 		ProjectUserCountStatsDTO projectUserCountStatsDTO = dataModelToDTOConversionService
-				.getResponseMapWithStatusAnalytics(statusAnalyticsList);
+				.getResponseMapWithStatusAnalytics(statusAnalyticsList, usersAndProjectsDTO);
 		logger.debug("All Status Analytics are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, projectUserCountStatsDTO,
 				SuccessHandler.GET_STATUS_SUCCESS);

@@ -31,6 +31,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.StatusResponseDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
+import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
@@ -41,6 +42,7 @@ public class DataModelToDTOConversionService {
 	public static final String PROJECT_COUNT = "project_count";
 	public static final String COMMENT_COUNT = "comment_count";
 	public static final String REPLY_COUNT = "reply_count";
+	public static final String STATUS_HOURS = "Status Hours";
 
 	public BaseDTO convertToBaseDTO(String value) {
 		BaseDTO baseDTO = new BaseDTO();
@@ -245,14 +247,14 @@ public class DataModelToDTOConversionService {
 	}
 
 	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalytics(
-			List<ProjectUserCountStats> projectUserCountStatsList) {
+			List<ProjectUserCountStats> projectUserCountStatsList, UsersAndProjectsDTO usersAndProjectsDTO) {
 
 		ProjectUserCountStatsDTO projectUserCountStatsDTO = new ProjectUserCountStatsDTO();
 		List<String> labels = new LinkedList<>();
 		List<String> series = new LinkedList<>();
 
 		Map<String, String> mapProjectDateToStatusHrCount = new HashMap<>();
-
+		
 		for (ProjectUserCountStats projectUsesrCountStats : projectUserCountStatsList) {
 			if (!labels.contains(projectUsesrCountStats.getDate()))
 				labels.add(projectUsesrCountStats.getDate());
@@ -260,9 +262,16 @@ public class DataModelToDTOConversionService {
 			if (!series.contains(projectUsesrCountStats.getProject().getProjectName()))
 				series.add(projectUsesrCountStats.getProject().getProjectName());
 
-			mapProjectDateToStatusHrCount.put(
+			if(usersAndProjectsDTO.getCountHours().equals(STATUS_HOURS)){
+					mapProjectDateToStatusHrCount.put(
 					projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
 					projectUsesrCountStats.getHours().toString());
+			}
+			else{
+				mapProjectDateToStatusHrCount.put(
+					projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
+					projectUsesrCountStats.getStatusCount().toString());
+			}
 		}
 		Collections.sort(labels, Collections.reverseOrder());
 		String[][] data = new String[series.size()][labels.size()];

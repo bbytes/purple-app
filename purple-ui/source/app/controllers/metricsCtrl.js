@@ -55,20 +55,26 @@
 
             dropdownListService.getStatusCountAndHours().then(function(response){
             $scope.counthoursfield = response.data;
-            $scope.counthours = response.data[1].value;
+            $scope.counthours = response.data[0].value;
           
               }, function(error){
         });
          
         }
 
-      $scope.loadAllStatusGraph = function(time){
+      $scope.loadAllStatusGraph = function(time, projectuser, counthours){
 
         if(time == null || time == 'undefined')
                  time = "Weekly";
+        if(projectuser == null || projectuser == 'undefined')
+                 projectuser = "Project";
+        if(counthours == null || counthours == 'undefined')
+                 counthours = "Status Hours";
         $scope.updateData = {
                 projectList :[],
-                userList : []
+                userList : [],
+                projectUser :projectuser,
+                countHours : counthours
         }
         metricsService.getAllStatusAnalytics($scope.updateData,time).then(function (response) {
             
@@ -86,11 +92,11 @@
          });
      }
 
-      $scope.timeChange = function(timePeriod) {
+    $scope.groupBychange = function(timePeriod, projectuser, counthours) {
 
-            $scope.loadAllStatusGraph(timePeriod);
+             $scope.loadAllStatusGraph(timePeriod, projectuser, counthours);
     }
-	 
+ 
 	 	//nav active
      $scope.setClickedRow = function(index){  //function that sets the value of selectedRow to current index
      $scope.selectedRow = index;

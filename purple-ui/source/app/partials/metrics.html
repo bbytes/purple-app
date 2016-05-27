@@ -56,17 +56,17 @@
      <ul>
        <li><b>Group By:</b></li>
 	     <li>
-       <select ng-model="projectuser" ng-options="groupbyProjectUserfield.value as groupbyProjectUserfield.id for groupbyProjectUserfield in groupbyProjectUserfield">
+       <select ng-model="projectuser" ng-options="groupbyProjectUserfield.value as groupbyProjectUserfield.id for groupbyProjectUserfield in groupbyProjectUserfield" ng-change="groupBychange(mytime, projectuser, counthours)">
             </select>
             
              </li>
       
          <li>
-               <select ng-model="counthours" ng-options="counthoursfield.value as counthoursfield.id for counthoursfield in counthoursfield">
+               <select ng-model="counthours" ng-options="counthoursfield.value as counthoursfield.id for counthoursfield in counthoursfield" ng-change="groupBychange(mytime, projectuser, counthours)">
             </select>
              </li>
              <li>
-              <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timeChange(mytime)">
+              <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="groupBychange(mytime, projectuser, counthours)">
 
              </select>
              </li>
