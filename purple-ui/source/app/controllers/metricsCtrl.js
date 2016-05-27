@@ -77,5 +77,10 @@
      $scope.selectedUser = index;
 	 $scope.selectedRow = null;
   };
-	 
+  
+    
+	//dropdown
+	$scope.project = ["Projects", "Users"];
+  
+	$scope.hours = ["Status Count", "Status Hours"];
     });

@@ -54,7 +54,20 @@
   <div class="content">
     <div class="search-filter">
      <ul>
-        <li>
+	      <li>
+		   <select>
+            <option ng-repeat="x in project">{{x}}</option>
+            </select>
+            
+             </li>
+		  
+	       <li>
+               <select>
+            <option ng-repeat="x in hours">{{x}}</option>
+            </select>
+             </li>
+	 
+             <li>
               <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod">
              </select>
              </li>
