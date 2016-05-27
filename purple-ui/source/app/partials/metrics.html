@@ -1,5 +1,5 @@
 <div class="leftSidebar">
-	 <div class="theiaStickySidebar" ng-init="loadTimePeriod()">
+	 <div class="theiaStickySidebar" ng-init="loadTimePeriod();loadGroupBy()">
 	    <div class="panel-group" id="accordion" ng-init="loadUserProjects();loadAllStatusGraph()">
           <div class="panel panel-default">
              <div class="panel-heading project-active">
@@ -56,20 +56,16 @@
      <ul>
        <li><b>Group By:</b></li>
 	     <li>
-		   <select>
-            <option ng-repeat="x in project">{{x}}</option>
+       <select ng-model="projectuser" ng-options="groupbyProjectUserfield.value as groupbyProjectUserfield.id for groupbyProjectUserfield in groupbyProjectUserfield">
             </select>
             
              </li>
-		  
-	       <li>
-               <select>
-            <option ng-repeat="x in hours">{{x}}</option>
+      
+         <li>
+               <select ng-model="counthours" ng-options="counthoursfield.value as counthoursfield.id for counthoursfield in counthoursfield">
             </select>
              </li>
-	 
              <li>
-
               <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timeChange(mytime)">
 
              </select>

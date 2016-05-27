@@ -87,5 +87,46 @@ rootApp.service('dropdownListService', function($rootScope, $http, $q, $window) 
 		return deferred.promise;
 
 	};
+
+	this.getProjectAndUser = function() {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/dropdownList/projectuser',
+			headers : {
+				'Content-Type' : 'application/json',
+			}
+
+		}).success(function(response, status, headers, config) {
+			deferred.resolve(response);
+		}).error(function(response) {
+				 deferred.reject(response);
+		});
+		return deferred.promise;
+
+	};
+
+	// Method is used to get statusCount and statusHours field
+	this.getStatusCountAndHours = function() {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/dropdownList/status/countandhour',
+			headers : {
+				'Content-Type' : 'application/json',
+			}
+
+		}).success(function(response, status, headers, config) {
+			deferred.resolve(response);
+		}).error(function(response) {
+				 deferred.reject(response);
+		});
+		return deferred.promise;
+
+	};
 	
 });

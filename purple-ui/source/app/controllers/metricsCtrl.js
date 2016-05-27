@@ -44,6 +44,24 @@
          });
      }
 
+      $scope.loadGroupBy = function(){
+
+            dropdownListService.getProjectAndUser().then(function(response){
+            $scope.groupbyProjectUserfield = response.data;
+            $scope.projectuser = response.data[0].value;
+          
+              }, function(error){
+        });
+
+            dropdownListService.getStatusCountAndHours().then(function(response){
+            $scope.counthoursfield = response.data;
+            $scope.counthours = response.data[1].value;
+          
+              }, function(error){
+        });
+         
+        }
+
       $scope.loadAllStatusGraph = function(time){
 
         if(time == null || time == 'undefined')
