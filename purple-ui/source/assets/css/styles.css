@@ -2006,7 +2006,8 @@ md-sidenav ul {
 @media not all and (min-width: 590px) {
 	.ng-pageslide{
 		width:70%;
-	}  
+	} 
+ 
 }
 .ng-pageslide{
 	top: 53px !important;
@@ -2016,6 +2017,9 @@ md-sidenav ul {
 	.tiny{
 		display:none !important;
 	}
+	.desktop-version{
+	 display:none;
+ }	
 }
 
 #main{
@@ -2139,22 +2143,4 @@ position: fixed;
 }
 .isOpen{
   overflow:hidden;
-}
-
-#processing {  
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:1000;
-    background-color:grey;
-    opacity: .6;
-}
-
-.ajax-loader {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    display: block;     
 }
