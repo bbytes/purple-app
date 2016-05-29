@@ -6,7 +6,7 @@ public class SuccessHandler {
 
 	public static final String RESET_PASSWORD = "reset_password";
 
-	public static final String UPDATE_TIMEZONE = "update_timezone";
+	public static final String UPDATE_SETTING = "update_setting";
 
 	public static final String NOTIFICATION_SUCCESS = "notification_success";
 

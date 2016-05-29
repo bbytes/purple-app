@@ -5,8 +5,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,11 +25,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TimePeriod;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
+import com.bbytes.purple.rest.dto.models.ProjectUserCountStatsDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
@@ -263,22 +267,22 @@ public class StatusController {
 
 		User user = userService.getLoggedInUser();
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
-		
+
 		Date[] startEndDates = statusService.getStartDateEndDate(timePeriodValue);
 		Date startDate = startEndDates[0];
 		Date endDate = startEndDates[1];
-		
-		
-		Iterable<ProjectUserCountStats> result = statusAnalyticsService.getProjectPerDayCountHours(user.getProjects(),startDate, endDate);
+
+		Iterable<ProjectUserCountStats> result = statusAnalyticsService.getProjectPerDayCountHours(user.getProjects(),
+				startDate, endDate);
 		List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
 		for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
 			ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
 			statusAnalyticsList.add(projectUserCountStats);
 		}
-		Map<String, Object> statusMap = dataModelToDTOConversionService
-				.getResponseMapWithStatusAnalytics(statusAnalyticsList);
+		ProjectUserCountStatsDTO projectUserCountStatsDTO = dataModelToDTOConversionService
+				.getResponseMapWithStatusAnalytics(statusAnalyticsList, usersAndProjectsDTO);
 		logger.debug("All Status Analytics are fetched successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, projectUserCountStatsDTO,
 				SuccessHandler.GET_STATUS_SUCCESS);
 
 		return statusReponse;

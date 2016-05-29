@@ -35,7 +35,7 @@ public class TestUtilityService extends PurpleBaseApplicationTests {
 		testUser.setOrganization(org1);
 		testUser.setUserRole(UserRole.ADMIN_USER_ROLE);
 
-		project1 = new Project("web", "2pm");
+		project1 = new Project("web");
 		project1.setOrganization(org1);
 
 		TenancyContextHolder.setTenant(testUser.getOrganization().getOrgId());

@@ -24,6 +24,7 @@ import com.bbytes.purple.rest.dto.models.ConfigSettingDTO;
 import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
 import com.bbytes.purple.rest.dto.models.PasswordDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.EmailService;
@@ -89,22 +90,23 @@ public class SettingController {
 	}
 
 	/**
-	 * The update timezone method is used to update timezone for users
+	 * The updateSetting method is used to update timezone and timePreference
+	 * for users.
 	 * 
 	 * @param timeZone
-	 * @param request
+	 * @param timePreference
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/setting/timezone", method = RequestMethod.POST)
-	public RestResponse updateTimeZone(@RequestParam String timeZone) throws PurpleException {
+	@RequestMapping(value = "/api/v1/setting", method = RequestMethod.POST)
+	public RestResponse updateSetting(@RequestParam("timeZone") String timeZone,
+			@RequestParam("timePreference") String timePreference) throws PurpleException {
 
-		final String TIMEZONE_SUCCESS_MSG = "Successfully updated user's timezone";
 		User user = userService.getLoggedInUser();
-		settingService.updateTimeZone(timeZone, user);
-		logger.debug(timeZone + " is updated successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, TIMEZONE_SUCCESS_MSG,
-				SuccessHandler.UPDATE_TIMEZONE);
+		user = settingService.updateSetting(timeZone, timePreference, user);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
+		logger.debug(timeZone + "&" + timePreference + " are updated successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.UPDATE_SETTING);
 
 		return userReponse;
 	}
@@ -167,14 +169,14 @@ public class SettingController {
 		final String template = GlobalConstants.EMAIL_FORGOT_PASSWORD_TEMPLATE;
 
 		User user = settingService.forgotPassword(email);
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 168);
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(email);
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.FORGOT_PASSWORD_URL + xauthToken);
-		
+
 		emailService.sendEmail(emailList, emailBody, subject, template);
 
 		logger.debug("Forgot password is done successfully");

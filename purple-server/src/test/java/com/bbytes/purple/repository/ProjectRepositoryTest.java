@@ -35,10 +35,10 @@ public class ProjectRepositoryTest extends PurpleBaseApplicationTests {
 		user2 = new User("bbb", "bb@gmail");
 		user2.setOrganization(bbytes);
 
-		proj1 = new Project("purple", "5.00 PM");
+		proj1 = new Project("purple");
 		proj1.setOrganization(bbytes);
 
-		proj2 = new Project("reveal", "6.00 pm");
+		proj2 = new Project("reveal");
 		proj2.setOrganization(bbytes);
 
 		TenancyContextHolder.setTenant(proj1.getOrganization().getOrgId());

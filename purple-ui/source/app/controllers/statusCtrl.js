@@ -31,6 +31,10 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			appNotifyService.error('Please fill in the hours for the selected project.');
             return false;
 		}
+		else if(!status.workedOn && !status.workingOn){
+			appNotifyService.error('WorkedOn or WorkingOn field can not be empty');
+            return false;
+		}
 
 		statusService.submitStatus(status).then(function(response) {
 			if (response.success = true) {

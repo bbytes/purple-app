@@ -89,6 +89,6 @@ public class TokenAuthenticationProvider {
 		User user = authUserDetailsService.loadUserByUsername(email);
 		final String userTenantId = tenantResolverService.findTenantIdForUserEmail(email);
 		final TokenDataHolder tokenDataHolder = new TokenDataHolder(user, userTenantId);
-		return tokenHandler.createJWTStringTokenForUser(tokenDataHolder);
+		return tokenHandler.createJWTStringTokenForUser(tokenDataHolder, tokenValidityInHrs);
 	}
 }

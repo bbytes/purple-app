@@ -1,5 +1,5 @@
   
-    rootApp.controller('graphCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,graphService, commentService, editableOptions, $mdSidenav) {
+    rootApp.controller('metricsCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,metricsService, commentService, editableOptions, $mdSidenav) {
 		
     	$rootScope.bodyClass = 'body-standalone1';
 	    $rootScope.navClass = 'nav-control';
@@ -8,14 +8,7 @@
 		$rootScope.statusClass = 'status-nav';
 	    $rootScope.dashboardClass = 'dashboard-current';
 	    $rootScope.settingClass = 'setting-nav';
-		 
-		 //grpg
-		/*$scope.labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Sept","Oct","Nov","Dec"];
-        $scope.series = ['Series A', 'Series B'];
-        $scope.data = [
-        [65, 59, 80, 81, 56, 55, 40],
-        [28, 48, 40, 19, 86, 27, 90]
-        ];*/
+		  
         $scope.onClick = function (points, evt) {
         console.log(points, evt);
         };
@@ -51,37 +44,59 @@
          });
      }
 
-      $scope.loadAllStatusGraph = function(){
+      $scope.loadGroupBy = function(){
 
-        time = "Weekly";
-         $scope.updateData = {
-              projectList :[],
-              userList : []
-      }
-        graphService.getAllStatusAnalytics($scope.updateData,time).then(function (response) {
+            dropdownListService.getProjectAndUser().then(function(response){
+            $scope.groupbyProjectUserfield = response.data;
+            $scope.projectuser = response.data[0].value;
+          
+              }, function(error){
+        });
+
+            dropdownListService.getStatusCountAndHours().then(function(response){
+            $scope.counthoursfield = response.data;
+            $scope.counthours = response.data[0].value;
+          
+              }, function(error){
+        });
+         
+        }
+
+      $scope.loadAllStatusGraph = function(time, projectuser, counthours){
+
+        if(time == null || time == 'undefined')
+                 time = "Weekly";
+        if(projectuser == null || projectuser == 'undefined')
+                 projectuser = "Project";
+        if(counthours == null || counthours == 'undefined')
+                 counthours = "Status Hours";
+        $scope.updateData = {
+                projectList :[],
+                userList : [],
+                projectUser :projectuser,
+                countHours : counthours
+        }
+        metricsService.getAllStatusAnalytics($scope.updateData,time).then(function (response) {
             
             $scope.labels = [];
-            
             $scope.series = [];
             $scope.data = [];
-             if (response.success) {
-                 labels = response.data.DateList.reverse();
-                  $scope.labels = labels;
-                 angular.forEach(response.data.gridData, function(value, key) {
-                    
-                    $scope.series.push(value.projectName);
-                    var temp = [];
-                    angular.forEach(value.projectUserCountStatsDTOList, function(value, key) {
 
-                                    temp.push(value.hours);
-                     });
-                    $scope.data.push(temp);
-                     });
+             if (response.success) {
+        
+                      $scope.labels = response.data.labels;
+                      $scope.series = response.data.series;
+                      $scope.data = response.data.data;
              }
              
          });
      }
-	 
+
+    $scope.groupBychange = function(timePeriod, projectuser, counthours) {
+
+             $scope.loadAllStatusGraph(timePeriod, projectuser, counthours);
+    }
+ 
 	 	//nav active
      $scope.setClickedRow = function(index){  //function that sets the value of selectedRow to current index
      $scope.selectedRow = index;
@@ -92,5 +107,10 @@
      $scope.selectedUser = index;
 	 $scope.selectedRow = null;
   };
-	 
+  
+    
+	//dropdown
+	$scope.project = ["Projects", "Users"];
+  
+	$scope.hours = ["Status Count", "Status Hours"];
     });

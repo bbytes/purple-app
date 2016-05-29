@@ -39,10 +39,9 @@
         				 $state.go("user-mgr");
          			}
          		}).error(function() {
-         			deferred.reject({
-         				'success' : false,
-         				'msg' : 'Oops! Something went wrong. Please try again later.'
-         			});
+         			deferred.reject(response);
+                    appNotifyService.error('The link is expired');
+                     $state.go("login");
          		});
 
          		return deferred.promise;

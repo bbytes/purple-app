@@ -23,7 +23,7 @@
 		  <ul ng-show="userRole == 'ADMIN'"  class="{{ navstatusClass }} nav-left" ng-controller="navCtrl">
 		   <li class="{{ statusClass }}"><a href="status" ng-class="{ active: isActive('/status') }">status</a></li>
 		   <li class="{{ dashboardClass }}"><a href="dashboard" ng-class="{ active: isActive('/dashboard') }">timeline</a></li>
-           <li class="{{ dashboardClass }}"><a href="graph" ng-class="{ active: isActive('/graph') }">metrics</a></li>	
+           <li class="{{ dashboardClass }}"><a href="metrics" ng-class="{ active: isActive('/metrics') }">metrics</a></li>	
            <li class="{{ settingClass }}"><a href="settings" ng-class="{ active: isActive('/settings') }">settings</a></li>	
      	   
           </ul>
@@ -31,7 +31,6 @@
 		  <ul ng-show="userRole == 'NORMAL'" class="{{ navstatusClass }} nav-left" ng-controller="navCtrl">
 		   <li class="{{ statusClass }}"><a href="status" ng-class="{ active: isActive('/status') }">status</a></li>
 		   <li class="{{ dashboardClass }}"><a href="dashboard" ng-class="{ active: isActive('/dashboard') }">timeline</a></li>
-           <li class="{{ dashboardClass }}"><a href="graph" ng-class="{ active: isActive('/graph') }">metrics</a></li>	
            <li class="{{ settingClass }}"><a href="settings" ng-class="{ active: isActive('/settings') }">settings</a></li>	   
           </ul>
 		  

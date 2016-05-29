@@ -1822,7 +1822,7 @@ md-content {
 	display: block;
     width: 100%;
     height: 34px;
-    padding: 6px 9px;
+    padding: 6px 25px;
     font-size: 14px;
     line-height: 1.42857143;
     color: #898989 !important;
@@ -1847,7 +1847,7 @@ md-content {
     display: block;
     width: 100%;
     height: 34px;
-    padding: 6px 9px;
+    padding: 6px 25px;
     font-size: 14px;
     line-height: 1.42857143;
     color: #898989 !important;
@@ -1999,13 +1999,15 @@ md-sidenav ul {
 		font-size: 23px;
         color: #fff;
 	}
-	
+	.mobile-version{
+		display:none;
+	}
 }
 @media not all and (min-width: 590px) {
 	.ng-pageslide{
 		width:70%;
-	}
-  
+	} 
+ 
 }
 .ng-pageslide{
 	top: 53px !important;
@@ -2015,6 +2017,9 @@ md-sidenav ul {
 	.tiny{
 		display:none !important;
 	}
+	.desktop-version{
+	 display:none;
+ }	
 }
 
 #main{
@@ -2139,4 +2144,3 @@ position: fixed;
 .isOpen{
   overflow:hidden;
 }
-

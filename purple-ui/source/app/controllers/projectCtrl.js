@@ -18,15 +18,7 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 	$scope.createProject = function(project) {
 
 		if (!project) {
-        	appNotifyService.error('Please enter a valid Project name and TimePreference');
-            return false;
-        }
-        else if(!project.projectName){
         	appNotifyService.error('Please enter a valid Project name');
-            return false;
-        }
-        else if(!project.timePreference){
-        	appNotifyService.error('Please select your TimePreference for reminder emails.');
             return false;
         }
 		$scope.userEmailsList = [];
@@ -191,10 +183,6 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 	// Update the project
 	$scope.updateProject = function(project) {
 
-		if(!project.timePreference){
-        	appNotifyService.error('Please select a valid TimePreference');
-            return false;
-        }
 		$scope.updateuserEmailsList = [];
 		angular.forEach($scope.orgUserList, function(user) {
 			$scope.updateuserEmailsList.push(user.email);

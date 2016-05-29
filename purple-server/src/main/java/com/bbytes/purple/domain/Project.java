@@ -37,19 +37,15 @@ public class Project {
 	@DBRef(lazy = true)
 	private List<User> user = new ArrayList<>();
 
-	@Field("time_preference")
-	private String timePreference;
-
 	@CreatedDate
 	private DateTime creationDate;
 
 	@LastModifiedDate
 	private DateTime lastModified;
 
-	public Project(String projectName, String timePreference) {
+	public Project(String projectName) {
 
 		this.projectName = projectName;
-		this.timePreference = timePreference;
 	}
 
 }

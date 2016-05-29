@@ -20,5 +20,9 @@ public class UsersAndProjectsDTO implements Serializable {
 	List<String> projectList = Collections.<String> emptyList();
 
 	List<String> userList = Collections.<String> emptyList();
+	
+	private String projectUser;
+
+	private String countHours;
 
 }

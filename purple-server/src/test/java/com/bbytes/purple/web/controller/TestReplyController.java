@@ -59,7 +59,7 @@ public class TestReplyController extends PurpleWebBaseApplicationTests {
 		normalUser = new User("akshay", "akshay@gmail.com");
 		normalUser.setOrganization(org);
 
-		project = new Project("purple", "4pm");
+		project = new Project("purple");
 		project.setOrganization(org);
 
 		status1 = new Status("Test1", "Test2", 3, new Date());

@@ -49,7 +49,7 @@ public class TestProjectController extends PurpleWebBaseApplicationTests {
 		adminUser.setUserRole(UserRole.ADMIN_USER_ROLE);
 		adminUser.setOrganization(org);
 
-		project1 = new Project("purple", "4pm");
+		project1 = new Project("purple");
 		project1.setOrganization(org);
 
 		TenancyContextHolder.setTenant(org.getOrgId());

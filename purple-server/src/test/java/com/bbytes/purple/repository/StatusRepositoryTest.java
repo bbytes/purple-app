@@ -44,10 +44,10 @@ public class StatusRepositoryTest extends PurpleBaseApplicationTests {
 		testUser2.setOrganization(org1);
 		testUser2.setUserRole(UserRole.ADMIN_USER_ROLE);
 
-		project1 = new Project("web", "2pm");
+		project1 = new Project("web");
 		project1.setOrganization(org1);
 		
-		project2 = new Project("web22", "22pm");
+		project2 = new Project("web22");
 		project2.setOrganization(org1);
 
 		status1 = new Status("testcase2", "testcase1", 8, DateTime.now().minusDays(8).toDate());

@@ -19,18 +19,6 @@
 					</div>
 				</div>
 
-				<div class="col-md-4">
-					<div class="form-group">
-						<label for="comment" class="settings">TIME PREFERENCE</label>
-						<div class="row">
-
-							<input type="text" size="8" class="form-control"
-								ng-model="project.timePreference" data-time-format="h:mm a"
-								data-autoclose="1" placeholder="Time" bs-timepicker required>
-						</div>
-					</div>
-				</div>
-
 				<div class="col-md-3">
 					<small>
 						<div class="add-user-icon">+</div>
@@ -87,14 +75,13 @@
 				</h4>
 			</div>
 			<div class="project-table" ng-init="loadAllProjects()">
-				<table ng-repeat="project in allprojects">
+				<table ng-repeat="project in allprojects  | orderBy:'projectName'">
 					<tr>
-						<td class="table-user">{{project.projectName}} <br /> <span
-							class="u-number">{{project.usersCount}} Users</span></td>
-						<td><img src="../../assets/img/time.png">
-							{{project.timePreference | date:'hh:mm a'}}</td>
-						<td><a href="#" ng-click="viewMembers(project.userList)"><img
-								src="../../assets/img/user.png"> View Member List</a></td>
+						<td class="table-user">{{project.projectName}} <br /> </td>
+						<td><a href="#" ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png">
+							{{project.usersCount}} Users</a></td>
+						<!-- <td><a href="#" ng-click="viewMembers(project.userList)"><img
+								src="../../assets/img/user.png"> View Member List</a></td> -->
 						<td style="float: right;"><a href="#" role="tab"
 							data-toggle="tab" ng-click="showEditPage(project.projectId)"><img
 								src="../../assets/img/edit.png"></a><a href="#"
@@ -133,18 +120,6 @@
 
 					</div>
 
-				</div>
-
-				<div class="col-md-4">
-					<div class="form-group">
-						<label for="comment" class="settings">TIME PREFERENCE</label>
-						<div class="row">
-
-							<input type="text" size="8" class="form-control"
-								data-time-format="h:mm:ss a" ng-model="data.timePreference"
-								data-autoclose="1" placeholder="Time" bs-timepicker required>
-						</div>
-					</div>
 				</div>
 
 				<div class="col-md-3">

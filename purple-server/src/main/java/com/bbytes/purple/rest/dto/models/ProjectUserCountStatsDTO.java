@@ -15,11 +15,10 @@ public class ProjectUserCountStatsDTO implements Serializable {
 
 	private static final long serialVersionUID = -4283248621429252655L;
 
-	private Double hours;
+	private String[] labels ;
 
-	private Integer month;
+	private String[] series;
 
-	private String date;
-
-	private String userName;
+	private String[][] data;
+	
 }

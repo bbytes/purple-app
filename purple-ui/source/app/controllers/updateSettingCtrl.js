@@ -1,14 +1,13 @@
     /**
      *  Update Status Controller
      */
-    rootApp.controller('updateStatusCtrl', function ($scope, $rootScope, $state,$q,$http,$window,$sessionStorage,appNotifyService) {
-    	
-    		$window.sessionStorage.token = $state.params.token;
+    rootApp.controller('updateSettingCtrl', function ($scope, $rootScope, $state,$q,$http,$window,$sessionStorage,appNotifyService) {
+        
+            $window.sessionStorage.token = $state.params.token;
           
              $rootScope.authToken = $state.params.token;
-             $rootScope.statusDate = $state.params.sd;
              
-         		var deferred = $q.defer();
+                var deferred = $q.defer();
                
                     $http({
                     method : 'GET',
@@ -21,16 +20,17 @@
 
                     $rootScope.userName = response.data.userName;
                     $rootScope.userRole = response.data.userRole.id;
+                    $rootScope.timePreference = response.data.timePreference;
 
                     var userInfo = {
                     email: $rootScope.loggedInUser,
                     name: $rootScope.userName,
                     userRoles:  $rootScope.userRole,
+                    timePreference :  $rootScope.timePreference,
                    };
               
                  $sessionStorage.userInfo =  userInfo;
-                  $state.go("status");
-
+                 $state.go("settings");
                     deferred.resolve(response);
                 }).error(function(response) {
                     deferred.reject(response);
@@ -38,6 +38,6 @@
                      $state.go("login");
                 });
 
-                
+                 
                  return deferred.promise;   
     });

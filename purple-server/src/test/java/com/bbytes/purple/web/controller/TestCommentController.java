@@ -49,7 +49,7 @@ public class TestCommentController extends PurpleWebBaseApplicationTests {
 				.build();
 
 		org = new Organization("Accenture", "Accenture IT Services");
-		project = new Project("purple", "4pm");
+		project = new Project("purple");
 		project.setOrganization(org);
 		status = new Status("purple", "reveal", 40, new Date());
 		status.setUser(user);

@@ -83,6 +83,7 @@ public class AdminService {
 				addUser.setOrganization(org);
 				addUser.setPassword(passwordHashService.encodePassword(GlobalConstants.DEFAULT_PASSWORD));
 				addUser.setStatus(User.PENDING);
+				addUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
 
 				boolean result = true;
 				try {
@@ -190,7 +191,8 @@ public class AdminService {
 
 		if (project != null) {
 			if (projectService.projectNameExist(project.getProjectName()))
-				throw new PurpleException("Project with given name '"+ project.getProjectName() +"' already exist", ErrorHandler.PROJECT_NOT_FOUND);
+				throw new PurpleException("Project with given name '" + project.getProjectName() + "' already exist",
+						ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				project = projectService.save(project);
 				for (User user : users) {
@@ -253,7 +255,6 @@ public class AdminService {
 				throw new PurpleException("Error while updating project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				Project updateProject = projectService.findByProjectId(projectId);
-				updateProject.setTimePreference(project.getTimePreference());
 				updateProject.setUser(project.getUser());
 				updatedProject = projectService.save(updateProject);
 				for (User user : updatedProject.getUser()) {

@@ -25,7 +25,6 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
-import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.TenantResolver;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
@@ -33,6 +32,7 @@ import com.bbytes.purple.repository.TenantResolverRepository;
 import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.NotificationService;
+import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
@@ -53,6 +53,9 @@ public class SchedulerService {
 
 	@Autowired
 	private AdminService adminService;
+
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private NotificationService notificationService;
@@ -90,10 +93,15 @@ public class SchedulerService {
 		}
 		for (String org : orgId) {
 			TenancyContextHolder.setTenant(org);
-			List<Project> allProjects = adminService.getAllProjects();
-			for (Project project : allProjects) {
+			List<User> allUsers = adminService.getAllUsers();
+			for (User user : allUsers) {
 
-				String timePreference = project.getTimePreference();
+				if (user.getTimePreference() == null) {
+					user.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
+					userService.save(user);
+				}
+
+				String timePreference = user.getTimePreference();
 
 				DateFormat outputFormat = new SimpleDateFormat(GlobalConstants.SCHEDULER_TIME_FORMAT);
 				DateFormat inputFormat = new SimpleDateFormat(GlobalConstants.SCHEDULER_DATE_FORMAT);
@@ -102,32 +110,34 @@ public class SchedulerService {
 				String outputTime = outputFormat.format(date);
 
 				DateTime now = DateTime.now();
-				LocalTime projectTime = new LocalTime(outputTime);
-				DateTime projectTimeDatetime = DateTime.now().withTime(projectTime);
+				LocalTime userTime = new LocalTime(outputTime);
+				DateTime userTimeDatetime = DateTime.now().withTime(userTime);
 
-				if (now.isBefore(projectTimeDatetime) && projectTimeDatetime.isBefore(now.plusMinutes(30))) {
+				if (now.isBefore(userTimeDatetime) && userTimeDatetime.isBefore(now.plusMinutes(30))) {
 					String hours = new SimpleDateFormat("HH").format(date);
 					String minutes = new SimpleDateFormat("mm").format(date);
 					DateTime dateTime = new DateTime().withHourOfDay(Integer.parseInt(hours));
 					dateTime = dateTime.withMinuteOfHour(Integer.parseInt(minutes));
-					for (User user : project.getUser()) {
-						List<String> emailList = new ArrayList<String>();
-						final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 30);
 
-						long currentDate = new Date().getTime();
-						int validHours = Integer.parseInt(configSettingService
-								.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable()) * 24;
+					List<String> emailList = new ArrayList<String>();
+					
+					long currentDate = new Date().getTime();
+					Integer validHours = Integer.parseInt(configSettingService
+							.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable()) * 24;
+					
+					final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), validHours);
 
-						Map<String, Object> emailBody = new HashMap<>();
-						emailBody.put(GlobalConstants.USER_NAME, user.getName());
-						emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.STATUS_URL + xauthToken
-								+ GlobalConstants.STATUS_DATE + currentDate);
-						emailBody.put(GlobalConstants.VALID_HOURS, validHours);
+					Map<String, Object> emailBody = new HashMap<>();
+					emailBody.put(GlobalConstants.USER_NAME, user.getName());
+					emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.STATUS_URL + xauthToken
+							+ GlobalConstants.STATUS_DATE + currentDate);
+					emailBody.put(GlobalConstants.SETTING_LINK, baseUrl + GlobalConstants.SETTING_URL + xauthToken);
+					emailBody.put(GlobalConstants.VALID_HOURS, validHours);
 
-						emailList.add(user.getEmail());
-						taskScheduler.schedule(new EmailSendJob(emailBody, emailList, notificationService),
-								dateTime.toDate());
-					}
+					emailList.add(user.getEmail());
+					taskScheduler.schedule(new EmailSendJob(emailBody, emailList, notificationService),
+							dateTime.toDate());
+
 				}
 			}
 		}

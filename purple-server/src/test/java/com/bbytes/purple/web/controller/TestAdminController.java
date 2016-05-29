@@ -276,7 +276,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		List<User> userList = new ArrayList<User>();
 		userList.add(normalUser);
 
-		Project project1 = new Project("purple", "4pm");
+		Project project1 = new Project("purple");
 		project1.setOrganization(org);
 		project1.setUser(userList);
 		projectService.save(project1);
@@ -333,7 +333,6 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 		ProjectDTO requestProjectDTO = new ProjectDTO();
 		requestProjectDTO.setProjectName("purple");
-		requestProjectDTO.setTimePreference("6.00 pm");
 		requestProjectDTO.setUsers(userList);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -352,7 +351,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testCreateProjectFailedwithSameName() throws Exception {
 
-		Project project = new Project("purple", "4pm");
+		Project project = new Project("purple");
 		project.setOrganization(org);
 		projectService.save(project);
 
@@ -365,7 +364,6 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 		ProjectDTO requestProjectDTO = new ProjectDTO();
 		requestProjectDTO.setProjectName("purple");
-		requestProjectDTO.setTimePreference("6.00 pm");
 		requestProjectDTO.setUsers(userList);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -395,7 +393,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testDeleteProjectPasses() throws Exception {
 
-		Project project = new Project("purple", "4pm");
+		Project project = new Project("purple");
 		project.setOrganization(org);
 		projectService.save(project);
 
@@ -444,12 +442,12 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		userList.add(user1);
 		userList.add(user2);
 
-		Project project1 = new Project("purple", "4pm");
+		Project project1 = new Project("purple");
 		project1.setOrganization(org);
 		project1.setUser(userList);
 		projectService.save(project1);
 
-		Project project2 = new Project("reveal", "4pm");
+		Project project2 = new Project("reveal");
 		project2.setOrganization(org);
 		projectService.save(project2);
 
@@ -474,7 +472,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testGetOneProjectsPasses() throws Exception {
 
-		Project project1 = new Project("purple", "4pm");
+		Project project1 = new Project("purple");
 		project1.setOrganization(org);
 		projectService.save(project1);
 
@@ -515,7 +513,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testUpdateProjectsPasses() throws Exception {
 
-		Project project1 = new Project("purple", "4pm");
+		Project project1 = new Project("purple");
 		project1.setOrganization(org);
 		projectService.save(project1);
 
@@ -530,7 +528,6 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 		ProjectDTO requestProjectDTO = new ProjectDTO();
 		requestProjectDTO.setProjectName("web");
-		requestProjectDTO.setTimePreference("6.00 pm");
 		requestProjectDTO.setUsers(userList);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -549,7 +546,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testUpdateProjectFailedwithNotExitID() throws Exception {
 
-		Project project1 = new Project("purple", "4pm");
+		Project project1 = new Project("purple");
 		project1.setOrganization(org);
 		projectService.save(project1);
 
@@ -563,7 +560,6 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		userList.add(user1.getEmail());
 
 		ProjectDTO requestProjectDTO = new ProjectDTO();
-		requestProjectDTO.setTimePreference("6.00 pm");
 		requestProjectDTO.setUsers(userList);
 
 		ObjectMapper mapper = new ObjectMapper();

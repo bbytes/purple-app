@@ -37,12 +37,20 @@ public class GlobalConstants {
 	public static final String USER_NAME = "name";
 
 	public static final String SUBSCRIPTION_DATE = "subscriptionDate";
+	
+	public static final String COMMENT_DESC = "comment_desc";
+	
+	public static final String REPLY_DESC = "reply_desc";
 
 	public static final String ACTIVATION_LINK = "activationLink";
+
+	public static final String SETTING_LINK = "settingLink";
 
 	public static final String TOKEN_URL = "/activateAccount?token=";
 
 	public static final String STATUS_URL = "/updatestatus?token=";
+
+	public static final String SETTING_URL = "/updateSetting?token=";
 
 	public static final String STATUS_DATE = "&sd=";
 
