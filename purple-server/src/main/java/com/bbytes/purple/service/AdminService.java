@@ -249,19 +249,28 @@ public class AdminService {
 
 	public Project updateProject(String projectId, Project project) throws PurpleException {
 
-		Project updatedProject = null;
+		Project newProject = null;
 		if (project != null) {
 			if (!projectService.projectIdExist(projectId))
 				throw new PurpleException("Error while updating project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				Project updateProject = projectService.findByProjectId(projectId);
+				for (User userTobeRemoved : updateProject.getUser()) {
+					userTobeRemoved.getProjects().remove(updateProject);
+					userService.save(userTobeRemoved);
+				}
 				updateProject.setUser(project.getUser());
-				updatedProject = projectService.save(updateProject);
-				for (User user : updatedProject.getUser()) {
+				newProject = projectService.save(updateProject);
+				for (User user : updateProject.getUser()) {
 					List<Project> projectList = new ArrayList<Project>();
-					List<Project> list = new ArrayList<Project>();
-					list = user.getProjects();
-					projectList.add(updatedProject);
+					List<Project> list = user.getProjects();
+					boolean flag = true;
+					for (Project getProject : list) {
+						if (getProject.getProjectId().equals(newProject.getProjectId()))
+							flag = false;
+					}
+					if (flag)
+						projectList.add(newProject);
 					list.addAll(projectList);
 					user.setProjects(list);
 					userService.save(user);
@@ -271,6 +280,6 @@ public class AdminService {
 			}
 		} else
 			throw new PurpleException("Can not find empty project", ErrorHandler.PROJECT_NOT_FOUND);
-		return updatedProject;
+		return newProject;
 	}
 }
