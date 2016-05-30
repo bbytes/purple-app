@@ -246,7 +246,7 @@ public class DataModelToDTOConversionService {
 		return responseData;
 	}
 
-	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalytics(
+	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalyticsbyProject(
 			List<ProjectUserCountStats> projectUserCountStatsList, UsersAndProjectsDTO usersAndProjectsDTO) {
 
 		ProjectUserCountStatsDTO projectUserCountStatsDTO = new ProjectUserCountStatsDTO();
@@ -254,7 +254,7 @@ public class DataModelToDTOConversionService {
 		List<String> series = new LinkedList<>();
 
 		Map<String, String> mapProjectDateToStatusHrCount = new HashMap<>();
-		
+
 		for (ProjectUserCountStats projectUsesrCountStats : projectUserCountStatsList) {
 			if (!labels.contains(projectUsesrCountStats.getDate()))
 				labels.add(projectUsesrCountStats.getDate());
@@ -262,15 +262,14 @@ public class DataModelToDTOConversionService {
 			if (!series.contains(projectUsesrCountStats.getProject().getProjectName()))
 				series.add(projectUsesrCountStats.getProject().getProjectName());
 
-			if(usersAndProjectsDTO.getCountHours().equals(STATUS_HOURS)){
-					mapProjectDateToStatusHrCount.put(
-					projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
-					projectUsesrCountStats.getHours().toString());
-			}
-			else{
+			if (usersAndProjectsDTO.getCountHours().equals(STATUS_HOURS)) {
 				mapProjectDateToStatusHrCount.put(
-					projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
-					projectUsesrCountStats.getStatusCount().toString());
+						projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
+						projectUsesrCountStats.getHours().toString());
+			} else {
+				mapProjectDateToStatusHrCount.put(
+						projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
+						projectUsesrCountStats.getStatusCount().toString());
 			}
 		}
 		Collections.sort(labels, Collections.reverseOrder());
@@ -280,6 +279,50 @@ public class DataModelToDTOConversionService {
 			int j = 0;
 			for (String date : labels) {
 				data[i][j] = mapProjectDateToStatusHrCount.get(projectName + ":" + date);
+				j++;
+			}
+			i++;
+		}
+		projectUserCountStatsDTO.setData(data);
+		projectUserCountStatsDTO.setSeries(series.toArray(new String[series.size()]));
+		projectUserCountStatsDTO.setLabels(labels.toArray(new String[labels.size()]));
+
+		return projectUserCountStatsDTO;
+	}
+
+	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalyticsbyUser(
+			List<ProjectUserCountStats> projectUserCountStatsList, UsersAndProjectsDTO usersAndProjectsDTO) {
+
+		ProjectUserCountStatsDTO projectUserCountStatsDTO = new ProjectUserCountStatsDTO();
+		List<String> labels = new LinkedList<>();
+		List<String> series = new LinkedList<>();
+
+		Map<String, String> mapProjectDateToStatusHrCount = new HashMap<>();
+
+		for (ProjectUserCountStats projectUsesrCountStats : projectUserCountStatsList) {
+			if (!labels.contains(projectUsesrCountStats.getDate()))
+				labels.add(projectUsesrCountStats.getDate());
+
+			if (!series.contains(projectUsesrCountStats.getUser().getName()))
+				series.add(projectUsesrCountStats.getUser().getName());
+
+			if (usersAndProjectsDTO.getCountHours().equals(STATUS_HOURS)) {
+				mapProjectDateToStatusHrCount.put(
+						projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
+						projectUsesrCountStats.getHours().toString());
+			} else {
+				mapProjectDateToStatusHrCount.put(
+						projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
+						projectUsesrCountStats.getStatusCount().toString());
+			}
+		}
+		Collections.sort(labels, Collections.reverseOrder());
+		String[][] data = new String[series.size()][labels.size()];
+		int i = 0;
+		for (String userName : series) {
+			int j = 0;
+			for (String date : labels) {
+				data[i][j] = mapProjectDateToStatusHrCount.get(userName + ":" + date);
 				j++;
 			}
 			i++;

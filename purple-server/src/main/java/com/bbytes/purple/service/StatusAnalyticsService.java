@@ -64,9 +64,9 @@ public class StatusAnalyticsService {
 	/**
 	 * Group by User , day wise with date filter.
 	 */
-	public Iterable<ProjectUserCountStats> getUserPerDayCountHours(Date startDate, Date endDate) {
+	public Iterable<ProjectUserCountStats> getUserPerDayCountHours(List<User> users, Date startDate, Date endDate) {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
-				match(Criteria.where("dateTime").gte(startDate).lte(endDate)),
+				match(Criteria.where("dateTime").gte(startDate).lte(endDate).and("user").in(users)),
 				project().and("dateTime").extractDayOfYear().as("dayOfYear").and("hours").as("hours").and("user")
 						.as("user"),
 				group("user", "dayOfYear").sum("hours").as("hours").count().as("status_count"),

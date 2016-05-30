@@ -141,7 +141,22 @@ public class UserService extends AbstractService<User, String> {
 		}
 		return allUsers;
 	}
-	
+
+	public Set<User> getUsersbyProjects(List<Project> projectList) throws PurpleException {
+
+		Set<User> allUsers = new HashSet<User>();
+		try {
+			for (Project project : projectList) {
+				Project getProject = projectService.findByProjectId(project.getProjectId());
+				allUsers.addAll(getProject.getUser());
+			}
+
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_PROJECT_FAILED);
+		}
+		return allUsers;
+	}
+
 	public List<Project> getAllUsersbyProjectMap(List<String> projectList) throws PurpleException {
 
 		List<Project> allProjects = new LinkedList<Project>();
