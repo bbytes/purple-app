@@ -195,8 +195,15 @@ $scope.loadTimePeriod = function(){
 	$scope.promise = null;
 		 $rootScope.itemChoose = project;
 
-				$scope.updateData.projectList = [project.projectId];
+			$scope.updateData.projectList = [project.projectId];
 				$scope.updateData.userList = [];
+
+
+			  projectService.getprojectsUsers($scope.updateData.projectList).then(function (response) {
+     	            if (response.success) {
+     	            	$scope.projectUsers = response.data.gridData;
+     	            }
+     	            });
 
                     statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
                      if (response.success) {
