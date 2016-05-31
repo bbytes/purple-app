@@ -2144,3 +2144,8 @@ position: fixed;
 .isOpen{
   overflow:hidden;
 }
+.glyphicon-remove:before {
+    content: "\f00d" !important;
+	cursor:pointer;
+	color:#222;
+}
