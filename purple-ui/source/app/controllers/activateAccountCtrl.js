@@ -29,7 +29,7 @@
               
                 $sessionStorage.userInfo =  userInfo;
          			deferred.resolve(response);
-         			if(response.data.accountInitialise = true && $sessionStorage.userInfo.userRoles == "NORMAL")
+         			if(response.data.accountInitialise = true && ($sessionStorage.userInfo.userRoles == "NORMAL" || $sessionStorage.userInfo.userRoles == "MANAGER"))
          				{
          				 appNotifyService.success('Your account has been activated successfully. Redirecting to settings.');
          				 $state.go("settings");

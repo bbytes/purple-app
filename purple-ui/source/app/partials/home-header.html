@@ -17,10 +17,10 @@
           <ul class="{{ navClass }} nav-left" ng-controller="navCtrl">
 		   <li><a href="user-mgr" ng-class="{ active: isActive('/user-mgr') }">users</a></li>
 		   <li><a href="projects" ng-class="{ active: isActive('/projects') }">projects</a></li>
-		   <li><a href="admin-settings" ng-class="{ active: isActive('/admin-settings') }">admin settings</a></li>
+		   <li ng-show="userRole == 'ADMIN'"><a href="admin-settings" ng-class="{ active: isActive('/admin-settings') }">admin settings</a></li>
 		   <li><a href="settings" ng-class="{ active: isActive('/settings') }">settings</a></li>
           </ul>
-		  <ul ng-show="userRole == 'ADMIN'"  class="{{ navstatusClass }} nav-left" ng-controller="navCtrl">
+		  <ul ng-show="userRole == 'ADMIN' || userRole == 'MANAGER'"  class="{{ navstatusClass }} nav-left" ng-controller="navCtrl">
 		   <li class="{{ statusClass }}"><a href="status" ng-class="{ active: isActive('/status') }">status</a></li>
 		   <li class="{{ dashboardClass }}"><a href="dashboard" ng-class="{ active: isActive('/dashboard') }">timeline</a></li>
            <li class="{{ dashboardClass }}"><a href="metrics" ng-class="{ active: isActive('/metrics') }">metrics</a></li>	
@@ -50,8 +50,20 @@
 						<li class="dropdown-header">Settings</li>
 						<li><a href="user-mgr"><i class="fa fa-user" aria-hidden="true"></i>Users</a></li>
 						<li><a href="projects"><i class="fa fa-server" aria-hidden="true"></i>Projects</a></li>
-						<!-- <li><a href="settings"><i class="fa fa-cog" aria-hidden="true"></i> SETTINGS</a></li> -->
 						<li><a href="admin-settings"><i class="fa fa-cog" aria-hidden="true"></i>Admin</a></li>
+						<li class="nav-divider"></li>
+						<li><a href="#" ng-controller="logoutCtrl"
+							ng-click="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
+
+
+					</ul>
+						<ul ng-show="userRole == 'MANAGER'" class="dropdown-menu dropdown-menu-right" role="menu"
+						aria-labelledby="dropdownMenu">
+						<li><a href="settings"><i class="fa fa-user" aria-hidden="true"></i>{{userName}}</a></li>
+						<li class="nav-divider"></li>
+						<li class="dropdown-header">Settings</li>
+						<li><a href="user-mgr"><i class="fa fa-user" aria-hidden="true"></i>Users</a></li>
+						<li><a href="projects"><i class="fa fa-server" aria-hidden="true"></i>Projects</a></li>
 						<li class="nav-divider"></li>
 						<li><a href="#" ng-controller="logoutCtrl"
 							ng-click="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
