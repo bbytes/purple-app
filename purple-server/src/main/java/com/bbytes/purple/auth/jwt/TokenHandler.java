@@ -59,7 +59,7 @@ public final class TokenHandler {
 	}
 
 	/**
-	 * Parse the jst token and extract the token data ie user and tenant id
+	 * Parse the jst token and extract the token data ie user 
 	 * 
 	 * @param jwtStringToken
 	 * @return
