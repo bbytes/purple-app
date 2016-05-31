@@ -300,7 +300,7 @@ public class StatusController {
 		}
 		logger.debug("All Status Analytics are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, projectUserCountStatsDTO,
-				SuccessHandler.GET_STATUS_SUCCESS);
+				SuccessHandler.GET_STATUS_ANALYTICS_SUCCESS);
 
 		return statusReponse;
 	}
