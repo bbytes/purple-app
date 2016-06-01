@@ -1,5 +1,7 @@
 package com.bbytes.purple.web.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -78,6 +80,7 @@ public class AdminController {
 
 		final String subject = GlobalConstants.EMAIL_INVITE_SUBJECT;
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 		Organization org = userService.getLoggedInUser().getOrganization();
 		User addUser = new User(userDTO.getUserName(), userDTO.getEmail().toLowerCase());
@@ -88,12 +91,13 @@ public class AdminController {
 
 		User user = adminService.addUsers(addUser);
 		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 720);
+		String postDate = dateFormat.format(new Date());
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(user.getEmail());
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 

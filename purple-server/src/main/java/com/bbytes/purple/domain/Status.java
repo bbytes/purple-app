@@ -2,7 +2,6 @@ package com.bbytes.purple.domain;
 
 import java.util.Date;
 
-import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -50,10 +49,10 @@ public class Status implements Comparable<Status> {
 	private User user;
 	
 	@CreatedDate
-	private DateTime creationDate;
+	private Date creationDate;
 	
 	@LastModifiedDate
-	private DateTime lastModified;
+	private Date lastModified;
 
 	public Status(String workingOn, String workedOn, double hours, Date dateTime) {
 

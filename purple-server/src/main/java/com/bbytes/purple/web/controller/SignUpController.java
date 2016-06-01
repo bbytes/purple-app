@@ -1,5 +1,7 @@
 package com.bbytes.purple.web.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -70,8 +72,9 @@ public class SignUpController {
 		// we assume the angular layer will do empty/null org name , user email
 		// etc.. validation
 		final String SIGN_UP_SUCCESS_MSG = "Activation link is successfully sent to your register email address";
-		final String subject = GlobalConstants.EMAIL_ACTIVATION_SUBJECT;
-		final String template = GlobalConstants.EMAIL_ACTIVATION_TEMPLATE;
+		final String subject = GlobalConstants.EMAIL_SIGNUP_SUBJECT;
+		final String template = GlobalConstants.EMAIL_SIGNUP_TEMPLATE;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
 
@@ -87,10 +90,11 @@ public class SignUpController {
 		registrationService.signUp(organization, user);
 
 		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(signUpRequestDTO.getEmail().toLowerCase(), 720);
+		String postDate = dateFormat.format(new Date());
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 		
 		emailService.sendEmail(emailList, emailBody, subject, template);
