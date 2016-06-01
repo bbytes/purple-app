@@ -35,6 +35,8 @@ public class GlobalConstants {
 	public static final String EMAIL_FORGOT_PASSWORD_TEMPLATE = "email-text-forgot-password.html";
 
 	public static final String USER_NAME = "name";
+	
+	public static final String CURRENT_DATE = "current_date";
 
 	public static final String SUBSCRIPTION_DATE = "subscriptionDate";
 	

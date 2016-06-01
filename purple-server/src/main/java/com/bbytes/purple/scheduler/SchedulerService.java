@@ -105,6 +105,7 @@ public class SchedulerService {
 
 				DateFormat outputFormat = new SimpleDateFormat(GlobalConstants.SCHEDULER_TIME_FORMAT);
 				DateFormat inputFormat = new SimpleDateFormat(GlobalConstants.SCHEDULER_DATE_FORMAT);
+				DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 				Date date = inputFormat.parse(timePreference);
 				String outputTime = outputFormat.format(date);
@@ -125,10 +126,13 @@ public class SchedulerService {
 					Integer validHours = Integer.parseInt(configSettingService
 							.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable()) * 24;
 					
+					String postDate = dateFormat.format(new Date());
+					
 					final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), validHours);
 
 					Map<String, Object> emailBody = new HashMap<>();
 					emailBody.put(GlobalConstants.USER_NAME, user.getName());
+					emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
 					emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.STATUS_URL + xauthToken
 							+ GlobalConstants.STATUS_DATE + currentDate);
 					emailBody.put(GlobalConstants.SETTING_LINK, baseUrl + GlobalConstants.SETTING_URL + xauthToken);
