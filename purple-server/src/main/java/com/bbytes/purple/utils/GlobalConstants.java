@@ -18,7 +18,7 @@ public class GlobalConstants {
 
 	public static final String EMAIL_REPLY_SUBJECT = "Replied on your Comment";
 
-	public static final String SCHEDULER_SUBJECT = "Online Stand-up Reminder for purple App";
+	public static final String SCHEDULER_SUBJECT = "Online Stand-up Reminder for Purple App";
 
 	public static final String FORGOT_PASSWORD_SUBJECT = "Forgot password for Purple APP";
 
@@ -28,7 +28,7 @@ public class GlobalConstants {
 
 	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
 
-	public static final String COMMENT_EMAIL_TEMPLATE = "email-text-comment.html";
+	public static final String COMMENT_EMAIL_TEMPLATE = "email-simple.html";
 
 	public static final String REPLY_EMAIL_TEMPLATE = "email-text-reply.html";
 
