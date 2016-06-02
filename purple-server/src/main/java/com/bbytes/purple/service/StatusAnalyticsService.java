@@ -70,7 +70,7 @@ public class StatusAnalyticsService {
 				project().and("dateTime").extractDayOfYear().as("dayOfYear").and("hours").as("hours").and("user")
 						.as("user"),
 				group("user", "dayOfYear").sum("hours").as("hours").count().as("status_count"),
-				sort(Direction.DESC, "status_count"));
+				sort(Direction.ASC, "dayOfYear").and(Direction.DESC, "status_count"));
 
 		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
 				ProjectUserCountStats.class);
@@ -104,7 +104,7 @@ public class StatusAnalyticsService {
 				project().and("dateTime").extractDayOfYear().as("dayOfYear") //
 						.and("hours").as("hours").and("project").as("project"),
 				group("project", "dayOfYear").sum("hours").as("hours").count().as("status_count"),
-				sort(Direction.DESC, "status_count"));
+				sort(Direction.ASC, "dayOfYear").and(Direction.DESC, "status_count"));
 
 		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
 				ProjectUserCountStats.class);
@@ -169,7 +169,7 @@ public class StatusAnalyticsService {
 				project().and("dateTime").extractMonth().as("month").and("hours").as("hours").and("project")
 						.as("project"),
 				group("project", "month").sum("hours").as("hours").count().as("status_count"),
-				sort(Direction.DESC, "status_count"));
+				sort(Direction.ASC, "month").and(Direction.DESC, "status_count"));
 
 		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
 				ProjectUserCountStats.class);
@@ -185,7 +185,7 @@ public class StatusAnalyticsService {
 				project().and("dateTime").extractMonth().as("month").and("hours").as("hours").and("project")
 						.as("project"),
 				group("project", "month").sum("hours").as("hours").count().as("status_count"),
-				sort(Direction.DESC, "status_count"));
+				sort(Direction.ASC, "month").and(Direction.DESC, "status_count"));
 
 		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
 				ProjectUserCountStats.class);

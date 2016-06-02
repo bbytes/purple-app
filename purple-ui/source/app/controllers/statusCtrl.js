@@ -3,7 +3,7 @@
  */
 rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		$sessionStorage, dropdownListService, statusService, projectService, appNotifyService,
-		$window, $location, settingsService, $filter) {
+		$window, $location, settingsService, $filter, cfpLoadingBar) {
 			
 	$rootScope.bodyClass = 'body-standalone1';
 	$rootScope.navClass = 'nav-control';

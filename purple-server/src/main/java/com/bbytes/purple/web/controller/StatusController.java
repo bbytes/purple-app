@@ -267,6 +267,7 @@ public class StatusController {
 
 		User user = userService.getLoggedInUser();
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
+		String aggrType = TimePeriod.valueOf(timePeriod).getAggrType();
 
 		Date[] startEndDates = statusService.getStartDateEndDate(timePeriodValue);
 		Date startDate = startEndDates[0];
@@ -277,26 +278,40 @@ public class StatusController {
 		List<User> allUsers = new ArrayList<User>();
 		allUsers.addAll(users);
 
+		Iterable<ProjectUserCountStats> result=null;
+		
 		if (usersAndProjectsDTO.getProjectUser().equals(PROJECT)) {
-			Iterable<ProjectUserCountStats> result = statusAnalyticsService
-					.getProjectPerDayCountHours(user.getProjects(), startDate, endDate);
+			if (aggrType.equals("day")) {
+				result = statusAnalyticsService.getProjectPerDayCountHours(user.getProjects(), startDate, endDate);
+			} else {
+				result = statusAnalyticsService.getProjectPerMonthCountHours(user.getProjects(), startDate, endDate);
+			}
 			List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
-			for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
-				ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
-				statusAnalyticsList.add(projectUserCountStats);
+			if (result != null) {
+				for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
+					ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
+					statusAnalyticsList.add(projectUserCountStats);
+				}
 			}
 			projectUserCountStatsDTO = dataModelToDTOConversionService
-					.getResponseMapWithStatusAnalyticsbyProject(statusAnalyticsList, usersAndProjectsDTO);
+					.getResponseMapWithStatusAnalyticsbyProject(statusAnalyticsList, usersAndProjectsDTO.getCountHours(),aggrType);
 		} else {
-			Iterable<ProjectUserCountStats> result = statusAnalyticsService.getUserPerDayCountHours(allUsers, startDate,
-					endDate);
+			
+			if (aggrType.equals("day")) {
+				result = statusAnalyticsService.getUserPerDayCountHours(allUsers, startDate, endDate);
+			} else {
+				result = statusAnalyticsService.getUserPerMonthCountHours(allUsers, startDate, endDate);
+			}
+
 			List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
-			for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
-				ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
-				statusAnalyticsList.add(projectUserCountStats);
+			if (result != null) {
+				for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
+					ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
+					statusAnalyticsList.add(projectUserCountStats);
+				}
 			}
 			projectUserCountStatsDTO = dataModelToDTOConversionService
-					.getResponseMapWithStatusAnalyticsbyUser(statusAnalyticsList, usersAndProjectsDTO);
+					.getResponseMapWithStatusAnalyticsbyUser(statusAnalyticsList, usersAndProjectsDTO.getCountHours(),aggrType);
 		}
 		logger.debug("All Status Analytics are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, projectUserCountStatsDTO,

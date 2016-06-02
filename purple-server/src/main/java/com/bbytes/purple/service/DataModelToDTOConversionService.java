@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Comment;
@@ -31,7 +32,6 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.StatusResponseDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
-import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
@@ -248,32 +248,51 @@ public class DataModelToDTOConversionService {
 	}
 
 	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalyticsbyProject(
-			List<ProjectUserCountStats> projectUserCountStatsList, UsersAndProjectsDTO usersAndProjectsDTO) {
+			List<ProjectUserCountStats> projectUserCountStatsList, String groupBy, String aggrType) {
 
 		ProjectUserCountStatsDTO projectUserCountStatsDTO = new ProjectUserCountStatsDTO();
 		List<String> labels = new LinkedList<>();
 		List<String> series = new LinkedList<>();
 
 		Map<String, String> mapProjectDateToStatusHrCount = new HashMap<>();
+		if (aggrType.equals("day")) {
+			for (ProjectUserCountStats projectUsesrCountStats : projectUserCountStatsList) {
+				if (!labels.contains(projectUsesrCountStats.getDate()))
+					labels.add(projectUsesrCountStats.getDate());
 
-		for (ProjectUserCountStats projectUsesrCountStats : projectUserCountStatsList) {
-			if (!labels.contains(projectUsesrCountStats.getDate()))
-				labels.add(projectUsesrCountStats.getDate());
+				if (!series.contains(projectUsesrCountStats.getProject().getProjectName()))
+					series.add(projectUsesrCountStats.getProject().getProjectName());
 
-			if (!series.contains(projectUsesrCountStats.getProject().getProjectName()))
-				series.add(projectUsesrCountStats.getProject().getProjectName());
+				if (groupBy.equals(STATUS_HOURS)) {
+					mapProjectDateToStatusHrCount.put(projectUsesrCountStats.getProject().getProjectName() + ":"
+							+ projectUsesrCountStats.getDate(), projectUsesrCountStats.getHours().toString());
+				} else {
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getProject().getProjectName() + ":"
+									+ projectUsesrCountStats.getDate(),
+							projectUsesrCountStats.getStatusCount().toString());
+				}
+			}
+		} else {
+			for (ProjectUserCountStats projectUsesrCountStats : projectUserCountStatsList) {
+				if (!labels.contains(projectUsesrCountStats.getMonth().toString()))
+					labels.add(projectUsesrCountStats.getMonth().toString());
 
-			if (usersAndProjectsDTO.getCountHours().equals(STATUS_HOURS)) {
-				mapProjectDateToStatusHrCount.put(
-						projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
-						projectUsesrCountStats.getHours().toString());
-			} else {
-				mapProjectDateToStatusHrCount.put(
-						projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
-						projectUsesrCountStats.getStatusCount().toString());
+				if (!series.contains(projectUsesrCountStats.getProject().getProjectName()))
+					series.add(projectUsesrCountStats.getProject().getProjectName());
+
+				if (groupBy.equals(STATUS_HOURS)) {
+					mapProjectDateToStatusHrCount.put(projectUsesrCountStats.getProject().getProjectName() + ":"
+							+ projectUsesrCountStats.getMonth(), projectUsesrCountStats.getHours().toString());
+				} else {
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getProject().getProjectName() + ":"
+									+ projectUsesrCountStats.getMonth(),
+							projectUsesrCountStats.getStatusCount().toString());
+				}
 			}
 		}
-		Collections.sort(labels, Collections.reverseOrder());
+
 		String[][] data = new String[series.size()][labels.size()];
 		int i = 0;
 		for (String projectName : series) {
@@ -286,13 +305,18 @@ public class DataModelToDTOConversionService {
 		}
 		projectUserCountStatsDTO.setData(data);
 		projectUserCountStatsDTO.setSeries(series.toArray(new String[series.size()]));
+		
+		if (aggrType.equals("month")) {
+			labels = convertIntMonthToStringMonthLabels(labels);
+		}
+		
 		projectUserCountStatsDTO.setLabels(labels.toArray(new String[labels.size()]));
 
 		return projectUserCountStatsDTO;
 	}
 
 	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalyticsbyUser(
-			List<ProjectUserCountStats> projectUserCountStatsList, UsersAndProjectsDTO usersAndProjectsDTO) {
+			List<ProjectUserCountStats> projectUserCountStatsList, String groupBy, String aggrType) {
 
 		ProjectUserCountStatsDTO projectUserCountStatsDTO = new ProjectUserCountStatsDTO();
 		List<String> labels = new LinkedList<>();
@@ -300,24 +324,44 @@ public class DataModelToDTOConversionService {
 
 		Map<String, String> mapProjectDateToStatusHrCount = new HashMap<>();
 
-		for (ProjectUserCountStats projectUsesrCountStats : projectUserCountStatsList) {
-			if (!labels.contains(projectUsesrCountStats.getDate()))
-				labels.add(projectUsesrCountStats.getDate());
+		if (aggrType.equals("day")) {
+			for (ProjectUserCountStats projectUsesrCountStats : projectUserCountStatsList) {
+				if (!labels.contains(projectUsesrCountStats.getDate()))
+					labels.add(projectUsesrCountStats.getDate());
 
-			if (!series.contains(projectUsesrCountStats.getUser().getName()))
-				series.add(projectUsesrCountStats.getUser().getName());
+				if (!series.contains(projectUsesrCountStats.getUser().getName()))
+					series.add(projectUsesrCountStats.getUser().getName());
 
-			if (usersAndProjectsDTO.getCountHours().equals(STATUS_HOURS)) {
-				mapProjectDateToStatusHrCount.put(
-						projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
-						projectUsesrCountStats.getHours().toString());
-			} else {
-				mapProjectDateToStatusHrCount.put(
-						projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
-						projectUsesrCountStats.getStatusCount().toString());
+				if (groupBy.equals(STATUS_HOURS)) {
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
+							projectUsesrCountStats.getHours().toString());
+				} else {
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
+							projectUsesrCountStats.getStatusCount().toString());
+				}
+			}
+		} else {
+			for (ProjectUserCountStats projectUsesrCountStats : projectUserCountStatsList) {
+				if (!labels.contains(projectUsesrCountStats.getMonth().toString()))
+					labels.add(projectUsesrCountStats.getMonth().toString());
+
+				if (!series.contains(projectUsesrCountStats.getUser().getName()))
+					series.add(projectUsesrCountStats.getUser().getName());
+
+				if (groupBy.equals(STATUS_HOURS)) {
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getMonth(),
+							projectUsesrCountStats.getHours().toString());
+				} else {
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getMonth(),
+							projectUsesrCountStats.getStatusCount().toString());
+				}
 			}
 		}
-		Collections.sort(labels, Collections.reverseOrder());
+
 		String[][] data = new String[series.size()][labels.size()];
 		int i = 0;
 		for (String userName : series) {
@@ -330,9 +374,27 @@ public class DataModelToDTOConversionService {
 		}
 		projectUserCountStatsDTO.setData(data);
 		projectUserCountStatsDTO.setSeries(series.toArray(new String[series.size()]));
+		
+		if (aggrType.equals("month")) {
+			labels = convertIntMonthToStringMonthLabels(labels);
+		}
+		
 		projectUserCountStatsDTO.setLabels(labels.toArray(new String[labels.size()]));
 
 		return projectUserCountStatsDTO;
+	}
+
+	private List<String> convertIntMonthToStringMonthLabels(List<String> labels) {
+		List<String> monthlabels = new LinkedList<>();
+		for (String month : labels) {
+			monthlabels.add(getMonthName(Integer.parseInt(month)));
+		}
+		
+		return monthlabels;
+	}
+	
+	private String getMonthName(Integer month) {
+		return DateTime.now().withMonthOfYear(month).toString("MMM");
 	}
 
 	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses) {
@@ -367,5 +429,7 @@ public class DataModelToDTOConversionService {
 		}
 		return statusResponseDTOList;
 	}
+
+	
 
 }
