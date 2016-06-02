@@ -43,11 +43,13 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
         var settingObj = new Object();
         settingObj.timeZone = $scope.timeZone;
         settingObj.timePreference = $scope.timePreference;
+        settingObj.emailNotificationState = $scope.switchState;
 
  	settingsService.updateSetting(settingObj).then(function (response) {
      	 if (response.success = true) {
 
             $rootScope.timePreference = response.data.timePreference;
+            $rootScope.switchState = response.data.emailNotificationState;
      		 appNotifyService.success('Preference has been successfully updated.');   		 
          } 
 
@@ -57,9 +59,10 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
 
  };
  
-  $scope.setTime= function () {
+  $scope.loadSetting= function () {
 
 	   $scope.timePreference =  $rootScope.timePreference;
+       $scope.switchState =  $rootScope.switchState;
  };
     
 	$("[name='my-checkbox']").bootstrapSwitch();

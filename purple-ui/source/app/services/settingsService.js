@@ -30,15 +30,13 @@ rootApp.service('settingsService', function($rootScope, $http, $q, $window) {
 	
 	
 	this.updateSetting = function(settingObj) {
-       console.log(settingObj);
-		var timeZone = "IST";
-		var timePreference = settingObj.timePreference;
+		
 		var deferred = $q.defer();
 
 		$http({
 			method : 'POST',
 			url : $rootScope.baseUrl + 'api/v1/setting',
-			params : {"timeZone" : timeZone, "timePreference" : timePreference},
+			data : settingObj,
 			headers : {
 				'Content-Type' : 'application/json',
 

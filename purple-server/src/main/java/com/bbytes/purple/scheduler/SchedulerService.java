@@ -114,7 +114,7 @@ public class SchedulerService {
 				LocalTime userTime = new LocalTime(outputTime);
 				DateTime userTimeDatetime = DateTime.now().withTime(userTime);
 
-				if (now.isBefore(userTimeDatetime) && userTimeDatetime.isBefore(now.plusMinutes(30))) {
+				if (now.isBefore(userTimeDatetime) && userTimeDatetime.isBefore(now.plusMinutes(30)) && user.isEmailNotificationState()) {
 					String hours = new SimpleDateFormat("HH").format(date);
 					String minutes = new SimpleDateFormat("mm").format(date);
 					DateTime dateTime = new DateTime().withHourOfDay(Integer.parseInt(hours));

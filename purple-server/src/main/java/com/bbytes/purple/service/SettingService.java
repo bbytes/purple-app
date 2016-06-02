@@ -38,7 +38,7 @@ public class SettingService {
 		}
 	}
 
-	public User updateSetting(String timeZone,String timePreference, User user) throws PurpleException {
+	public User updateSetting(String timeZone,String timePreference,String emailNotificationState, User user) throws PurpleException {
 		if (user != null) {
 			if (!userService.userEmailExist(user.getEmail()))
 				throw new PurpleException("Error while updating setting", ErrorHandler.USER_NOT_FOUND);
@@ -48,6 +48,7 @@ public class SettingService {
 			try {
 				user.setTimeZone(timeZone);
 				user.setTimePreference(timePreference);
+				user.setEmailNotificationState(Boolean.parseBoolean(emailNotificationState));
 				user = userService.save(user);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_SETTING_FAILED);

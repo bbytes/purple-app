@@ -28,5 +28,7 @@ public class UserDTO implements Serializable {
 	private BaseDTO userRole;
 
 	private String timePreference;
+	
+	private boolean emailNotificationState;
 
 }

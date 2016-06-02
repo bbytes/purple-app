@@ -49,8 +49,8 @@ public class User {
 	@Field("time_preference")
 	private String timePreference;
 	
-	@Field("email_reminder")
-	private boolean emailReminder = true;
+	@Field("email_notification_state")
+	private boolean emailNotificationState = true;
 
 	@DBRef
 	private Organization organization;

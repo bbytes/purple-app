@@ -76,6 +76,7 @@ public class DataModelToDTOConversionService {
 		userDTO.setAccountInitialise(user.isAccountInitialise());
 		userDTO.setUserRole(convertToBaseDTO(user.getUserRole().getRoleName()));
 		userDTO.setTimePreference(user.getTimePreference());
+		userDTO.setEmailNotificationState(user.isEmailNotificationState());
 		return userDTO;
 	}
 

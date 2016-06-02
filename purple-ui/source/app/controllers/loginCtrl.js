@@ -22,6 +22,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                $rootScope.userName = response.data.userName;
                 $rootScope.authToken = response.headers["x-auth-token"];
                 $rootScope.timePreference = response.data.timePreference;
+                $rootScope.switchState = response.data.emailNotificationState;     
 
                var userInfo = {
                     authToken: response.headers["x-auth-token"],
@@ -29,6 +30,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                     name: $rootScope.userName,
                     userRoles:  $rootScope.userRole,
                     timePreference :  $rootScope.timePreference,
+                    emailNotificationState : $rootScope.switchState,    
                 };
               
             $sessionStorage.userInfo =  userInfo;

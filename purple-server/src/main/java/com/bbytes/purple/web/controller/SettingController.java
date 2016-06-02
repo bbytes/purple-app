@@ -24,6 +24,7 @@ import com.bbytes.purple.rest.dto.models.ConfigSettingDTO;
 import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
 import com.bbytes.purple.rest.dto.models.PasswordDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.rest.dto.models.SettingDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
@@ -99,13 +100,12 @@ public class SettingController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/setting", method = RequestMethod.POST)
-	public RestResponse updateSetting(@RequestParam("timeZone") String timeZone,
-			@RequestParam("timePreference") String timePreference) throws PurpleException {
+	public RestResponse updateSetting(@RequestBody SettingDTO settingDTO) throws PurpleException {
 
 		User user = userService.getLoggedInUser();
-		user = settingService.updateSetting(timeZone, timePreference, user);
+		user = settingService.updateSetting(settingDTO.getTimeZone(), settingDTO.getTimePreference(),settingDTO.getEmailNotificationState(), user);
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
-		logger.debug(timeZone + "&" + timePreference + " are updated successfully");
+		logger.debug("Setting is updated successfully");
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.UPDATE_SETTING);
 
 		return userReponse;
