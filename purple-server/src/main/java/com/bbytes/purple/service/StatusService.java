@@ -1,5 +1,9 @@
 package com.bbytes.purple.service;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -8,10 +12,15 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.ConfigSetting;
 import com.bbytes.purple.domain.Project;
+import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
@@ -34,6 +43,9 @@ public class StatusService extends AbstractService<Status, String> {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private MongoTemplate mongoTemplate;
 
 	@Autowired
 	private ConfigSettingService configSettingService;
@@ -59,6 +71,12 @@ public class StatusService extends AbstractService<Status, String> {
 	public List<Status> findByProjectAndUser(Project project, User user) {
 		return statusRepository.findByProjectAndUser(project, user);
 	}
+
+	/*
+	 * public List<Status> findByDateTimeAndUser(Date startDate, List<User>
+	 * user) { return statusRepository.findByDateTimeAndUserIn(currentDate,
+	 * user); }
+	 */
 
 	public boolean statusIdExist(String projectId) {
 		boolean state = statusRepository.findOne(projectId) == null ? false : true;
@@ -172,7 +190,7 @@ public class StatusService extends AbstractService<Status, String> {
 			Date[] startEndDates = getStartDateEndDate(timePeriod);
 			Date startDate = startEndDates[0];
 			Date endDate = startEndDates[1];
-			
+
 			statuses = statusRepository.findByDateTimeBetweenAndUser(startDate, endDate, user);
 			Collections.sort(statuses, Collections.reverseOrder());
 
@@ -297,16 +315,32 @@ public class StatusService extends AbstractService<Status, String> {
 
 		// start date set
 		startEndDates[0] = new DateTime(new Date()).minusDays(noOfDays).withTimeAtStartOfDay().toDate();
-		
-		//end date set
+
+		// end date set
 		startEndDates[1] = DateTime.now().toDate();
-		
-		// in case of yesterday (noOfDays is 1) we set end date as today start datetime midnight 12  
-		if(noOfDays == 1)
+
+		// in case of yesterday (noOfDays is 1) we set end date as today start
+		// datetime midnight 12
+		if (noOfDays == 1)
 			startEndDates[1] = DateTime.now().withTimeAtStartOfDay().toDate();
-		
 
 		return startEndDates;
 	}
 
+	/**
+	 * getUserofStatus method is used to pull the users from status.
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public Iterable<ProjectUserCountStats> getUserofStatus(Date startDate, Date endDate) {
+
+		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
+				match(Criteria.where("dateTime").gte(startDate).lte(endDate)), project().and("user").as("user"));
+
+		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
+				ProjectUserCountStats.class);
+		return result;
+	}
 }
