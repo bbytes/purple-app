@@ -123,8 +123,12 @@ public class SchedulerService {
 					List<String> emailList = new ArrayList<String>();
 					
 					long currentDate = new Date().getTime();
-					Integer validHours = Integer.parseInt(configSettingService
-							.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable()) * 24;
+					String statusEditEnableDays = configSettingService.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable();
+					
+					if(statusEditEnableDays==null)
+						statusEditEnableDays="1";
+					
+					Integer validHours = Integer.parseInt(statusEditEnableDays) * 24;
 					
 					String postDate = dateFormat.format(new Date());
 					

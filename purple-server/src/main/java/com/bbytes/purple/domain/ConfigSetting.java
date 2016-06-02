@@ -31,7 +31,7 @@ public class ConfigSetting {
 	private boolean weekendNotification = false;
 
 	@Field("statusEnable")
-	private String statusEnable;
+	private String statusEnable="1";
 
 	@DBRef
 	private Organization organization;

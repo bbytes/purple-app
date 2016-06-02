@@ -36,7 +36,6 @@ public class ConfigSettingService extends AbstractService<ConfigSetting, String>
 	}
 
 	public ConfigSetting getConfigSettingbyOrganization(Organization org) {
-
 		return configSettingRepository.findByOrganization(org);
 	}
 
