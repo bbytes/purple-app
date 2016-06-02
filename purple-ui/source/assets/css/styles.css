@@ -2149,3 +2149,56 @@ position: fixed;
 	cursor:pointer;
 	color:#222;
 }
+
+.ats-switch span.switch-left {
+    color: #fff;
+    background: #7c6991 !important;
+}
+.ats-switch {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 0px !important;
+    border: 1px solid;
+    border-color: #7c6991 !important;
+    position: relative;
+    text-align: left;
+    overflow: hidden;
+    line-height: 8px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+    min-width: 100px;
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.ats-switch:hover {
+    border-color: #7c6991 !important;
+    outline: 0;
+    -webkit-box-shadow:none;
+    box-shadow:none;
+}
+.set-pass li{
+	list-style:none;
+	margin-top:15px;
+}
+
+#loading-bar-spinner {
+  top: 3%;
+  left: 50%;
+}
+
+#loading-bar .bar {
+background: #7c6991;
+height: 4px;
+}
+#loading-bar-spinner .spinner-icon {
+width: 22px;
+height: 22px;
+border: solid 4px transparent;
+border-top-color: #7c6991;
+border-left-color: #7c6991;
+border-radius: 10px;
+}

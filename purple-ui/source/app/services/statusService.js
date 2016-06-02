@@ -2,7 +2,7 @@
  * Status Service
  */
 
-rootApp.service('statusService', function($rootScope, $http, $q, $window) {
+rootApp.service('statusService', function($rootScope, $http, $q, $window, cfpLoadingBar) {
 
 	this.submitStatus = function(status) {
 

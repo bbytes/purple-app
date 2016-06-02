@@ -1,8 +1,7 @@
 // Define Angular Module with dependencies 
 var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
 		'ngAnimate', 'templates-main', 'toaster', 'ngStorage' ,'angular-md5',
-		'angular-hmac-sha512','angularModalService','ngLetterAvatar','frapontillo.bootstrap-switch','ui.calendar','mgcrea.ngStrap','dm.stickyNav','ngMaterial','angular-confirm','textAngular','angular-timezone-select','server-url','angularInlineEdit','720kb.tooltips','angular-notification-icons', 'xeditable','chart.js','pageslide-directive']);
- 
+		'angular-hmac-sha512','angularModalService','ngLetterAvatar','ui.calendar','mgcrea.ngStrap','dm.stickyNav','ngMaterial','angular-confirm','textAngular','angular-timezone-select','server-url','angularInlineEdit','720kb.tooltips','angular-notification-icons', 'xeditable','chart.js','pageslide-directive','chieffancypants.loadingBar','toggle-switch']);
  // avoid the spacing while copy paste in text angular 
   rootApp.filter('htmlToPlaintext', function() {
     return function(text) {
@@ -24,7 +23,7 @@ rootApp.run([
 			$rootScope.authToken = '';
 			$rootScope.currentState = '';
 			$rootScope.authrization = '';
-
+           
 			  $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
 
 		            if (to.data && to.data.authorization !== '') {

@@ -1,7 +1,7 @@
 /**
  * Dashboard controller to load status timeline
  */
-rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,statusService, commentService, editableOptions, $mdSidenav, $mdMedia) {
+rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService,appNotifyService,$window,$location,statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
 	 $scope.commentDesc = '';
     $scope.isActive = function(route) {
         return route === $location.path();
@@ -28,6 +28,14 @@ $scope.loadTimePeriod = function(){
         });
 		 
 }
+$scope.start = function() {
+      cfpLoadingBar.start();
+    };
+
+    $scope.complete = function () {
+      cfpLoadingBar.complete();
+    };
+
 
   $scope.loadStatusTimeline = function(time){
 

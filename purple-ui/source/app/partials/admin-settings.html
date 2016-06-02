@@ -8,12 +8,15 @@
 	<div class="create-settings" ng-init="loadSetting()">
 		<div class="row">
 			<div class="col-md-3">
-				<label class="settings">CAPTURE HOURS</label> <input type="checkbox"
-					name="my-checkbox" checked> <br />
+				<label class="settings">CAPTURE HOURS</label> 
+				<toggle-switch ng-model="switchState2"></toggle-switch>
+				 <br />
 				<br />
 				<br />
-				<br /> <label class="settings">WEEKENDS NOTIFICATIONS</label> <input
-					type="checkbox" name="my-checkbox"> <br />
+				<br /> <label class="settings">WEEKENDS NOTIFICATIONS</label> 
+				<toggle-switch ng-model="switchState1"></toggle-switch>
+				
+				 <br />
 				<br />
 				<br />
 				<br /> <label class="settings">STATUS EDIT ENABLE FOR</label> <select

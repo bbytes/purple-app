@@ -4,7 +4,29 @@
 	<div class="main-title" ng-init="setTime()">
 		<h4>preference</h4>
 	</div>
-
+      <div class="row">
+	    <div class="col-md-7">
+		 <div class="row">
+		   <div class="form-group">
+		   <label class="control-label col-sm-5 settings" for="pwd">EMAIL NOTIFICATION</label>
+		   <div class="col-sm-7"> 
+               <toggle-switch ng-model="switchState"></toggle-switch>
+				
+           </div>
+		   </div>
+		 </div>
+		
+		</div>
+		
+		<div class="col-md-5">
+		   <div class="form-group" style="margin-top:-7px;">
+				<label for="comment" class="settings">EMAIL REMINDER TIME</label>
+				 <input type="text" size="8" class="form-control"  ng-model="timePreference" data-time-format="h:mm a" data-autoclose="1" placeholder="Time" bs-timepicker />
+			
+			  </div>
+		</div>
+		
+	  </div>
 	
 		<div class="row">
 			<div class="col-md-7">
@@ -17,11 +39,7 @@
 			</div>
 
 			<div class="col-md-5">
-			  <div class="form-group">
-						<label for="comment" class="settings">EMAIL REMINDER TIME</label>
-							 <input type="text" size="8" class="form-control"  ng-model="timePreference" data-time-format="h:mm a" data-autoclose="1" placeholder="Time" bs-timepicker>
-			
-					</div>
+			  
 			</div>
 		</div>
 		<div class="col-md-5">
