@@ -338,9 +338,16 @@ $scope.start = function() {
 		 $('body').on('click', '.md-sidenav-backdrop ', function(){
 			 $rootScope.isOpen = false;
 		 });
-		$rootScope.closeSideNavPanel = function() {
+		$rootScope.closeSideNavPanel = function(timePeriod) {
 			$mdSidenav('right').close();
 			$rootScope.isOpen = false;
+			var itemSelected = $rootScope.itemChoose;
+		if($scope.isActive)
+			$scope.loadStatusTimeline(timePeriod);
+		else if($scope.isProject)
+		 	$scope.loadProjectMap(itemSelected,timePeriod);
+		 else if($scope.isUser)
+			 $scope.loadUserMap(itemSelected,timePeriod);
 		};
   };
  
