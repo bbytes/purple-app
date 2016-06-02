@@ -184,8 +184,8 @@
                     inline-edit-textarea
                     inline-edit-validation="comment.commentDesc.validator(comment.commentDesc)"
                     inline-edit-btn-save="Save"
-				
-                    inline-edit-btn-cancel="Cancel"> 
+                    inline-edit-btn-cancel="Cancel"> </span>
+                    <span ng-show="'{{userName}}' == '{{comment.userName}}'">
 					<a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deleteComment(comment.commentId,$index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a>
 					</span>
 					
@@ -213,7 +213,7 @@
                     inline-edit-validation="reply.replyDesc.validator(reply.replyDesc)"
                     inline-edit-btn-save="Save"
                     inline-edit-btn-cancel="Cancel"></span>
-					<a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deletereplyComment(reply.replyId,commentId,$index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a>
+					<span ng-show="'{{userName}}' == '{{reply.userName}}'"><a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deletereplyComment(reply.replyId,commentId,$index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a></span>
                   </md-content>
 					
                 </div>
