@@ -1,9 +1,9 @@
 package com.bbytes.purple.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -38,10 +38,10 @@ public class Project {
 	private List<User> user = new ArrayList<>();
 
 	@CreatedDate
-	private DateTime creationDate;
+	private Date creationDate;
 
 	@LastModifiedDate
-	private DateTime lastModified;
+	private Date lastModified;
 
 	public Project(String projectName) {
 

@@ -1,6 +1,7 @@
 package com.bbytes.purple.domain;
 
-import org.joda.time.DateTime;
+import java.util.Date;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -33,10 +34,10 @@ public class Organization {
 	private String timePreference;
 	
 	@CreatedDate
-	private DateTime creationDate;
+	private Date creationDate;
 	
 	@LastModifiedDate
-	private DateTime lastModified;
+	private Date lastModified;
 
 	public Organization(String orgId, String orgName) {
 		this.orgId = orgId;

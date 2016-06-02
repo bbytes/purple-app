@@ -18,7 +18,7 @@
 		   <li><a href="user-mgr" ng-class="{ active: isActive('/user-mgr') }">users</a></li>
 		   <li><a href="projects" ng-class="{ active: isActive('/projects') }">projects</a></li>
 		   <li ng-show="userRole == 'ADMIN'"><a href="admin-settings" ng-class="{ active: isActive('/admin-settings') }">admin settings</a></li>
-		   <li><a href="settings" ng-class="{ active: isActive('/settings') }">settings</a></li>
+		  
           </ul>
 		  <ul ng-show="userRole == 'ADMIN' || userRole == 'MANAGER'"  class="{{ navstatusClass }} nav-left" ng-controller="navCtrl">
 		   <li class="{{ statusClass }}"><a href="status" ng-class="{ active: isActive('/status') }">status</a></li>

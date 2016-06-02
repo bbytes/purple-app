@@ -1,5 +1,7 @@
 package com.bbytes.purple.web.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +70,9 @@ public class ReplyController {
 
 		final String subject = GlobalConstants.EMAIL_REPLY_SUBJECT;
 		final String template = GlobalConstants.REPLY_EMAIL_TEMPLATE;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+
+
 
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();
@@ -76,6 +81,7 @@ public class ReplyController {
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
 		
 		int replySize = comment.getReplies().size();
+		String postDate = dateFormat.format(comment.getCreationDate());;
 
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
@@ -83,7 +89,7 @@ public class ReplyController {
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, comment.getCreationDate());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize-1).getReplyDesc());
 
 		emailService.sendEmail(emailList, emailBody, subject, template);

@@ -1,7 +1,8 @@
 package com.bbytes.purple.domain;
 
+import java.util.Date;
+
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,10 +26,10 @@ public class Reply {
 	private String replyDesc;
 
 	@CreatedDate
-	private DateTime creationDate;
+	private Date creationDate;
 	
 	@LastModifiedDate
-	private DateTime lastModified;
+	private Date lastModified;
 	
 	@DBRef
 	private User user;

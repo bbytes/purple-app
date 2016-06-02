@@ -10,25 +10,25 @@ public class GlobalConstants {
 
 	public static final String URL_AUTH_TOKEN = "token";
 
-	public static final String EMAIL_ACTIVATION_SUBJECT = "Activation Link for Purple App";
+	public static final String EMAIL_SIGNUP_SUBJECT = "Statusnap - Activation Link";
 
-	public static final String EMAIL_INVITE_SUBJECT = "Invitation for Purple App";
+	public static final String EMAIL_INVITE_SUBJECT = "Invitation to join Statusnap";
 
-	public static final String EMAIL_COMMENT_SUBJECT = "Commented on your Status";
+	public static final String EMAIL_COMMENT_SUBJECT = "Statusnap - You have a new comment on your status";
 
-	public static final String EMAIL_REPLY_SUBJECT = "Replied on your Comment";
+	public static final String EMAIL_REPLY_SUBJECT = "Statusnap - You have a new reply on your comment";
 
-	public static final String SCHEDULER_SUBJECT = "Online Stand-up Reminder for Purple App";
+	public static final String SCHEDULER_SUBJECT = "Statusnap - Its time to update your daily status";
 
-	public static final String FORGOT_PASSWORD_SUBJECT = "Forgot password for Purple APP";
+	public static final String FORGOT_PASSWORD_SUBJECT = "Statusnap - Reset Password";
 
-	public static final String EMAIL_ACTIVATION_TEMPLATE = "email-text-only.html";
+	public static final String EMAIL_SIGNUP_TEMPLATE = "email-text-signup.html";
 
 	public static final String EMAIL_INVITE_TEMPLATE = "email-text-invite-user.html";
 
 	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
 
-	public static final String COMMENT_EMAIL_TEMPLATE = "email-simple.html";
+	public static final String COMMENT_EMAIL_TEMPLATE = "email-text-comment.html";
 
 	public static final String REPLY_EMAIL_TEMPLATE = "email-text-reply.html";
 

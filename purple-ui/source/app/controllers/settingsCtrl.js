@@ -1,7 +1,7 @@
 /**
  * User setting controller
  */
-rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService) {
+rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService, cfpLoadingBar) {
     
 	$rootScope.bodyClass = 'body-standalone1';
 	$rootScope.navClass = 'nav-control';
@@ -84,5 +84,12 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
         user.oldPassword = '';
         $scope.confirmPassword = '';
         user.newPassword = '';
-    }      
+    } 
+
+	
+	 $scope.switchState= function () {
+
+	   $scope.switchStatus =  $rootScope.switchStatus;
+ };
+	
 });

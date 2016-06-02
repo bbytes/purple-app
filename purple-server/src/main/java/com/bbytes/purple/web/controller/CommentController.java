@@ -1,5 +1,7 @@
 package com.bbytes.purple.web.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,17 +62,19 @@ public class CommentController {
 
 		final String subject = GlobalConstants.EMAIL_COMMENT_SUBJECT;
 		final String template = GlobalConstants.COMMENT_EMAIL_TEMPLATE;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 		User user = userService.getLoggedInUser();
 		Comment comment = commentService.addComment(commentDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
 
+		String postDate = dateFormat.format(status.getDateTime());
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, status.getDateTime());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
 		emailBody.put("userName", user.getName());
 

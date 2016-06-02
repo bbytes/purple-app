@@ -1,9 +1,9 @@
 package com.bbytes.purple.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -48,6 +48,9 @@ public class User {
 
 	@Field("time_preference")
 	private String timePreference;
+	
+	@Field("email_reminder")
+	private boolean emailReminder = true;
 
 	@DBRef
 	private Organization organization;
@@ -59,10 +62,10 @@ public class User {
 	private UserRole userRole = UserRole.NORMAL_USER_ROLE;
 
 	@CreatedDate
-	private DateTime creationDate;
+	private Date creationDate;
 
 	@LastModifiedDate
-	private DateTime lastModified;
+	private Date lastModified;
 
 	public User(String name, String email) {
 		this.name = name;

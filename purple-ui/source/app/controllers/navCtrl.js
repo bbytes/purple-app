@@ -1,4 +1,6 @@
-rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $location) {
+
+
+rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $location,cfpLoadingBar) {
 	
 	$scope.isActive = function (viewLocation) {
      var active = (viewLocation === $location.path());
