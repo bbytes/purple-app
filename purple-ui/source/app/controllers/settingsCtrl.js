@@ -44,6 +44,10 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
         settingObj.timeZone = $scope.timeZone;
         settingObj.timePreference = $scope.timePreference;
         settingObj.emailNotificationState = $scope.switchState;
+        if(!settingObj.timeZone){
+            appNotifyService.error('Please select valid timezone');   
+            return false;
+        }
 
  	settingsService.updateSetting(settingObj).then(function (response) {
      	 if (response.success = true) {
