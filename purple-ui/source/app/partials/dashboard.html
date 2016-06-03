@@ -279,7 +279,7 @@
            
 
                                  <div class="edit">
-								  <a role="button" ng-click="openCommentSideBar(status.statusId); openSideNavPanel()" tooltips tooltip-template="Comment"><img src="../../assets/img/comment.svg"></a>
+								  <a role="button" ng-click="openCommentSideBar(status.statusId); openSideNavPanel(mytime)" tooltips tooltip-template="Comment"><img src="../../assets/img/comment.svg"></a>
                              									  
 								 </div>
 
@@ -294,7 +294,7 @@
                                      <h4 ng-show="isUser"><span class="hash"># </span> {{status.projectName}}
                                      <span  style="float:right"> {{status.time}}</span>
 									</h4>
-									<p>{{status.hours}}hrs, {{artist.date}}, <a href="#" ng-click="openCommentSideBar(status.statusId); openSideNavPanel()">{{status.commentCount}} Comments</a></p> 
+									<p>{{status.hours}}hrs, {{artist.date}}, <a href="#" ng-click="openCommentSideBar(status.statusId); openSideNavPanel(mytime)">{{status.commentCount}} Comments</a></p> 
                                    </div>
 								   
                                   <div class="timeline-body worked-on">

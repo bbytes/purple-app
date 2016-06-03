@@ -331,23 +331,19 @@ $scope.start = function() {
 	
 	 $rootScope.isOpen = false;
 	 $rootScope.closeSideNavPanel;
-	 $scope.openSideNavPanel = function () {
+	 $scope.openSideNavPanel = function (timePeriod) {
 		 $mdSidenav('right').open();
 		 $rootScope.isOpen= !$mdSidenav('right').isOpen();
 		 $rootScope.isOpen= true;
 		 $('body').on('click', '.md-sidenav-backdrop ', function(){
-			 $rootScope.isOpen = false;
+ 	
+			$rootScope.isOpen = false;
+			$scope.timeChange(timePeriod);
 		 });
-		$rootScope.closeSideNavPanel = function(timePeriod) {
+		$rootScope.closeSideNavPanel = function() {
 			$mdSidenav('right').close();
 			$rootScope.isOpen = false;
-			var itemSelected = $rootScope.itemChoose;
-		if($scope.isActive)
-			$scope.loadStatusTimeline(timePeriod);
-		else if($scope.isProject)
-		 	$scope.loadProjectMap(itemSelected,timePeriod);
-		 else if($scope.isUser)
-			 $scope.loadUserMap(itemSelected,timePeriod);
+			$scope.timeChange(timePeriod);
 		};
   };
  
