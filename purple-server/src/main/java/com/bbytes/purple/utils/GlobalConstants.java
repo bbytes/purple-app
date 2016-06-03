@@ -34,7 +34,7 @@ public class GlobalConstants {
 
 	public static final String REPLY_EMAIL_TEMPLATE = "email-text-reply.html";
 
-	public static final String ASSOCIATES_EMAIL_TEMPLATE = "email-text-unfilledStatus-users.html";
+	public static final String ASSOCIATES_EMAIL_TEMPLATE = "email-text-associate-checklist.html";
 
 	public static final String EMAIL_FORGOT_PASSWORD_TEMPLATE = "email-text-forgot-password.html";
 

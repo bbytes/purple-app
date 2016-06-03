@@ -222,6 +222,7 @@ public class SchedulerService {
 			if (!nameList.isEmpty())
 				emailService.sendEmail(emailList, emailBody, subject, template);
 		}
+		TenancyContextHolder.setDefaultTenant();
 	}
 
 }
