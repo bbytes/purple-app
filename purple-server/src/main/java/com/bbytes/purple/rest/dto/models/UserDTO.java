@@ -30,5 +30,7 @@ public class UserDTO implements Serializable {
 	private String timePreference;
 	
 	private boolean emailNotificationState;
+	
+	private String timeZone;
 
 }
