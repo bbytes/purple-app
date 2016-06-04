@@ -44,12 +44,17 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
         settingObj.timeZone = $scope.timeZone;
         settingObj.timePreference = $scope.timePreference;
         settingObj.emailNotificationState = $scope.switchState;
+        if(!settingObj.timeZone){
+            appNotifyService.error('Please select valid timezone');   
+            return false;
+        }
 
  	settingsService.updateSetting(settingObj).then(function (response) {
      	 if (response.success = true) {
 
             $rootScope.timePreference = response.data.timePreference;
             $rootScope.switchState = response.data.emailNotificationState;
+            $rootScope.timeZone = response.data.timeZone;
      		 appNotifyService.success('Preference has been successfully updated.');   		 
          } 
 
@@ -63,6 +68,7 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
 
 	   $scope.timePreference =  $rootScope.timePreference;
        $scope.switchState =  $rootScope.switchState;
+       $scope.timeZone = $rootScope.timeZone;
  };
     
 	$("[name='my-checkbox']").bootstrapSwitch();

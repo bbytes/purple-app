@@ -141,7 +141,7 @@
 			  </div>
 			    <div class="col-md-7 comment-side">
 				<div class="sidebar-nav">
-							<md-button class="md-icon-button" aria-label="Close Side Panel" ng-click="closeSideNavPanel()"> 
+							<md-button class="md-icon-button" aria-label="Close Side Panel" ng-click="closeSideNavPanel(mytime)"> 
 								<md-tooltip>Close Side Panel</md-tooltip> 
 								<md-icon class="md-default-theme" class="material-icons"><img src="../../assets/img/delete.svg"></md-icon> 
 							</md-button>
@@ -279,7 +279,7 @@
            
 
                                  <div class="edit">
-								  <a role="button" ng-click="openCommentSideBar(status.statusId); openSideNavPanel()" tooltips tooltip-template="Comment"><img src="../../assets/img/comment.svg"></a>
+								  <a role="button" ng-click="openCommentSideBar(status.statusId); openSideNavPanel(mytime)" tooltips tooltip-template="Comment"><img src="../../assets/img/comment.svg"></a>
                              									  
 								 </div>
 
@@ -294,7 +294,7 @@
                                      <h4 ng-show="isUser"><span class="hash"># </span> {{status.projectName}}
                                      <span  style="float:right"> {{status.time}}</span>
 									</h4>
-									<p>{{status.hours}}hrs, {{artist.date}}, <a href="#" ng-click="openCommentSideBar(status.statusId); openSideNavPanel()">{{status.commentCount}} Comments</a></p> 
+									<p>{{status.hours}}hrs, {{artist.date}}, <a href="#" ng-click="openCommentSideBar(status.statusId); openSideNavPanel(mytime)">{{status.commentCount}} Comments</a></p> 
                                    </div>
 								   
                                   <div class="timeline-body worked-on">

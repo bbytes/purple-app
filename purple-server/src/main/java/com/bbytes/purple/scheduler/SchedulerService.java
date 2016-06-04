@@ -6,7 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,13 +27,16 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
+import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.TenantResolver;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.TenantResolverRepository;
 import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.ConfigSettingService;
+import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.NotificationService;
+import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
@@ -56,6 +61,12 @@ public class SchedulerService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private StatusService statusService;
+
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	private NotificationService notificationService;
@@ -114,25 +125,28 @@ public class SchedulerService {
 				LocalTime userTime = new LocalTime(outputTime);
 				DateTime userTimeDatetime = DateTime.now().withTime(userTime);
 
-				if (now.isBefore(userTimeDatetime) && userTimeDatetime.isBefore(now.plusMinutes(30)) && user.isEmailNotificationState()) {
+				if (now.isBefore(userTimeDatetime) && userTimeDatetime.isBefore(now.plusMinutes(30))
+						&& user.isEmailNotificationState()) {
 					String hours = new SimpleDateFormat("HH").format(date);
 					String minutes = new SimpleDateFormat("mm").format(date);
 					DateTime dateTime = new DateTime().withHourOfDay(Integer.parseInt(hours));
 					dateTime = dateTime.withMinuteOfHour(Integer.parseInt(minutes));
 
 					List<String> emailList = new ArrayList<String>();
-					
+
 					long currentDate = new Date().getTime();
-					String statusEditEnableDays = configSettingService.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable();
-					
-					if(statusEditEnableDays==null)
-						statusEditEnableDays="1";
-					
+					String statusEditEnableDays = configSettingService
+							.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable();
+
+					if (statusEditEnableDays == null)
+						statusEditEnableDays = "1";
+
 					Integer validHours = Integer.parseInt(statusEditEnableDays) * 24;
-					
+
 					String postDate = dateFormat.format(new Date());
-					
-					final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), validHours);
+
+					final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(),
+							validHours);
 
 					Map<String, Object> emailBody = new HashMap<>();
 					emailBody.put(GlobalConstants.USER_NAME, user.getName());
@@ -151,4 +165,64 @@ public class SchedulerService {
 		}
 		TenancyContextHolder.setDefaultTenant();
 	}
+
+	@Scheduled(cron = "0 0 10 * * ?")
+	public void sendEmailforStatusUpdate() throws PurpleException, ParseException {
+
+		final String subject = GlobalConstants.ASSOCIATE_LIST_SUBJECT;
+		final String template = GlobalConstants.ASSOCIATES_EMAIL_TEMPLATE;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+
+		List<TenantResolver> tenantResolver = tenantResolverRepository.findAll();
+		Set<String> orgId = new LinkedHashSet<String>();
+		for (TenantResolver tr : tenantResolver) {
+			orgId.add(tr.getOrgId());
+		}
+		for (String org : orgId) {
+			TenancyContextHolder.setTenant(org);
+			List<User> allUsers = adminService.getAllUsers();
+			Date startDate = new DateTime(new Date()).minusDays(1).withTimeAtStartOfDay().toDate();
+			Date endDate = new DateTime(new Date()).withTimeAtStartOfDay().toDate();
+
+			Iterable<ProjectUserCountStats> result = statusService.getUserofStatus(startDate, endDate);
+			Set<User> userList = new LinkedHashSet<User>();
+			for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
+				ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
+				userList.add(projectUserCountStats.getUser());
+			}
+			List<User> userListToBeSendMail = new LinkedList<User>();
+			Set<String> nameList = new LinkedHashSet<String>();
+
+			for (User user : allUsers) {
+				if (!userList.toString().contains(user.toString())) {
+					userListToBeSendMail.add(user);
+					nameList.add(user.getName());
+				}
+				if (user.getUserRole().getRoleName().equals("MANAGER"))
+					userListToBeSendMail.add(user);
+			}
+			List<String> emailList = new ArrayList<String>();
+
+			for (User userFromList : userListToBeSendMail) {
+				emailList.add(userFromList.getEmail());
+			}
+
+			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+			for (String name : nameList) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("name", name);
+				list.add(map);
+			}
+			String postDate = dateFormat.format(startDate);
+
+			Map<String, Object> emailBody = new HashMap<>();
+			emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
+			emailBody.put(GlobalConstants.USER_NAME, list);
+
+			if (!nameList.isEmpty())
+				emailService.sendEmail(emailList, emailBody, subject, template);
+		}
+		TenancyContextHolder.setDefaultTenant();
+	}
+
 }

@@ -331,16 +331,19 @@ $scope.start = function() {
 	
 	 $rootScope.isOpen = false;
 	 $rootScope.closeSideNavPanel;
-	 $scope.openSideNavPanel = function () {
+	 $scope.openSideNavPanel = function (timePeriod) {
 		 $mdSidenav('right').open();
 		 $rootScope.isOpen= !$mdSidenav('right').isOpen();
 		 $rootScope.isOpen= true;
 		 $('body').on('click', '.md-sidenav-backdrop ', function(){
-			 $rootScope.isOpen = false;
+ 	
+			$rootScope.isOpen = false;
+			$scope.timeChange(timePeriod);
 		 });
 		$rootScope.closeSideNavPanel = function() {
 			$mdSidenav('right').close();
 			$rootScope.isOpen = false;
+			$scope.timeChange(timePeriod);
 		};
   };
  

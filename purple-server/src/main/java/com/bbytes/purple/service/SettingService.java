@@ -42,7 +42,7 @@ public class SettingService {
 		if (user != null) {
 			if (!userService.userEmailExist(user.getEmail()))
 				throw new PurpleException("Error while updating setting", ErrorHandler.USER_NOT_FOUND);
-			if (timeZone == null && timePreference == null)
+			if (timeZone == null || timePreference == null)
 				throw new PurpleException("Error while updating setting", ErrorHandler.UPDATE_SETTING_FAILED);
 			
 			try {

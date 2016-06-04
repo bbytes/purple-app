@@ -20,6 +20,8 @@ public class GlobalConstants {
 
 	public static final String SCHEDULER_SUBJECT = "Statusnap - Its time to update your daily status";
 
+	public static final String ASSOCIATE_LIST_SUBJECT = "Statusnap - Associate Checklist - Couldn't Update Status";
+
 	public static final String FORGOT_PASSWORD_SUBJECT = "Statusnap - Reset Password";
 
 	public static final String EMAIL_SIGNUP_TEMPLATE = "email-text-signup.html";
@@ -32,16 +34,18 @@ public class GlobalConstants {
 
 	public static final String REPLY_EMAIL_TEMPLATE = "email-text-reply.html";
 
+	public static final String ASSOCIATES_EMAIL_TEMPLATE = "email-text-associate-checklist.html";
+
 	public static final String EMAIL_FORGOT_PASSWORD_TEMPLATE = "email-text-forgot-password.html";
 
 	public static final String USER_NAME = "name";
-	
+
 	public static final String CURRENT_DATE = "current_date";
 
 	public static final String SUBSCRIPTION_DATE = "subscriptionDate";
-	
+
 	public static final String COMMENT_DESC = "comment_desc";
-	
+
 	public static final String REPLY_DESC = "reply_desc";
 
 	public static final String ACTIVATION_LINK = "activationLink";

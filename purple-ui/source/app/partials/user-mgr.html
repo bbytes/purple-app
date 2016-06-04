@@ -52,14 +52,33 @@
 	<div class="col-md-12">
 		<div class="row">
 			<div class="main-title">
-				<h4>
-					user activity <span class="list-member">{{joinedCount}}
+             <div class="section group">
+	          <div class="col span_1_of_3">
+	            	<h4>user activity </h4>
+	         </div>
+
+	        <div class="col span_1_of_3">
+	          <div class="right-inner-addon ">
+		<i class="fa fa-search"></i> <input ng-model="searchText"
+			class="form-control" placeholder="Search...">
+	</div>
+	       </div>
+
+	        <div class="col span_1_of_3">
+	         <span class="list-member">{{joinedCount}}
 						Joined {{pendingCount}} Pending</span>
-				</h4>
+	        </div>
+         </div>
+
+			
+
+					
+					
+				
 			</div>
 			<div class="project-table" ng-init="initUser()">
 				<table>
-					<tr ng-repeat="user in allusers | orderBy:'userName'">
+					<tr ng-repeat="user in allusers | orderBy:'userName'  | filter:searchText">
 						<td class="table-user"><small> <ng-letter-avatar
 									data="{{user.userName}}" shape="round"></ng-letter-avatar>
 						</small>

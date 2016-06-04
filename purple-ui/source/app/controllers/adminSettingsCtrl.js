@@ -15,13 +15,17 @@ rootApp.controller('adminSettingsCtrl', function ($scope, $rootScope, $state, dr
 
         settingsService.getConfigSetting().then(function(response){
          if (response.success = true) 
-             $rootScope.statusEnable = response.data.statusEnable;
+            $rootScope.statusEnable = response.data.statusEnable;
+            $rootScope.weekendnotify = response.data.weekendNotification;
+            $rootScope.capturehours = response.data.captureHours;
        }, function(error){
        });
     };
     // config setting method to save admin setting information
     $scope.configSetting = function(){
         var admin = new Object();
+        admin.captureHours = $scope.capturehours;
+        admin.weekendNotification = $scope.weekendnotify;
         admin.statusEnable = $scope.statusEnable;
         if(!admin.statusEnable){
             appNotifyService.error('Please select valid input');   
@@ -33,6 +37,8 @@ rootApp.controller('adminSettingsCtrl', function ($scope, $rootScope, $state, dr
          if (response.success = true) 
                  appNotifyService.success('Your Setting has been successfully saved.');
              $scope.statusEnable = response.data.statusEnable;
+             $scope.weekendnotify = response.data.weekendNotification;
+             $scope.capturehours = response.data.captureHours;
        }, function(error){
             appNotifyService.error("Error while saving setting.");
        });
