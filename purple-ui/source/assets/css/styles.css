@@ -31,11 +31,12 @@ header{
     min-height: 53px !important;
     margin-bottom: 0px;
     border: 0px solid transparent;
+	    width: 100%;
 }
 .navbar-brand > img {
     display: block;
-    width: 23px;
-    margin-top: 4px;
+    max-width:100%;
+    margin-top: 0px;
 }
 .navbar-default .navbar-brand {
     color: #777;
@@ -47,7 +48,7 @@ header{
     padding: 5px 15px !important;
     font-size: 18px;
     line-height: 20px;
-    width: 59px;
+    width: 66px;
 }
 .nav-control{
 	display:none;
@@ -2202,10 +2203,24 @@ border-top-color: #7c6991;
 border-left-color: #7c6991;
 border-radius: 10px;
 }
-
-
+.btn-default:focus, .btn-default.focus {
+    color: #fff;
+}
+.nav-landing .nav-logo{
+	background:transparent !important;
+}
+.nav-logo img{
+	width:200px !important;
+	max-width:300px !important;
+}
+.landin-page > li > a{
+	line-height:20px !important;
+}
+.nav-logo{
+	padding:0px !important;
+}
 /*  SECTIONS  */
-.section {
+.main-title .section {
     clear: both;
     padding: 0px;
     margin: 0px;
@@ -2242,13 +2257,6 @@ Landing page css style section #################################################
 */
 
 
-
-body {
-	background-color: #f9f9f9;
-	color: #505458;
-	font-family: 'Roboto', sans-serif;
-}
-
 .h3,h3
 {
 font-size:24px;
@@ -2257,11 +2265,11 @@ color: #aa6489;
 
 
 .logo {
-	max-width: 148px;
-	    width: 22px
+	max-width: 100%;
+	 width: 222px
 }
 .signup-button{
-	margin-top:10px;
+	margin-top:0px;
 }
 .signup-color{
 	background:#7665a0 !important;
@@ -2450,7 +2458,6 @@ a{
 }
 
 .title {
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 700;
   margin-top: 0px;
 }
@@ -2558,13 +2565,12 @@ iframe {
 .navbar-default .navbar-nav>li>a {
 	font-weight: 600;
 	font-size: 13px;
-	color: #182433;
+	color: #fff;
 	letter-spacing: 0.02em;
-	font-family: 'Josefin Sans', sans-serif;
 }
 
 .navbar-default .navbar-nav>li>a:hover,.navbar-custom-dark.navbar-default .navbar-nav>li>a {
-	color: #c575cc;
+	color: #fff;
 }
 
 .navbar-custom {
@@ -2585,7 +2591,7 @@ iframe {
 }
 
 .navbar-custom-dark.navbar-default .navbar-nav>li>a {
-	color: #ddd;
+	color: #fff;
 }
 
 .navbar-toggle {
@@ -2605,7 +2611,6 @@ iframe {
 
 
 .nav-alt.navbar-default .navbar-nav>li>a {
-  font-family: 'Roboto', sans-serif;
   font-weight: 500;
   text-transform: uppercase;
   font-size: 13px;
@@ -2691,7 +2696,6 @@ iframe {
 .home-wrapper p {
   font-size: 15px;
   letter-spacing: 2px;
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 700;
   color: #787787;
 }
@@ -2748,14 +2752,12 @@ iframe {
 
 .facts-box  h2 {
 	font-weight: 700;
-	font-family: 'Josefin Sans', sans-serif;
 	color: #767D8E;
 }
 
 .facts-box p {
 	margin-bottom: 20px;
 	font-weight: 700;
-	font-family: 'Josefin Sans', sans-serif;
 }
 
 .testimonial-cta {
@@ -2781,7 +2783,6 @@ iframe {
 
 .features-box h3{
 	font-size: 20px;
-	font-family: 'Josefin Sans', sans-serif;
 	font-weight: 700;
 }
 
@@ -2813,7 +2814,6 @@ iframe {
 .features-alt h4{
   font-style: italic;
   margin-bottom: 0px;
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 600;
 }
 
@@ -2844,7 +2844,6 @@ iframe {
 }
 
 .feat-facts .feat-facts-box h4 {
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 600;
 }
 
@@ -2901,7 +2900,6 @@ iframe {
   margin-bottom: 10px;
   color: #435966;
   font-weight: 700;
-  font-family: 'Josefin Sans', sans-serif;
 }
 
 .pricing-column .plan-duration {
@@ -2938,7 +2936,6 @@ iframe {
 .subscribe-form  h3 {
 	color: #fff;
 	margin: 0px 0px 30px 0px;
-	font-family: 'Josefin Sans', sans-serif;
 	font-weight: 700;
 }
 
@@ -2997,7 +2994,6 @@ iframe {
 }
 .testi-text {
   line-height: 30px;
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 600;
   letter-spacing: 0.05em;
 }
@@ -3029,7 +3025,6 @@ iframe {
 }
 .gal-detail p {
   font-size: 13px;
-  font-family: 'Josefin Sans', sans-serif;
 }
 
 
@@ -3048,7 +3043,6 @@ iframe {
 }
 
 .team-box p {
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 700;
   color: #98a6ad;
   margin-bottom: 20px;
@@ -3135,7 +3129,6 @@ textarea.form-control {
 }
 
 .home-register .home-wrapper h1 {
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 700;
   color: #ffffff;
 }
@@ -3188,7 +3181,6 @@ textarea.form-control {
   margin-bottom: 20px;
   font-weight: 700;
   letter-spacing: 1px;
-  font-family: 'Josefin Sans', sans-serif;
 }
 
 .footer-one .about-text {
@@ -3252,7 +3244,6 @@ textarea.form-control {
 }
 
 .question-box h4 {
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 700;
 }
 
@@ -3326,7 +3317,6 @@ textarea.form-control {
 .home-showcase h2 {
   margin-top: 0px;
   margin-bottom: 30px;
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 700;
 }
 
@@ -3373,7 +3363,6 @@ textarea.form-control {
 }
 
 .author-content h3 {
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 600;
 }
 
@@ -3414,7 +3403,6 @@ textarea.form-control {
   text-align: center;
   position: relative;
   cursor: default;
-  font-family: 'Josefin Sans', sans-serif;
   font-weight: 700;
   color: #ffffff;
 }
@@ -3511,8 +3499,7 @@ textarea.form-control {
 
 @media (min-width: 768px) {
   .navbar-nav>li>a {
-    padding-top: 20px;
-    padding-bottom: 20px;
+   
   }
 }
 
@@ -4557,3 +4544,100 @@ Landing page css style section ends here #######################################
 */
 
 
+.side-tab .active{
+	border-bottom:0px solid;
+}
+.tab-content .active{
+	border-bottom:0px solid;
+}
+.left-tabbar{
+	width:22%;
+	float:left;
+	background: rgb(221, 221, 221);
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+	background:rgb(204, 149, 181);
+	color:#fff;
+	font-weight:bold;
+}
+.nav-tabs > li.active > a{
+	border: 0px solid #ddd !important;
+}
+.tabs-left>li>a {
+    border-radius: 0px 0 0 0px !important;
+    margin-right: 0;
+    display: block;
+	font-size:15px;
+	color:#222;
+	border-bottom:1px solid rgb(204, 204, 204);
+}
+.tabs-left, .tabs-right {
+    border-bottom: none;
+     padding-top: 0px;
+}
+tabs-left, .tabs-right {
+  border-bottom: none;
+  padding-top: 2px;
+}
+.tabs-left {
+  border-right: 1px solid #ddd;
+}
+.tabs-right {
+  border-left: 1px solid #ddd;
+}
+.tabs-left>li, .tabs-right>li {
+  float: none;
+  margin-bottom: 2px;
+}
+.tabs-left>li {
+  margin-right: -1px;
+}
+.tabs-right>li {
+  margin-left: -1px;
+}
+.tabs-left>li.active>a,
+.tabs-left>li.active>a:hover,
+.tabs-left>li.active>a:focus {
+  border-bottom-color: #ddd;
+  border-right-color: transparent;
+}
+
+.tabs-right>li.active>a,
+.tabs-right>li.active>a:hover,
+.tabs-right>li.active>a:focus {
+  border-bottom: 1px solid #ddd;
+  border-left-color: transparent;
+}
+.tabs-left>li>a {
+  border-radius: 4px 0 0 4px;
+  margin-right: 0;
+  display:block;
+}
+.tabs-right>li>a {
+  border-radius: 0 4px 4px 0;
+  margin-right: 0;
+}
+.intergration-wrapper{
+	padding-top: 30px;
+    width: 98%;
+    margin: 0px auto;
+    padding-left: 25%;
+}
+.intergration-wrapper h3{
+	
+	font-weight:bold;
+}
+.intergration-wrapper img{
+	max-width:100%;
+}
+.intergration-wrapper button{
+	width:30%;
+}
+.jira{
+	width:20%;
+	max-width:100%;
+	margin-top: -5px;
+}
+.tabs-left img{
+	width:16px;
+}

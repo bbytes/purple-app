@@ -1,5 +1,5 @@
 <header>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top nav-main-header" role="navigation">
 	<div class="wrapper">
 		<!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -17,8 +17,8 @@
           <ul class="{{ navClass }} nav-left" ng-controller="navCtrl">
 		   <li><a href="user-mgr" ng-class="{ active: isActive('/user-mgr') }">users</a></li>
 		   <li><a href="projects" ng-class="{ active: isActive('/projects') }">projects</a></li>
+		   <li><a href="integration" ng-class="{ active: isActive('/integration') }">integration</a></li>
 		   <li ng-show="userRole == 'ADMIN'"><a href="admin-settings" ng-class="{ active: isActive('/admin-settings') }">admin settings</a></li>
-		  
           </ul>
 		  <ul ng-show="userRole == 'ADMIN' || userRole == 'MANAGER'"  class="{{ navstatusClass }} nav-left" ng-controller="navCtrl">
 		   <li class="{{ statusClass }}"><a href="status" ng-class="{ active: isActive('/status') }">status</a></li>
@@ -50,6 +50,7 @@
 						<li class="dropdown-header">Settings</li>
 						<li><a href="user-mgr"><i class="fa fa-user" aria-hidden="true"></i>Users</a></li>
 						<li><a href="projects"><i class="fa fa-server" aria-hidden="true"></i>Projects</a></li>
+						<li><a href="integration"><i class="fa fa-cogs" aria-hidden="true"></i>Integration</a></li>
 						<li><a href="admin-settings"><i class="fa fa-cog" aria-hidden="true"></i>Admin</a></li>
 						<li class="nav-divider"></li>
 						<li><a href="#" ng-controller="logoutCtrl"

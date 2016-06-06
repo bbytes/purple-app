@@ -69,13 +69,16 @@ module.exports = function(grunt) {
 								'source/assets/js/lib/index.js',
 								'source/assets/js/lib/server-url.js',
 								'source/assets/js/lib/theia-sticky-sidebar.js',
-								'source/assets/js/lib/test.js'
-								
+								'source/assets/js/lib/test.js',
+								'source/assets/js/lib/bootstrap.min.js'
 						],
 						dest : '<%= grunt.config.get("buildPath") %>/assets/js/_lib.js'
 					},
 					css : {
-						src : [ 'source/assets/css/**/*.css' ],
+						src : [ 'source/assets/css/**/*.css',
+                                'source/assets/css/landing.css'						
+						        
+						      ],
 						dest : '<%= grunt.config.get("buildPath") %>/assets/css/styles.css'
 					},
 					appControllers : {

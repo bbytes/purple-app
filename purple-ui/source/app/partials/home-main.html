@@ -1,4 +1,4 @@
-  <nav class="navbar navbar-default navbar-custom navbar-custom-dark sticky bg-trans">
+  <nav class="navbar navbar-default navbar-custom navbar-custom-dark sticky bg-trans nav-landing">
             <div class="container">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -8,13 +8,13 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><img src="../../assets/img/logo.png" class="logo logo-white" alt="logo"><img src="../../assets/img/logo.png" class="logo logo-dark hidden" alt="logo"> </a>
+                    <a class="navbar-brand nav-logo" href="#"><img src="../../assets/img/logo-1.png" class="logo logo-white" alt="logo"><img src="../../assets/img/logo-1.png" class="logo logo-dark hidden" alt="logo"> </a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                   
-                    <ul class="nav navbar-nav navbar-right">
+                    <ul class="nav navbar-nav navbar-right landin-page">
                         <li><a href="#home" class="scroll">Home</a></li>
                         <li><a href="#features" class="scroll">Features</a></li>
                         <li><a href="#pricing" class="scroll">Pricing</a></li>
@@ -383,3 +383,9 @@
             </div>
 
         </footer>
+        <script type="text/javascript">
+            //sticky header on scroll
+            $(window).load(function() {
+                $(".sticky").sticky({topSpacing: 0});
+            });
+        </script>

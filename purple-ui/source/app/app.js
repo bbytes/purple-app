@@ -23,7 +23,7 @@ rootApp.run([
 			$rootScope.authToken = '';
 			$rootScope.currentState = '';
 			$rootScope.authrization = '';
-           
+
 			  $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
 
 		            if (to.data && to.data.authorization !== '') {
@@ -146,6 +146,28 @@ rootApp.config([
 				},
 				data: {
 		                authorization: 'metrics',
+		                redirectTo: 'login'
+		            }
+			}).state('integration', {
+				url : '/integration',
+				views : {
+					'' : {
+						templateUrl : 'app/partials/home.html'
+						
+					},
+					'header@integration' : {
+						templateUrl : 'app/partials/home-header.html'
+					},
+					'main@integration' : {
+						templateUrl : 'app/partials/integration.html',
+						controller : 'integrationCtrl'
+					},
+					'footer@integration' : {
+						templateUrl : 'app/partials/home-footer.html'
+					}
+				},
+				data: {
+		                authorization: 'integration',
 		                redirectTo: 'login'
 		            }
 			}).state('status', {
