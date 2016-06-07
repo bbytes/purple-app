@@ -14,6 +14,10 @@ public class GlobalConstants {
 
 	public static final String EMAIL_INVITE_SUBJECT = "Invitation to join Statusnap";
 
+	public static final String EMAIL_FEEDBACK_SEND_SUBJECT = " has sent the feedback on Statusnap";
+
+	public static final String EMAIL_FEEDBACK_RESPONSE_SUBJECT = "Thank you for providing your feedback!";
+
 	public static final String EMAIL_COMMENT_SUBJECT = "Statusnap - You have a new comment on your status";
 
 	public static final String EMAIL_REPLY_SUBJECT = "Statusnap - You have a new reply on your comment";
@@ -31,6 +35,10 @@ public class GlobalConstants {
 	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
 
 	public static final String COMMENT_EMAIL_TEMPLATE = "email-text-comment.html";
+
+	public static final String FEEDBACK_SEND_EMAIL_TEMPLATE = "email-text-feedback-send.html";
+
+	public static final String FEEDBACK_RESPONSE_EMAIL_TEMPLATE = "email-text-feedback-response.html";
 
 	public static final String REPLY_EMAIL_TEMPLATE = "email-text-reply.html";
 
@@ -76,7 +84,13 @@ public class GlobalConstants {
 
 	public static final String PASSWORD = "default_password";
 
+	public static final String CATEGORY = "category";
+
+	public static final String FEEDBACK = "feedback";
+
 	public static final String VALID_HOURS = "hours";
 
 	public static final String JIRA_GETPROJECTS_API_URL = "/rest/api/2/project";
+
+	public static final String FEEDBACK_EMAIL_ADDRESS = "statusnap@beyondbytes.co.in";
 }
