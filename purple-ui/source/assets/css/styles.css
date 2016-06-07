@@ -2210,11 +2210,14 @@ border-radius: 10px;
 	background:transparent !important;
 }
 .nav-logo img{
-	width:200px !important;
+	width:150px !important;
 	max-width:300px !important;
 }
 .landin-page > li > a{
-	line-height:20px !important;
+	line-height:15px !important;
+}
+.landin-page{
+	margin-top:12px;
 }
 .nav-logo{
 	padding:0px !important;
@@ -2279,10 +2282,6 @@ color: #aa6489;
 }
 a{
   text-decoration: none !important;
-	-webkit-transition: all 400ms ease-in-out;
-	   -moz-transition: all 400ms ease-in-out;
-       -o-transition: all 400ms ease-in-out;
-          transition: all 400ms ease-in-out;
 }
     
 /* BUTTONS */
@@ -2623,7 +2622,7 @@ iframe {
   z-index: 9999;
 }
 
-.is-sticky .navbar-custom{
+.is-sticky{
   background-color: #ffffff !important;
   z-index: 999;
   width: 100%;
@@ -4631,7 +4630,8 @@ tabs-left, .tabs-right {
 	max-width:100%;
 }
 .intergration-wrapper button{
-	width:30%;
+	width:70%;
+	margin-bottom:20px;
 }
 .jira{
 	width:20%;
@@ -4640,4 +4640,71 @@ tabs-left, .tabs-right {
 }
 .tabs-left img{
 	width:16px;
+}
+
+
+#header_nav {
+    width:100% !important;
+    
+    position:fixed !important;
+    top:0 !important;
+    left:0 !important;
+   -webkit-transition:0.5s linear all !important;
+   -moz-transition:0.5s linear all !important;
+   -o-transition:0.5s linear all !important;
+   transition:0.5s linear all !important;
+}
+
+.big {
+    height:80px !important;
+}
+
+.small {
+   height:80px !important;
+   background-color: #ffffff !important;
+       -webkit-box-shadow: 0 2px 2px rgba(0,0,0,.1) !important;
+    -moz-box-shadow: 0 2px 2px rgba(0,0,0,.1) !important;
+    box-shadow: 0 2px 2px rgba(0,0,0,.1) !important;
+}
+.small a {
+    color: #222 !important
+}
+.landin-page .active{
+	background: url(../img/menu-line.png) no-repeat center !important;
+    border-bottom:0px solid #ccc !important;	
+}
+.login-content img{
+	width:14%;
+	max-width:100%;
+}
+.connected::before {
+  content:  url(../img/connect.gif);
+  float:left;
+  line-height:2;
+  margin:0px 5px;
+}
+.connected p{
+	font-size:17px;
+	font-weight:bold;
+}
+
+.offline::before {
+  content:  url(../img/offline.gif);
+  float:left;
+  line-height:2;
+  margin:0px 5px;
+}
+.offline p{
+	font-size:17px;
+	font-weight:bold;
+}
+.island h3{
+	margin-top:-21px;
+}
+.island textarea{
+	height:100px !important;
+	margin-bottom:10px;
+}
+.island select{
+	margin-bottom:20px;
 }

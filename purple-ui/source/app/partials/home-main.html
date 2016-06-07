@@ -1,4 +1,4 @@
-  <nav class="navbar navbar-default navbar-custom navbar-custom-dark sticky bg-trans nav-landing">
+  <nav id="header_nav" ng-class="navClass" class="navbar navbar-default navbar-custom navbar-custom-dark sticky bg-trans nav-landing">
             <div class="container">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -15,10 +15,10 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                   
                     <ul class="nav navbar-nav navbar-right landin-page">
-                        <li><a href="#home" class="scroll">Home</a></li>
-                        <li><a href="#features" class="scroll">Features</a></li>
-                        <li><a href="#pricing" class="scroll">Pricing</a></li>
-                        <li><a href="#faqs" class="scroll">FAQ</a></li>
+                        <li><a href="#home" du-smooth-scroll du-scrollspy offset="30" class="scroll">Home</a></li>
+                        <li><a href="#features" du-smooth-scroll du-scrollspy offset="30" class="scroll">Features</a></li>
+                        <li><a href="#pricing" du-smooth-scroll du-scrollspy offset="30" class="scroll">Pricing</a></li>
+                        <li><a href="#faqs" du-smooth-scroll du-scrollspy offset="30" class="scroll">FAQ</a></li>
 					    <li><a href="signup" class="scroll btn btn-custom signup-button signup-color">SIGNUP</a></li>
 						<li>&nbsp;</li>
 						<li><a href="login" class="scroll btn btn-custom signup-button login-color">LOGIN</a></li>
@@ -40,7 +40,7 @@
                             <h3>Never loose track of your team's progress. Track em online.</h3>
                             
                             <a href="signup" class="btn btn-custom signup-color">SIGNUP</a>
-                            <a href="login" class="btn btn-custom login-color">LOGIN</a>
+                           <!-- <a href="login" class="btn btn-custom login-color">LOGIN</a> -->
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                             <h4 class="text-muted">Status updates - Anywhere, Anytime.</h4>
                             <h3>Online Standup made easy</h3>
 
-                            <p class="text-muted">We’ve all been taught that it’s important to have daily standup meetings. These are meant to encourage information flow between teams, but the problem is that they’re actually structured to restrict information flow. And with distributed teams, this becomes an even bigger problem. <br> 
+                            <p class="text-muted">We've all been taught that it's important to have daily standup meetings. These are meant to encourage information flow between teams, but the problem is that they're actually structured to restrict information flow. And with distributed teams, this becomes an even bigger problem. <br> 
                             Stausnap sends you daily reminders to fill in your status updates for the day. Just fill 3 items - What you have worked on? What are you working on? and Are there any blockers.</p>
 
                             <p class="text-muted">Status update in less than a minute! Get to see updates from the rest of the team too!</p>
@@ -138,8 +138,8 @@
 
                             <p class="text-muted">As a team have you faced these problems? <br>
                                 1. No clear visibility & tracking mechanism for team/member or project updates.<br>
-                                2. Threaded comments in emails. Long email threads quickly breakdown into reply-hell where it’s difficult to tell who said what and to whom they’re talking. <br>
-                                3. Not transparent to other teams who might want/need to know what your team is doing. If you weren’t on the email thread, you don’t have access to the data. <br></p>
+                                2. Threaded comments in emails. Long email threads quickly breakdown into reply-hell where it's difficult to tell who said what and to whom they're talking. <br>
+                                3. Not transparent to other teams who might want/need to know what your team is doing. If you weren't on the email thread, you don't have access to the data. <br></p>
 
                                 <p class="text-muted">We put a lot of effort in sorting these out. Give statusnap a spin!</p>
                                
@@ -366,10 +366,13 @@
             <div class="footer-one-alt">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-5">
-                            <p class="m-b-0 font-13 copyright">© 2016 Beyond Bytes Technolgies</p>
-                        </div>
                         <div class="col-sm-7">
+                            <p class="m-b-0 font-13 copyright">&copy; 2016 Beyond Bytes Technolgies</p>
+                        </div>
+						<div class="col-sm-2">
+                           <img src="../../assets/img/comodo_secure.png" style="width:74px; float:right; margin-top:-9px;"/>
+                        </div>
+                        <div class="col-sm-3">
                             <ul class="list-inline footer-social-one m-b-0 pull-right">
                                 <li><a href="#"><i class="pe-so-facebook"></i></a></li>
                                 <li><a href="#"><i class="pe-so-twitter"></i></a></li>
@@ -383,9 +386,3 @@
             </div>
 
         </footer>
-        <script type="text/javascript">
-            //sticky header on scroll
-            $(window).load(function() {
-                $(".sticky").sticky({topSpacing: 0});
-            });
-        </script>

@@ -1,6 +1,6 @@
 
 
-rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $location,cfpLoadingBar) {
+rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $location,cfpLoadingBar, $fancyModal) {
 	
 	$scope.isActive = function (viewLocation) {
      var active = (viewLocation === $location.path());
@@ -12,4 +12,5 @@ rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $locatio
         $('.dropdown-toggle').dropdown();
         });
 
+	
 }]);

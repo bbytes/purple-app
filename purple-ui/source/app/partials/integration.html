@@ -16,9 +16,24 @@
 		  <div class="intergration-wrapper">
 		      <h3>Connect to JIRA to Fetch Project and User Information</h3>
 			  <hr />
-			   <div class="col-md-12">
-			 <button class="btn btn-default status-submit"data-toggle="collapse" data-target="#demo"><img src="../../assets/img/icon-jira-logo.png" class="jira"/> CONNECT</button>
+			  <div class="row">
+			   <div class="col-md-6">
+			    <button class="btn btn-default status-submit"data-toggle="collapse" data-target="#demo"><img src="../../assets/img/icon-jira-logo.png" class="jira"/> CONNECT</button>
+				
+				<button class="btn btn-default status-submit after"data-toggle="collapse" data-target="#demo"><i class="fa fa-refresh" aria-hidden="true"></i> Sync Project</button>
+				
+				<button class="btn btn-default status-submit after"data-toggle="collapse" data-target="#demo"><i class="fa fa-refresh" aria-hidden="true"></i> Sync Users</button>
+				
+				<button class="btn btn-default status-submit after"data-toggle="collapse" data-target="#demo"><i class="fa fa-link" aria-hidden="true"></i> Link Users & Projects</button>
 			   </div>
+			   
+			   
+			   <div class="col-md-6">
+			    <div class="connected"><p>Connected</p></div>
+				<div class="offline"><p>Offline</p></div>
+			   </div>
+			  
+			   
 			   <form name="form" style="margin-top:100px;">
 			    <div class="col-md-6">
 			    <div id="demo" class="collapse">
@@ -39,6 +54,7 @@
 			  <div class="col-md-6">
 			  </div>
 		   </div>
+		    </div>
 		</div>
 		
 		 <div class="tab-pane" id="slack">
