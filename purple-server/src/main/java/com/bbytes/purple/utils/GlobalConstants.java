@@ -20,7 +20,7 @@ public class GlobalConstants {
 
 	public static final String SCHEDULER_SUBJECT = "Statusnap - Its time to update your daily status";
 
-	public static final String ASSOCIATE_LIST_SUBJECT = "Statusnap - Associate Checklist - Couldn't Update Status";
+	public static final String ASSOCIATE_LIST_SUBJECT = "Statusnap - Associate Checklist - Pending Status update";
 
 	public static final String FORGOT_PASSWORD_SUBJECT = "Statusnap - Reset Password";
 
@@ -77,4 +77,6 @@ public class GlobalConstants {
 	public static final String PASSWORD = "default_password";
 
 	public static final String VALID_HOURS = "hours";
+
+	public static final String JIRA_GETPROJECTS_API_URL = "/rest/api/2/project";
 }

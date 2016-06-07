@@ -99,11 +99,19 @@
          });
      }
 
+
     $scope.groupBychange = function(timePeriod, projectuser, counthours) {
 
              $scope.loadAllStatusGraph(timePeriod, projectuser, counthours);
     }
  
+
+      $scope.timeChange = function(timePeriod) {
+
+            $scope.loadAllStatusGraph(timePeriod);
+    }
+	 
+
 	 	//nav active
      $scope.setClickedRow = function(index){  //function that sets the value of selectedRow to current index
      $scope.selectedRow = index;

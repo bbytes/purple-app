@@ -27,6 +27,7 @@ import com.bbytes.purple.repository.StatusRepository;
 import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
+import com.bbytes.purple.service.IntegrationService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
@@ -61,6 +62,9 @@ public class PurpleWebBaseApplicationTests extends PurpleApplicationTests {
 
 	@Autowired
 	protected ProjectService projectService;
+	
+	@Autowired
+	protected IntegrationService integrationService;
 
 	@Autowired
 	protected NotificationService notificationService;
