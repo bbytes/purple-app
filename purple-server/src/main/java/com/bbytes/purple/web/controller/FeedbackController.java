@@ -45,6 +45,7 @@ public class FeedbackController {
 	@RequestMapping(value = "/api/v1/feedback", method = RequestMethod.POST)
 	public RestResponse sendFeedback(@RequestBody FeedbackDTO feedbackDTO) throws PurpleException {
 
+		final String FEEDBACK_SUCCESS_MSG = "Feedback has been sent succeessfully";
 		User user = userService.getLoggedInUser();
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
@@ -75,7 +76,7 @@ public class FeedbackController {
 				feedbackResponseTemplate);
 
 		logger.debug("User with email '" + user.getEmail() + "' is sent feedback successfully");
-		RestResponse feedbackResponse = new RestResponse(RestResponse.SUCCESS, SuccessHandler.FEEDBACK_SUCCESS);
+		RestResponse feedbackResponse = new RestResponse(RestResponse.SUCCESS, FEEDBACK_SUCCESS_MSG, SuccessHandler.FEEDBACK_SUCCESS);
 
 		return feedbackResponse;
 	}
