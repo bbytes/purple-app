@@ -2,6 +2,10 @@ package com.bbytes.purple.utils;
 
 public class SuccessHandler {
 
+	public static final String JIRA_CONNECTION_SUCCESS = "jira_connection_success";
+
+	public static final String JIRA_ADD_PROJECTS_SUCCESS = "jira_add_projects_success";
+
 	public static final String SIGN_UP_SUCCESS = "sign_up_success";
 
 	public static final String RESET_PASSWORD = "reset_password";
@@ -33,7 +37,7 @@ public class SuccessHandler {
 	public static final String ADD_STATUS_SUCCESS = "add_status_success";
 
 	public static final String GET_STATUS_SUCCESS = "get_status_success";
-	
+
 	public static final String GET_STATUS_ANALYTICS_SUCCESS = "get_status_analytics_success";
 
 	public static final String DELETE_STATUS_SUCCESS = "delete_status_success";

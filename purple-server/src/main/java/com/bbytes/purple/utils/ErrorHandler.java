@@ -16,6 +16,8 @@ public class ErrorHandler {
 
 	public static final String AUTH_FAILURE = "authentication_failure";
 
+	public static final String BAD_GATEWAY = "bad_gateway";
+
 	public static final String ACCOUNT_ACTIVATION_FAILURE = "account_inactive";
 
 	public static final String USER_NOT_FOUND = "user_not_found";
@@ -89,6 +91,8 @@ public class ErrorHandler {
 	public static final String PASS_DUEDATE_STATUS_EDIT = "pass_duedate_status_edit";
 
 	public static final String FUTURE_DATE_STATUS_EDIT = "future_date_status_edit";
+
+	public static final String JIRA_CONNECTION_FAILED = "jira_connection_failed";
 
 	public static String resolveAuthError(AuthenticationException authEx) {
 		try {
