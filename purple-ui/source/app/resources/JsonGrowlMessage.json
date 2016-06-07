@@ -1,0 +1,52 @@
+{
+  "login":
+   {
+      "Error":"Opps! login failed Something is wrong ",
+      "Success":"login is successfull"
+   },
+   
+   "signup":
+   {
+     "Error1":"Username/Email already exists",
+     " Error2":"Password missmatch please enter correct password",
+     "Error3":"Opps! registration failed Something is wrong ",
+     "Success":"Activation link has been sent to registerd email"
+      
+   },
+   "adminactivation":
+   {
+   Error:"Link is expired please click here to regenerate",
+   success:"u have been activated, add users",
+   },
+   "invite":
+   {
+   "Error1":"Error while adding users",
+   "Error2":"Username/Email already exists"
+   "Success":"Successfully added,Activation link has been sent to registerd email"
+   }
+   "delete":
+   {
+   "Warning":"Are you sure want to delete this record",
+   "Error":"Error while deleting",
+    success:"Record deleted successfully"
+    }
+    "update":
+    {
+    "Error":"Error while updating record",
+    "success":"details has ben updated successfully"
+    }
+    "updatepassword":
+    {
+    "Error":"Incorrect password",
+    "Error1":"password mismatch",
+    "Error2":"Opps! password reset failed Something is wrong ",
+    "success":"Password has been updated successfully"
+    }
+    "comments":
+    {
+     "Error":"Error while adding comments",
+    "success":"Comments saved succesgfully
+    }
+    }
+    }
+      

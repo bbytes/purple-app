@@ -1,0 +1,11 @@
+node_modules
+bower_components
+builds
+nbproject
+/.settings/
+/target/
+/*.classpath
+/*.project
+/*.log
+/target-grunt/
+/.externalToolBuilders/

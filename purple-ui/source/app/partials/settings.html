@@ -1,0 +1,104 @@
+
+<!-- /.main -->
+<div class="col-md-offset-2 col-md-8 main-section">
+	<div class="main-title" ng-init="loadSetting()">
+		<h4>preference</h4>
+	</div>
+      <div class="row">
+	    <div class="col-md-7">
+		 
+		   <div class="form-group">
+		   <label class="settings" for="pwd">EMAIL NOTIFICATION</label>
+		   
+               <toggle-switch ng-model="switchState"></toggle-switch>
+			
+		   </div>
+		
+		
+		</div>
+		
+		<div class="col-md-5">
+		   <div class="form-group">
+				<label for="comment" class="settings">EMAIL REMINDER TIME</label>
+				 <input type="text" size="8" class="form-control"  ng-model="timePreference" data-time-format="h:mm a" data-autoclose="1" placeholder="Time" bs-timepicker />
+			
+			  </div>
+		</div>
+		
+	  </div>
+	
+		<div class="row">
+			<div class="col-md-7">
+				<form name="timeForm">
+					<label class="settings">TIMEZONE</label>
+                       <div ng-init="translations.placeholder = 'SeLecT your timezone :)'">					
+					 <input class="timezone-select" timezone-select="timezone" ng-model="timeZone">
+					 </div>
+					
+			</div>
+
+			<div class="col-md-5">
+			  
+			</div>
+		</div>
+		<div class="col-md-5">
+		<div class="row">
+		 <button type="button" class="btn btn-default create" ng-click="updateSetting()" style="float: left; width: 55.2%;">save</button>
+				</form>
+			</div>	
+		</div>
+	
+
+  <div class="col-md-12">
+		<div class="row">
+	<div class="main-title">
+		<h4>reset password</h4>
+	</div>
+   </div>
+</div>
+
+	<div class="row">
+
+		<form name="signupForm">
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-6">
+						<label class="settings">CURRENT PASSWORD</label> <input
+							type="password" class="form-control" name="oldPassword"
+							ng-model="user.oldPassword" required />
+					</div>
+					<div class="col-md-6"></div>
+				</div>
+				<br />
+
+				<div class="row">
+					<div class="col-md-6">
+						<label class="settings">NEW PASSWORD</label> <input
+							type="password" class="form-control" name="password"
+							ng-model="user.newPassword" ng-minlength="8" ng-maxlength="12"
+							required /> <span class="label label-danger"
+							ng-show="signupForm.password.$dirty && signupForm.password.$error.minlength">use
+							atleast 8 characters</span> <span class="label label-danger"
+							ng-show="!isFormSubmitted && signupForm.password.$dirty && signupForm.password.$error.required">Password
+							required.</span>
+					</div>
+					<div class="col-md-6">
+						<label class="settings">REPEAT NEW PASSWORD</label> <input
+							type="password" class="form-control" id="password_c"
+							name="confirmPassword" ng-model="confirmPassword" required /> <span
+							class="label label-danger"
+							ng-show="!isFormSubmitted &&  signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Password
+							required.</span> <span class="label label-danger"
+							ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (user.newPassword != confirmPassword)">Password
+							mismatch </span>
+					</div>
+
+				</div>
+				<button type="button" class="btn btn-default create"
+					style="float: left; width: 35%;"
+					ng-click="updatePassword(user,confirmPassword)">save</button>
+				<div class="col-md-4"></div>
+			</div>
+		</form>
+  </div>
+ </div>
