@@ -1,7 +1,7 @@
 /**
  * Feedback Controller
  */
-rootApp.controller('feebackCtrl', function($scope, $rootScope, $state,$q,$http,$window,$sessionStorage,appNotifyService) {
+rootApp.controller('feebackCtrl', function($scope, $rootScope, $state,$q,$http,$window,$sessionStorage,appNotifyService,$fancyModal) {
 			
 
 	$scope.sendFeedback = function() {

@@ -92,5 +92,5 @@ public class GlobalConstants {
 
 	public static final String JIRA_GETPROJECTS_API_URL = "/rest/api/2/project";
 
-	public static final String FEEDBACK_EMAIL_ADDRESS = "statusnap@beyondbytes.co.in";
+	public static final String FEEDBACK_EMAIL_ADDRESS = "sanjaykumar@beyondbytes.co.in";
 }

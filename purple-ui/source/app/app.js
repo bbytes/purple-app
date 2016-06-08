@@ -1,7 +1,7 @@
 // Define Angular Module with dependencies 
 var rootApp = angular.module('rootApp', [ 'ui.router', 'ui.bootstrap',
 		'ngAnimate', 'templates-main', 'toaster', 'ngStorage' ,'angular-md5',
-		'angular-hmac-sha512','angularModalService','ngLetterAvatar','ui.calendar','mgcrea.ngStrap','dm.stickyNav','ngMaterial','angular-confirm','textAngular','angular-timezone-select','server-url','angularInlineEdit','720kb.tooltips','angular-notification-icons', 'xeditable','chart.js','pageslide-directive','chieffancypants.loadingBar','toggle-switch','duScroll','vesparny.fancyModal']);
+		'angular-hmac-sha512','angularModalService','ngLetterAvatar','ui.calendar','mgcrea.ngStrap','dm.stickyNav','ngMaterial','angular-confirm','textAngular','angular-timezone-select','server-url','angularInlineEdit','720kb.tooltips','angular-notification-icons', 'xeditable','chart.js','pageslide-directive','chieffancypants.loadingBar','toggle-switch','duScroll','vesparny.fancyModal','angularModalService']);
  // avoid the spacing while copy paste in text angular 
   rootApp.filter('htmlToPlaintext', function() {
     return function(text) {

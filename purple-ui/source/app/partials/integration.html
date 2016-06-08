@@ -20,11 +20,11 @@
 			   <div class="col-md-6"> 
 			    <button class="btn btn-default status-submit" data-toggle="collapse" data-target="#demo"><img src="../../assets/img/icon-jira-logo.png" class="jira"/> CONNECT</button>
 				
-				<button class="btn btn-default status-submit after" ng-click="syncJiraProject()"><i class="fa fa-refresh" aria-hidden="true"></i> Sync Project</button>
+				<button class="btn btn-default status-submit after" ng-click="syncJiraProject()" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true" ></i> Sync Project</button>
 				
-				<button class="btn btn-default status-submit after"><i class="fa fa-refresh" aria-hidden="true"></i> Sync Users</button>
+				<button class="btn btn-default status-submit after" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true"></i> Sync Users</button>
 				
-				<button class="btn btn-default status-submit after"><i class="fa fa-link" aria-hidden="true"></i> Link Users & Projects</button>
+				<button class="btn btn-default status-submit after" ng-show="isConnected"><i class="fa fa-link" aria-hidden="true"></i> Link Users & Projects</button>
 			   </div>
 			   
 			   

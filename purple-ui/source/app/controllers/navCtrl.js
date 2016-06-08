@@ -12,5 +12,4 @@ rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $locatio
         $('.dropdown-toggle').dropdown();
         });
 
-	
 }]);
