@@ -27,7 +27,7 @@ rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 			// Something went wrong.
 			deferred.reject({
 				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
+				'msg' : 'Error While creating project.'
 			});
 		});
 

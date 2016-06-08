@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.PasswordHashService;
+import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
@@ -61,6 +63,9 @@ public class AdminController {
 
 	@Autowired
 	private PasswordHashService passwordHashService;
+	
+	@Autowired
+	private ProjectService projectService;
 
 	@Autowired
 	private EmailService emailService;
@@ -236,16 +241,31 @@ public class AdminController {
 	@RequestMapping(value = "/api/v1/admin/project/create", method = RequestMethod.POST)
 	public RestResponse createProject(@RequestBody ProjectDTO projectDTO) throws PurpleException {
 
+		final String subject = GlobalConstants.EMAIL_INVITE_PROJECT_SUBJECT;
+		final String template = GlobalConstants.EMAIL_INVITE_PROJECT_TEMPLATE;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		
 		// we assume angular layer will do empty checks for project
 		Organization org = userService.getLoggedInUser().getOrganization();
 		Project addProject = new Project(projectDTO.getProjectName());
 		addProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();
+		List<String> emailList = new ArrayList<String>();
 		for (String i : projectDTO.getUsers()) {
 			usersTobeAdded.add(userService.getUserByEmail(i));
+			emailList.add(i);
 		}
 		addProject.setUser(usersTobeAdded);
 		Project project = adminService.createProject(addProject, usersTobeAdded);
+		
+		String postDate = dateFormat.format(new Date());
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+
+		emailService.sendEmail(emailList, emailBody, subject, template);
+		
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
 		logger.debug("User with email  '" + projectDTO.getProjectName() + "' are added successfully");
@@ -320,6 +340,10 @@ public class AdminController {
 	public RestResponse updateProject(@PathVariable("projectid") String projectId, @RequestBody ProjectDTO projectDTO)
 			throws PurpleException {
 
+		final String subject = GlobalConstants.EMAIL_INVITE_PROJECT_SUBJECT;
+		final String template = GlobalConstants.EMAIL_INVITE_PROJECT_TEMPLATE;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		
 		// we assume angular layer will do null checks for project object
 		Organization org = userService.getLoggedInUser().getOrganization();
 		Project updateProject = new Project(projectDTO.getProjectName());
@@ -328,9 +352,25 @@ public class AdminController {
 		for (String i : projectDTO.getUsers()) {
 			usersTobeAdded.add(userService.getUserByEmail(i));
 		}
+		List<User> usersFromProject = projectService.findByProjectId(projectId).getUser();
+		
+		List<String> emailList = new LinkedList<String>();
+		for(User user : usersTobeAdded){
+			
+			if(!usersFromProject.contains(user))
+				emailList.add(user.getEmail());
+		}
 		updateProject.setUser(usersTobeAdded);
-
 		Project project = adminService.updateProject(projectId, updateProject);
+
+		String postDate = dateFormat.format(new Date());
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+
+		emailService.sendEmail(emailList, emailBody, subject, template);
+		
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
 		logger.debug("Projects are updated successfully");

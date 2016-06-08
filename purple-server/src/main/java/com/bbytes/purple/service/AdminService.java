@@ -189,7 +189,7 @@ public class AdminService {
 
 	public Project createProject(Project project, List<User> users) throws PurpleException {
 
-		if (project != null) {
+		if (project.getProjectName() != null) {
 			if (projectService.projectNameExist(project.getProjectName()))
 				throw new PurpleException("Project with given name '" + project.getProjectName() + "' already exist",
 						ErrorHandler.PROJECT_NOT_FOUND);
@@ -207,7 +207,8 @@ public class AdminService {
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_PROJECT_FAILED);
 			}
-		}
+		} else
+			throw new PurpleException("Can not add empty project", ErrorHandler.ADD_PROJECT_FAILED);
 		return project;
 	}
 
@@ -260,6 +261,7 @@ public class AdminService {
 					userService.save(userTobeRemoved);
 				}
 				updateProject.setUser(project.getUser());
+				updateProject.setProjectName(project.getProjectName());
 				newProject = projectService.save(updateProject);
 				for (User user : updateProject.getUser()) {
 					List<Project> projectList = new ArrayList<Project>();

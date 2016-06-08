@@ -14,6 +14,8 @@ public class GlobalConstants {
 
 	public static final String EMAIL_INVITE_SUBJECT = "Invitation to join Statusnap";
 
+	public static final String EMAIL_INVITE_PROJECT_SUBJECT = "Statusnap - Added to new Project";
+
 	public static final String EMAIL_FEEDBACK_SEND_SUBJECT = " has sent the feedback on Statusnap";
 
 	public static final String EMAIL_FEEDBACK_RESPONSE_SUBJECT = "Thank you for providing your feedback!";
@@ -32,6 +34,8 @@ public class GlobalConstants {
 
 	public static final String EMAIL_INVITE_TEMPLATE = "email-text-invite-user.html";
 
+	public static final String EMAIL_INVITE_PROJECT_TEMPLATE = "email-text-invite-project.html";
+
 	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
 
 	public static final String COMMENT_EMAIL_TEMPLATE = "email-text-comment.html";
@@ -47,6 +51,8 @@ public class GlobalConstants {
 	public static final String EMAIL_FORGOT_PASSWORD_TEMPLATE = "email-text-forgot-password.html";
 
 	public static final String USER_NAME = "name";
+
+	public static final String PROJECT_NAME = "projectName";
 
 	public static final String CURRENT_DATE = "current_date";
 
