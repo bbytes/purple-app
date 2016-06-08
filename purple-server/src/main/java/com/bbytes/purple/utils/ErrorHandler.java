@@ -88,6 +88,8 @@ public class ErrorHandler {
 
 	public static final String UPDATE_USERROLE_FAILED = "update_userrole_failed";
 
+	public static final String UPDATE_USER_PROFILE_FAILED = "update_user_profile_failed";
+
 	public static final String PASS_DUEDATE_STATUS_EDIT = "pass_duedate_status_edit";
 
 	public static final String FUTURE_DATE_STATUS_EDIT = "future_date_status_edit";

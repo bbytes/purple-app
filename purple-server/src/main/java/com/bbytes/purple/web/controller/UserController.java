@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.domain.Project;
@@ -110,6 +111,27 @@ public class UserController {
 				SuccessHandler.GET_PROJECT_SUCCESS);
 
 		return projectReponse;
+	}
+
+	/**
+	 * The updateUser methods is used to update user's profile
+	 * 
+	 * @param userName
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/user/update", method = RequestMethod.PUT)
+	public RestResponse updateUser(@RequestParam("userName") String userName) throws PurpleException {
+
+		User user = userService.getLoggedInUser();
+
+		User updatedUser = userService.updateUserProfile(userName, user);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(updatedUser);
+		logger.debug("User profile is updated successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO,
+				SuccessHandler.UPDATE_USER_SUCCESS);
+
+		return userReponse;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.bbytes.purple.web.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -150,7 +151,7 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 	}
-	
+
 	@Test
 	public void testGetAllUsersByProjectsFailed() throws Exception {
 
@@ -186,6 +187,21 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
 		mockMvc.perform(get("/api/v1/projects/users/all").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
+
+	// Test cases for update user
+
+	@Test
+	public void testUpdateUserPasses() throws Exception {
+
+		String userName = "Updated Name";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
+		mockMvc.perform(put("/api/v1/user/update").param("userName", userName)
+				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 	}

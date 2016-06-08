@@ -1,7 +1,32 @@
 
 <!-- /.main -->
-<div class="col-md-offset-2 col-md-8 main-section">
-	<div class="main-title" ng-init="loadSetting()">
+<div class="col-md-offset-2 col-md-8 main-section" ng-init="loadSetting()">
+   <!--profile-->
+   <div class="profile">
+   <div class="main-title" >
+		<h4>profile</h4>
+	</div>
+	<form name="profileForm">
+     <div class="form-group">
+				<label for="comment" class="settings">Display Name</label>
+				 <input type="text" size="8" class="form-control"  ng-model="userName" name="userName" style="width:40%;" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required/>
+				<span style="color: red"
+							ng-show="profileForm.userName.$dirty && profileForm.userName.$error.required">Display
+							Name is required.</span> <span style="color: red"
+							ng-show="profileForm.userName.$dirty && profileForm.userName.$error.pattern">Please enter valid Name</span>
+			  </div>
+			  </form>
+     <div class="col-md-5">
+		<div class="row">
+		 <button type="button" class="btn btn-default create" ng-click="updateUserProfile()" style="width: 55.2%;">save</button>
+				
+			</div>	
+		</div>
+		</div>
+		<div class="clear" style="clear:both; padding-bottom:40px;">
+    <!--profile ends-->
+
+	<div class="main-title" >
 		<h4>preference</h4>
 	</div>
       <div class="row">

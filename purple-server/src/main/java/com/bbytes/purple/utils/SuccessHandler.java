@@ -24,6 +24,8 @@ public class SuccessHandler {
 
 	public static final String GET_USER_SUCCESS = "get_users_success";
 
+	public static final String UPDATE_USER_SUCCESS = "update_user_success";
+
 	public static final String ADD_PROJECT_SUCCESS = "add_project_success";
 
 	public static final String DELETE_PROJECT_SUCCESS = "delete_project_success";
