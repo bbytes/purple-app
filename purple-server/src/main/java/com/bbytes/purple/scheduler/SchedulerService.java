@@ -194,7 +194,7 @@ public class SchedulerService {
 			Set<String> nameList = new LinkedHashSet<String>();
 
 			for (User user : allUsers) {
-				if (!userList.toString().contains(user.toString())) {
+				if (!userList.toString().contains(user.toString()) && user.getProjects().size() > 0) {
 					userListToBeSendMail.add(user);
 					nameList.add(user.getName());
 				}
