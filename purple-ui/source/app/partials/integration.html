@@ -18,7 +18,7 @@
 			  <hr />
 			  <div class="row">
 			   <div class="col-md-6"> 
-			    <button class="btn btn-default status-submit" data-toggle="collapse" data-target="#demo"><img src="../../assets/img/icon-jira-logo.png" class="jira"/> CONNECT</button>
+			    <button class="btn btn-default status-submit" data-toggle="collapse" data-target="#intergration-form"><img src="../../assets/img/icon-jira-logo.png" class="jira"/> CONNECT</button>
 				
 				<button class="btn btn-default status-submit after" ng-click="syncJiraProject()" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true" ></i> Sync Project</button>
 				
@@ -36,7 +36,7 @@
 			   
 			   <form name="form" style="margin-top:100px;">
 			    <div class="col-md-6">
-			    <div id="demo" class="collapse">
+			    <div id="intergration-form" class="collapse">
                   <label class="settings">JIRA Base url</label> 
 				  <input type="text" class="form-control" ng-model="jiraurl" required />
 				  
@@ -46,7 +46,7 @@
 				   <label class="settings">Password</label> 
 				  <input type="password" class="form-control" ng-model="password" required />
 				   <br />
-				   <input type="submit" value="Connect" class="btn btn-default" ng-click="connectToJira()">
+				   <input type="submit" value="Connect" class="btn btn-default" ng-click="connectToJira()" data-toggle="collapse" data-target="#intergration-form">
                 </div>
 				</div>
 				
