@@ -148,17 +148,6 @@ public class IntegrationController {
 			String jiraGetProjectsAPIURL = GlobalConstants.JIRA_GETPROJECTS_API_URL;
 			String basicAuthHeader = integration.getJiraBasicAuthHeader();
 
-			/*
-			 * HttpGet request = new HttpGet(integration.getJiraBaseURL() +
-			 * jiraGetProjectsAPIURL);
-			 * request.setHeader(HttpHeaders.AUTHORIZATION, basicAuthHeader);
-			 * 
-			 * HttpClient client = HttpClientBuilder.create().build();
-			 * HttpResponse response = client.execute(request);
-			 * 
-			 * //int statusCode1 = response.getStatusLine().getStatusCode();
-			 */
-
 			URL url = new URL(integration.getJiraBaseURL() + jiraGetProjectsAPIURL);
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -170,21 +159,22 @@ public class IntegrationController {
 					throw new PurpleException("Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
 			}
 
-			URI jiraServerUri = URI.create(integration.getJiraBaseURL());
+			// Below Code is for JIRA REST Client -- Giving some issue
+			
+			/*URI jiraServerUri = URI.create(integration.getJiraBaseURL());
 
 			AsynchronousJiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
 			JiraRestClient restClient = factory.createWithBasicHttpAuthentication(jiraServerUri, "username",
 					"password");
 
-			final int buildNumber = restClient.getMetadataClient().getServerInfo().claim().getBuildNumber(); // Giving
-																												// error
+			final int buildNumber = restClient.getMetadataClient().getServerInfo().claim().getBuildNumber(); 
 
 			if (buildNumber >= 600) {
 				final Iterable<BasicProject> allProjects = restClient.getProjectClient().getAllProjects().claim();
 				for (BasicProject project : allProjects) {
 					System.out.println(project);
 				}
-			}
+			}*/
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
