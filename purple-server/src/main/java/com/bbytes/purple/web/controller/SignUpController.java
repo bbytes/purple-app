@@ -72,8 +72,11 @@ public class SignUpController {
 		// we assume the angular layer will do empty/null org name , user email
 		// etc.. validation
 		final String SIGN_UP_SUCCESS_MSG = "Activation link is successfully sent to your register email address";
-		final String subject = GlobalConstants.EMAIL_SIGNUP_SUBJECT;
-		final String template = GlobalConstants.EMAIL_SIGNUP_TEMPLATE;
+		final String clientSubject = GlobalConstants.EMAIL_SIGNUP_SUBJECT;
+		final String clientTemplate = GlobalConstants.EMAIL_SIGNUP_TEMPLATE;
+
+		final String subject = GlobalConstants.EMAIL_REGISTER_TENANT_SUBJECT;
+		final String template = GlobalConstants.EMAIL_REGISTER_TENANT_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
@@ -84,21 +87,31 @@ public class SignUpController {
 		user.setEmail(signUpRequestDTO.getEmail().toLowerCase());
 		user.setPassword(signUpRequestDTO.getPassword());
 		user.setOrganization(organization);
-		List<String> emailList = new ArrayList<String>();
-		emailList.add(user.getEmail());
+		List<String> clientEmailList = new ArrayList<String>();
+		clientEmailList.add(user.getEmail());
 
 		registrationService.signUp(organization, user);
 
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(signUpRequestDTO.getEmail().toLowerCase(), 720);
+		final String xauthToken = tokenAuthenticationProvider
+				.getAuthTokenForUser(signUpRequestDTO.getEmail().toLowerCase(), 720);
 		String postDate = dateFormat.format(new Date());
+
+		Map<String, Object> clientEmailBody = new HashMap<>();
+		clientEmailBody.put(GlobalConstants.USER_NAME, user.getName());
+		clientEmailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		clientEmailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
+
+		List<String> emailList = new ArrayList<String>();
+		emailList.add("akshaynagprkr@gmail.com");
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
-		
+		emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
+		emailBody.put(GlobalConstants.EMAIL_ADDRESS, user.getEmail());
+
+		emailService.sendEmail(clientEmailList, clientEmailBody, clientSubject, clientTemplate);
 		emailService.sendEmail(emailList, emailBody, subject, template);
-		
+
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 
 		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, SIGN_UP_SUCCESS_MSG,

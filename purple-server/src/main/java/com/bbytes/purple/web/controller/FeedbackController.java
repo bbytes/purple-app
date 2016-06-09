@@ -57,7 +57,7 @@ public class FeedbackController {
 
 		String postDate = dateFormat.format(new Date());
 		List<String> feedBackSendEmailList = new ArrayList<String>();
-		feedBackSendEmailList.add(GlobalConstants.FEEDBACK_EMAIL_ADDRESS);
+		feedBackSendEmailList.add(GlobalConstants.STATUSNAP_EMAIL_ADDRESS);
 
 		Map<String, Object> feedBackSendEmailBody = new HashMap<>();
 		feedBackSendEmailBody.put(GlobalConstants.USER_NAME, user.getName());

@@ -14,6 +14,8 @@ public class GlobalConstants {
 
 	public static final String EMAIL_INVITE_SUBJECT = "Invitation to join Statusnap";
 
+	public static final String EMAIL_REGISTER_TENANT_SUBJECT = " Register on Statusnap";
+
 	public static final String EMAIL_INVITE_PROJECT_SUBJECT = "Statusnap - Added to new Project";
 
 	public static final String EMAIL_FEEDBACK_SEND_SUBJECT = " has sent the feedback on Statusnap";
@@ -33,6 +35,8 @@ public class GlobalConstants {
 	public static final String EMAIL_SIGNUP_TEMPLATE = "email-text-signup.html";
 
 	public static final String EMAIL_INVITE_TEMPLATE = "email-text-invite-user.html";
+
+	public static final String EMAIL_REGISTER_TENANT_TEMPLATE = "email-text-register_tenant.html";
 
 	public static final String EMAIL_INVITE_PROJECT_TEMPLATE = "email-text-invite-project.html";
 
@@ -90,6 +94,8 @@ public class GlobalConstants {
 
 	public static final String PASSWORD = "default_password";
 
+	public static final String EMAIL_ADDRESS = "email";
+
 	public static final String CATEGORY = "category";
 
 	public static final String FEEDBACK = "feedback";
@@ -98,5 +104,5 @@ public class GlobalConstants {
 
 	public static final String JIRA_GETPROJECTS_API_URL = "/rest/api/2/project";
 
-	public static final String FEEDBACK_EMAIL_ADDRESS = "statusnap@beyondbytes.co.in";
+	public static final String STATUSNAP_EMAIL_ADDRESS = "statusnap@beyondbytes.co.in";
 }
