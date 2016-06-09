@@ -41,7 +41,10 @@ public class ExceptionHandlingController {
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	public ResponseEntity<Object> handleError(HttpServletRequest req, Exception ex) {
-		String erroMessage = "Request: " + req.getRequestURL() + " raised - " + ex.getMessage();
+		
+		String userInfoStr = getUserInfo();
+
+		String erroMessage = "Request: " + req.getRequestURL() + " raised - " + ex.getMessage() + userInfoStr;
 		logger.error(erroMessage, ex);
 		RestResponse errorResponse = new RestResponse(RestResponse.FAILED, ex.getMessage(), ErrorHandler.SERVER_ERROR);
 		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -51,6 +54,9 @@ public class ExceptionHandlingController {
 
 		User user = userService.getLoggedInUser();
 
+		if(user == null)
+			return "";
+		
 		String userInfo = " - by Logged in User - " + user.getName() + " with Email : " + user.getEmail() + " of "
 				+ user.getOrganization().getOrgName() + " - organization";
 
