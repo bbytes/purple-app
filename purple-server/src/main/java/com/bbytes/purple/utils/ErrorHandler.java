@@ -83,6 +83,8 @@ public class ErrorHandler {
 	public static final String UPDATE_COMMENT_FAILED = "update_comment_failed";
 
 	public static final String UPDATE_SETTING_FAILED = "update_setting_failed";
+	
+	public static final String SET_TIMEZONE_TIMEPREFERENCE_FAILED = "set timezone or timepreference failed";
 
 	public static final String HOURS_EXCEEDED = "hours_exceeded";
 
