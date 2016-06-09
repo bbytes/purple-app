@@ -22,7 +22,7 @@ public class ExceptionHandlingController {
 	@ExceptionHandler(PurpleException.class)
 	@ResponseBody
 	public ResponseEntity<Object> handleError(HttpServletRequest req, PurpleException ex) {
-		String erroMessage = "Request: " + req.getRequestURL() + " raised " + ex.getMessage();
+		String erroMessage = "Request: " + req.getRequestURL() + " raised - " + ex.getMessage() +  " - Error Constant - " +  ex.getErrConstant();
 		logger.error(erroMessage, ex);
 		RestResponse errorResponse = new RestResponse(RestResponse.FAILED, ex.getMessage(), ex.getErrConstant());
 		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -31,7 +31,7 @@ public class ExceptionHandlingController {
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	public ResponseEntity<Object> handleError(HttpServletRequest req, Exception ex) {
-		String erroMessage = "Request: " + req.getRequestURL() + " raised " + ex.getMessage();
+		String erroMessage = "Request: " + req.getRequestURL() + " raised - " + ex.getMessage();
 		logger.error(erroMessage, ex);
 		RestResponse errorResponse = new RestResponse(RestResponse.FAILED, ex.getMessage(), ErrorHandler.SERVER_ERROR);
 		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
