@@ -171,4 +171,19 @@ public class UserService extends AbstractService<User, String> {
 		}
 		return allProjects;
 	}
+
+	public User updateUserProfile(String userName, User user) throws PurpleException {
+
+		User updatedUser = null;
+		if (!exists(user.getUserId()))
+			throw new PurpleException("Error while updating user profile", ErrorHandler.USER_NOT_FOUND);
+		try {
+			user.setName(userName);
+			updatedUser = userRepository.save(user);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_USER_PROFILE_FAILED);
+		}
+
+		return updatedUser;
+	}
 }

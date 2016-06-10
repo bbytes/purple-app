@@ -36,7 +36,7 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 
 					} else {
 						appNotifyService.error(response.data,
-								'error while creating project.');
+								'Error while creating project.');
 					}
 				}, function(error) {
 					appNotifyService.error(error.msg);

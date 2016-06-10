@@ -83,10 +83,14 @@ public class ErrorHandler {
 	public static final String UPDATE_COMMENT_FAILED = "update_comment_failed";
 
 	public static final String UPDATE_SETTING_FAILED = "update_setting_failed";
+	
+	public static final String SET_TIMEZONE_TIMEPREFERENCE_FAILED = "set timezone or timepreference failed";
 
 	public static final String HOURS_EXCEEDED = "hours_exceeded";
 
 	public static final String UPDATE_USERROLE_FAILED = "update_userrole_failed";
+
+	public static final String UPDATE_USER_PROFILE_FAILED = "update_user_profile_failed";
 
 	public static final String PASS_DUEDATE_STATUS_EDIT = "pass_duedate_status_edit";
 

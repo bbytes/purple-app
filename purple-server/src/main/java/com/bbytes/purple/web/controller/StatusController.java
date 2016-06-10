@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TimePeriod;
@@ -34,6 +35,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
+import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.StatusAnalyticsService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
@@ -53,6 +55,8 @@ public class StatusController {
 
 	private static final String PROJECT = "Project";
 
+	private static final String USER = "User";
+
 	@Autowired
 	private StatusService statusService;
 
@@ -61,6 +65,9 @@ public class StatusController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private ProjectService projectService;
 
 	@Autowired
 	private UtilityService utilityService;
@@ -278,9 +285,9 @@ public class StatusController {
 		List<User> allUsers = new ArrayList<User>();
 		allUsers.addAll(users);
 
-		Iterable<ProjectUserCountStats> result=null;
-		
-		if (usersAndProjectsDTO.getProjectUser().equals(PROJECT)) {
+		Iterable<ProjectUserCountStats> result = null;
+
+		if (usersAndProjectsDTO.getProjectList().isEmpty() && usersAndProjectsDTO.getProjectUser().equals(PROJECT)) {
 			if (aggrType.equals("day")) {
 				result = statusAnalyticsService.getProjectPerDayCountHours(user.getProjects(), startDate, endDate);
 			} else {
@@ -293,10 +300,10 @@ public class StatusController {
 					statusAnalyticsList.add(projectUserCountStats);
 				}
 			}
-			projectUserCountStatsDTO = dataModelToDTOConversionService
-					.getResponseMapWithStatusAnalyticsbyProject(statusAnalyticsList, usersAndProjectsDTO.getCountHours(),aggrType);
-		} else {
-			
+			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyProject(
+					statusAnalyticsList, usersAndProjectsDTO.getCountHours(), aggrType);
+		} else if (usersAndProjectsDTO.getUserList().isEmpty() && usersAndProjectsDTO.getProjectUser().equals(USER)) {
+
 			if (aggrType.equals("day")) {
 				result = statusAnalyticsService.getUserPerDayCountHours(allUsers, startDate, endDate);
 			} else {
@@ -310,8 +317,49 @@ public class StatusController {
 					statusAnalyticsList.add(projectUserCountStats);
 				}
 			}
-			projectUserCountStatsDTO = dataModelToDTOConversionService
-					.getResponseMapWithStatusAnalyticsbyUser(statusAnalyticsList, usersAndProjectsDTO.getCountHours(),aggrType);
+			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyUser(
+					statusAnalyticsList, usersAndProjectsDTO.getCountHours(), aggrType);
+		} else if (usersAndProjectsDTO.getProjectList().get(0) != null) {
+
+			Project project = projectService.findByProjectId(usersAndProjectsDTO.getProjectList().get(0));
+			List<Project> projectList = new ArrayList<Project>();
+			projectList.add(project);
+
+			if (aggrType.equals("day")) {
+				result = statusAnalyticsService.getProjectPerDayCountHours(projectList, startDate, endDate);
+			} else {
+				result = statusAnalyticsService.getProjectPerMonthCountHours(projectList, startDate, endDate);
+			}
+
+			List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
+			if (result != null) {
+				for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
+					ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
+					statusAnalyticsList.add(projectUserCountStats);
+				}
+			}
+			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyProject(
+					statusAnalyticsList, usersAndProjectsDTO.getCountHours(), aggrType);
+		} else {
+
+			User getUser = userService.getUserByEmail(usersAndProjectsDTO.getUserList().get(0));
+			List<User> userList = new ArrayList<User>();
+			userList.add(getUser);
+
+			if (aggrType.equals("day")) {
+				result = statusAnalyticsService.getUserPerDayCountHours(userList, startDate, endDate);
+			} else {
+				result = statusAnalyticsService.getUserPerMonthCountHours(userList, startDate, endDate);
+			}
+			List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
+			if (result != null) {
+				for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
+					ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
+					statusAnalyticsList.add(projectUserCountStats);
+				}
+			}
+			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyUser(
+					statusAnalyticsList, usersAndProjectsDTO.getCountHours(), aggrType);
 		}
 		logger.debug("All Status Analytics are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, projectUserCountStatsDTO,

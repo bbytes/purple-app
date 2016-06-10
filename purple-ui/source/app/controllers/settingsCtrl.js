@@ -1,7 +1,7 @@
 /**
  * User setting controller
  */
-rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, settingsService,appNotifyService, cfpLoadingBar) {
+rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, $sessionStorage, settingsService,appNotifyService, cfpLoadingBar) {
     
 	$rootScope.bodyClass = 'body-standalone1';
 	$rootScope.navClass = 'nav-control';
@@ -100,5 +100,35 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, setting
 
 	   $scope.switchStatus =  $rootScope.switchStatus;
  };
+
+  // Used for updating user profile
+
+  $scope.updateUserProfile = function(){
+
+    var user = $scope.userName;
+    if(!user){
+      appNotifyService.error('Please enter your name');
+            return false;
+        }
+      settingsService.updateProfile(user).then(function (response) {
+       if (response.success = true) {
+        $rootScope.userName = response.data.userName;
+        $rootScope.userRole = response.data.userRole.id;
+
+                    var userInfo = {
+                    name: $rootScope.userName,
+                    userRoles:  $rootScope.userRole,
+                   };
+              
+        $sessionStorage.userInfo =  userInfo;
+         appNotifyService.success('Profile has been successfully updated.');        
+         } 
+
+     }, function (error) {
+         appNotifyService.error('Please set a valid profile');
+     });
+
+
+  };
 	
 });

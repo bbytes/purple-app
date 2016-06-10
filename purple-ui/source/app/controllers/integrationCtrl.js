@@ -59,13 +59,13 @@ rootApp.controller('integrationCtrl', function ($scope, $rootScope, $state, $win
 
         integrationService.getJiraProject().then(function (response) {
                      if (response.success) {
-                        appNotifyService.success('Connected to JIRA');  
+                        appNotifyService.success('Projects are Sync');  
                         
                  }
              }, function(error) {
              			 
 			if (error.reason == "bad_gateway"){
-				appNotifyService.error('You have entered invalid JIRA URL');
+				appNotifyService.error('Bad Gateway');
 			}
 			else if (error.reason == "authentication_failure"){
 				appNotifyService.error('User is not authorized');

@@ -74,6 +74,27 @@ rootApp.service('settingsService', function($rootScope, $http, $q, $window) {
 		return deferred.promise;
 	};
 
+	this.updateProfile = function(user) {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'PUT',
+			url : $rootScope.baseUrl + 'api/v1/user/update',
+			params : {"userName" : user},
+			headers : {
+				'Content-Type' : 'application/json',
+			}
+
+		}).success(function(response, status, headers, config) {
+				deferred.resolve(response);
+		}).error(function(response) {
+				deferred.reject(response);
+		});
+
+		return deferred.promise;
+	};
+
 	this.getConfigSetting = function(admin) {
 
 		var deferred = $q.defer();

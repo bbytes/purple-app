@@ -166,6 +166,14 @@ public class SchedulerService {
 		TenancyContextHolder.setDefaultTenant();
 	}
 
+	/**
+	 * sendEmailforStatusUpdate Method is used to distribute emails to "MANAGER"
+	 * who couldn't update status.
+	 * 
+	 * @throws PurpleException
+	 * @throws ParseException
+	 */
+
 	@Scheduled(cron = "	0 0 10 ? * TUE,WED,THU,FRI,SAT")
 	public void sendEmailforStatusUpdate() throws PurpleException, ParseException {
 
@@ -194,7 +202,7 @@ public class SchedulerService {
 			Set<String> nameList = new LinkedHashSet<String>();
 
 			for (User user : allUsers) {
-				if (!userList.toString().contains(user.toString())) {
+				if (!userList.toString().contains(user.toString()) && user.getProjects().size() > 0) {
 					userListToBeSendMail.add(user);
 					nameList.add(user.getName());
 				}

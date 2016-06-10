@@ -18,7 +18,7 @@
 			  </li>
 			  
 		      <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'">
-			  <a ng-click="loadProjectMap(project,mytime)">{{project.projectName}}</a>
+			  <a ng-click="loadStatusGraph(mytime, project, counthours)">{{project.projectName}}</a>
 			  </li>		  
             </ul>
           </div>
@@ -39,7 +39,7 @@
          <div class="panel-body">
             <ul class="list-group project-nav">
               <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers  | orderBy:'userName'" >
-			  <a ng-click="loadUserMap(users, mytime)">{{users.userName}}</a>
+			  <a ng-click="loadStatusGraph(mytime, users, counthours)">{{users.userName}}</a>
 			  </li>
             </ul>
           </div>
@@ -56,7 +56,7 @@
      <ul>
        <li><b>Group By:</b></li>
 	     <li>
-       <select ng-model="projectuser" ng-options="groupbyProjectUserfield.value as groupbyProjectUserfield.id for groupbyProjectUserfield in groupbyProjectUserfield" ng-change="groupBychange(mytime, projectuser, counthours)">
+       <select ng-model="projectuser" ng-options="groupbyProjectUserfield.value as groupbyProjectUserfield.id for groupbyProjectUserfield in groupbyProjectUserfield" ng-change="groupBychange(mytime, projectuser, counthours)" ng-hide="isGroupBy">
             </select>
             
              </li>
