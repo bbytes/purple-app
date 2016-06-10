@@ -101,6 +101,7 @@
               <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers  | orderBy:'userName'" >
 			  <a ng-click="loadUserMap(users, mytime)">{{users.userName}}</a>
 			  </li>
+			  
             </ul>
           </div>
 
@@ -247,6 +248,7 @@
 
 <div class="col-md-9">
 <div class="content">
+ 
     <!-- Page Content -->
 	  <div class="search-filter">
 	   <ul>
@@ -264,9 +266,13 @@
 						
 					<span ng-show="isActive" class="username" ><span class="hash" ># </span>All Projects</span> 
 					<span ng-show="isProject" class="username" ><span class="hash" ># </span>{{selected.projectName}}</span> 
-					<span ng-show="isUser" class="username" ><span class="hash" >@ </span>{{selected.userName}}</span> 
+					<span ng-show="isUser" class="username">
+					<span class="hash" ng-if="selected.userName">@ 
+					</span>{{selected.userName}}
+					</span>
+                   					
 					 </div>
-					 
+					
 					 <!--timeline-->
                       <ul class="timeline newid" ng-repeat="artist in artists">
                         <div class="date-time">
@@ -285,10 +291,14 @@
 
                                   <div class="timeline-heading">
                                   
-                                     <h4 ng-show="isActive"><span class="hash"># </span> {{status.projectName}} <span class="hash">@ </span> {{status.userName}}
-                                     <span  style="float:right"> {{status.time}}</span>
+                                     <h4 ng-show="isActive">
+									 <div class="hash"><ng-letter-avatar
+									data="{{status.userName}}" shape="round"  width="25px" height="25px" fontSize="15px"></ng-letter-avatar>  {{status.userName}} </div>
+									 <div class="hash">&nbsp;&nbsp;&nbsp;# </span> {{status.projectName}} 
+                                     <span  style="float:right"> {{status.time}}</div>
 									</h4>
-                                     <h4 ng-show="isProject"><span class="hash">@ </span> {{status.userName}}
+                                     <h4 ng-show="isProject"><span class="hash"><ng-letter-avatar
+									data="{{status.userName}}" shape="round"  width="25px" height="25px" fontSize="15px"></ng-letter-avatar> </span> {{status.userName}}
                                      <span  style="float:right"> {{status.time}}</span>
 									</h4>
                                      <h4 ng-show="isUser"><span class="hash"># </span> {{status.projectName}}
