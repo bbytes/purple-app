@@ -111,6 +111,10 @@ public class DropdownListController {
 		statusMap.put("1 Day", "1");
 		statusMap.put("2 Days", "2");
 		statusMap.put("3 Days", "3");
+		statusMap.put("4 Days", "4");
+		statusMap.put("5 Days", "5");
+		statusMap.put("6 Days", "6");
+		statusMap.put("7 Days", "7");
 
 		List<BaseDTO> baseDTOList = new ArrayList<BaseDTO>();
 
