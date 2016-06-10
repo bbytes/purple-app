@@ -77,5 +77,4 @@ rootApp.controller('integrationCtrl', function ($scope, $rootScope, $state, $win
 
     };
 
-
 });

@@ -3914,3 +3914,26 @@ tabs-left, .tabs-right {
 .feedback-show{
 	display:block;
 }
+.fancymodal .fancymodal-close{
+	position:static !important;
+}
+.btn-default:hover {
+    color: #fff !important;
+    background-color:rgb(124, 105, 145) !important;
+    border-color: transparent !important;
+}
+
+.fancymodal .fancymodal-close:before {
+    border-radius: 3px;
+    position: absolute;
+    content: "\00D7";
+    font-size: 26px;
+    line-height: 30px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    top: 3px;
+    right: 3px;
+    color: #ccc;
+    z-index: 999;
+}

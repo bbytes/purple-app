@@ -2,16 +2,16 @@
   <div class="island" ng-controller="feebackCtrl">
      <h3>Feedback</h3>
 	 <hr />
-	 <form>
-	 <select class="form-control" ng-model="category">
+	 <form name="myForm">
+	 <select class="form-control" ng-model="category" required>
 	    <option value="">-- Select Category --</option>
 	    <option value="Bugs">Bugs</option>
 		<option value="Enhancement">Enhancement</option>
         <option value="Comments">Comments</option>		
 		</select>
-	 <textarea name="" class="form-control" placeholder="Send us your comments or suggestion..." ng-model="commentText"></textarea>
+	 <textarea name="" class="form-control" placeholder="Send us your comments or suggestion..." ng-model="commentText" required></textarea>
 	
-	 <button class="btn btn-default" id="close-button" ng-click="sendFeedback(); "> Send</button>
+	 <button class="btn btn-default fancymodal-close" id="close-button" ng-click="sendFeedback()" ng-disabled="myForm.$invalid"> Send</button>
 	 </form>
   </div>
   </div>
