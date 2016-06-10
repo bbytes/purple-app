@@ -84,7 +84,10 @@
                 countHours : counthours
         }
         metricsService.getAllStatusAnalytics($scope.updateData,time).then(function (response) {
-            
+
+            $scope.isGroupBy = false;
+            $scope.isActive = true;
+
             $scope.labels = [];
             $scope.series = [];
             $scope.data = [];
@@ -97,11 +100,48 @@
              }
              
          });
-     }
+     };
+
+      $scope.loadStatusGraph = function(time, projectuser, counthours){
+
+        $rootScope.itemChoose = projectuser;
+        var email, projectId;
+
+        if(projectuser.projectId == null || projectuser.projectId == 'undefined')
+                 email = projectuser.email;
+        else
+            projectId = projectuser.projectId;
+        $scope.updateData = {
+                projectList :[projectId],
+                userList : [email],
+                countHours : counthours
+        }
+        metricsService.getAllStatusAnalytics($scope.updateData,time).then(function (response) {
+            
+            $scope.isGroupBy = true;
+            $scope.isActive = false;
+
+            $scope.labels = [];
+            $scope.series = [];
+            $scope.data = [];
+
+             if (response.success) {
+        
+                      $scope.labels = response.data.labels;
+                      $scope.series = response.data.series;
+                      $scope.data = response.data.data;
+             }
+             
+         });
+     };
 
 
     $scope.groupBychange = function(timePeriod, projectuser, counthours) {
 
+            var itemSelected = $rootScope.itemChoose;
+        if($scope.isGroupBy)
+            $scope.loadStatusGraph(timePeriod, itemSelected, counthours);
+        else 
              $scope.loadAllStatusGraph(timePeriod, projectuser, counthours);
     }
  
