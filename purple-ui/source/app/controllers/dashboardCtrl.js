@@ -246,7 +246,7 @@ $scope.start = function() {
                       angular.forEach(response.data.gridData, function(value, key) {
                       $scope.artists.push(value);
                       });
-                  	$scope.selected = user;
+                  	  $scope.selected = user;
                       $scope.isUser = true;
                       $scope.isProject = false;
                       $scope.isActive = false;  

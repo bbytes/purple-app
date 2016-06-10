@@ -12,4 +12,24 @@ rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $locatio
         $('.dropdown-toggle').dropdown();
         });
 
+	
+	$scope.open = function () {
+
+    var modalInstance = $modal.open({
+      templateUrl: 'app/partials/feedback.html',
+      controller: 'feedbackCtrl',
+      resolve: {
+        items: function () {
+          return $scope.items;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+	
 }]);

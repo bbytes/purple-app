@@ -31,6 +31,9 @@ rootApp.controller('feebackCtrl', function($scope, $rootScope, $state,$q,$http,$
                     deferred.reject(response);   
                 });
                  return deferred.promise;
+				$('#close-button').click(function(){
+  $.fancybox.close();
+});
 	}
-
+   
 });

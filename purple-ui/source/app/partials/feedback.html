@@ -2,6 +2,7 @@
   <div class="island" ng-controller="feebackCtrl">
      <h3>Feedback</h3>
 	 <hr />
+	 <form>
 	 <select class="form-control" ng-model="category">
 	    <option value="">-- Select Category --</option>
 	    <option value="Bugs">Bugs</option>
@@ -10,5 +11,6 @@
 		</select>
 	 <textarea name="" class="form-control" placeholder="Send us your comments or suggestion..." ng-model="commentText"></textarea>
 	
-	 <button class="btn btn-default" ng-click="sendFeedback(); modalInstance.close()"> Send</button>
+	 <button class="btn btn-default" id="close-button" ng-click="sendFeedback(); "> Send</button>
+	 </form>
   </div>

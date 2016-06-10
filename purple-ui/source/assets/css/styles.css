@@ -651,7 +651,7 @@ select:first-child, select#f {
    font-weight: bold;
 }
 .hash{
-    color:#bca9de;
+    color:#000000;
 }
 .date-time p{
     background: #c7bcd1;
@@ -929,19 +929,47 @@ a{
 	text-decoration:none;
 	margin: -8px !important;
 }
+
+.timeline-panel:hover .edit-status {
+    display: block;
+}
+.edit-status a{
+	padding-top: 0px;
+	padding-bottom:0;
+	padding-right:0;
+	padding-left:0;
+	display:inline-block;
+	padding:0px;
+	text-decoration:none;
+	margin: -8px !important;
+}
 tooltip, .avtive{
 	border-bottom:0px solid #ccc !important;
 }
 .edit{
    padding-right: 0%;
     position: absolute;
-    top: 30px;
+    top: 50px;
     display: none;
     text-align: center;
     right: 12px;
 }
 .edit img{
-	margin-top:10px;
+	margin-top:0px;
+	width:45%;
+	height:45%;
+}
+
+.edit-status{
+   padding-right: 0%;
+    position: absolute;
+    top: 35px;
+    display: none;
+    text-align: center;
+    right: 12px;
+}
+.edit-status img{
+	margin-top:0px;
 	width:45%;
 	height:45%;
 }
@@ -3666,6 +3694,10 @@ textarea.form-control {
 	width:22%;
 	float:left;
 	background: rgb(221, 221, 221);
+	height: 100% !important;
+    position: fixed;
+    top: 52px;
+    bottom: 0;
 }
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
 	background:rgb(204, 149, 181);
@@ -3732,7 +3764,6 @@ tabs-left, .tabs-right {
 .intergration-wrapper{
 	padding-top: 30px;
     width: 98%;
-    margin: 0px auto;
     padding-left: 25%;
 }
 .intergration-wrapper h3{
@@ -3824,3 +3855,55 @@ tabs-left, .tabs-right {
 .feature-icon img{
 	margin-top:-10px;
 }
+.hash img{
+	margin-top:-4px;
+}
+
+ 	
+#slideout {
+	position: fixed;
+	top: 41%;
+	right: 0;
+	width: 35px;
+	padding: 12px 0;
+	text-align: center;
+	background: #cc95b5;
+	-webkit-transition-duration: 0.3s;
+	-moz-transition-duration: 0.3s;
+	-o-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+	z-index:99;
+			
+}
+#slideout_inner {
+	position: fixed;
+	top: 41%;
+	right: -90px;
+	background: #cc95b5;
+	width: 90px;
+	padding: 4px;
+	-webkit-transition-duration: 0.3s;
+	-moz-transition-duration: 0.3s;
+	-o-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+	text-align: left;
+}
+		
+#slideout:hover {
+	right: 90px;
+}
+#slideout:hover #slideout_inner {
+	right: 0;
+}
+#slideout_inner p{
+	margin-top: 0px;
+    padding: 8px !important;
+    margin-bottom: 0;
+    color:#fff;
+	font-weight:bold;
+}
+#slideout .fa{
+	color:#fff;
+}
+
+.round { border-radius: 50%; }
