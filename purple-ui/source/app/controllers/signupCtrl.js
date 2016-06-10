@@ -4,7 +4,7 @@
 rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupService,appNotifyService,$sessionStorage) {
   
     $rootScope.bodyClass = 'body-standalone';
-    
+      $rootScope.feedbackClass = 'feedback-log';
     $scope.submitSignUp = function (isValid) {
     	if (!isValid) {
             appNotifyService.error('Please enter valid inputs');

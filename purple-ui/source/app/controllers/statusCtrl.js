@@ -12,7 +12,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 	$rootScope.statusClass = 'status-current';
 	$rootScope.dashboardClass = 'dashboard-nav';
 	$rootScope.settingClass = 'setting-nav';
-	
+	  $rootScope.feedbackClass = 'feedback-log feedback-show';
 	$scope.isSubmit = true;
 	$scope.submitStatus = function() {
 

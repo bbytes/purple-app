@@ -2,7 +2,7 @@
     rootApp.controller('indexCtrl', function ($scope, $rootScope, $state, $window) {
 		
 		 $rootScope.bodyClass = 'body-standalone1';
-		
+		  $rootScope.feedbackClass = 'feedback-log';
 		 $scope.toTheTop = function() {
       $document.scrollTop(0, 5000);
     }
