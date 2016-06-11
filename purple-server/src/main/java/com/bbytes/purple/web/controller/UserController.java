@@ -21,6 +21,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -71,6 +72,8 @@ public class UserController {
 	public RestResponse getCurrentUser() throws PurpleException {
 
 		User user = userService.getLoggedInUser();
+		if (user == null)
+			throw new PurpleException("User is not authorized", ErrorHandler.AUTH_FAILURE);
 		UserDTO currentUserMap = dataModelToDTOConversionService.convertUser(user);
 		logger.debug("Current user are fetched successfully");
 		RestResponse currentUserReponse = new RestResponse(RestResponse.SUCCESS, currentUserMap,

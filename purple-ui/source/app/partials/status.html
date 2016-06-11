@@ -13,7 +13,8 @@
 
 		<div class="top-header" style="margin-top: 27px;">
 			<span class="project"><span
-					class="username"><span class="hash">@ </span>
+					class="username"><span class="hash"><ng-letter-avatar
+									data="{{userName}}" shape="round"  width="25px" height="25px" fontSize="15px"></ng-letter-avatar> </span>
 						{{userName}}</span></span>
 		</div>
 
@@ -27,7 +28,7 @@
 				<div class="timeline-badge"></div>
 
 				<div class="timeline-panel">
-					<div class="edit">
+					<div class="edit-status">
 					    <a href="#" ng-click="deleteStatus(status.statusId,$index)" confirm="Are you sure you want to delete the item?" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"  tooltips tooltip-template="Delete"></a>
 					
 						<a ng-show ="showEditIcon(artist.date)" href="#" ng-click="showUpdatePage(status.statusId)" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"  tooltips tooltip-template="Edit"></a> 
@@ -36,7 +37,7 @@
 					</div>
 					<div class="timeline-heading">
 						<h4>
-							<span class="hash"> <span class="hash">#</span>
+							<span class="hash"> <span class="hash"><i class="fa fa-server" aria-hidden="true"></i></span>
 							
 								{{status.projectName}}        <span  style="float:right"> {{status.time}}</span>
 						</h4>

@@ -2,9 +2,10 @@
  *  Login Controller
  */
 rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginService,appNotifyService,$sessionStorage,$window) {
-
-    $rootScope.bodyClass = 'body-standalone';
     
+    $rootScope.bodyClass = 'body-standalone';
+      $rootScope.feedbackClass = 'feedback-log';
+	
     $scope.submitLoginForm = function (isValid) {
 
         // Validating login form

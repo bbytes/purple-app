@@ -76,6 +76,12 @@ public class SchedulerService {
 
 	@Value("${base.url}")
 	private String baseUrl;
+	
+	@Value("${email.scheduler.subject}")
+	private String schedulerSubject;
+	
+	@Value("${email.associate.checklist.subject}")
+	private String associateChecklistSubject;
 
 	private TaskScheduler taskScheduler;
 
@@ -157,7 +163,7 @@ public class SchedulerService {
 					emailBody.put(GlobalConstants.VALID_HOURS, validHours);
 
 					emailList.add(user.getEmail());
-					taskScheduler.schedule(new EmailSendJob(emailBody, emailList, notificationService),
+					taskScheduler.schedule(new EmailSendJob(emailBody, emailList, notificationService, schedulerSubject),
 							dateTime.toDate());
 
 				}
@@ -177,7 +183,6 @@ public class SchedulerService {
 	@Scheduled(cron = "	0 0 10 ? * TUE,WED,THU,FRI,SAT")
 	public void sendEmailforStatusUpdate() throws PurpleException, ParseException {
 
-		final String subject = GlobalConstants.ASSOCIATE_LIST_SUBJECT;
 		final String template = GlobalConstants.ASSOCIATES_EMAIL_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
@@ -228,7 +233,7 @@ public class SchedulerService {
 			emailBody.put(GlobalConstants.USER_NAME, list);
 
 			if (!nameList.isEmpty())
-				emailService.sendEmail(emailList, emailBody, subject, template);
+				emailService.sendEmail(emailList, emailBody, associateChecklistSubject, template);
 		}
 		TenancyContextHolder.setDefaultTenant();
 	}

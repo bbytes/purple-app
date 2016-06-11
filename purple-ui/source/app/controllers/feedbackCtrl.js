@@ -27,10 +27,12 @@ rootApp.controller('feebackCtrl', function($scope, $rootScope, $state,$q,$http,$
                 }).success(function(response, status, headers, config) {
              			deferred.resolve(response);
              			appNotifyService.error('Thank you for your feedback...!');
-                }).error(function(response) {
+                })
+				.error(function(response) {
                     deferred.reject(response);   
                 });
                  return deferred.promise;
+				
 	}
-
+   
 });
