@@ -166,7 +166,7 @@ public class SchedulerService {
 		TenancyContextHolder.setDefaultTenant();
 	}
 
-	@Scheduled(cron = "0 0 10 * * ?")
+	@Scheduled(cron = "	0 0 10 ? * TUE,WED,THU,FRI,SAT")
 	public void sendEmailforStatusUpdate() throws PurpleException, ParseException {
 
 		final String subject = GlobalConstants.ASSOCIATE_LIST_SUBJECT;
