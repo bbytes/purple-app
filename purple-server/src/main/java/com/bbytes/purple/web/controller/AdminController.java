@@ -72,6 +72,12 @@ public class AdminController {
 
 	@Value("${base.url}")
 	private String baseUrl;
+	
+	@Value("${email.invite.subject}")
+	private String inviteSubject;
+	
+	@Value("${email.invite.project.subject}")
+	private String projectInviteSubject;
 
 	/**
 	 * The add user method is used to add users into tenant
@@ -83,7 +89,6 @@ public class AdminController {
 	@RequestMapping(value = "/api/v1/admin/user/add", method = RequestMethod.POST)
 	public RestResponse addUser(@RequestBody UserDTO userDTO) throws PurpleException {
 
-		final String subject = GlobalConstants.EMAIL_INVITE_SUBJECT;
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
@@ -106,7 +111,7 @@ public class AdminController {
 		emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
-		emailService.sendEmail(emailList, emailBody, subject, template);
+		emailService.sendEmail(emailList, emailBody, inviteSubject, template);
 
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 		logger.debug("User with email  '" + userDTO.getEmail() + "' are added successfully");
@@ -126,7 +131,6 @@ public class AdminController {
 	@RequestMapping(value = "/api/v1/admin/user/bulkupload", method = RequestMethod.POST)
 	public RestResponse bulkUploadUsers(@RequestParam("file") MultipartFile file) throws PurpleException {
 
-		final String subject = GlobalConstants.EMAIL_INVITE_SUBJECT;
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
 
 		Organization org = userService.getLoggedInUser().getOrganization();
@@ -142,7 +146,7 @@ public class AdminController {
 			emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
 			emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
-			emailService.sendEmail(emailList, emailBody, subject, template);
+			emailService.sendEmail(emailList, emailBody, inviteSubject, template);
 		}
 
 		List<UserDTO> responseDTO = dataModelToDTOConversionService.convertUsers(users);
@@ -241,7 +245,6 @@ public class AdminController {
 	@RequestMapping(value = "/api/v1/admin/project/create", method = RequestMethod.POST)
 	public RestResponse createProject(@RequestBody ProjectDTO projectDTO) throws PurpleException {
 
-		final String subject = GlobalConstants.EMAIL_INVITE_PROJECT_SUBJECT;
 		final String template = GlobalConstants.EMAIL_INVITE_PROJECT_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 		
@@ -264,7 +267,7 @@ public class AdminController {
 		emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 
-		emailService.sendEmail(emailList, emailBody, subject, template);
+		emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
 		
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
@@ -340,7 +343,6 @@ public class AdminController {
 	public RestResponse updateProject(@PathVariable("projectid") String projectId, @RequestBody ProjectDTO projectDTO)
 			throws PurpleException {
 
-		final String subject = GlobalConstants.EMAIL_INVITE_PROJECT_SUBJECT;
 		final String template = GlobalConstants.EMAIL_INVITE_PROJECT_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 		
@@ -369,7 +371,7 @@ public class AdminController {
 		emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 
-		emailService.sendEmail(emailList, emailBody, subject, template);
+		emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
 		
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 

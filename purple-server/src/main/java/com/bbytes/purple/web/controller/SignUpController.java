@@ -58,6 +58,12 @@ public class SignUpController {
 
 	@Value("${base.url}")
 	private String baseUrl;
+	
+	@Value("${email.signup.subject}")
+	private String signupSubject;
+	
+	@Value("${email.register.tenant.subject}")
+	private String registerTenantSubject;
 
 	/**
 	 * The Sign up method is used to register organization and user
@@ -72,10 +78,8 @@ public class SignUpController {
 		// we assume the angular layer will do empty/null org name , user email
 		// etc.. validation
 		final String SIGN_UP_SUCCESS_MSG = "Activation link is successfully sent to your register email address";
-		final String clientSubject = GlobalConstants.EMAIL_SIGNUP_SUBJECT;
 		final String clientTemplate = GlobalConstants.EMAIL_SIGNUP_TEMPLATE;
 
-		final String subject = GlobalConstants.EMAIL_REGISTER_TENANT_SUBJECT;
 		final String template = GlobalConstants.EMAIL_REGISTER_TENANT_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
@@ -109,8 +113,8 @@ public class SignUpController {
 		emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
 		emailBody.put(GlobalConstants.EMAIL_ADDRESS, user.getEmail());
 
-		emailService.sendEmail(clientEmailList, clientEmailBody, clientSubject, clientTemplate);
-		emailService.sendEmail(emailList, emailBody, subject, template);
+		emailService.sendEmail(clientEmailList, clientEmailBody, signupSubject, clientTemplate);
+		emailService.sendEmail(emailList, emailBody, registerTenantSubject, template);
 
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 

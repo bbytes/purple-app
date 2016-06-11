@@ -10,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,11 +57,13 @@ public class CommentController {
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
+	
+	@Value("${email.comment.subject}")
+	private String commentSubject;
 
 	@RequestMapping(value = "/api/v1/comment/add", method = RequestMethod.POST)
 	public RestResponse saveComment(@RequestBody CommentDTO commentDTO) throws PurpleException {
 
-		final String subject = GlobalConstants.EMAIL_COMMENT_SUBJECT;
 		final String template = GlobalConstants.COMMENT_EMAIL_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
@@ -78,7 +81,7 @@ public class CommentController {
 		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
 		emailBody.put("userName", user.getName());
 
-		emailService.sendEmail(emailList, emailBody, subject, template);
+		emailService.sendEmail(emailList, emailBody, commentSubject, template);
 
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 

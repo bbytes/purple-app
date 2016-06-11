@@ -10,28 +10,6 @@ public class GlobalConstants {
 
 	public static final String URL_AUTH_TOKEN = "token";
 
-	public static final String EMAIL_SIGNUP_SUBJECT = "Statusnap - Activation Link";
-
-	public static final String EMAIL_INVITE_SUBJECT = "Invitation to join Statusnap";
-
-	public static final String EMAIL_REGISTER_TENANT_SUBJECT = " Register on Statusnap";
-
-	public static final String EMAIL_INVITE_PROJECT_SUBJECT = "Statusnap - Added to new Project";
-
-	public static final String EMAIL_FEEDBACK_SEND_SUBJECT = " has sent the feedback on Statusnap";
-
-	public static final String EMAIL_FEEDBACK_RESPONSE_SUBJECT = "Thank you for providing your feedback!";
-
-	public static final String EMAIL_COMMENT_SUBJECT = "Statusnap - You have a new comment on your status";
-
-	public static final String EMAIL_REPLY_SUBJECT = "Statusnap - You have a new reply on your comment";
-
-	public static final String SCHEDULER_SUBJECT = "Statusnap - Its time to update your daily status";
-
-	public static final String ASSOCIATE_LIST_SUBJECT = "Statusnap - Associate Checklist - Pending Status update";
-
-	public static final String FORGOT_PASSWORD_SUBJECT = "Statusnap - Reset Password";
-
 	public static final String EMAIL_SIGNUP_TEMPLATE = "email-text-signup.html";
 
 	public static final String EMAIL_INVITE_TEMPLATE = "email-text-invite-user.html";

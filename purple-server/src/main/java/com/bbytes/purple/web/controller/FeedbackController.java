@@ -11,6 +11,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,6 +42,12 @@ public class FeedbackController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Value("${email.feedback.send.subject}")
+	private String feedbackSendSubject;
+	
+	@Value("${email.feedback.response.subject}")
+	private String feedbackResponseSubject;
 
 	@RequestMapping(value = "/api/v1/feedback", method = RequestMethod.POST)
 	public RestResponse sendFeedback(@RequestBody FeedbackDTO feedbackDTO) throws PurpleException {
@@ -49,10 +56,9 @@ public class FeedbackController {
 		User user = userService.getLoggedInUser();
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
-		final String feedBackSendSubject = user.getName() + GlobalConstants.EMAIL_FEEDBACK_SEND_SUBJECT;
+		final String feedBackSendSubject = user.getName() + " " + feedbackSendSubject;
 		final String feedbackSendTemplate = GlobalConstants.FEEDBACK_SEND_EMAIL_TEMPLATE;
 
-		final String feedbackResponseSubject = GlobalConstants.EMAIL_FEEDBACK_RESPONSE_SUBJECT;
 		final String feedbackResponseTemplate = GlobalConstants.FEEDBACK_RESPONSE_EMAIL_TEMPLATE;
 
 		String postDate = dateFormat.format(new Date());

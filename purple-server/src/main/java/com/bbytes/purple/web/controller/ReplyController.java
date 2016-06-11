@@ -10,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +56,9 @@ public class ReplyController {
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
+	
+	@Value("${email.reply.subject}")
+	private String replySubject;
 
 	/**
 	 * The addReply method is used to add reply to comment
@@ -68,11 +72,8 @@ public class ReplyController {
 	public RestResponse addReply(@PathVariable("commentid") String commentId, @RequestBody ReplyDTO replyDTO)
 			throws PurpleException {
 
-		final String subject = GlobalConstants.EMAIL_REPLY_SUBJECT;
 		final String template = GlobalConstants.REPLY_EMAIL_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
-
-
 
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();
@@ -92,7 +93,7 @@ public class ReplyController {
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize-1).getReplyDesc());
 
-		emailService.sendEmail(emailList, emailBody, subject, template);
+		emailService.sendEmail(emailList, emailBody, replySubject, template);
 
 		Map<String, Object> replyMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndReply(comment);
 
