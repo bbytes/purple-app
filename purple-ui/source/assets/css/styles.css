@@ -3822,7 +3822,7 @@ tabs-left, .tabs-right {
 	max-width:100%;
 }
 .connected::before {
-  content:  url(../img/connect.gif);
+  content:  url(../img/connect.png);
   float:left;
   line-height:2;
   margin:0px 5px;
@@ -3833,7 +3833,7 @@ tabs-left, .tabs-right {
 }
 
 .offline::before {
-  content:  url(../img/offline.gif);
+  content:  url(../img/offline.png);
   float:left;
   line-height:2;
   margin:0px 5px;
