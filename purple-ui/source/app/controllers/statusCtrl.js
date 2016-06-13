@@ -238,4 +238,8 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 	$scope.stripFormat = function ($html) {
   return $filter('htmlToPlaintext')($html);
 };
+
+//date
+$scope.current_date = new Date();
+
 });

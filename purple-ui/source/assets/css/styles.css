@@ -3937,3 +3937,16 @@ tabs-left, .tabs-right {
     color: #ccc;
     z-index: 999;
 }
+.form-sidebar{
+	padding-top:0px !important;
+}
+.date-display{
+	padding-top:10px !important;
+	
+}
+.date-display p{
+	font-weight:bold;
+	text-transform:uppercase;
+	font-style:italic;
+	font-size:16px;
+}
