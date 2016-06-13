@@ -173,6 +173,12 @@
 	<div class="col-md-4 side">
 
 		<div class="row" >
+		  <div class="col-md-12">
+		    <div class="date-display">
+		     <p>{{current_date | date:'MMM dd, yyyy'}}</p>
+			</div>
+		   </div>
+		
 			<div class="col-md-9" 
 				ng-init="loadProjects()">
 				<div class="form-sidebar">
