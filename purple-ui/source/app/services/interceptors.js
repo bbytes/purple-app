@@ -20,6 +20,7 @@ rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $l
                     $rootScope.switchState = userInfo.emailNotificationState;   
                     $rootScope.statusDate =  userInfo.statusDate; 
                     $rootScope.current_date = userInfo.displayDate;
+                    $rootScope.timeZone = userInfo.timeZone;
                 }
             }
             return config;          

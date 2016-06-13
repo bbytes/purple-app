@@ -23,7 +23,8 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                 $rootScope.userName = response.data.userName;
                 $rootScope.authToken = response.headers["x-auth-token"];
                 $rootScope.timePreference = response.data.timePreference;
-                $rootScope.switchState = response.data.emailNotificationState;    
+                $rootScope.switchState = response.data.emailNotificationState;
+                $rootScope.timeZone = response.data.timeZone;
                 $rootScope.current_date = new Date(); 
 
                var userInfo = {
@@ -32,7 +33,8 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                     name: $rootScope.userName,
                     userRoles:  $rootScope.userRole,
                     timePreference :  $rootScope.timePreference,
-                    emailNotificationState : $rootScope.switchState,    
+                    emailNotificationState : $rootScope.switchState,  
+                    timeZone : $rootScope.timeZone,
                     displayDate : $rootScope.current_date,
                 };
               
