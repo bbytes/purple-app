@@ -3950,3 +3950,9 @@ tabs-left, .tabs-right {
 	font-style:italic;
 	font-size:16px;
 }
+.username-status{
+	color:#898989 !important;
+}
+.hash-tag{
+	color:#af96db;
+}

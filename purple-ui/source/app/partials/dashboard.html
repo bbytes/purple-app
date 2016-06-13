@@ -264,10 +264,10 @@
                      <div class="top-header">
 						<!--  <span class="project"><span class="hash"># </span>{{status.projectName}}</span> -->
 						
-					<span ng-show="isActive" class="username" ><span class="hash" ># </span>All Projects</span> 
-					<span ng-show="isProject" class="username" ><span class="hash" ># </span>{{selected.projectName}}</span> 
-					<span ng-show="isUser" class="username">
-					<span class="hash" ng-if="selected.userName">@ 
+					<span ng-show="isActive" class="username username-status"><span class="hash hash-tag"># </span>All Projects</span> 
+					<span ng-show="isProject" class="username username-status"><span class="hash hash-tag"># </span>{{selected.projectName}}</span> 
+					<span ng-show="isUser" class="username username-status">
+					<span class="hash hash-tag" ng-if="selected.userName">@ 
 					</span>{{selected.userName}}
 					</span>
                    					
@@ -292,9 +292,9 @@
                                   <div class="timeline-heading">
                                   
                                      <h4 ng-show="isActive">
-									 <div class="hash"><ng-letter-avatar
+									 <div class="hash username-status"><ng-letter-avatar
 									data="{{status.userName}}" shape="round"  width="25px" height="25px" fontSize="15px"></ng-letter-avatar>  {{status.userName}} </div>
-									 <div class="hash">&nbsp;&nbsp;&nbsp;# </span> {{status.projectName}} 
+									 <div class="hash username-status"><span class="hash-tag">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# </span> {{status.projectName}} 
                                      <span  style="float:right"> {{status.time}}</div>
 									</h4>
                                      <h4 ng-show="isProject"><span class="hash"><ng-letter-avatar
