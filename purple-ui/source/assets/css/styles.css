@@ -1972,6 +1972,7 @@ md-sidenav ul {
 @media not all and (min-width: 990px) {
   .side{
 	  position:relative;
+	  padding-top:10px;
   }
   .comment-side{
 	   position:relative;
