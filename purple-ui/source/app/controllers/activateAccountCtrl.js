@@ -21,6 +21,7 @@
          		}).success(function(response, status, headers, config) {
 
                     $rootScope.userRole = response.data.userRole.id;
+                    $rootScope.userName = response.data.userName;
 
                      var userInfo = {
                     name: $rootScope.userName,
