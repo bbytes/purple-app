@@ -22,7 +22,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		status.workingOn = $scope.workingOn;
 		status.workedOn = $scope.workedOn;
 		status.blockers = $scope.blockers;
-		status.dateTime =  $rootScope.statusDate;
+		status.dateTime = $rootScope.statusDate;
 		if(!status.projectId){
 			appNotifyService.error('Please select a valid project');
             return false;
@@ -238,8 +238,5 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 	$scope.stripFormat = function ($html) {
   return $filter('htmlToPlaintext')($html);
 };
-
-//date
-$scope.current_date = new Date();
 
 });

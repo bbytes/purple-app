@@ -22,10 +22,19 @@
                     $rootScope.userName = response.data.userName;
                     $rootScope.userRole = response.data.userRole.id;
 
+
+
+        if($rootScope.statusDate == undefined && $rootScope.statusDate == null)
+            $rootScope.current_date = new Date();
+        else
+            $rootScope.current_date = new Date(parseInt($rootScope.statusDate));
+
                     var userInfo = {
                     email: $rootScope.loggedInUser,
                     name: $rootScope.userName,
                     userRoles:  $rootScope.userRole,
+                    statusDate :  $rootScope.statusDate,
+                    displayDate : $rootScope.current_date,
                    };
               
                  $sessionStorage.userInfo =  userInfo;

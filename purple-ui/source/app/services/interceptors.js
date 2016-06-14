@@ -17,7 +17,9 @@ rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $l
                     $rootScope.userName=userInfo.name;
                     $rootScope.userRole= userInfo.userRoles;  
                     $rootScope.timePreference = userInfo.timePreference;   
-                    $rootScope.switchState = userInfo.emailNotificationState;     
+                    $rootScope.switchState = userInfo.emailNotificationState;   
+                    $rootScope.statusDate =  userInfo.statusDate; 
+                    $rootScope.current_date = userInfo.displayDate;
                 }
             }
             return config;          

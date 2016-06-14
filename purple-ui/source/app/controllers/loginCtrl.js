@@ -17,13 +17,14 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
         loginService.login($scope.username, $scope.password).then(function (response) {
         	 if (response.headers["x-auth-token"] && response.data.accountInitialise == true) {
         	$window.sessionStorage.token = response.headers["x-auth-token"];
-               $rootScope.loggedStatus = true;
-               $rootScope.loggedInUser = $scope.username;
-               $rootScope.userRole = response.data.userRole.id;
-               $rootScope.userName = response.data.userName;
+                $rootScope.loggedStatus = true;
+                $rootScope.loggedInUser = $scope.username;
+                $rootScope.userRole = response.data.userRole.id;
+                $rootScope.userName = response.data.userName;
                 $rootScope.authToken = response.headers["x-auth-token"];
                 $rootScope.timePreference = response.data.timePreference;
-                $rootScope.switchState = response.data.emailNotificationState;     
+                $rootScope.switchState = response.data.emailNotificationState;    
+                $rootScope.current_date = new Date(); 
 
                var userInfo = {
                     authToken: response.headers["x-auth-token"],
@@ -32,6 +33,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                     userRoles:  $rootScope.userRole,
                     timePreference :  $rootScope.timePreference,
                     emailNotificationState : $rootScope.switchState,    
+                    displayDate : $rootScope.current_date,
                 };
               
             $sessionStorage.userInfo =  userInfo;
