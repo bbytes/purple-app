@@ -63,8 +63,6 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	public Integration getJIRAConnection(User user) throws PurpleException {
 		Integration integration = null;
 
-		if (!integrationExist(user))
-			throw new PurpleException("Error while getting jira connection", ErrorHandler.JIRA_CONNECTION_FAILED);
 		try {
 			integration = getIntegrationByUser(user);
 		} catch (Throwable e) {

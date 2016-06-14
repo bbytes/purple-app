@@ -47,6 +47,10 @@ rootApp.controller('integrationCtrl', function ($scope, $rootScope, $state, $win
                         $scope.isConnected = true; 
                         $scope.isOffline = false;      
                  }
+                 else{
+                        $scope.isConnected = false; 
+                        $scope.isOffline = true; 
+                 }
              }, function(error) {
              			$scope.isConnected = false; 
                         $scope.isOffline = true; 

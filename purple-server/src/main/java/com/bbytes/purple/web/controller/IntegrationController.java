@@ -3,7 +3,6 @@ package com.bbytes.purple.web.controller;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -21,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.atlassian.jira.rest.client.JiraRestClient;
-import com.atlassian.jira.rest.client.domain.BasicProject;
-import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import com.bbytes.purple.domain.Integration;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
@@ -104,13 +100,23 @@ public class IntegrationController {
 		User user = userService.getLoggedInUser();
 		int statusCode;
 		final String JIRA_CONNECTION_MSG = "jira is connected successfully";
+		RestResponse jiraRestResponse;
 		try {
 
 			Integration integration = integrationService.getJIRAConnection(user);
+			if (integration == null) {
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.AUTH_FAILURE);
+
+				return jiraRestResponse;
+			}
 
 			String basicAuthHeader = integration.getJiraBasicAuthHeader();
-			if(basicAuthHeader == null)
-				throw new PurpleException("Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
+			if (basicAuthHeader.isEmpty() || basicAuthHeader == null) {
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.AUTH_FAILURE);
+				return jiraRestResponse;
+			}
 
 			HttpGet request = new HttpGet(integration.getJiraBaseURL());
 			request.setHeader(HttpHeaders.AUTHORIZATION, basicAuthHeader);
@@ -124,17 +130,24 @@ public class IntegrationController {
 		}
 
 		if (statusCode != 200) {
-			if (statusCode == 502)
-				throw new PurpleException("Failed : HTTP Connection ", ErrorHandler.BAD_GATEWAY);
-			else if (statusCode == 401)
-				throw new PurpleException("Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
+			if (statusCode == 502) {
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.BAD_GATEWAY);
+
+				return jiraRestResponse;
+			} else if (statusCode == 401) {
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.AUTH_FAILURE);
+
+				return jiraRestResponse;
+			}
 		}
 
 		logger.debug("User is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
+		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
 				SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
-		return response;
+		return jiraRestResponse;
 	}
 
 	@RequestMapping(value = "/api/v1/integration/jira/getprojects", method = RequestMethod.GET)
@@ -160,21 +173,25 @@ public class IntegrationController {
 			}
 
 			// Below Code is for JIRA REST Client -- Giving some issue
-			
-			/*URI jiraServerUri = URI.create(integration.getJiraBaseURL());
 
-			AsynchronousJiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
-			JiraRestClient restClient = factory.createWithBasicHttpAuthentication(jiraServerUri, "username",
-					"password");
-
-			final int buildNumber = restClient.getMetadataClient().getServerInfo().claim().getBuildNumber(); 
-
-			if (buildNumber >= 600) {
-				final Iterable<BasicProject> allProjects = restClient.getProjectClient().getAllProjects().claim();
-				for (BasicProject project : allProjects) {
-					System.out.println(project);
-				}
-			}*/
+			/*
+			 * URI jiraServerUri = URI.create(integration.getJiraBaseURL());
+			 * 
+			 * AsynchronousJiraRestClientFactory factory = new
+			 * AsynchronousJiraRestClientFactory(); JiraRestClient restClient =
+			 * factory.createWithBasicHttpAuthentication(jiraServerUri,
+			 * "username", "password");
+			 * 
+			 * final int buildNumber =
+			 * restClient.getMetadataClient().getServerInfo().claim().
+			 * getBuildNumber();
+			 * 
+			 * if (buildNumber >= 600) { final Iterable<BasicProject>
+			 * allProjects =
+			 * restClient.getProjectClient().getAllProjects().claim(); for
+			 * (BasicProject project : allProjects) {
+			 * System.out.println(project); } }
+			 */
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 

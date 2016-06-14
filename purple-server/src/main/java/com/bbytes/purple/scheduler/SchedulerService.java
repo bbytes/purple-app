@@ -76,10 +76,10 @@ public class SchedulerService {
 
 	@Value("${base.url}")
 	private String baseUrl;
-	
+
 	@Value("${email.scheduler.subject}")
 	private String schedulerSubject;
-	
+
 	@Value("${email.associate.checklist.subject}")
 	private String associateChecklistSubject;
 
@@ -132,7 +132,7 @@ public class SchedulerService {
 				DateTime userTimeDatetime = DateTime.now().withTime(userTime);
 
 				if (now.isBefore(userTimeDatetime) && userTimeDatetime.isBefore(now.plusMinutes(30))
-						&& user.isEmailNotificationState()) {
+						&& user.isEmailNotificationState() && user.isAccountInitialise()) {
 					String hours = new SimpleDateFormat("HH").format(date);
 					String minutes = new SimpleDateFormat("mm").format(date);
 					DateTime dateTime = new DateTime().withHourOfDay(Integer.parseInt(hours));
@@ -163,7 +163,8 @@ public class SchedulerService {
 					emailBody.put(GlobalConstants.VALID_HOURS, validHours);
 
 					emailList.add(user.getEmail());
-					taskScheduler.schedule(new EmailSendJob(emailBody, emailList, notificationService, schedulerSubject),
+					taskScheduler.schedule(
+							new EmailSendJob(emailBody, emailList, notificationService, schedulerSubject),
 							dateTime.toDate());
 
 				}

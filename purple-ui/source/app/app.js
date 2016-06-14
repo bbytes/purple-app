@@ -24,6 +24,16 @@ rootApp.run([
 			$rootScope.currentState = '';
 			$rootScope.authrization = '';
 
+			  $rootScope.authFailureReasons = [
+           		'auth-token-expired',
+            	'login-user-id-missing',
+            	'auth-signature-missing',
+            	'invalid-auth-signature',
+            	'username-not-found',
+            	'invalid-credentials',
+            	'login-failed'
+        	];
+
 			  $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
 
 		            if (to.data && to.data.authorization !== '') {
@@ -50,6 +60,8 @@ rootApp.run([
 		        });
 
 		} ]);
+
+
 
 // Angular ui-router route definitions
 rootApp.config([
