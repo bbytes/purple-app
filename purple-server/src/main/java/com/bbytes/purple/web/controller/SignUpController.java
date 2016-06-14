@@ -106,7 +106,7 @@ public class SignUpController {
 		clientEmailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
 		List<String> emailList = new ArrayList<String>();
-		emailList.add("akshaynagprkr@gmail.com");
+		emailList.add(GlobalConstants.STATUSNAP_EMAIL_ADDRESS);
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
