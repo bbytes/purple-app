@@ -40,7 +40,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			if (response.success = true) {
 				$scope.clearStatus();
 				$scope.usersstatusLoad();
-				appNotifyService.success('Status added successfully');
+				appNotifyService.success('Status is added successfully');
 			}
 
 		}, function(error) {
@@ -206,7 +206,7 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 				$scope.usersstatusLoad();
 				$scope.isSubmit = true;
 				$scope.isUpdate = false;
-				appNotifyService.success('Status updated successfully');
+				appNotifyService.success('Status is updated successfully');
 			} 
 
 		}, function(error) {
