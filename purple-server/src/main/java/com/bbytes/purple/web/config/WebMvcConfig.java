@@ -1,4 +1,4 @@
-package com.bbytes.purple.web.config;
+/*package com.bbytes.purple.web.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -27,4 +27,4 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	}
 
-}
+}*/
