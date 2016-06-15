@@ -2874,13 +2874,15 @@ iframe {
 
 .features-alt h4{
   font-style: italic;
-  margin-bottom: 0px;
+  margin-bottom: 10px;
   font-weight: 600;
+  margin-top: -5px;
+  font-size: 15px;
 }
 
 .features-alt h3{
   margin-top: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 7px;
 }
 
 .features-alt p {
