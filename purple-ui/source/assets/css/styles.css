@@ -210,9 +210,9 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
 	}
 	
 .logo-img{
-    width: 40px;
-    margin-top: -74px;
-    margin-bottom: 10px;
+    width: 200px;
+    /* margin-top: -74px; */
+    margin-top: 34px;
 }
 .form h5{
     color:#3f3f3f;
@@ -240,7 +240,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
     font-weight:bold;
 }
 .signup{
-   margin:80px auto !important;
+   margin:110px auto !important;
 }
 
 .signup, .online1{
@@ -2034,9 +2034,19 @@ md-sidenav ul {
 		display:none;
 	}
 	
-	
+.login-bg{
+	background-color:transparent !important;
 }
-
+.mob-dropdown{
+	background:#fff;
+}
+.mob-dropdown a{
+	text-align:center;
+}
+}
+.login-bg{
+	background-color:transparent !important;
+}
 @media not all and (min-width: 775px) {
 	.top-header {
     margin: 0px; 
@@ -2978,6 +2988,7 @@ iframe {
 .pricing-column .plan-stats li {
   margin-bottom: 15px;
   line-height: 24px;
+  list-style: initial;
 }
 
 .pricing-column .plan-stats li i {
@@ -3991,4 +4002,11 @@ tabs-left, .tabs-right {
 }
 .hash-tag{
 	color:#af96db;
+}
+.plan-stats img{
+	width:26px;
+}
+.key-feature li{
+	font-size: 15px;
+    line-height: 24px;
 }

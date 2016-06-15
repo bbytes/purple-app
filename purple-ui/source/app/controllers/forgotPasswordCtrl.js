@@ -4,7 +4,7 @@
 rootApp.controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, forgotPasswordService,appNotifyService) {
 
     $rootScope.bodyClass = 'body-standalone';
-    
+     $rootScope.feedbackClass = 'feedback-log';
     $scope.submitForgotPasswordForm = function (isValid) {
         if (!isValid) {     
             appNotifyService.error('Please enter a valid email-id.');
