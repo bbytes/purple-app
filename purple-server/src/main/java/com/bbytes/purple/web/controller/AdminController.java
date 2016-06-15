@@ -63,7 +63,7 @@ public class AdminController {
 
 	@Autowired
 	private PasswordHashService passwordHashService;
-	
+
 	@Autowired
 	private ProjectService projectService;
 
@@ -72,10 +72,10 @@ public class AdminController {
 
 	@Value("${base.url}")
 	private String baseUrl;
-	
+
 	@Value("${email.invite.subject}")
 	private String inviteSubject;
-	
+
 	@Value("${email.invite.project.subject}")
 	private String projectInviteSubject;
 
@@ -247,9 +247,10 @@ public class AdminController {
 
 		final String template = GlobalConstants.EMAIL_INVITE_PROJECT_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
-		
+
 		// we assume angular layer will do empty checks for project
-		Organization org = userService.getLoggedInUser().getOrganization();
+		User user = userService.getLoggedInUser();
+		Organization org = user.getOrganization();
 		Project addProject = new Project(projectDTO.getProjectName());
 		addProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();
@@ -260,15 +261,21 @@ public class AdminController {
 		}
 		addProject.setUser(usersTobeAdded);
 		Project project = adminService.createProject(addProject, usersTobeAdded);
-		
+
 		String postDate = dateFormat.format(new Date());
+		long currentDate = new Date().getTime();
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 720);
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
+		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		emailBody.put(GlobalConstants.ACTIVATION_LINK,
+				baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
 
-		emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
-		
+		if (!emailList.isEmpty())
+			emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
+
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
 		logger.debug("User with email  '" + projectDTO.getProjectName() + "' are added successfully");
@@ -345,9 +352,10 @@ public class AdminController {
 
 		final String template = GlobalConstants.EMAIL_INVITE_PROJECT_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
-		
+
 		// we assume angular layer will do null checks for project object
-		Organization org = userService.getLoggedInUser().getOrganization();
+		User loggedInuser = userService.getLoggedInUser();
+		Organization org = loggedInuser.getOrganization();
 		Project updateProject = new Project(projectDTO.getProjectName());
 		updateProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();
@@ -355,24 +363,30 @@ public class AdminController {
 			usersTobeAdded.add(userService.getUserByEmail(i));
 		}
 		List<User> usersFromProject = projectService.findByProjectId(projectId).getUser();
-		
+
 		List<String> emailList = new LinkedList<String>();
-		for(User user : usersTobeAdded){
-			
-			if(!usersFromProject.contains(user))
+		for (User user : usersTobeAdded) {
+
+			if (!usersFromProject.contains(user))
 				emailList.add(user.getEmail());
 		}
 		updateProject.setUser(usersTobeAdded);
 		Project project = adminService.updateProject(projectId, updateProject);
 
 		String postDate = dateFormat.format(new Date());
+		long currentDate = new Date().getTime();
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(loggedInuser.getEmail(), 720);
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
+		emailBody.put(GlobalConstants.USER_NAME, loggedInuser.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		emailBody.put(GlobalConstants.ACTIVATION_LINK,
+				baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
 
-		emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
-		
+		if (!emailList.isEmpty())
+			emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
+
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
 		logger.debug("Projects are updated successfully");

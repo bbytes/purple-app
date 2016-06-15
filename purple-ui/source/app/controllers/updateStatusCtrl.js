@@ -21,8 +21,9 @@
 
                     $rootScope.userName = response.data.userName;
                     $rootScope.userRole = response.data.userRole.id;
-
-
+                    $rootScope.timePreference = response.data.timePreference;
+                    $rootScope.switchState = response.data.emailNotificationState;
+                    $rootScope.timeZone = response.data.timeZone;
 
         if($rootScope.statusDate == undefined && $rootScope.statusDate == null)
             $rootScope.current_date = new Date();
@@ -34,6 +35,9 @@
                     name: $rootScope.userName,
                     userRoles:  $rootScope.userRole,
                     statusDate :  $rootScope.statusDate,
+                    timePreference :  $rootScope.timePreference,
+                    emailNotificationState : $rootScope.switchState,  
+                    timeZone : $rootScope.timeZone,
                     displayDate : $rootScope.current_date,
                    };
               
