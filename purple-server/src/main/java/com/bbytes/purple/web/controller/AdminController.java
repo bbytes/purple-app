@@ -35,6 +35,7 @@ import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.PasswordHashService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
 
@@ -233,6 +234,45 @@ public class AdminController {
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.GET_USER_SUCCESS);
 
 		return userReponse;
+	}
+
+	/**
+	 * reInvite method is used to re-send email for pending user.
+	 * 
+	 * @param userDTO
+	 * @return
+	 * @throws PurpleException
+	 */
+
+	@RequestMapping(value = "/api/v1/admin/user/reinvite", method = RequestMethod.GET)
+	public RestResponse reInvite(@RequestParam("name") String name, @RequestParam("email") String email)
+			throws PurpleException {
+
+		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
+		final String REINVITE_SUCCESS_MSG = "Reinvite is successful";
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+
+		if (!userService.userEmailExist(email))
+			throw new PurpleException("User is not found", ErrorHandler.USER_NOT_FOUND);
+
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(email, 720);
+		String postDate = dateFormat.format(new Date());
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(email);
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, name);
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
+		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
+
+		emailService.sendEmail(emailList, emailBody, inviteSubject, template);
+
+		logger.debug("Reinvite is done successfully to user with email - " + email);
+		RestResponse inviteReponse = new RestResponse(RestResponse.SUCCESS, REINVITE_SUCCESS_MSG,
+				SuccessHandler.REINVITE_SUCCESS);
+
+		return inviteReponse;
 	}
 
 	/**

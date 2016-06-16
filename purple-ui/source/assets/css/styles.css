@@ -739,6 +739,7 @@ select:first-child, select#f {
     font-size: 11px;
     text-transform: none;
     color: #939393;
+    margin-top: 10px;
 }
 .project-table table{
     width:100%;
@@ -4009,4 +4010,12 @@ tabs-left, .tabs-right {
 .key-feature li{
 	font-size: 15px;
     line-height: 24px;
+}
+.re-invite button{
+    width: 70%;
+    padding: 5px !important;
+    text-align: center;
+}
+.delete-img img{
+    margin-top:-20px;
 }

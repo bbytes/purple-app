@@ -38,6 +38,17 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
         });
         }
     };
+
+    // Used to re invite user who yet to joined
+
+    $scope.resend = function(name,email){
+
+     adminService.reInviteUser(name,email).then(function (response) {
+            if (response.success) {
+              appNotifyService.success( 'You have been successfully invited to user : '+name);
+            }
+        });
+    };
     
     $scope.loadUsers = function(){
  
@@ -51,7 +62,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, $state, adminServi
 				}
             	$scope.joinedCount = response.data.joined_count ;
             	$scope.pendingCount = response.data.pending_count;
-                $scope.allusers   =  response.data.gridData; 
+              $scope.allusers   =  response.data.gridData; 
             }
         });
     }

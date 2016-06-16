@@ -29,6 +29,31 @@ rootApp.service('adminService', function($rootScope, $http, $q, $window) {
 
 	};
 
+	this.reInviteUser = function(name,email) {
+
+		var deferred = $q.defer();
+
+		$http({
+			method : 'GET',
+			url : $rootScope.baseUrl + 'api/v1/admin/user/reinvite',
+			params : {"name":name,"email":email},
+			headers : {
+				'Content-Type' : 'application/json',
+
+			}
+
+		}).success(function(response, status, headers, config) {
+
+			deferred.resolve(response);
+		}).error(function(response) {
+
+			deferred.reject(response);
+		});
+
+		return deferred.promise;
+
+	};
+
 	this.getAllusers = function() {
 
 		var deferred = $q.defer();

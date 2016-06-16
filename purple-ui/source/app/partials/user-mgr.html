@@ -93,7 +93,13 @@
 						<select class="form-control" ng-options="roles.value as roles.value for roles in userRoles" ng-model="user.userRole.value" ng-change="roleChange(user.userRole.value,user)">			
 						</select>
 						</td>
-						<td style="float: right;">
+
+						<td class="re-invite">
+						<center><button type="button" class="btn btn-default create"
+									ng-click="resend(user.userName,user.email)" ng-hide= "'{{user.status}}' !=  'Pending'">Re-invite</button></center>
+						</td>
+
+						<td>
 							<div ng-click="deleteUser(user.email, $index)"
 								confirm="Are you sure you want to delete the user?">
 								<img src="../../assets/img/delete.png">

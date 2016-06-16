@@ -19,6 +19,8 @@ public class SuccessHandler {
 	public static final String FORGOT_PASSWORD_SUCCESS = "forgot_password_success";
 
 	public static final String ADD_USER_SUCCESS = "add_users_success";
+	
+	public static final String REINVITE_SUCCESS = "reinvite_success";
 
 	public static final String DELETE_USER_SUCCESS = "delete_user_success";
 
