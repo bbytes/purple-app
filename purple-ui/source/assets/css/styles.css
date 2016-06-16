@@ -2046,6 +2046,10 @@ md-sidenav ul {
 .mob-dropdown a{
 	text-align:center;
 }
+
+.side{
+	width:100%;
+}
 }
 .login-bg{
 	background-color:transparent !important;
