@@ -31,8 +31,8 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 			appNotifyService.error('Please fill in the hours for the selected project.');
             return false;
 		}
-		else if(!status.workedOn && !status.workingOn){
-			appNotifyService.error('WorkedOn or WorkingOn field can not be empty');
+		else if(!status.workedOn || !status.workingOn){
+			appNotifyService.error('WorkedOn and WorkingOn field can not be empty');
             return false;
 		}
 
@@ -198,6 +198,10 @@ rootApp.controller('statusCtrl', function($scope, $rootScope, $state,
 		else if(!newstatus.hours){
 				appNotifyService.error('Please fill in the hours for the selected project.');
 				return false;
+		}
+		else if(!newstatus.workedOn || !newstatus.workingOn){
+			appNotifyService.error('WorkedOn or WorkingOn field can not be empty');
+            return false;
 		}
 		statusService.updateStatus(newstatus, id).then(function(response) {
 			if (response.success = true) {
