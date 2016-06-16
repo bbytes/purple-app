@@ -43,8 +43,9 @@
 						ng-show="signupForm.confirmPassword.$dirty && signupForm.confirmPassword.$error.required">Password
 						required.</span> <span class="label label-danger"
 						ng-show="(signupForm.password.$dirty && signupForm.confirmPassword.$dirty) && (user.password != password_c)">Password
-						mismatch </span> <input class="send submit" type="submit"
-						value="SIGN ME UP" />
+						mismatch </span> 
+						
+						<button class="send submit" type="submit">SIGN ME UP</button>
 				</div>
 			</div>
 		</form>

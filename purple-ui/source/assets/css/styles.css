@@ -147,7 +147,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
 	padding: 5px;    
     margin: 0 0 5px 0;
     }
-	#container input.submit{
+	#container button.submit{
     width: 93%;
     padding: 8px 0;
     font-weight: 500;
@@ -164,7 +164,7 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
 	-ms-transition:0.5s all;
 	margin-top:15px;
     }
-	#container input.submit:hover {
+	#container button.submit:hover {
 	background: #7c6991;
 	transition:0.5s all;
 	-webkit-transition:0.5s all;
@@ -173,14 +173,14 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
 	-ms-transition:0.5s all;
 	 width: 93%;
 	}
-    #container input.submit:focus { border: none; }     
-    #container input.error { border: 1px solid red; }
-    #container input.valid { border: 1px solid #1FFF00; }    
-    #container input:focus, #container select:focus {
+    #container button.submit:focus { border: none; }     
+    #container button.error { border: 1px solid red; }
+    #container button.valid { border: 1px solid #1FFF00; }    
+    #container button:focus, #container select:focus {
         border: 1px solid #7c6991;
         color: #888;
     }
-	#container input.submit:focus{
+	#container button.submit:focus{
 		color: #fff;
 	}
 #container select {   
@@ -295,6 +295,8 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
     overflow: auto;
     bottom: 0;
     padding-top: 51px;
+	width:32.33%;
+	height:100%;
 }
 .ng-sticky-fixed{
     bottom:0;
@@ -1746,7 +1748,7 @@ label {
 	width: 494px !important;
 }
 .ta-editor {
-  min-height: 95px !important;
+  min-height: 82px !important;
   height: auto !important;
   overflow: auto !important;
   font-family: inherit !important;
@@ -1754,7 +1756,7 @@ label {
 }
 .ta-scroll-window > .ta-bind {
     height: auto;
-    min-height: 95px !important;
+    min-height: 82px !important;
     padding: 6px 12px;
 }
 
