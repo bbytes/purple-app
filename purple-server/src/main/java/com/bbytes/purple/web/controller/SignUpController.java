@@ -58,10 +58,10 @@ public class SignUpController {
 
 	@Value("${base.url}")
 	private String baseUrl;
-	
+
 	@Value("${email.signup.subject}")
 	private String signupSubject;
-	
+
 	@Value("${email.register.tenant.subject}")
 	private String registerTenantSubject;
 
@@ -107,6 +107,7 @@ public class SignUpController {
 
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(GlobalConstants.STATUSNAP_EMAIL_ADDRESS);
+		emailList.add(GlobalConstants.SALES_EMAIL_ADDRESS);
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
