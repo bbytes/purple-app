@@ -50,7 +50,6 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
             }
 
         }, function (error) {
-            //Login failed. Showing error notification
             appNotifyService.error('Invalid Username or Password');
         });
     };

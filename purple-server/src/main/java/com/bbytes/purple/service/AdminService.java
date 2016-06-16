@@ -25,7 +25,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.utils.ErrorHandler;
-import com.bbytes.purple.utils.GlobalConstants;
+import com.bbytes.purple.utils.StringUtils;
 
 @Service
 public class AdminService {
@@ -56,13 +56,28 @@ public class AdminService {
 		return user;
 	}
 
-	public List<User> bulkUsers(Organization org, MultipartFile file) throws PurpleException {
+	public User reInvitetoUser(String email, String randomPassword) throws PurpleException {
+
+		User user = null;
+		if (!userService.userEmailExist(email) || !tenantResolverService.emailExist(email))
+			throw new PurpleException("User not found", ErrorHandler.USER_NOT_FOUND);
+		try {
+			user = userService.getUserByEmail(email);
+			user.setPassword(passwordHashService.encodePassword(randomPassword));
+			user = userService.save(user);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.REINVITE_FAILED);
+		}
+		return user;
+	}
+
+	public Map<String, User> bulkUsers(Organization org, MultipartFile file) throws PurpleException {
 
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ",";
 		Map<String, String> maps = new LinkedHashMap<String, String>();
-		List<User> bulkUsers = new LinkedList<User>();
+		Map<String, User> bulkUsers = new LinkedHashMap<String, User>();
 		InternetAddress emailAddr;
 
 		try {
@@ -79,9 +94,10 @@ public class AdminService {
 			}
 			for (Map.Entry<String, String> entry : maps.entrySet()) {
 
+				String generatePassword = StringUtils.nextSessionId();
 				User addUser = new User(entry.getValue(), entry.getKey().toLowerCase());
 				addUser.setOrganization(org);
-				addUser.setPassword(passwordHashService.encodePassword(GlobalConstants.DEFAULT_PASSWORD));
+				addUser.setPassword(passwordHashService.encodePassword(generatePassword));
 				addUser.setStatus(User.PENDING);
 				addUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
 
@@ -96,7 +112,7 @@ public class AdminService {
 						|| !tenantResolverService.emailExist(addUser.getEmail())) && result) {
 					try {
 						User user = userService.save(addUser);
-						bulkUsers.add(user);
+						bulkUsers.put(generatePassword, user);
 					} catch (Throwable e) {
 						throw new PurpleException(e.getMessage(), ErrorHandler.ADD_USER_FAILED);
 					}

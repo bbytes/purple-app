@@ -35,8 +35,8 @@ import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.PasswordHashService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.UserService;
-import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
+import com.bbytes.purple.utils.StringUtils;
 import com.bbytes.purple.utils.SuccessHandler;
 
 /**
@@ -93,10 +93,12 @@ public class AdminController {
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
+		String generatePassword = StringUtils.nextSessionId();
+
 		Organization org = userService.getLoggedInUser().getOrganization();
 		User addUser = new User(userDTO.getUserName(), userDTO.getEmail().toLowerCase());
 		addUser.setOrganization(org);
-		addUser.setPassword(passwordHashService.encodePassword(GlobalConstants.DEFAULT_PASSWORD));
+		addUser.setPassword(passwordHashService.encodePassword(generatePassword));
 		addUser.setStatus(User.PENDING);
 		addUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
 
@@ -109,7 +111,7 @@ public class AdminController {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
+		emailBody.put(GlobalConstants.PASSWORD, generatePassword);
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
 		emailService.sendEmail(emailList, emailBody, inviteSubject, template);
@@ -133,24 +135,29 @@ public class AdminController {
 	public RestResponse bulkUploadUsers(@RequestParam("file") MultipartFile file) throws PurpleException {
 
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
+		List<User> allUser = new LinkedList<User>();
 
 		Organization org = userService.getLoggedInUser().getOrganization();
-		List<User> users = adminService.bulkUsers(org, file);
+		Map<String, User> userMap = adminService.bulkUsers(org, file);
 
-		for (User user : users) {
-			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 720);
+		for (Map.Entry<String, User> entry : userMap.entrySet()) {
+			allUser.add(entry.getValue());
+		}
+		for (Map.Entry<String, User> entry : userMap.entrySet()) {
+
+			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(entry.getValue().getEmail(), 720);
 			List<String> emailList = new ArrayList<String>();
-			emailList.add(user.getEmail());
+			emailList.add(entry.getValue().getEmail());
 			Map<String, Object> emailBody = new HashMap<>();
-			emailBody.put(GlobalConstants.USER_NAME, user.getName());
+			emailBody.put(GlobalConstants.USER_NAME, entry.getValue().getName());
 			emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, new Date());
-			emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
+			emailBody.put(GlobalConstants.PASSWORD, entry.getKey());
 			emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
 			emailService.sendEmail(emailList, emailBody, inviteSubject, template);
 		}
 
-		List<UserDTO> responseDTO = dataModelToDTOConversionService.convertUsers(users);
+		List<UserDTO> responseDTO = dataModelToDTOConversionService.convertUsers(allUser);
 		logger.debug(responseDTO.size() + "' User are added successfully");
 
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.ADD_USER_SUCCESS);
@@ -252,10 +259,10 @@ public class AdminController {
 		final String REINVITE_SUCCESS_MSG = "Reinvite is successful";
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
-		if (!userService.userEmailExist(email))
-			throw new PurpleException("User is not found", ErrorHandler.USER_NOT_FOUND);
+		String generatePassword = StringUtils.nextSessionId();
 
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(email, 720);
+		User user = adminService.reInvitetoUser(email, generatePassword);
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 720);
 		String postDate = dateFormat.format(new Date());
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(email);
@@ -263,7 +270,7 @@ public class AdminController {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, name);
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.PASSWORD, GlobalConstants.DEFAULT_PASSWORD);
+		emailBody.put(GlobalConstants.PASSWORD, generatePassword);
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
 		emailService.sendEmail(emailList, emailBody, inviteSubject, template);

@@ -11,7 +11,6 @@ rootApp.service('appNotifyService', function (toaster) {
             toaster.clear();
         }
 
-        console.log('here');
         toaster.pop('error', title, msg, stayFor);
 
     };
@@ -34,7 +33,7 @@ rootApp.service('appNotifyService', function (toaster) {
     this.success = function (msg, title, stayFor, clear) {
 
         // 0 to make it sticky
-        stayFor = stayFor || 4000;
+        stayFor = stayFor || 3000;
         title = title || '';
         clear = clear || false;
 

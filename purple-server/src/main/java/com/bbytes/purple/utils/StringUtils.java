@@ -1,11 +1,16 @@
 package com.bbytes.purple.utils;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Collection;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
 public final class StringUtils {
+
+	private static SecureRandom random = new SecureRandom();
+
 	private StringUtils() {
 	}
 
@@ -16,5 +21,12 @@ public final class StringUtils {
 
 	public static String commaSeparate(Collection<String> collectionOfStrings) {
 		return Joiner.on(",").join(collectionOfStrings);
+	}
+
+	/**
+	 * Random password generator
+	 */
+	public static String nextSessionId() {
+		return new BigInteger(40, random).toString(32);
 	}
 }

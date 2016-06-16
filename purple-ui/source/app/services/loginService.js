@@ -27,9 +27,8 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
                 result.success = response.success;
 
                 deferred.resolve(result);
-            }).error(function () {
-                // Something went wrong.
-                deferred.reject({'success': false, 'msg': 'Oops! Something went wrong. Please try again later.'});
+            }).error(function (response) {
+                deferred.reject(response);
             });
 
             return deferred.promise;
