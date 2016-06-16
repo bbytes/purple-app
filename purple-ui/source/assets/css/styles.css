@@ -886,7 +886,7 @@ a{
 	list-style: none;
     /* padding-bottom: 14px; */
     font-weight: 400;
-    padding: 9px 0px;
+    
     border-bottom: 1px solid #ccc;
 }
 .panel-body {
@@ -898,7 +898,7 @@ a{
 	display:block;
     width: 100%;
 }
-.list-group li{
+.list-group li a{
 	padding:13px;
 }
 .panel-group .panel + .panel {
