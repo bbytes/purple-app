@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
@@ -126,6 +127,13 @@ public class SignUpController {
 
 	}
 
+	/**
+	 * accountActivation Method is used to activate account for user.
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+
 	@RequestMapping(value = "/api/v1/admin/activateAccount", method = RequestMethod.GET)
 	public RestResponse accountActivation() throws PurpleException {
 
@@ -137,5 +145,43 @@ public class SignUpController {
 		RestResponse activeResponse = new RestResponse(RestResponse.SUCCESS, responseDTO,
 				SuccessHandler.SIGN_UP_SUCCESS);
 		return activeResponse;
+	}
+
+	/**
+	 * The resendActivationLink method is used to send the activation link.
+	 * 
+	 * @param email
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/auth/resendActivation", method = RequestMethod.GET)
+	public RestResponse resendActivationLink(@RequestParam String email) throws PurpleException {
+
+		final String RESEND_ACTIVATION_SUCCESS_MSG = "Activation link is successfully sent to your register email address";
+		final String template = GlobalConstants.EMAIL_SIGNUP_TEMPLATE;
+		RestResponse userReponse = null;
+
+		User user = registrationService.resendActivation(email);
+		if (!user.getUserRole().getRoleName().equals("ADMIN")) {
+			userReponse = new RestResponse(RestResponse.FAILED, "Resend activation link failed",
+					SuccessHandler.RESEND_ACTIVATION_LINK_SUCCESS);
+			return userReponse;
+		}
+
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 720);
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(email);
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, user.getName());
+		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.FORGOT_PASSWORD_URL + xauthToken);
+
+		emailService.sendEmail(emailList, emailBody, signupSubject, template);
+
+		logger.debug("Resend activation link is done successfully");
+		userReponse = new RestResponse(RestResponse.SUCCESS, RESEND_ACTIVATION_SUCCESS_MSG,
+				SuccessHandler.RESEND_ACTIVATION_LINK_SUCCESS);
+
+		return userReponse;
 	}
 }

@@ -32,22 +32,22 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 
 	Organization org;
 	User adminUser;
-	
+
 	@Before
-	public void setUp()
-	{
+	public void setUp() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).dispatchOptions(true).addFilters(filterChainProxy)
 				.build();
 		org = new Organization("test", "test-org");
-		adminUser = new User("admin-user", "test@gmail.com");
+		adminUser = new User("admin-user", "akshaynagprkr@gmail.com");
 		adminUser.setUserRole(UserRole.ADMIN_USER_ROLE);
+		adminUser.setPassword("Test123");
 		adminUser.setOrganization(org);
-		
+
 		TenancyContextHolder.setTenant(org.getOrgId());
 		userService.deleteAll();
 		organizationRepository.deleteAll();
 	}
-	
+
 	@Test
 	public void testSignUpFailed() throws Exception {
 		mockMvc.perform(post("/auth/signup")).andExpect(status().is5xxServerError()).andDo(print());
@@ -100,12 +100,12 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":true")));
 
 	}
-	
+
 	@Test
 	public void testActivateAccountFailed() throws Exception {
 		mockMvc.perform(get("api/v1/admin/activateAccount")).andExpect(status().is4xxClientError()).andDo(print());
 	}
-	
+
 	@Test
 	public void testActivateAccountPasses() throws Exception {
 
@@ -116,11 +116,11 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
 		mockMvc.perform(get("/api/v1/admin/activateAccount").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
-		.andExpect(status().isOk()).andDo(print())
-		.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 	}
-	
+
 	@Test
 	public void testActivateAccountFailedWithInvalidToken() throws Exception {
 
@@ -131,9 +131,43 @@ public class TestSignUpController extends PurpleWebBaseApplicationTests {
 
 		String xauthToken = "fbvhfdvbjfdvfdjvfdjvfdvfdvfdjvn455552";
 		mockMvc.perform(get("/api/v1/admin/activateAccount").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
-		.andExpect(status().is4xxClientError()).andDo(print())
-		.andExpect(content().string(containsString("{\"success\":false"))).andExpect(status().is4xxClientError());
+				.andExpect(status().is4xxClientError()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":false")))
+				.andExpect(status().is4xxClientError());
 
 	}
-	
+
+	// Test Case for re-send activation link for admin user.
+
+	@Test
+	public void testResendActivationLinkPassesforAdmin() throws Exception {
+
+		TenancyContextHolder.setTenant(org.getOrgId());
+		organizationRepository.save(org);
+		User user = userService.save(adminUser);
+
+		String email = user.getEmail();
+
+		mockMvc.perform(get("/auth/resendActivation").param("email", email).contentType(APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true")));
+	}
+
+	// Test Case for re-send activation link for normal user.
+
+	@Test
+	public void testResendActivationLinkPassesforNormal() throws Exception {
+
+		adminUser.setUserRole(UserRole.NORMAL_USER_ROLE);
+		TenancyContextHolder.setTenant(org.getOrgId());
+		organizationRepository.save(org);
+		User user = userService.save(adminUser);
+
+		String email = user.getEmail();
+
+		mockMvc.perform(get("/auth/resendActivation").param("email", email).contentType(APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":false")));
+	}
+
 }

@@ -54,4 +54,21 @@ public class RegistrationService {
 		}
 		return activeUser;
 	}
+	
+	public User resendActivation(String email) throws PurpleException {
+		User user = null;
+		if (email != null && !email.isEmpty()) {
+			String orgId = tenantResolverService.findTenantIdForUserEmail(email);
+			TenancyContextHolder.setTenant(orgId);
+			if (!userService.userEmailExist(email))
+				throw new PurpleException("Error while resend activation link", ErrorHandler.USER_NOT_FOUND);
+			try {
+				user = userService.getUserByEmail(email);
+				
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.RESEND_ACTIVATION_FAILURE);
+			}
+		}
+		return user;
+	}
 }

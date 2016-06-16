@@ -20,6 +20,8 @@ public class ErrorHandler {
 
 	public static final String ACCOUNT_ACTIVATION_FAILURE = "account_inactive";
 
+	public static final String RESEND_ACTIVATION_FAILURE = "resend_activation_failure";
+
 	public static final String USER_NOT_FOUND = "user_not_found";
 
 	public static final String PASSWORD_MISMATCH = "password_mistach";
@@ -83,7 +85,7 @@ public class ErrorHandler {
 	public static final String UPDATE_COMMENT_FAILED = "update_comment_failed";
 
 	public static final String UPDATE_SETTING_FAILED = "update_setting_failed";
-	
+
 	public static final String SET_TIMEZONE_TIMEPREFERENCE_FAILED = "set timezone or timepreference failed";
 
 	public static final String HOURS_EXCEEDED = "hours_exceeded";
