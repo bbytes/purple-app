@@ -21,13 +21,15 @@
                     $rootScope.userName = response.data.userName;
                     $rootScope.userRole = response.data.userRole.id;
                     $rootScope.timePreference = response.data.timePreference;
-                    $rootScope.switchState = response.data.emailNotificationState;     
+                    $rootScope.switchState = response.data.emailNotificationState; 
+                    $rootScope.timeZone = response.data.timeZone; 
 
                     var userInfo = {
                     email: $rootScope.loggedInUser,
                     name: $rootScope.userName,
                     userRoles:  $rootScope.userRole,
                     timePreference :  $rootScope.timePreference,
+                    timeZone : $rootScope.timeZone,
                     emailNotificationState : $rootScope.switchState,    
                    };
               
