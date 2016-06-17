@@ -142,7 +142,7 @@ public class SchedulerService {
 
 					long currentDate = new Date().getTime();
 					String statusEditEnableDays = configSettingService
-							.getConfigSettingbyOrganization(user.getOrganization()).getStatusEnable();
+							.getConfigSetting(user.getOrganization()).getStatusEnable();
 
 					if (statusEditEnableDays == null)
 						statusEditEnableDays = "1";
