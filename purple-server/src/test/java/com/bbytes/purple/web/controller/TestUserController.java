@@ -185,7 +185,7 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(projectList);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
-		mockMvc.perform(get("/api/v1/projects/users/all").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/projects/users/all").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 

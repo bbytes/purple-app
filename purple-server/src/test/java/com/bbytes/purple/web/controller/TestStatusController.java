@@ -264,7 +264,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		statusService.save(status1);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
-		mockMvc.perform(get("/api/v1/status").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
+		mockMvc.perform(get("/api/v1/status").param("timePeriod", "Weekly").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
 				.andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
@@ -470,7 +470,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestStatusDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/status/project/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/status/project/user").param("timePeriod", "Weekly").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true")));
 
@@ -541,7 +541,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestStatusDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/status/project/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/status/project/user").param("timePeriod", "Weekly").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true")));
 
@@ -608,7 +608,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestStatusDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/status/project/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/status/project/user").param("timePeriod", "Weekly").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true")));
 
@@ -670,7 +670,7 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestStatusDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/status/project/user").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/status/project/user").param("timePeriod", "Weekly").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true")));
 

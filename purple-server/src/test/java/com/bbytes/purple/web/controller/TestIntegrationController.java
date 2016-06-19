@@ -92,9 +92,9 @@ public class TestIntegrationController extends PurpleWebBaseApplicationTests {
 
 		mockMvc.perform(
 				get("/api/v1/integration/jira/getAuthentication").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
-				.andExpect(status().is5xxServerError()).andDo(print())
+				.andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":false")))
-				.andExpect(status().is5xxServerError());
+				.andExpect(status().isOk());
 	}
 
 	// Test Case for getting project from JIRA by logged in user.

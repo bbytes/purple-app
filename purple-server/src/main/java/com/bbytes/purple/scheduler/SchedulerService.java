@@ -42,9 +42,9 @@ import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
 /**
- * Scheduler Service
+ * Scheduler Service for distributing emails.
  * 
- * @author akshay
+ * @author Akshay
  *
  */
 @Component
@@ -100,6 +100,8 @@ public class SchedulerService {
 	 * @throws PurpleException
 	 * @throws ParseException
 	 */
+	
+	/* Cron Runs every 30 minutes */
 	@Scheduled(cron = "0 0/30 * * * ?")
 	public void emailSchedule() throws PurpleException, ParseException {
 
@@ -181,6 +183,7 @@ public class SchedulerService {
 	 * @throws ParseException
 	 */
 
+	/* Cron Runs every Tuesday-Saturday at 10 am */
 	@Scheduled(cron = "	0 0 10 ? * TUE,WED,THU,FRI,SAT")
 	public void sendEmailforStatusUpdate() throws PurpleException, ParseException {
 
@@ -212,6 +215,7 @@ public class SchedulerService {
 					userListToBeSendMail.add(user);
 					nameList.add(user.getName());
 				}
+				 // Manager get include as well in email list.
 				if (user.getUserRole().getRoleName().equals("MANAGER"))
 					userListToBeSendMail.add(user);
 			}
