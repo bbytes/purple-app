@@ -25,8 +25,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                 $rootScope.timePreference = response.data.timePreference;
                 $rootScope.switchState = response.data.emailNotificationState;
                 $rootScope.timeZone = response.data.timeZone;
-                $rootScope.current_date = new Date(); 
-                $rootScope.statusDate = null;
+                $rootScope.current_date = new Date();
 
                var userInfo = {
                     authToken: response.headers["x-auth-token"],
