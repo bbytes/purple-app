@@ -129,12 +129,9 @@ rootApp.service('projectService', function($rootScope, $http, $q, $window) {
 		}).success(function(response, status, headers, config) {
 
 			deferred.resolve(response);
-		}).error(function() {
+		}).error(function(response) {
 			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Add project or TimePreference'
-			});
+			deferred.reject(response);
 		});
 
 		return deferred.promise;

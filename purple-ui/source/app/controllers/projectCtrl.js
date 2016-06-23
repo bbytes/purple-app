@@ -183,6 +183,10 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 	// Update the project
 	$scope.updateProject = function(project) {
 
+		if (!project.projectName) {
+        	appNotifyService.error('Project name can not be empty');
+            return false;
+        }
 		$scope.updateuserEmailsList = [];
 		angular.forEach($scope.orgUserList, function(user) {
 			$scope.updateuserEmailsList.push(user.email);

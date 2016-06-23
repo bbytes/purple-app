@@ -301,28 +301,28 @@ public class AdminController {
 		Project addProject = new Project(projectDTO.getProjectName());
 		addProject.setOrganization(org);
 		List<User> usersTobeAdded = new ArrayList<User>();
-		List<String> emailList = new ArrayList<String>();
 		for (String i : projectDTO.getUsers()) {
 			usersTobeAdded.add(userService.getUserByEmail(i));
-			emailList.add(i);
 		}
 		addProject.setUser(usersTobeAdded);
 		Project project = adminService.createProject(addProject, usersTobeAdded);
 
 		String postDate = dateFormat.format(new Date());
 		long currentDate = new Date().getTime();
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 720);
 
-		Map<String, Object> emailBody = new HashMap<>();
-		emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
-		emailBody.put(GlobalConstants.USER_NAME, user.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.ACTIVATION_LINK,
-				baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
+		for (User addedUser : usersTobeAdded) {
+			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(addedUser.getEmail(), 168);
+			Map<String, Object> emailBody = new HashMap<>();
+			List<String> emailList = new ArrayList<String>();
+			emailList.add(addedUser.getEmail());
+			emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
+			emailBody.put(GlobalConstants.USER_NAME, addedUser.getName());
+			emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+			emailBody.put(GlobalConstants.ACTIVATION_LINK,
+					baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
 
-		if (!emailList.isEmpty())
 			emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
-
+		}
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
 		logger.debug("User with email  '" + projectDTO.getProjectName() + "' are added successfully");
@@ -411,29 +411,33 @@ public class AdminController {
 		}
 		List<User> usersFromProject = projectService.findByProjectId(projectId).getUser();
 
-		List<String> emailList = new LinkedList<String>();
+		List<User> updateUserList = new LinkedList<User>();
 		for (User user : usersTobeAdded) {
 
 			if (!usersFromProject.contains(user))
-				emailList.add(user.getEmail());
+				updateUserList.add(user);
 		}
 		updateProject.setUser(usersTobeAdded);
 		Project project = adminService.updateProject(projectId, updateProject);
 
 		String postDate = dateFormat.format(new Date());
 		long currentDate = new Date().getTime();
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(loggedInuser.getEmail(), 720);
 
-		Map<String, Object> emailBody = new HashMap<>();
-		emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
-		emailBody.put(GlobalConstants.USER_NAME, loggedInuser.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.ACTIVATION_LINK,
-				baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
+		// Here get newly added user to project.
+		for (User sendMailtoUpdatedUser : updateUserList) {
+			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(sendMailtoUpdatedUser.getEmail(),
+					168);
+			List<String> emailList = new LinkedList<String>();
+			emailList.add(sendMailtoUpdatedUser.getEmail());
+			Map<String, Object> emailBody = new HashMap<>();
+			emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
+			emailBody.put(GlobalConstants.USER_NAME, sendMailtoUpdatedUser.getName());
+			emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+			emailBody.put(GlobalConstants.ACTIVATION_LINK,
+					baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
 
-		if (!emailList.isEmpty())
 			emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
-
+		}
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
 		logger.debug("Projects are updated successfully");
