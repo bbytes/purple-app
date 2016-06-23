@@ -14,7 +14,7 @@
 			<div class="user-show-next">
 
 				<table width="100%">
-					<tr ng-repeat="user in allusers | filter:searchText">
+					<tr ng-repeat="user in allusers  | orderBy:'userName' | filter:searchText">
 						<td class="add-user-table"><small> <ng-letter-avatar
 									data="{{user.userName}}" shape="round"></ng-letter-avatar>
 						</small>
