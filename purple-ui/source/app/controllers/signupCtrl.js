@@ -28,6 +28,10 @@ rootApp.controller('signupCtrl', function ($scope, $rootScope, $state, signupSer
                  //Login failed. Showing error notification
                  appNotifyService.error('Looks like this email is already registered with us.');
              }
+             else if(error.reason =="invalid_email") {
+
+                 appNotifyService.error('Email domain is not supported');
+             }
         	 else{
             //Login failed. Showing error notification
             appNotifyService.error(error.msg, 'Oops!! Registration has Failed. Please try after sometime!');

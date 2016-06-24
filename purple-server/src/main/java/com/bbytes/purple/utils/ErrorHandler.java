@@ -102,6 +102,10 @@ public class ErrorHandler {
 
 	public static final String JIRA_CONNECTION_FAILED = "jira_connection_failed";
 
+	public static final String DISPOSABLE_EMAIL_DOMAIN = "Email domain is not supported";
+
+	public static final String INVALID_EMAIL = "invalid_email";
+
 	public static String resolveAuthError(AuthenticationException authEx) {
 		try {
 			RestResponse errorResponse;

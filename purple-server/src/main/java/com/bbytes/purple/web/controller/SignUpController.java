@@ -29,8 +29,10 @@ import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.RegistrationService;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
+import com.bbytes.purple.utils.ValidateEmailDomain;
 
 /**
  * Sign-up controller
@@ -87,6 +89,9 @@ public class SignUpController {
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
 
 		Organization organization = new Organization(orgId, signUpRequestDTO.getOrgName().trim());
+
+		if (ValidateEmailDomain.isEmailDomainNotValid(signUpRequestDTO.getEmail()))
+			throw new PurpleException(ErrorHandler.DISPOSABLE_EMAIL_DOMAIN, ErrorHandler.INVALID_EMAIL);
 
 		User user = new User(orgId, signUpRequestDTO.getEmail());
 		user.setEmail(signUpRequestDTO.getEmail().toLowerCase());
