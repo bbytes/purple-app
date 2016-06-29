@@ -2,7 +2,7 @@ package com.bbytes.purple.domain;
 
 public enum TimePeriod {
 
-	Today(0,"day"),Yesterday(1,"day"), Weekly(7,"day"), BiWeekly(15,"day"), Monthly(30,"day"), Quaterly(90,"month"), Yearly(365,"month");
+	Today(0,"day"),Yesterday(1,"day"), Weekly(7,"day"), BiWeekly(15,"day"), Monthly(30,"day"), Quarterly(90,"month"), Yearly(365,"month");
 
 	Integer days;
 	
