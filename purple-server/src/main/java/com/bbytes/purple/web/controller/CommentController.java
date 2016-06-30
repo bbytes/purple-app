@@ -57,9 +57,12 @@ public class CommentController {
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
-	
+
 	@Value("${email.comment.subject}")
 	private String commentSubject;
+
+	@Value("${email.updateComment.subject}")
+	private String updateCommentSubject;
 
 	@RequestMapping(value = "/api/v1/comment/add", method = RequestMethod.POST)
 	public RestResponse saveComment(@RequestBody CommentDTO commentDTO) throws PurpleException {
@@ -108,7 +111,26 @@ public class CommentController {
 	public RestResponse updateComment(@PathVariable("commentId") String commentId, @RequestBody CommentDTO commentDTO)
 			throws PurpleException {
 
+		/*final String template = GlobalConstants.UPDATE_COMMENT_EMAIL_TEMPLATE;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+
+		User user = userService.getLoggedInUser();*/
 		Comment comment = commentService.updateComment(commentId, commentDTO);
+		/*Status status = statusService.findOne(comment.getStatus().getStatusId());
+
+		final String updateCommentSub = "Statusnap - " + " " + status.getUser().getName() + " " + updateCommentSubject;
+		String postDate = dateFormat.format(status.getDateTime());
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(status.getUser().getEmail());
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
+		emailBody.put("userName", user.getName());
+
+		emailService.sendEmail(emailList, emailBody, updateCommentSub, template);
+*/
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 
 		logger.debug("Comment is updated successfully");
