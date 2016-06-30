@@ -67,6 +67,7 @@ public class FeedbackController {
 
 		Map<String, Object> feedBackSendEmailBody = new HashMap<>();
 		feedBackSendEmailBody.put(GlobalConstants.USER_NAME, user.getName());
+		feedBackSendEmailBody.put(GlobalConstants.EMAIL_ADDRESS, user.getEmail());
 		feedBackSendEmailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		feedBackSendEmailBody.put(GlobalConstants.CATEGORY, feedbackDTO.getCategory());
 		feedBackSendEmailBody.put(GlobalConstants.FEEDBACK, feedbackDTO.getSuggestions());
