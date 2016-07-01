@@ -3,7 +3,7 @@ rootApp.service('appNotifyService', function (toaster) {
     this.error = function (msg, title, stayFor, clear) {
 
         // 0 to make it sticky
-        stayFor = stayFor || 3000;
+        stayFor = stayFor || 4000;
         title = title || '';
         clear = clear || false;
 
@@ -33,7 +33,7 @@ rootApp.service('appNotifyService', function (toaster) {
     this.success = function (msg, title, stayFor, clear) {
 
         // 0 to make it sticky
-        stayFor = stayFor || 3000;
+        stayFor = stayFor || 4000;
         title = title || '';
         clear = clear || false;
 
