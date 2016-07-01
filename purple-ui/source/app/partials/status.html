@@ -72,11 +72,18 @@
 	<div class="col-md-4">
       <div class="side">
 		<div class="row">
-		   <div class="col-md-12">
+		
 		    <div class="date-display">
-		     <p>{{current_date | date:'MMM dd, yyyy'}}</p>
+			 <!-- p>{{current_date | date:'MMM dd, yyyy'}}</p -->
+			  <div class="col-md-9">
+		        <select name="singleSelect" class="form-control" id="singleSelect" ng-model="data.singleSelect">
+                   <option value="">---Please select---</option> <!-- not selected / blank option -->
+                   <option value="{{data.option1}}">Option 1</option> <!-- interpolation -->
+                   <option value="option-2">Option 2</option>
+                </select>
+			  </div>
 			</div>
-		   </div>
+		 
 		   
 			<div class="col-md-9" 
 				ng-init="loadProjects()">
@@ -173,11 +180,17 @@
 	<div class="col-md-4 side">
 
 		<div class="row" >
-		  <div class="col-md-12">
+		  
 		    <div class="date-display">
-		     <p>{{current_date | date:'MMM dd, yyyy'}}</p>
+			 <!-- p>{{current_date | date:'MMM dd, yyyy'}}</p -->
+			  <div class="col-md-9">
+		        <select name="singleSelect" class="form-control" id="singleSelect" ng-model="data.singleSelect">
+                   <option value="">---Please select---</option> <!-- not selected / blank option -->
+                   <option value="{{data.option1}}">Option 1</option> <!-- interpolation -->
+                   <option value="option-2">Option 2</option>
+                </select>
+			  </div>
 			</div>
-		   </div>
 		
 			<div class="col-md-9" 
 				ng-init="loadProjects()">

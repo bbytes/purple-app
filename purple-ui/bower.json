@@ -38,8 +38,8 @@
     "angular-pageslide-directive": "^1.2.2",
     "angular-loading-bar": "^0.9.0",
     "angular-bootstrap-toggle-switch": "^0.5.6",
-    "angular-scroll": "^1.0.0",
-    "angular-fancy-modal": "^0.1.4"
+    "angular-fancy-modal": "^0.1.4",
+    "angular-scroll": "^1.0.0"
   },
   "devDependencies": {},
   "resolutions": {

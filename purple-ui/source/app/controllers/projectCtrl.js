@@ -243,4 +243,11 @@ rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
 		$scope.sharedDate = new Date(new Date().setMinutes(0, 0));
 	}
 
+	
+	$scope.scrollToTop = function($var) {
+      // 'html, body' denotes the html element, to go to any other custom element, use '#elementID'
+      $('html, body').animate({
+          scrollTop: 0
+      }, 'fast'); // 'fast' is for fast animation
+  };
 });
