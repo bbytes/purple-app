@@ -4,6 +4,8 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -29,6 +31,7 @@ import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.UsersAndProjectsDTO;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class StatusService extends AbstractService<Status, String> {
@@ -98,8 +101,9 @@ public class StatusService extends AbstractService<Status, String> {
 		return hours;
 	}
 
-	public Status create(StatusDTO statusDTO, User user) throws PurpleException {
+	public Status create(StatusDTO statusDTO, User user) throws PurpleException, ParseException {
 		Status savedStatus = null;
+		SimpleDateFormat formatter = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 		cleanUpStatusText(statusDTO);
 
@@ -114,7 +118,7 @@ public class StatusService extends AbstractService<Status, String> {
 				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
 						new Date());
 			} else {
-				Date statusDate = new Date(Long.parseLong(statusDTO.getDateTime()));
+				Date statusDate = formatter.parse(statusDTO.getDateTime());
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(statusDate);
 				Date newTime = new DateTime(new Date())

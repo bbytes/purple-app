@@ -84,7 +84,7 @@ public class StatusController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/api/v1/status/add", method = RequestMethod.POST)
-	public RestResponse addStatus(@RequestBody StatusDTO statusDTO) throws PurpleException {
+	public RestResponse addStatus(@RequestBody StatusDTO statusDTO) throws PurpleException, ParseException {
 
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();

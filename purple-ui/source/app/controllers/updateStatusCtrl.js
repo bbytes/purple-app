@@ -6,7 +6,7 @@
     		$window.sessionStorage.token = $state.params.token;
           
              $rootScope.authToken = $state.params.token;
-             $rootScope.statusDate = $state.params.sd;
+             $rootScope.statusDateFromLink = $state.params.sd;
              
          		var deferred = $q.defer();
                
@@ -25,20 +25,13 @@
                     $rootScope.switchState = response.data.emailNotificationState;
                     $rootScope.timeZone = response.data.timeZone;
 
-        if($rootScope.statusDate == undefined && $rootScope.statusDate == null)
-            $rootScope.current_date = new Date();
-        else
-            $rootScope.current_date = new Date(parseInt($rootScope.statusDate));
-
                     var userInfo = {
                     email: $rootScope.loggedInUser,
                     name: $rootScope.userName,
                     userRoles:  $rootScope.userRole,
-                    statusDate :  $rootScope.statusDate,
                     timePreference :  $rootScope.timePreference,
                     emailNotificationState : $rootScope.switchState,  
                     timeZone : $rootScope.timeZone,
-                    displayDate : $rootScope.current_date,
                    };
               
                  $sessionStorage.userInfo =  userInfo;
