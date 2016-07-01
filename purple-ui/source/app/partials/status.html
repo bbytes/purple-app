@@ -76,7 +76,7 @@
 		    <div class="date-display">
 			 <!-- p>{{current_date | date:'MMM dd, yyyy'}}</p -->
 			  <div class="col-md-9" ng-init=" loadStatusDates()">
-		        <select name="singleSelect" class="form-control" id="statusDate" name="statusDate" ng-model="statusDate" 
+		        <select class="form-control" id="statusDate" name="statusDate" ng-model="statusDate" 
 						ng-disabled="isDisable">
                     <option ng-repeat="date in dateArray" value="{{date}}" >{{date | date:'MMM dd, yyyy'}}</option>
 						</select>
