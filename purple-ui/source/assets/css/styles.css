@@ -4037,3 +4037,8 @@ tabs-left, .tabs-right {
 .delete-img img{
     margin-top:-20px;
 }
+.active-user a{
+   background: transparent !important;
+   color:#777 !important;
+   cursor: default !important;
+}
