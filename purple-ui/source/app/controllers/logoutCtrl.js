@@ -6,7 +6,7 @@ rootApp.controller('logoutCtrl', function ($scope, $rootScope, $state, logoutSer
 	
 	  $scope.logout = function() {
 		  delete $window.sessionStorage.token;
-		  delete $rootScope.statusDate;
+		  delete $rootScope.statusDateFromLink;
 		  $sessionStorage.$reset();
 		  $state.go("login");
 		};
