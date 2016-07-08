@@ -41,6 +41,7 @@
                 }).error(function(response) {
                     deferred.reject(response);
                     appNotifyService.error('The link is expired');
+                     delete $rootScope.statusDateFromLink;
                      $state.go("login");
                 });
 
