@@ -64,6 +64,12 @@ rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $i
                     case "update_status_failed":
                         appNotifyService.error('Error while updating status.');
                         break;
+                    case "add_project_failed":
+                        appNotifyService.error('Error while adding project.');
+                        break;
+                    case "update_project_failed":
+                        appNotifyService.error('Error while updating project.');
+                        break;
                 }
             }
 

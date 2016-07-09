@@ -145,7 +145,6 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, projectService, 
         projectService.getMoreUsersToAdd(projid).then(function (response) {
             if (response.success) {
                 $scope.allmoreusers = response.data.gridData;
-                console.log($scope.allmoreusers);
                 showModal();
             }
         });
@@ -202,14 +201,10 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, projectService, 
                         $scope.orgUserList = '';
                         $scope.loadAllProjects();
                         $scope.showpage = false;
-
-                    } else {
-                        appNotifyService.error(response.data,
-                                'Invite unsuccesfull.');
                     }
 
                 }, function (error) {
-            appNotifyService.error(error.msg);
+            appNotifyService.error("Error while updating project.");
         });
     };
 
