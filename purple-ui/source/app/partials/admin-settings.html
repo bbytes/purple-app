@@ -1,65 +1,65 @@
 
 <!-- /.main -->
 <div class="col-md-offset-2 col-md-8 main-section">
-	<div class="main-title">
-		<h4>settings</h4>
-	</div>
+    <div class="main-title">
+        <h4>settings</h4>
+    </div>
 
-	<div class="create-settings" ng-init="loadSetting()">
-		<div class="row">
-			<div class="col-md-3">
-				<label class="settings">CAPTURE HOURS</label> 
-				<toggle-switch ng-model="capturehours"></toggle-switch>
-				 <br />
-				<br />
-				<br />
-				<br /> <label class="settings">WEEKENDS NOTIFICATIONS</label> 
-				<toggle-switch ng-model="weekendnotify"></toggle-switch>
-				
-				 <br />
-				<br />
-				<br />
-				<br /> <label class="settings">STATUS EDIT ENABLE FOR</label> <select
-					class="form-control turnintodropdown" id="statusEnable" ng-model="statusEnable" ng-options="days.value as days.id for days in days">
-					<option value="">-- Select Days --</option>
-				</select> <br />
-				<br />
-				<button type="button" class="btn btn-default submit" ng-click="configSetting()">save</button>
-			</div>
+    <div class="create-settings" ng-init="loadSetting()">
+        <div class="row">
+            <div class="col-md-3">
+                <label class="settings">CAPTURE HOURS</label> 
+                <toggle-switch ng-model="capturehours"></toggle-switch>
+                <br />
+                <br />
+                <br />
+                <br /> <label class="settings">WEEKENDS NOTIFICATIONS</label> 
+                <toggle-switch ng-model="weekendnotify"></toggle-switch>
 
-			<div class="col-md-9">
-				<table style="width: 100%; border: 1px solid #ddd;">
-					<tr>
-						<td class="cal-table">
-							<h5>HOLIDAYS</h5> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
-									src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
-								14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
-						</a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
-									src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
-								14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
-						</a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
-									src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
-								14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
-						</a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
-									src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
-								14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
-						</a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
-									src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
-								14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
-						</a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
-									src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
-								14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
-						</a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
-									src="../../assets/img/cross.png"></span></a>
+                <br />
+                <br />
+                <br />
+                <br /> <label class="settings">STATUS EDIT ENABLE FOR</label> <select
+                    class="form-control turnintodropdown" id="statusEnable" ng-model="statusEnable" ng-options="days.value as days.id for days in days">
+                    <option value="">-- Select Days --</option>
+                </select> <br />
+                <br />
+                <button type="button" class="btn btn-default submit" ng-click="configSetting()">save</button>
+            </div>
 
-						</td>
-						<td>
-							<div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div>
-						</td>
-					</tr>
-				</table>
-			</div>
+            <div class="col-md-9">
+                <table style="width: 100%; border: 1px solid #ddd;">
+                    <tr>
+                        <td class="cal-table">
+                            <h5>HOLIDAYS</h5> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
+                                        src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
+                                14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
+                            </a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
+                                        src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
+                                14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
+                            </a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
+                                        src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
+                                14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
+                            </a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
+                                        src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
+                                14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
+                            </a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
+                                        src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
+                                14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
+                            </a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
+                                        src="../../assets/img/cross.png"></span></a> <a href="#" class="tag">Mon,
+                                14 Mar 2016 <span><img src="../../assets/img/cross.png"></span>
+                            </a> <a href="#" class="tag">Mon, 14 Mar 2016 <span><img
+                                        src="../../assets/img/cross.png"></span></a>
 
-		</div>
-	</div>
+                        </td>
+                        <td>
+                            <div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
 </div>

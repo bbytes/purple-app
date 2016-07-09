@@ -1,81 +1,81 @@
 <div class="leftSidebar">
-	 <div class="theiaStickySidebar" ng-init="loadTimePeriod();loadGroupBy()">
-	    <div class="panel-group" id="accordion" ng-init="loadUserProjects();loadAllStatusGraph()">
-          <div class="panel panel-default">
-             <div class="panel-heading project-active">
-               <h4 class="panel-title">
-                <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseOne">
-                 <i class="fa fa-inbox"></i>
-                 <span>PROJECTS</span></a>
-                </h4>
-              </div>
-		 
-       <div id="collapseOne" class="panel-collapse collapse in">
-         <div class="panel-body">
-           <ul class="list-group project-nav">
-              <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
-			  <a ng-click="loadAllStatusGraph()" >ALL</a>
-			  </li>
-			  
-		      <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects | orderBy:'projectName'">
-			  <a ng-click="loadStatusGraph(mytime, project, counthours)">{{project.projectName}}</a>
-			  </li>		  
-            </ul>
-          </div>
-       </div>
+    <div class="theiaStickySidebar" ng-init="loadTimePeriod();loadGroupBy()">
+        <div class="panel-group" id="accordion" ng-init="loadUserProjects();loadAllStatusGraph()">
+            <div class="panel panel-default">
+                <div class="panel-heading project-active">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseOne">
+                            <i class="fa fa-inbox"></i>
+                            <span>PROJECTS</span></a>
+                    </h4>
+                </div>
 
-      </div>
-  
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <ul class="list-group project-nav">
+                            <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
+                                <a ng-click="loadAllStatusGraph()" >ALL</a>
+                            </li>
 
-      <div class="panel panel-default">
-         <div class="panel-heading project-active">
-            <h4 class="panel-title">
-              <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseTwo">
-               <i class="fa fa-user"></i> <span>USERS</span>
-              </a>
-            </h4>
-          </div>
-      <div id="collapseTwo" class="panel-collapse collapse in">
-         <div class="panel-body">
-            <ul class="list-group project-nav">
-              <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers  | orderBy:'userName'" >
-			  <a ng-click="loadStatusGraph(mytime, users, counthours)">{{users.userName}}</a>
-			  </li>
-            </ul>
-          </div>
+                            <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects| orderBy:'projectName'">
+                                <a ng-click="loadStatusGraph(mytime, project, counthours)">{{project.projectName}}</a>
+                            </li>		  
+                        </ul>
+                    </div>
+                </div>
 
-      </div>
-     </div>
-  </div>
-</div>
+            </div>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading project-active">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-target="#collapseTwo">
+                            <i class="fa fa-user"></i> <span>USERS</span>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <ul class="list-group project-nav">
+                            <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers| orderBy:'userName'" >
+                                <a ng-click="loadStatusGraph(mytime, users, counthours)">{{users.userName}}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="col-md-9">
-  <div class="content">
-    <div class="search-filter">
-     <ul>
-       <li><b>Group By:</b></li>
-	     <li>
-       <select ng-model="projectuser" ng-options="groupbyProjectUserfield.value as groupbyProjectUserfield.id for groupbyProjectUserfield in groupbyProjectUserfield" ng-change="groupBychange(mytime, projectuser, counthours)" ng-hide="isGroupBy">
-            </select>
-            
-             </li>
-      
-         <li>
-               <select ng-model="counthours" ng-options="counthoursfield.value as counthoursfield.id for counthoursfield in counthoursfield" ng-change="groupBychange(mytime, projectuser, counthours)">
-            </select>
-             </li>
-             <li>
-              <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="groupBychange(mytime, projectuser, counthours)">
+    <div class="content">
+        <div class="search-filter">
+            <ul>
+                <li><b>Group By:</b></li>
+                <li>
+                    <select ng-model="projectuser" ng-options="groupbyProjectUserfield.value as groupbyProjectUserfield.id for groupbyProjectUserfield in groupbyProjectUserfield" ng-change="groupBychange(mytime, projectuser, counthours)" ng-hide="isGroupBy">
+                    </select>
 
-             </select>
-             </li>
-        </ul>
-      </div>
-	  <highchart id="chart1" series="chart.series" title="chart.title" options="chart.options"></highchart>
-	  
-       <canvas id="bar" class="chart chart-bar"
-       chart-data="data" chart-labels="labels" chart-series="series" chart-legend="true">
-       </canvas>
-   </div>
+                </li>
+
+                <li>
+                    <select ng-model="counthours" ng-options="counthoursfield.value as counthoursfield.id for counthoursfield in counthoursfield" ng-change="groupBychange(mytime, projectuser, counthours)">
+                    </select>
+                </li>
+                <li>
+                    <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="groupBychange(mytime, projectuser, counthours)">
+
+                    </select>
+                </li>
+            </ul>
+        </div>
+        <highchart id="chart1" series="chart.series" title="chart.title" options="chart.options"></highchart>
+
+        <canvas id="bar" class="chart chart-bar"
+                chart-data="data" chart-labels="labels" chart-series="series" chart-legend="true">
+        </canvas>
+    </div>
 </div>

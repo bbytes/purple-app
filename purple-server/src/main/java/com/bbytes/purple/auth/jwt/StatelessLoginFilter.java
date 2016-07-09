@@ -100,7 +100,7 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 		SecurityContextHolder.clearContext();
 		String erroMsg = ErrorHandler.resolveAuthError(exception);
 		((HttpServletResponse) response).setContentType("application/json");
-		((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		((HttpServletResponse) response).setStatus(HttpServletResponse.SC_OK);
 		((HttpServletResponse) response).getOutputStream().println(erroMsg);
 
 	}

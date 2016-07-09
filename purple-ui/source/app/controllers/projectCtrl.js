@@ -1,253 +1,250 @@
 /**
  * Project controller on project page
  */
-rootApp.controller('projectCtrl', function($scope, $rootScope, $state,
-		projectService, appNotifyService, adminService, $uibModal,
-		statusService, $window) {
+rootApp.controller('projectCtrl', function ($scope, $rootScope, projectService, appNotifyService, $uibModal) {
 
-	$scope.isActive = function(route) {
-		return route === $location.path();
-	}
+    $scope.isActive = function (route) {
+        return route === $location.path();
+    };
 
-	$rootScope.navClass = 'nav navbar-nav';
-	$rootScope.navstatusClass = 'right-nav-ct';
-	$rootScope.bodyClass = 'body-standalone1';
-	$scope.showpage = false;
-	
-	// Method is used to create project
-	$scope.createProject = function(project) {
+    $rootScope.navClass = 'nav navbar-nav';
+    $rootScope.navstatusClass = 'right-nav-ct';
+    $rootScope.bodyClass = 'body-standalone1';
+    $scope.showpage = false;
 
-		if (!project) {
-        	appNotifyService.error('Please enter a valid Project name');
+    // Method is used to create project
+    $scope.createProject = function (project) {
+
+        if (!project) {
+            appNotifyService.error('Please enter a valid Project name');
             return false;
         }
-		$scope.userEmailsList = [];
-		angular.forEach($scope.newList, function(user) {
-			$scope.userEmailsList.push(user.email);
-		});
-		$scope.project.users = $scope.userEmailsList;
+        $scope.userEmailsList = [];
+        angular.forEach($scope.newList, function (user) {
+            $scope.userEmailsList.push(user.email);
+        });
+        $scope.project.users = $scope.userEmailsList;
 
-		projectService.createProject($scope.project).then(
-				function(response) {
-					if (response.success) {
-						$scope.project = '';
-						$scope.newList = '';
-						$scope.loadAllProjects();
+        projectService.createProject($scope.project).then(function (response) {
+            if (response.success) {
+                $scope.project = '';
+                $scope.newList = '';
+                $scope.loadAllProjects();
 
-					} else {
-						appNotifyService.error(response.data,
-								'Error while creating project.');
-					}
-				}, function(error) {
-					appNotifyService.error(error.msg);
-				});
-	};
+            } else {
+                appNotifyService.error(response.data);
+            }
+        }, function (error) {
+            appNotifyService.error('Error while creating project.');
+        });
+    };
 
-	// Method is used to load all projects
-	$scope.loadAllProjects = function() {
-		projectService.getAllprojects().then(function(response) {
-			if (response.success) {
-				if (response) {
-					$scope.userscount = response.data.length;
-				}
-				$scope.usersCount = response.data.gridData.usersCount;
-				$scope.projectCount = response.data.project_count;
-				$scope.allprojects = response.data.gridData;
-			}
-		});
-	}
+    // Method is used to load all projects
+    $scope.loadAllProjects = function () {
+        projectService.getAllprojects().then(function (response) {
+            if (response.success) {
+                if (response) {
+                    $scope.userscount = response.data.length;
+                }
+                $scope.usersCount = response.data.gridData.usersCount;
+                $scope.projectCount = response.data.project_count;
+                $scope.allprojects = response.data.gridData;
+            }
+        });
+    };
 
-	/* Method to get Loggedin user projects for status*/
-	$scope.loadUsersProjects = function() {
-		projectService.getUserproject().then(function(response) {
-			if (response.success) {
+    /* Method to get Loggedin user projects for status*/
+    $scope.loadUsersProjects = function () {
+        projectService.getUserproject().then(function (response) {
+            if (response.success) {
 
-				$scope.userprojects = response.data.gridData;
-			}
-		});
-	}
-	$scope.initUserProjects = function() {
-		$scope.loadUsersProjects();
-	};
-	
-	// Get all 'joined' status users
-	$scope.getAllUseresInModal = function() {
+                $scope.userprojects = response.data.gridData;
+            }
+        });
+    };
 
-		projectService.getAllUsersToAdd().then(function(response) {
-			if (response.success = true) {
-				if (response) {
-					$scope.userscount = response.data.length;
-				}
-				$scope.joinedCount = response.data.joined_count;
-				$scope.pendingCount = response.data.pending_count;
-				$scope.allusers = response.data.gridData;
-				showModal();
-			}
-		});
+    $scope.initUserProjects = function () {
+        $scope.loadUsersProjects();
+    };
 
-		function showModal() {
-			var uibModalInstance = $uibModal.open({
-				animation : true,
-				templateUrl : 'app/partials/allusers-modal.html',
-				controller : 'allusersModalCtrl',
-				backdrop : 'static',
-				size : 'md',
-				resolve : {
-					options : function() {
-						return {
-							"title" : 'Add Users',
-							"data" : $scope.allusers
-						};
-					}
-				}
-			});
+    // Get all 'joined' status users
+    $scope.getAllUseresInModal = function () {
 
-			uibModalInstance.result.then(function(selection) {
-				$scope.newList = [];
-				angular.forEach($scope.allusers, function(user) {
-					if (selection.indexOf(user.id) > -1) {
-						$scope.newList.push(user);
-					}
-				});
-			});
-		}
-	}
+        projectService.getAllUsersToAdd().then(function (response) {
+            if (response.success) {
+                if (response) {
+                    $scope.userscount = response.data.length;
+                }
+                $scope.joinedCount = response.data.joined_count;
+                $scope.pendingCount = response.data.pending_count;
+                $scope.allusers = response.data.gridData;
+                showModal();
+            }
+        });
 
-	//to delete user from modal
-	$scope.deleteUserFromList = function(id, $index) {
-		$scope.newList.splice($index, 1);
-	}
-	
-	//To delete user from ui
-	$scope.deleteOrgUserFromList = function(id, $index) {
-		$scope.orgUserList.splice($index, 1);
-	}
+        function showModal() {
+            var uibModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/partials/allusers-modal.html',
+                controller: 'allusersModalCtrl',
+                backdrop: 'static',
+                size: 'md',
+                resolve: {
+                    options: function () {
+                        return {
+                            "title": 'Add Users',
+                            "data": $scope.allusers
+                        };
+                    }
+                }
+            });
 
-	// view the all members of project
-	$scope.viewMembers = function(userList) {
-		$scope.membersList = userList;
-		$("#myModal").modal('show');
+            uibModalInstance.result.then(function (selection) {
+                $scope.newList = [];
+                angular.forEach($scope.allusers, function (user) {
+                    if (selection.indexOf(user.id) > -1) {
+                        $scope.newList.push(user);
+                    }
+                });
+            });
+        }
+    };
 
-	}
+    //to delete user from modal
+    $scope.deleteUserFromList = function (id, $index) {
+        $scope.newList.splice($index, 1);
+    };
 
-	// Edit project
-	$scope.showEditPage = function(id) {
-		projectService.getProjectWithId(id).then(function(response) {
-			if (response.success = true) {
+    //To delete user from ui
+    $scope.deleteOrgUserFromList = function (id, $index) {
+        $scope.orgUserList.splice($index, 1);
+    };
 
-				$scope.data = response.data;
-				$scope.orgUserList = response.data.userList;
-				$scope.showpage = true;
-			}
-		});
-	}
+    // view the all members of project
+    $scope.viewMembers = function (userList) {
+        $scope.membersList = userList;
+        $("#myModal").modal('show');
 
-	// Get all 'JOINED' users who are not part of project
-	$scope.getAllUseresInUpdateModal = function(projid) {
+    };
 
-		projectService.getMoreUsersToAdd(projid).then(function(response) {
-			if (response.success = true) {
-				$scope.allmoreusers = response.data.gridData;
-				console.log($scope.allmoreusers);
-				showModal();
-			}
-		});
-		function showModal() {
+    // Edit project
+    $scope.showEditPage = function (id) {
+        projectService.getProjectWithId(id).then(function (response) {
+            if (response.success) {
 
-			var uibModalInstance = $uibModal.open({
-				animation : true,
-				templateUrl : 'app/partials/allusers-modal.html',
-				controller : 'allusersModalCtrl',
-				backdrop : 'static',
-				size : 'md',
-				resolve : {
-					options : function() {
-						return {
-							"title" : 'Add Users',
-							"data" : $scope.allmoreusers
-						};
-					}
-				}
-			});
+                $scope.data = response.data;
+                $scope.orgUserList = response.data.userList;
+                $scope.showpage = true;
+            }
+        });
+    };
 
-			uibModalInstance.result.then(function(selection) {
-				angular.forEach($scope.allmoreusers, function(user) {
-					if (selection.indexOf(user.id) > -1) {
-						$scope.orgUserList.push(user);
-					}
-				});
-			});
-		}
-	}
+    // Get all 'JOINED' users who are not part of project
+    $scope.getAllUseresInUpdateModal = function (projid) {
 
-	// Update the project
-	$scope.updateProject = function(project) {
+        projectService.getMoreUsersToAdd(projid).then(function (response) {
+            if (response.success) {
+                $scope.allmoreusers = response.data.gridData;
+                console.log($scope.allmoreusers);
+                showModal();
+            }
+        });
+        function showModal() {
 
-		if (!project.projectName) {
-        	appNotifyService.error('Project name can not be empty');
+            var uibModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/partials/allusers-modal.html',
+                controller: 'allusersModalCtrl',
+                backdrop: 'static',
+                size: 'md',
+                resolve: {
+                    options: function () {
+                        return {
+                            "title": 'Add Users',
+                            "data": $scope.allmoreusers
+                        };
+                    }
+                }
+            });
+
+            uibModalInstance.result.then(function (selection) {
+                angular.forEach($scope.allmoreusers, function (user) {
+                    if (selection.indexOf(user.id) > -1) {
+                        $scope.orgUserList.push(user);
+                    }
+                });
+            });
+        }
+    };
+
+    // Update the project
+    $scope.updateProject = function (project) {
+
+        if (!project.projectName) {
+            appNotifyService.error('Project name can not be empty');
             return false;
         }
-		$scope.updateuserEmailsList = [];
-		angular.forEach($scope.orgUserList, function(user) {
-			$scope.updateuserEmailsList.push(user.email);
-		});
+        $scope.updateuserEmailsList = [];
+        angular.forEach($scope.orgUserList, function (user) {
+            $scope.updateuserEmailsList.push(user.email);
+        });
 
-		$scope.updateData = {
-			projectName : $scope.data.projectName,
-			timePreference : $scope.data.timePreference,
-			users : $scope.updateuserEmailsList
-		}
-		var id = $scope.data.projectId;
-		projectService.updateProject($scope.updateData, id).then(
-				function(response) {
-					if (response.success) {
-						$scope.data = '';
-						$scope.orgUserList = '';
-						$scope.loadAllProjects();
-						$scope.showpage = false;
+        $scope.updateData = {
+            projectName: $scope.data.projectName,
+            timePreference: $scope.data.timePreference,
+            users: $scope.updateuserEmailsList
+        };
+        var id = $scope.data.projectId;
+        projectService.updateProject($scope.updateData, id).then(
+                function (response) {
+                    if (response.success) {
+                        $scope.data = '';
+                        $scope.orgUserList = '';
+                        $scope.loadAllProjects();
+                        $scope.showpage = false;
 
-					} else {
-						appNotifyService.error(response.data,
-								'Invite unsuccesfull.');
-					}
+                    } else {
+                        appNotifyService.error(response.data,
+                                'Invite unsuccesfull.');
+                    }
 
-				}, function(error) {
-					appNotifyService.error(error.msg);
-				});
-	};
-	
-	// Delete project
-	$scope.deleteProject = function(id, $index) {
-		projectService.deleteProject(id).then(function(response) {
-			if (response.success = true) {
-				appNotifyService.success('Project has been successfully deleted.');
-			}
-			$scope.allprojects.splice($index, 1);
-			$scope.loadAllProjects();
-		});
-	}
+                }, function (error) {
+            appNotifyService.error(error.msg);
+        });
+    };
 
-	$scope.show = true;
-	$scope.closeAlert = function() {
-		$scope.show = false;
-	};
+    // Delete project
+    $scope.deleteProject = function (id, $index) {
+        projectService.deleteProject(id).then(function (response) {
+            if (response.success) {
+                appNotifyService.success('Project has been successfully deleted.');
+            }
+            $scope.allprojects.splice($index, 1);
+            $scope.loadAllProjects();
+        });
+    };
 
-	$scope.alert = {
-		type : 'alert-info'
-	};
+    $scope.show = true;
+    $scope.closeAlert = function () {
+        $scope.show = false;
+    };
 
-	{
-		$scope.time = new Date(1970, 0, 1, 10, 30, 40);
-		$scope.selectedTimeAsNumber = 10 * 36e5 + 30 * 6e4 + 40 * 1e3;
-		$scope.selectedTimeAsString = '10:00';
-		$scope.sharedDate = new Date(new Date().setMinutes(0, 0));
-	}
+    $scope.alert = {
+        type: 'alert-info'
+    };
 
-	
-	$scope.scrollToTop = function($var) {
-      // 'html, body' denotes the html element, to go to any other custom element, use '#elementID'
-      $('html, body').animate({
-          scrollTop: 0
-      }, 'fast'); // 'fast' is for fast animation
-  };
+    {
+        $scope.time = new Date(1970, 0, 1, 10, 30, 40);
+        $scope.selectedTimeAsNumber = 10 * 36e5 + 30 * 6e4 + 40 * 1e3;
+        $scope.selectedTimeAsString = '10:00';
+        $scope.sharedDate = new Date(new Date().setMinutes(0, 0));
+    }
+
+
+    $scope.scrollToTop = function ($var) {
+        // 'html, body' denotes the html element, to go to any other custom element, use '#elementID'
+        $('html, body').animate({
+            scrollTop: 0
+        }, 'fast'); // 'fast' is for fast animation
+    };
 });

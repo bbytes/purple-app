@@ -2,16 +2,15 @@
  * 
  */
 rootApp.service('logoutService', function ($rootScope, $http, $q) {
-	
-	return {
 
-logout: function () {
+    return {
+        logout: function () {
             var result = {};
             var deferred = $q.defer();
 
             $http({
                 method: 'GET',
-                url:  $rootScope.baseUrl + 'auth/logout',
+                url: $rootScope.baseUrl + 'auth/logout',
                 cache: false
             }).success(function (response, status, headers) {
 
@@ -26,6 +25,6 @@ logout: function () {
 
             return deferred.promise;
         }
-	};
-        
+    };
+
 });

@@ -46,7 +46,7 @@ public class AdminService {
 
 		if (user != null) {
 			if (userService.userEmailExist(user.getEmail()) || tenantResolverService.emailExist(user.getEmail()))
-				throw new PurpleException("Error while adding users", ErrorHandler.USER_NOT_FOUND);
+				throw new PurpleException("Username or Email already exist", ErrorHandler.USER_NOT_FOUND);
 			try {
 				user = userService.save(user);
 			} catch (Throwable e) {
@@ -114,7 +114,7 @@ public class AdminService {
 						User user = userService.save(addUser);
 						bulkUsers.put(generatePassword, user);
 					} catch (Throwable e) {
-						throw new PurpleException(e.getMessage(), ErrorHandler.ADD_USER_FAILED);
+						throw new PurpleException(e.getMessage(), ErrorHandler.BULD_UPLAOD_FAILED);
 					}
 				}
 			}

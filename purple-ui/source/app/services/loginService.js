@@ -1,6 +1,6 @@
 /*
-* Login Service
-*/
+ * Login Service
+ */
 
 rootApp.service('loginService', function ($rootScope, $http, $q) {
 
@@ -11,8 +11,7 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
 
             $http({
                 method: 'GET',
-                url:$rootScope.baseUrl+'auth/login?username=' + userName + '&password=' + Passwd,
-                //params:{'username': userName,'password': Passwd},
+                url: $rootScope.baseUrl + 'auth/login?username=' + userName + '&password=' + Passwd,
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -33,14 +32,13 @@ rootApp.service('loginService', function ($rootScope, $http, $q) {
 
             return deferred.promise;
         },
-
         logout: function () {
             var result = {};
             var deferred = $q.defer();
 
             $http({
                 method: 'GET',
-                url:  $rootScope.baseUrl+'auth/logout',
+                url: $rootScope.baseUrl + 'auth/logout',
                 cache: false
             }).success(function (response, status, headers) {
 

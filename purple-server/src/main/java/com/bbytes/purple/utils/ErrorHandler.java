@@ -17,6 +17,8 @@ public class ErrorHandler {
 	public static final String AUTH_FAILURE = "authentication_failure";
 
 	public static final String BAD_GATEWAY = "bad_gateway";
+	
+	public static final String RESET_FAILED = "reset_failed";
 
 	public static final String ACCOUNT_ACTIVATION_FAILURE = "account_inactive";
 
@@ -39,6 +41,8 @@ public class ErrorHandler {
 	public static final String NOTIFICATION_FAILED = "notification_failed";
 
 	public static final String ADD_USER_FAILED = "add_user_failed";
+	
+	public static final String BULD_UPLAOD_FAILED = "buld_uplaod_failed";
 
 	public static final String REINVITE_FAILED = "reinvite_failed";
 

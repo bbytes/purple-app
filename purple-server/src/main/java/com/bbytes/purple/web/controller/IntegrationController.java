@@ -106,7 +106,7 @@ public class IntegrationController {
 			Integration integration = integrationService.getJIRAConnection(user);
 			if (integration == null) {
 				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
-						ErrorHandler.AUTH_FAILURE);
+						ErrorHandler.JIRA_CONNECTION_FAILED);
 
 				return jiraRestResponse;
 			}
@@ -114,7 +114,7 @@ public class IntegrationController {
 			String basicAuthHeader = integration.getJiraBasicAuthHeader();
 			if (basicAuthHeader.isEmpty() || basicAuthHeader == null) {
 				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
-						ErrorHandler.AUTH_FAILURE);
+						ErrorHandler.JIRA_CONNECTION_FAILED);
 				return jiraRestResponse;
 			}
 

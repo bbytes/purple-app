@@ -1,69 +1,70 @@
-rootApp.directive('capitalize', function() {
-	   return {
-	     require: 'ngModel',
-	     link: function(scope, element, attrs, modelCtrl) {
-	        var capitalize = function(inputValue) {
-	           if(inputValue == undefined) inputValue = '';
-	           var capitalized = inputValue.toUpperCase();
-	           if(capitalized !== inputValue) {
-	              modelCtrl.$setViewValue(capitalized);
-	              modelCtrl.$render();
-	            }         
-	            return capitalized;
-	         }
-	         modelCtrl.$parsers.push(capitalize);
-	         capitalize(scope[attrs.ngModel]);  // capitalize initial value
-	     }
-	   };
-	});
+rootApp.directive('capitalize', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attrs, modelCtrl) {
+            var capitalize = function (inputValue) {
+                if (inputValue == undefined)
+                    inputValue = '';
+                var capitalized = inputValue.toUpperCase();
+                if (capitalized !== inputValue) {
+                    modelCtrl.$setViewValue(capitalized);
+                    modelCtrl.$render();
+                }
+                return capitalized;
+            }
+            modelCtrl.$parsers.push(capitalize);
+            capitalize(scope[attrs.ngModel]);  // capitalize initial value
+        }
+    };
+});
 
 rootApp.directive('ngConfirmClick', [
-                                 function(){
-                                     return {
-                                         priority: 1,
-                                         terminal: true,
-                                         link: function (scope, element, attr) {
-                                             var msg = attr.ngConfirmClick || "Are you sure want to delete?";
-                                             var clickAction = attr.ngClick;
-                                             element.bind('click',function (event) {
-                                                 if ( window.confirm(msg) ) {
-                                                     scope.$eval(clickAction)
-                                                 }
-                                             });
-                                         }
-                                     };
-                             }]);
+    function () {
+        return {
+            priority: 1,
+            terminal: true,
+            link: function (scope, element, attr) {
+                var msg = attr.ngConfirmClick || "Are you sure want to delete?";
+                var clickAction = attr.ngClick;
+                element.bind('click', function (event) {
+                    if (window.confirm(msg)) {
+                        scope.$eval(clickAction)
+                    }
+                });
+            }
+        };
+    }]);
 
-rootApp.directive('validPasswordC', function() {
-	  return {
-	    require: 'ngModel',
-	    scope: {
+rootApp.directive('validPasswordC', function () {
+    return {
+        require: 'ngModel',
+        scope: {
+            reference: '=validPasswordC'
 
-	      reference: '=validPasswordC'
+        },
+        link: function (scope, elm, attrs, ctrl) {
+            ctrl.$parsers.unshift(function (viewValue, $scope) {
 
-	    },
-	    link: function(scope, elm, attrs, ctrl) {
-	      ctrl.$parsers.unshift(function(viewValue, $scope) {
-
-	        var noMatch = viewValue != scope.reference
-	        ctrl.$setValidity('noMatch', !noMatch);
-	        return (noMatch)?noMatch:undefined;
-	      });
-
-	      scope.$watch("reference", function(value) {;
-	        ctrl.$setValidity('noMatch', value === ctrl.$viewValue);
-
-	      });
-	    }
-	  }
-	});
-	
-	angular.element(document).ready(function(){
-
-                c = angular.element(document.querySelector('#controller-demo')).scope();
+                var noMatch = viewValue != scope.reference
+                ctrl.$setValidity('noMatch', !noMatch);
+                return (noMatch) ? noMatch : undefined;
             });
 
-           
+            scope.$watch("reference", function (value) {
+                ;
+                ctrl.$setValidity('noMatch', value === ctrl.$viewValue);
+
+            });
+        }
+    }
+});
+
+angular.element(document).ready(function () {
+
+    c = angular.element(document.querySelector('#controller-demo')).scope();
+});
+
+
 
 /* inline */
 
@@ -71,7 +72,7 @@ rootApp.directive('validPasswordC', function() {
 var pageslideDirective = angular.module("pageslide-directive", []);
 
 pageslideDirective.directive('pageslide', [
-    function (){
+    function () {
         var defaults = {};
 
         /* Return directive definition object */
@@ -98,13 +99,13 @@ pageslideDirective.directive('pageslide', [
                 //console.log(el);
                 var content = null;
                 if (el.children() && el.children().length) {
-                    content = el.children()[0];  
+                    content = el.children()[0];
                 } else {
                     content = (attrs.href) ? document.getElementById(attrs.href.substr(1)) : document.getElementById(attrs.psTarget.substr(1));
                 }
                 //console.log(content);
                 // Check for content
-                if (!content) 
+                if (!content)
                     throw new Error('You have to elements inside the <pageslide> or you have not specified a target href');
                 var slider = document.createElement('div');
                 slider.className = param.className;
@@ -118,27 +119,27 @@ pageslideDirective.directive('pageslide', [
                 slider.style.height = 0;
                 slider.style.transitionProperty = 'width, height';
 
-                switch (param.side){
+                switch (param.side) {
                     case 'right':
-                        slider.style.height = attrs.psCustomHeight || '100%'; 
-                        slider.style.top = attrs.psCustomTop ||  '0px';
-                        slider.style.bottom = attrs.psCustomBottom ||  '0px';
-                        slider.style.right = attrs.psCustomRight ||  '0px';
+                        slider.style.height = attrs.psCustomHeight || '100%';
+                        slider.style.top = attrs.psCustomTop || '0px';
+                        slider.style.bottom = attrs.psCustomBottom || '0px';
+                        slider.style.right = attrs.psCustomRight || '0px';
                         break;
                     case 'left':
-                        slider.style.height = attrs.psCustomHeight || '100%';   
+                        slider.style.height = attrs.psCustomHeight || '100%';
                         slider.style.top = attrs.psCustomTop || '0px';
                         slider.style.bottom = attrs.psCustomBottom || '0px';
                         slider.style.left = attrs.psCustomLeft || '0px';
                         break;
                     case 'top':
-                        slider.style.width = attrs.psCustomWidth || '100%';   
+                        slider.style.width = attrs.psCustomWidth || '100%';
                         slider.style.left = attrs.psCustomLeft || '0px';
                         slider.style.top = attrs.psCustomTop || '0px';
                         slider.style.right = attrs.psCustomRight || '0px';
                         break;
                     case 'bottom':
-                        slider.style.width = attrs.psCustomWidth || '100%'; 
+                        slider.style.width = attrs.psCustomWidth || '100%';
                         slider.style.bottom = attrs.psCustomBottom || '0px';
                         slider.style.left = attrs.psCustomLeft || '0px';
                         slider.style.right = attrs.psCustomRight || '0px';
@@ -151,103 +152,103 @@ pageslideDirective.directive('pageslide', [
                 slider.appendChild(content);
 
                 /* Closed */
-                function psClose(slider,param){
-                    if (slider.style.width !== 0 && slider.style.width !== 0){
+                function psClose(slider, param) {
+                    if (slider.style.width !== 0 && slider.style.width !== 0) {
                         content.style.display = 'none';
-                        switch (param.side){
+                        switch (param.side) {
                             case 'right':
-                                slider.style.width = '0px'; 
+                                slider.style.width = '0px';
                                 break;
                             case 'left':
                                 slider.style.width = '0px';
                                 break;
                             case 'top':
-                                slider.style.height = '0px'; 
+                                slider.style.height = '0px';
                                 break;
                             case 'bottom':
-                                slider.style.height = '0px'; 
+                                slider.style.height = '0px';
                                 break;
                         }
                     }
                 }
 
                 /* Open */
-                function psOpen(slider,param){
-                    if (slider.style.width !== 0 && slider.style.width !== 0){
-                        switch (param.side){
+                function psOpen(slider, param) {
+                    if (slider.style.width !== 0 && slider.style.width !== 0) {
+                        switch (param.side) {
                             case 'right':
-                                slider.style.width = param.size; 
+                                slider.style.width = param.size;
                                 break;
                             case 'left':
-                                slider.style.width = param.size; 
+                                slider.style.width = param.size;
                                 break;
                             case 'top':
-                                slider.style.height = param.size; 
+                                slider.style.height = param.size;
                                 break;
                             case 'bottom':
-                                slider.style.height = param.size; 
+                                slider.style.height = param.size;
                                 break;
                         }
-                        setTimeout(function(){
+                        setTimeout(function () {
                             content.style.display = 'block';
-                        },(param.speed * 1000));
+                        }, (param.speed * 1000));
 
                     }
                 }
 
                 /*
-                * Watchers
-                * */
+                 * Watchers
+                 * */
 
-                $scope.$watch(attrs.psOpen, function (value){
+                $scope.$watch(attrs.psOpen, function (value) {
                     if (!!value) {
                         // Open
-                        psOpen(slider,param);
+                        psOpen(slider, param);
                     } else {
                         // Close
-                        psClose(slider,param);
+                        psClose(slider, param);
                     }
                 });
 
                 // close panel on location change
-                if(attrs.psAutoClose){
-                    $scope.$on("$locationChangeStart", function(){
+                if (attrs.psAutoClose) {
+                    $scope.$on("$locationChangeStart", function () {
                         psClose(slider, param);
                     });
-                    $scope.$on("$stateChangeStart", function(){
+                    $scope.$on("$stateChangeStart", function () {
                         psClose(slider, param);
                     });
                 }
 
-               
+
 
                 /*
-                * Events
-                * */
+                 * Events
+                 * */
                 var close_handler = (attrs.href) ? document.getElementById(attrs.href.substr(1) + '-close') : null;
                 if (el[0].addEventListener) {
-                    el[0].addEventListener('click',function(e){
+                    el[0].addEventListener('click', function (e) {
                         e.preventDefault();
-                        psOpen(slider,param);                    
+                        psOpen(slider, param);
                     });
 
-                    if (close_handler){
-                        close_handler.addEventListener('click', function(e){
+                    if (close_handler) {
+                        close_handler.addEventListener('click', function (e) {
                             e.preventDefault();
-                            psClose(slider,param);
+                            psClose(slider, param);
                         });
                     }
                 } else {
                     // IE8 Fallback code
-                    el[0].attachEvent('onclick',function(e){
+                    el[0].attachEvent('onclick', function (e) {
                         e.returnValue = false;
-                        psOpen(slider,param);                    
+                        psOpen(slider, param);
                     });
 
-                    if (close_handler){
-                        close_handler.attachEvent('onclick', function(e){
+                    if (close_handler) {
+                        close_handler.attachEvent('onclick', function (e) {
                             e.returnValue = false;
-                            psClose(slider,param);
+                            psClose(slider, param);
                         });
                     }
                 }
@@ -256,17 +257,17 @@ pageslideDirective.directive('pageslide', [
         };
     }
 ]);
-   // Directive for csv file download of status                          
-  rootApp.directive('purpleCsvDownload', function($document, $timeout, statusService) {
+// Directive for csv file download of status                          
+rootApp.directive('purpleCsvDownload', function ($document, $timeout, statusService) {
     return {
         restrict: 'AC',
         scope: {
             csvData: '=purpleCsvDownload'
         },
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
 
             function doClick() {
-                statusService.csvDownloadAllStatus(scope.csvData).then(function(response) {
+                statusService.csvDownloadAllStatus(scope.csvData).then(function (response) {
                     scope.csv = response.data;
                     var charset = scope.charset || "utf-8";
                     var blob = new Blob([scope.csv], {
@@ -284,7 +285,7 @@ pageslideDirective.directive('pageslide', [
 
                         $document.find('body').append(downloadContainer);
 
-                        $timeout(function() {
+                        $timeout(function () {
                             downloadLink[0].click();
                             downloadLink.remove();
                         }, null);
@@ -292,7 +293,7 @@ pageslideDirective.directive('pageslide', [
                 });
             }
 
-            element.bind('click', function(e) {
+            element.bind('click', function (e) {
                 if (scope.csvData) {
                     doClick();
                 }
@@ -303,17 +304,17 @@ pageslideDirective.directive('pageslide', [
 
 
 // Directive for csv file download of timeline
- rootApp.directive('csvDownload', function($document, $timeout, statusService) {
+rootApp.directive('csvDownload', function ($document, $timeout, statusService) {
     return {
         restrict: 'AC',
         scope: {
             csvData: '=csvDownload'
         },
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
 
             function doClick() {
                 console.log(scope.csvData);
-                statusService.csvDownloadByProjectAndUser(scope.csvData).then(function(response) {
+                statusService.csvDownloadByProjectAndUser(scope.csvData).then(function (response) {
                     scope.csv = response.data;
                     var charset = scope.charset || "utf-8";
                     var blob = new Blob([scope.csv], {
@@ -331,7 +332,7 @@ pageslideDirective.directive('pageslide', [
 
                         $document.find('body').append(downloadContainer);
 
-                        $timeout(function() {
+                        $timeout(function () {
                             downloadLink[0].click();
                             downloadLink.remove();
                         }, null);
@@ -339,7 +340,7 @@ pageslideDirective.directive('pageslide', [
                 });
             }
 
-            element.bind('click', function(e) {
+            element.bind('click', function (e) {
                 if (scope.csvData) {
                     doClick();
                 }

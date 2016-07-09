@@ -2,257 +2,250 @@
  * 
  */
 
-rootApp.service('commentService', function($rootScope, $http, $q, $window) {
+rootApp.service('commentService', function ($rootScope, $http, $q, $window) {
 
-	this.postComment = function(commentBody) {
+    this.postComment = function (commentBody) {
 
-		var deferred = $q.defer();
+        var deferred = $q.defer();
 
-		$http({
-			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/comment/add',
-			data : commentBody,
-			headers : {
-				'Content-Type' : 'application/json',
+        $http({
+            method: 'POST',
+            url: $rootScope.baseUrl + 'api/v1/comment/add',
+            data: commentBody,
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-			}
+        }).success(function (response, status, headers, config) {
 
-		}).success(function(response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function () {
+            // Something went wrong.
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
 
-			deferred.resolve(response);
-		}).error(function() {
-			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
-		});
+        return deferred.promise;
 
-		return deferred.promise;
+    };
 
-	};
-	
-	//get comment
-	
-	this.getComment = function(statusId) {
+    //get comment
 
-		var deferred = $q.defer();
+    this.getComment = function (statusId) {
 
-		$http({
-			method : 'GET',
-			url : $rootScope.baseUrl + 'api/v1/comments?statusId=' + statusId,
-			headers : {
-				'Content-Type' : 'application/json'
-			}
-		}).success(function(response, status, headers, config) {
-			deferred.resolve(response);
-		}).error(function() {
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
-		});
+        var deferred = $q.defer();
 
-		return deferred.promise;
-	};
-	
-	
-	//reaply
-	this.postReply = function(replyPost, commentId) {
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/comments?statusId=' + statusId,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function () {
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
 
-		var deferred = $q.defer();
+        return deferred.promise;
+    };
 
-		$http({
-			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/comment/' +commentId +'/reply',
-			data : replyPost,
-			headers : {
-				'Content-Type' : 'application/json',
 
-			}
+    //reaply
+    this.postReply = function (replyPost, commentId) {
 
-		}).success(function(response, replyPost, headers, config) {
+        var deferred = $q.defer();
 
-			deferred.resolve(response);
-		}).error(function() {
-			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
-		});
+        $http({
+            method: 'POST',
+            url: $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply',
+            data: replyPost,
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-		return deferred.promise;
+        }).success(function (response, replyPost, headers, config) {
 
-	};
-	
-	//get comment to reply
-	
-	this.getReplies = function(commentId) {
+            deferred.resolve(response);
+        }).error(function () {
+            // Something went wrong.
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
 
-		var deferred = $q.defer();
+        return deferred.promise;
 
-		$http({
-			method : 'GET',
-			url : $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply/all',
-			headers : {
-				'Content-Type' : 'application/json'
-			}
-		}).success(function(response, status, headers, config) {
-			deferred.resolve(response);
-		}).error(function() {
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
-		});
+    };
 
-		return deferred.promise;
-	};
-	
-	//maping
-	this.getProjectMap = function(projectId) {
+    //get comment to reply
 
-		var deferred = $q.defer();
+    this.getReplies = function (commentId) {
 
-		$http({
-			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/projects/users/all/map',
-			data : [projectId],
-			headers : {
-				'Content-Type' : 'application/json',
+        var deferred = $q.defer();
 
-			}
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply/all',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function () {
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
 
-		}).success(function(response, status, headers, config) {
+        return deferred.promise;
+    };
 
-			deferred.resolve(response);
-		}).error(function() {
-			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
-		});
+    //maping
+    this.getProjectMap = function (projectId) {
 
-		return deferred.promise;
+        var deferred = $q.defer();
 
-	};
-	//update comments
-	this.updateComment = function(data, commentId) {
-	console.log(data);
-	console.log(commentId);
-		var comment = { 
-			"commentDesc": data
-		}
-		var deferred = $q.defer();
+        $http({
+            method: 'POST',
+            url: $rootScope.baseUrl + 'api/v1/projects/users/all/map',
+            data: [projectId],
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-		$http({
-			method : 'PUT',
-			url : $rootScope.baseUrl + 'api/v1/comment/update/' + commentId,
-			data : comment,
-			headers : {
-				'Content-Type' : 'application/json',
+        }).success(function (response, status, headers, config) {
 
-			}
+            deferred.resolve(response);
+        }).error(function () {
+            // Something went wrong.
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
 
-		}).success(function(response, status, headers, config) {
+        return deferred.promise;
 
-			deferred.resolve(response);
-		}).error(function(response) {
-			
-				deferred.reject(response);
-		});
+    };
+    //update comments
+    this.updateComment = function (data, commentId) {
+        console.log(data);
+        console.log(commentId);
+        var comment = {
+            "commentDesc": data
+        }
+        var deferred = $q.defer();
 
-		return deferred.promise;
-	};
-	
-	//update reply comments
-	this.updateReply = function(data, commentId, replyId) {
-	console.log(data);
-	console.log(commentId);
-	console.log(replyId);
-		var reply = { 
-			"replyDesc": data
-		}
-		var deferred = $q.defer();
+        $http({
+            method: 'PUT',
+            url: $rootScope.baseUrl + 'api/v1/comment/update/' + commentId,
+            data: comment,
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-		$http({
-			method : 'PUT',
-			url : $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply/update/' + replyId,
-			data : reply,
-			headers : {
-				'Content-Type' : 'application/json',
+        }).success(function (response, status, headers, config) {
 
-			}
+            deferred.resolve(response);
+        }).error(function (response) {
 
-		}).success(function(response, status, headers, config) {
+            deferred.reject(response);
+        });
 
-			deferred.resolve(response);
-		}).error(function(response) {
-			
-				deferred.reject(response);
-		});
+        return deferred.promise;
+    };
 
-		return deferred.promise;
-	};
-	
-	//delete comment
-	this.deleteComment = function(commentId) {
+    //update reply comments
+    this.updateReply = function (data, commentId, replyId) {
+        console.log(data);
+        console.log(commentId);
+        console.log(replyId);
+        var reply = {
+            "replyDesc": data
+        }
+        var deferred = $q.defer();
 
-		var deferred = $q.defer();
+        $http({
+            method: 'PUT',
+            url: $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply/update/' + replyId,
+            data: reply,
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-		$http({
-			method : 'DELETE',
-			url : $rootScope.baseUrl + 'api/v1/comment/delete/' + commentId,
-			// data : admin,
-			headers : {
-				'Content-Type' : 'application/json',
+        }).success(function (response, status, headers, config) {
 
-			}
+            deferred.resolve(response);
+        }).error(function (response) {
 
-		}).success(function(response, status, headers, config) {
+            deferred.reject(response);
+        });
 
-			deferred.resolve(response);
-		}).error(function() {
-			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
-		});
+        return deferred.promise;
+    };
 
-		return deferred.promise;
+    //delete comment
+    this.deleteComment = function (commentId) {
 
-	};
-	
-	//delete reply comment
-	this.deletereplyComment = function(replyId, commentId) {
+        var deferred = $q.defer();
 
-		var deferred = $q.defer();
+        $http({
+            method: 'DELETE',
+            url: $rootScope.baseUrl + 'api/v1/comment/delete/' + commentId,
+            // data : admin,
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-		$http({
-			method : 'DELETE',
-			url : $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply/' + replyId,
-			// data : admin,
-			headers : {
-				'Content-Type' : 'application/json',
+        }).success(function (response, status, headers, config) {
 
-			}
+            deferred.resolve(response);
+        }).error(function () {
+            // Something went wrong.
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
 
-		}).success(function(response, status, headers, config) {
+        return deferred.promise;
 
-			deferred.resolve(response);
-		}).error(function() {
-			// Something went wrong.
-			deferred.reject({
-				'success' : false,
-				'msg' : 'Oops! Something went wrong. Please try again later.'
-			});
-		});
+    };
 
-		return deferred.promise;
+    //delete reply comment
+    this.deletereplyComment = function (replyId, commentId) {
 
-	};
-	
-	});
+        var deferred = $q.defer();
+
+        $http({
+            method: 'DELETE',
+            url: $rootScope.baseUrl + 'api/v1/comment/' + commentId + '/reply/' + replyId,
+            // data : admin,
+            headers: {
+                'Content-Type': 'application/json',
+            }
+
+        }).success(function (response, status, headers, config) {
+
+            deferred.resolve(response);
+        }).error(function () {
+            // Something went wrong.
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
+
+        return deferred.promise;
+
+    };
+
+});

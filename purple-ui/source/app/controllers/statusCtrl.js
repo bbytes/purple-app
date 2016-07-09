@@ -14,6 +14,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
     $rootScope.settingClass = 'setting-nav';
     $rootScope.feedbackClass = 'feedback-log feedback-show';
     $scope.isSubmit = true;
+    
     $scope.submitStatus = function () {
 
         var status = new Object();
@@ -29,28 +30,20 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
         } else if (!status.hours) {
             appNotifyService.error('Please fill in the hours for the selected project.');
             return false;
-        } else if (!status.workedOn || !status.workingOn) {
-            appNotifyService.error('WorkedOn and WorkingOn field can not be empty');
+        } else if (!status.workedOn && !status.workingOn) {
+            appNotifyService.error('WorkedOn or WorkingOn field can not be empty');
             return false;
         }
 
         statusService.submitStatus(status).then(function (response) {
-            if (response.success = true) {
+            if (response.success) {
                 $scope.clearStatus();
                 $scope.usersstatusLoad();
                 appNotifyService.success('Status for ' + response.data.gridData[0].date + ' is added successfully');
             }
 
         }, function (error) {
-            if (error.reason == "hours_exceeded") {
-                appNotifyService.error('You have exceeded 24 hours in a day!');
-            } else if (error.reason == "pass_duedate_status_edit") {
-                appNotifyService.error('You are not allow to enter status pass due date');
-            } else if (error.reason == "future_date_status_edit") {
-                appNotifyService.error('Can not allow to enter status for future date');
-            } else {
                 appNotifyService.error('Error while submitting status');
-            }
         });
     };
 
@@ -59,7 +52,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
         var time = "Weekly";
 
         settingsService.getConfigSetting().then(function (response) {
-            if (response.success = true)
+            if (response.success)
                 $rootScope.statusEnable = response.data.statusEnable;
         }, function (error) {
         });
@@ -96,13 +89,14 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
 
     $scope.loadStatusDates = function () {
 
-        if ($rootScope.statusDateFromLink == undefined && $rootScope.statusDateFromLink == null)
-            $scope.statusDate = $filter('date')(new Date());
-        else
+        if ($rootScope.statusDateFromLink)
             $scope.statusDate = $filter('date')(new Date(parseInt($rootScope.statusDateFromLink)));
 
+        else
+            $scope.statusDate = $filter('date')(new Date());
+
         settingsService.getConfigSetting().then(function (response) {
-            if (response.success = true)
+            if (response.success)
                 $rootScope.statusEnable = response.data.statusEnable;
 
             $rootScope.dateArray = [];
@@ -166,7 +160,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
 
     $scope.deleteStatus = function (id, $index) {
         statusService.deleteStatus(id).then(function (response) {
-            if (response.success = true) {
+            if (response.success) {
                 appNotifyService.success('Status has been successfully deleted.');
             }
             $scope.allstatus.splice($index, 1);
@@ -177,14 +171,12 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
     /*Update */
     $scope.showUpdatePage = function (id) {
 
-
         statusService.getStatusWithId(id).then(function (response) {
-            if (response.success = true) {
+            if (response.success) {
 
                 $scope.statusdata = response.data.gridData;
 
                 angular.forEach(response.data.gridData, function (value, key) {
-
 
                     $scope.allstatus = value.statusList;
                     $scope.project = $scope.allstatus[0].projectId;
@@ -202,7 +194,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
                 });
             }
         });
-    }
+    };
     //ends
 
     $scope.updateStatus = function () {
@@ -222,13 +214,13 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
         } else if (!newstatus.hours) {
             appNotifyService.error('Please fill in the hours for the selected project.');
             return false;
-        } else if (!newstatus.workedOn || !newstatus.workingOn) {
+        } else if (!newstatus.workedOn && !newstatus.workingOn) {
             appNotifyService.error('WorkedOn or WorkingOn field can not be empty');
             return false;
         }
         // calling status service
         statusService.updateStatus(newstatus, id).then(function (response) {
-            if (response.success = true) {
+            if (response.success) {
 
                 $scope.clearStatus();
                 $scope.usersstatusLoad();
@@ -242,12 +234,8 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
                 appNotifyService.success('Status for ' + response.data.gridData[0].date + ' is updated successfully');
             }
 
-        }, function (error) {
-            if (error.reason == "hours_exceeded") {
-                appNotifyService.error('You have exceeded 24 hours in a day!');
-            } else {
+        }, function (error) {      
                 appNotifyService.error('Error while updating status');
-            }
         });
     };
 

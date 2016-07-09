@@ -35,7 +35,7 @@ public class ExceptionHandlingController {
 				+ ex.getErrConstant() + userInfoStr;
 		logger.error(erroMessage, ex);
 		RestResponse errorResponse = new RestResponse(RestResponse.FAILED, ex.getMessage(), ex.getErrConstant());
-		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Object>(errorResponse, HttpStatus.OK);
 	}
 
 	@ExceptionHandler(Exception.class)

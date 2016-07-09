@@ -1,87 +1,86 @@
 
-   
-    <div class="left-tabbar"> <!-- required for floating -->
-      <!-- Nav tabs -->
-      <ul class="nav nav-tabs tabs-left side-tab">
+
+<div class="left-tabbar"> <!-- required for floating -->
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs tabs-left side-tab">
         <li class="active"><a href="#JIRA" data-toggle="tab"><img src="../../assets/img/jira-icon.png" /> JIRA</a></li>
         <li><a href="#slack" data-toggle="tab"><img src="../../assets/img/slack-icon.png" /> SLACK</a></li>
         <li><a href="#hipchat" data-toggle="tab"><img src="../../assets/img/hipchat-icon.png" /> HIPCHAT</a></li>
         <li><a href="#github" data-toggle="tab"><img src="../../assets/img/github-icon.png" /> GITHUB</a></li>
-		<li><a href="#bit-bucket" data-toggle="tab"><img src="../../assets/img/bitbucket-icon.png" /> BIT BUCKET</a></li>
-      </ul>
-    </div>
-	
-	<div class="tab-content" ng-init="getJiraConnection()">
-        <div class="tab-pane active" id="JIRA">
-		  <div class="intergration-wrapper">
-		      <h3>Connect to JIRA to Fetch Project and User Information</h3>
-			  <hr />
-			  <div class="row">
-			   <div class="col-md-4"> 
-			    <button class="btn btn-default status-submit" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected"><img src="../../assets/img/icon-jira-logo.png" class="jira" /> CONNECT</button>
-				
-				<button class="btn btn-default status-submit after" ng-click="syncJiraProject()" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true" ></i> Sync Project</button>
-				
-				<button class="btn btn-default status-submit after" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true"></i> Sync Users</button>
-				
-				<button class="btn btn-default status-submit after" ng-show="isConnected"><i class="fa fa-link" aria-hidden="true"></i> Link Users & Projects</button>
-			   </div>
-			   
-			   
-			   <div class="col-md-8">
-			    <div class="connected" ng-show="isConnected"><p>Connected</p></div>
-				<div class="offline" ng-show="isOffline"><p>Offline</p></div>
-			   </div>
-			  
-			   
-			   <form name="form" style="margin-top:100px;">
-			    <div class="col-md-6">
-			    <div id="intergration-form" class="collapse">
-                  <label class="settings">JIRA Base url</label> 
-				  <input type="text" class="form-control" ng-model="jiraurl" required />
-				  
-				   <label class="settings">Username</label> 
-				  <input type="text" class="form-control" ng-model="username" required />
-				  
-				   <label class="settings">Password</label> 
-				  <input type="password" class="form-control" ng-model="password" required />
-				   <br />
-				   <input type="submit" value="Connect" class="btn btn-default" ng-click="connectToJira()" data-toggle="collapse" data-target="#intergration-form">
+        <li><a href="#bit-bucket" data-toggle="tab"><img src="../../assets/img/bitbucket-icon.png" /> BIT BUCKET</a></li>
+    </ul>
+</div>
+
+<div class="tab-content" ng-init="getJiraConnection()">
+    <div class="tab-pane active" id="JIRA">
+        <div class="intergration-wrapper">
+            <h3>Connect to JIRA to Fetch Project and User Information</h3>
+            <hr />
+            <div class="row">
+                <div class="col-md-4"> 
+                    <button class="btn btn-default status-submit" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected"><img src="../../assets/img/icon-jira-logo.png" class="jira" /> CONNECT</button>
+
+                    <button class="btn btn-default status-submit after" ng-click="syncJiraProject()" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true" ></i> Sync Project</button>
+
+                    <button class="btn btn-default status-submit after" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true"></i> Sync Users</button>
+
+                    <button class="btn btn-default status-submit after" ng-show="isConnected"><i class="fa fa-link" aria-hidden="true"></i> Link Users & Projects</button>
                 </div>
-				</div>
-				
-			  </form>
-			  <div class="col-md-6">
-			  </div>
-		   </div>
-		    </div>
-		</div>
-		
-		 <div class="tab-pane" id="slack">
-		   <div class="intergration-wrapper">
-		     <img src="../../assets/img/coming-soon.png" />
-		   </div>
-		</div>
-		
-        <div class="tab-pane" id="hipchat">
-		   <div class="intergration-wrapper">
-		     <img src="../../assets/img/coming-soon.png" />
-		   </div>
-		</div>
-		
-		
-        <div class="tab-pane" id="github">
-		   <div class="intergration-wrapper">
-		       <img src="../../assets/img/coming-soon.png" />
-		   </div>
-		</div>
-		
-		
-        <div class="tab-pane" id="bit-bucket">
-		  <div class="intergration-wrapper">
- 
-    <img src="../../assets/img/coming-soon.png" />
-		   </div>
-		</div>
-      </div>
-	
+
+
+                <div class="col-md-8">
+                    <div class="connected" ng-show="isConnected"><p>Connected</p></div>
+                    <div class="offline" ng-show="isOffline"><p>Offline</p></div>
+                </div>
+
+
+                <form name="form" style="margin-top:100px;">
+                    <div class="col-md-6">
+                        <div id="intergration-form" class="collapse">
+                            <label class="settings">JIRA Base url</label> 
+                            <input type="text" class="form-control" ng-model="jiraurl" required />
+
+                            <label class="settings">Username</label> 
+                            <input type="text" class="form-control" ng-model="username" required />
+
+                            <label class="settings">Password</label> 
+                            <input type="password" class="form-control" ng-model="password" required />
+                            <br />
+                            <input type="submit" value="Connect" class="btn btn-default" ng-click="connectToJira()" data-toggle="collapse" data-target="#intergration-form">
+                        </div>
+                    </div>
+
+                </form>
+                <div class="col-md-6">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="slack">
+        <div class="intergration-wrapper">
+            <img src="../../assets/img/coming-soon.png" />
+        </div>
+    </div>
+
+    <div class="tab-pane" id="hipchat">
+        <div class="intergration-wrapper">
+            <img src="../../assets/img/coming-soon.png" />
+        </div>
+    </div>
+
+
+    <div class="tab-pane" id="github">
+        <div class="intergration-wrapper">
+            <img src="../../assets/img/coming-soon.png" />
+        </div>
+    </div>
+
+
+    <div class="tab-pane" id="bit-bucket">
+        <div class="intergration-wrapper">
+
+            <img src="../../assets/img/coming-soon.png" />
+        </div>
+    </div>
+</div>

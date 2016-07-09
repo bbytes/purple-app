@@ -2,226 +2,254 @@
 <!-- /.main -->
 <div class="col-md-offset-2 col-md-8" ng-show="showpage == false">
 
-	<div class="main-title">
-		<h4>create project</h4>
-	</div>
+    <div class="main-title">
+        <h4>create project</h4>
+    </div>
 
-	<div class="create-project">
-		<form name="myForm" novalidate>
-			<div class="row">
-				<div class="col-md-5">
-					<div class="form-group">
-						<label for="comment" class="settings">PROJECT NAME</label> <input
-							type="text" name="myName" ng-model="project.projectName"
-							class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
-					</div>
-				</div>
+    <div class="create-project">
+        <form name="myForm" novalidate>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="comment" class="settings">PROJECT NAME</label> <input
+                            type="text" name="myName" ng-model="project.projectName"
+                            class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
+                    </div>
+                </div>
 
-				<div class="col-md-3">
-					<small>
-						<div class="add-user-icon">+</div>
-					</small>
-					<div class="user-label">
-						<h4 style="margin-top: 22px;">
-							<a href="#" ng-click="getAllUseresInModal()">Add Users</a>
-						</h4>
-					</div>
-				</div>
+                <div class="col-md-3">
+                    <small>
+                        <div class="add-user-icon">+</div>
+                    </small>
+                    <div class="user-label">
+                        <h4 style="margin-top: 22px;">
+                            <a href="#" ng-click="getAllUseresInModal()">Add Users</a>
+                        </h4>
+                    </div>
+                </div>
 
-			</div>
-		</form>
-	</div>
-
-
-	<div class="col-md-12">
-		<div class="row">
-			<div class="main-subtitle">
-				<h4>users</h4>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-4" ng-repeat="user in newList">
-			<div class="alert alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert"
-					aria-label="Close" ng-click="deleteUserFromList(user.id,$index)">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<small> <ng-letter-avatar data="{{user.userName}}"
-						shape="round"></ng-letter-avatar>
-				</small>
-				<div class="user-label">
-					<h4>{{user.userName}}</h4>
-					<p>{{user.email}}</p>
-				</div>
-				<div style="margin-bottom: 30px;"></div>
-			</div>
-
-		</div>
-	</div>
-
-	<button type="button" class="btn btn-default create"
-		ng-click="createProject(project)">create project</button>
+            </div>
+        </form>
+    </div>
 
 
-	<div class="col-md-12">
-		<div class="row">
-			<div class="main-title">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="main-subtitle">
+                <h4>users</h4>
+            </div>
+        </div>
+    </div>
 
-				<div class="section group">
-	          <div class="col span_1_of_3">
-	            	<h4>projects</h4>
-	         </div>
+    <div class="row">
+        <div class="col-md-4" ng-repeat="user in newList">
+            <div class="alert alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"
+                        aria-label="Close" ng-click="deleteUserFromList(user.id, $index)">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <small> <ng-letter-avatar data="{{user.userName}}"
+                                          shape="round"></ng-letter-avatar>
+                </small>
+                <div class="user-label">
+                    <h4>{{user.userName}}</h4>
+                    <p>{{user.email}}</p>
+                </div>
+                <div style="margin-bottom: 30px;"></div>
+            </div>
 
-	        <div class="col span_1_of_3">
-	          <div class="right-inner-addon ">
-		<i class="fa fa-search"></i> <input ng-model="searchText"
-			class="form-control" placeholder="Search...">
-	</div>
-	       </div>
+        </div>
+    </div>
 
-	        <div class="col span_1_of_3">
-	         <span class="list-member" ng-if="projectCount >1 ">{{projectCount}} Projects</span> 
-					<span class="list-member" ng-if="projectCount == 1 ">{{projectCount}} Project</span>
-	        </div>
-         </div>
+    <button type="button" class="btn btn-default create"
+            ng-click="createProject(project)">create project</button>
 
-			</div>
-			
-			<div class="project-table" ng-init="loadAllProjects()">
-				<table ng-repeat="project in allprojects  | orderBy:'projectName' | filter:searchText">
-					<tr>
-						<td class="table-user">{{project.projectName}} <br /> </td>
-						<td><a href="#" ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png">
-							{{project.usersCount}} Users</a></td>
-						<!-- <td><a href="#" ng-click="viewMembers(project.userList)"><img
-								src="../../assets/img/user.png"> View Member List</a></td> -->
-						<td style="float: right;"><a href="#" role="tab"
-							data-toggle="tab" ng-click="showEditPage(project.projectId);scrollToTop()"><img
-								src="../../assets/img/edit.png"></a><a href="#"
-							ng-click="deleteProject(project.projectId,$index)"
-							confirm="Are you sure you want to delete the project?"> <img
-								src="../../assets/img/delete.png"></a></td>
-					</tr>
 
-				</table>
-			</div>
-		</div>
-	</div>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="main-title">
+
+                <div class="section group">
+                    <div class="col span_1_of_3">
+                        <h4>projects</h4>
+                    </div>
+
+                    <div class="col span_1_of_3">
+                        <div class="right-inner-addon ">
+                            <i class="fa fa-search"></i> <input ng-model="searchText"
+                                                                class="form-control" placeholder="Search...">
+                        </div>
+                    </div>
+
+                    <div class="col span_1_of_3">
+                        <span class="list-member" ng-if="projectCount > 1">{{projectCount}} Projects</span> 
+                        <span class="list-member" ng-if="projectCount == 1">{{projectCount}} Project</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="project-table" ng-init="loadAllProjects()">
+                <table ng-repeat="project in allprojects| orderBy:'projectName' | filter:searchText">
+                    <tr>
+                        <td class="table-user">{{project.projectName}} <br /> </td>
+                        <td><a href="#" ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png">
+                                {{project.usersCount}} Users</a></td>
+                        <!-- <td><a href="#" ng-click="viewMembers(project.userList)"><img
+                                        src="../../assets/img/user.png"> View Member List</a></td> -->
+                        <td style="float: right;"><a href="#" role="tab"
+                                                     data-toggle="tab" ng-click="showEditPage(project.projectId);scrollToTop()"><img
+                                    src="../../assets/img/edit.png"></a><a href="#"
+                                                                   ng-click="deleteProject(project.projectId, $index)"
+                                                                   confirm="Are you sure you want to delete the project?"> <img
+                                    src="../../assets/img/delete.png"></a></td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
 
 </div>
 
 <!-- update project -->
 <div class="col-md-offset-2 col-md-8" ng-show="showpage == true">
-	<div class="main-title">
-		<h4>Update project</h4>
-	</div>
+    <div class="main-title">
+        <h4>Update project</h4>
+    </div>
 
-	<form name="myForm" novalidate>
+    <form name="myForm" novalidate>
 
-		<div class="create-project">
+        <div class="create-project">
 
-			<div class="row">
-				<div class="col-md-5">
-					<div class="form-group">
-						<label for="comment" class="settings">PROJECT NAME</label> <input
-							type="text" name="myName" ng-model="data.projectName"
-							ng-init="new.projectName=data.projectName" class="form-control"
-							ng-pattern="/[a-zA-Z0-9^ ]/" required>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="comment" class="settings">PROJECT NAME</label> <input
+                            type="text" name="myName" ng-model="data.projectName"
+                            ng-init="new .projectName = data.projectName" class="form-control"
+                            ng-pattern="/[a-zA-Z0-9^ ]/" required>
 
-					</div>
+                    </div>
 
-				</div>
+                </div>
 
-				<div class="col-md-3">
-					<small>
-						<div class="add-user-icon">+</div>
-					</small>
-					<div class="user-label">
-						<h4 style="margin-top: 22px;">
-							<a href="#" ng-click="getAllUseresInUpdateModal(data.projectId)">Add
-								Users</a>
-						</h4>
-					</div>
-				</div>
+                <div class="col-md-3">
+                    <small>
+                        <div class="add-user-icon">+</div>
+                    </small>
+                    <div class="user-label">
+                        <h4 style="margin-top: 22px;">
+                            <a href="#" ng-click="getAllUseresInUpdateModal(data.projectId)">Add
+                                Users</a>
+                        </h4>
+                    </div>
+                </div>
 
-			</div>
+            </div>
 
-		</div>
-	</form>
+        </div>
+    </form>
 
-	<div class="col-md-12">
-		<div class="row">
-			<div class="main-subtitle">
-				<h4>users</h4>
-			</div>
-		</div>
-	</div>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="main-subtitle">
+                <h4>users</h4>
+            </div>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="col-md-4" ng-repeat="user in orgUserList">
-			<div class="alert alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert"
-					aria-label="Close" ng-click="deleteOrgUserFromList(user.id,$index)">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<small> <ng-letter-avatar data="{{user.userName}}"
-						shape="round"></ng-letter-avatar>
-				</small>
-				<div class="user-label">
-					<h4>{{user.userName}}</h4>
-					<p>{{user.email}}</p>
-				</div>
-				<div style="margin-bottom: 30px;"></div>
-			</div>
+    <div class="row">
+        <div class="col-md-4" ng-repeat="user in orgUserList">
+            <div class="alert alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"
+                        aria-label="Close" ng-click="deleteOrgUserFromList(user.id, $index)">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <small> <ng-letter-avatar data="{{user.userName}}"
+                                          shape="round"></ng-letter-avatar>
+                </small>
+                <div class="user-label">
+                    <h4>{{user.userName}}</h4>
+                    <p>{{user.email}}</p>
+                </div>
+                <div style="margin-bottom: 30px;"></div>
+            </div>
 
-		</div>
-	</div>
+        </div>
+    </div>
 
-	<button type="button" class="btn btn-default create" ng-click="updateProject(data)">update project</button>
+    <button type="button" class="btn btn-default create" ng-click="updateProject(data)">update project</button>
 
 
-	<div class="col-md-12">
-		<div class="row">
-			<div class="main-title">
-			<div class="section group">
-	          <div class="col span_1_of_3">
-	            	<h4>projects</h4>
-	         </div>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="main-title">
+                <div class="section group">
+                    <div class="col span_1_of_3">
+                        <h4>projects</h4>
+                    </div>
 
-	        <div class="col span_1_of_3">
-	          <div class="right-inner-addon ">
-		<i class="fa fa-search"></i> <input ng-model="searchText"
-			class="form-control" placeholder="Search...">
-	</div>
-	       </div>
+                    <div class="col span_1_of_3">
+                        <div class="right-inner-addon ">
+                            <i class="fa fa-search"></i> <input ng-model="searchText"
+                                                                class="form-control" placeholder="Search...">
+                        </div>
+                    </div>
 
-	        <div class="col span_1_of_3">
-	         <span class="list-member" ng-if="projectCount >1 ">{{projectCount}} Projects</span> 
-					<span class="list-member" ng-if="projectCount == 1 ">{{projectCount}} Project</span>
-	        </div>
-         </div>
-			</div>
-			<div class="project-table" ng-init="initProjects()">
-				<table ng-repeat="project in allprojects  | orderBy:'projectName' | filter:searchText">
-					<tr>
-						<td class="table-user">{{project.projectName}} <br /> </td>
-						<td><a href="#" ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png">
-							{{project.usersCount}} Users</a></td>
-						<!-- <td><a href="#" ng-click="viewMembers(project.userList)"><img
-								src="../../assets/img/user.png"> View Member List</a></td> -->
-						<td style="float: right;">
-						<a href="#" ng-click="showEditPage(project.projectId);toSection3()">
-						<img src="../../assets/img/edit.png"></a>
-						 <a href="#" ng-click="deleteProject(project.projectId,$index)" confirm="Are you sure you want to delete the project?"> <img src="../../assets/img/delete.png"></a></td>
-					</tr>
+                    <div class="col span_1_of_3">
+                        <span class="list-member" ng-if="projectCount > 1">{{projectCount}} Projects</span> 
+                        <span class="list-member" ng-if="projectCount == 1">{{projectCount}} Project</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-table" ng-init="initProjects()">
+                <table ng-repeat="project in allprojects| orderBy:'projectName' | filter:searchText">
+                    <tr>
+                        <td class="table-user">{{project.projectName}} <br /> </td>
+                        <td><a href="#" ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png">
+                                {{project.usersCount}} Users</a></td>
+                        <!-- <td><a href="#" ng-click="viewMembers(project.userList)"><img
+                                        src="../../assets/img/user.png"> View Member List</a></td> -->
+                        <td style="float: right;">
+                            <a href="#" ng-click="showEditPage(project.projectId);toSection3()">
+                                <img src="../../assets/img/edit.png"></a>
+                            <a href="#" ng-click="deleteProject(project.projectId, $index)" confirm="Are you sure you want to delete the project?"> <img src="../../assets/img/delete.png"></a></td>
+                    </tr>
 
-				</table>
-				
-			</div>
-		</div>
-	</div>
+                </table>
+            </div>
+        </div>
+    </div>
 
 </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Members</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div></div>
+            <div class="modal-body" ng-repeat="user in membersList">
+
+                <table width="100%">
+                    <tr>
+                        <td class="add-user-table"><small> <ng-letter-avatar
+                                    data="{{user.userName}}" shape="round"></ng-letter-avatar>
+                            </small>
+                            <div class="user-label">
+                                <h4>{{user.userName}}</h4>
+                                <p>{{user.email}}</p>
+                            </div></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 

@@ -33,7 +33,7 @@ public class SettingService {
 				user.setPassword(passwordHashService.encodePassword(passwordDTO.getNewPassword()));
 				userService.save(user);
 			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.PASSWORD_INCORRECT);
+				throw new PurpleException(e.getMessage(), ErrorHandler.RESET_FAILED);
 			}
 		}
 	}

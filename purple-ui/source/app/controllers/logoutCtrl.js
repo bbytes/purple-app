@@ -1,13 +1,12 @@
 /*
  * Logout Controller
  */
-rootApp.controller('logoutCtrl', function ($scope, $rootScope, $state, logoutService,$location,$sessionStorage,$window) {
+rootApp.controller('logoutCtrl', function ($scope, $rootScope, $state, logoutService, $location, $sessionStorage, $window) {
 
-	
-	  $scope.logout = function() {
-		  delete $window.sessionStorage.token;
-		  delete $rootScope.statusDateFromLink;
-		  $sessionStorage.$reset();
-		  $state.go("login");
-		};
+    $scope.logout = function () {
+        delete $window.sessionStorage.token;
+        delete $rootScope.statusDateFromLink;
+        $sessionStorage.$reset();
+        $state.go("login");
+    };
 });

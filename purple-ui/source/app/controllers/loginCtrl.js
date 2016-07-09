@@ -27,7 +27,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                 $rootScope.timeZone = response.data.timeZone;
 
                 var userInfo = {
-                    authToken: response.headers["x-auth-token"],
+                    accessToken: response.headers["x-auth-token"],
                     email: $rootScope.loggedInUser,
                     name: $rootScope.userName,
                     userRoles: $rootScope.userRole,
@@ -40,13 +40,13 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                 $rootScope.showWelcomeMessage = true;
 
                 $state.go('status');
-            } else {
-                // Erase the token if the user fails to log in
-                delete $window.sessionStorage.token;
-                //Login failed. Showing error notification
-                appNotifyService.error('Please activate your account before login. Check your email for activation link.');
-            }
-
+            } /*else {
+             // Erase the token if the user fails to log in
+             delete $window.sessionStorage.token;
+             //Login failed. Showing error notification
+             appNotifyService.error('Please activate your account before login. Check your email for activation link.');
+             }
+             */
         }, function (error) {
             appNotifyService.error('Invalid Username or Password');
         });

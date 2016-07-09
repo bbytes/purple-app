@@ -1,46 +1,46 @@
-    <nav id="header_nav" ng-class="navClass" class="navbar navbar-default navbar-custom navbar-custom-dark sticky nav-landing login-bg">
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    
-                    <a class="navbar-brand nav-logo" href="./"><img src="../../assets/img/logo-1.png" class="logo logo-white" alt="logo"><img src="../../assets/img/logo-1.png" class="logo logo-dark hidden" alt="logo"> </a>
-                </div> 
-            </div><!-- /.container-fluid -->
-        </nav>
+<nav id="header_nav" ng-class="navClass" class="navbar navbar-default navbar-custom navbar-custom-dark sticky nav-landing login-bg">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+
+            <a class="navbar-brand nav-logo" href="./"><img src="../../assets/img/logo-1.png" class="logo logo-white" alt="logo"><img src="../../assets/img/logo-1.png" class="logo logo-dark hidden" alt="logo"> </a>
+        </div> 
+    </div><!-- /.container-fluid -->
+</nav>
 <div id="main">
- 
-	<div class="login-content">
-		
-		<div id="container">
-			<form name="loginForm" ng-submit="submitLoginForm(loginForm.$valid)"
-				novalidate>
-				<!-- #first_step -->
-				<div id="first_step">
-					<div class="form">
-						<h5>Email Address</h5>
-						<input type="text" name="username" id="username"
-							ng-model="username" value=""
-							ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required /> <span
-							class="label label-danger"
-							ng-show="loginForm.username.$invalid &&!loginForm.username.$error.required">Email
-							is invalid</span>
-						<h5>Password</h5>
-						<input type="password" name="password" id="password" ng-model="password" value="" required /> 
-							<button class="send submit" type="submit" name="submit" id="submit">LOGIN</button>
-					</div>
-				</div>
-				<div class="clear"></div>
 
-			</form>
-		</div>
+    <div class="login-content">
 
-		<br />
-		<center>
-			<a href="forgot-password">FORGOT PASSWORD ?</a>
-		</center>
-	</div>
+        <div id="container">
+            <form name="loginForm" ng-submit="submitLoginForm(loginForm.$valid)"
+                  novalidate>
+                <!-- #first_step -->
+                <div id="first_step">
+                    <div class="form">
+                        <h5>Email Address</h5>
+                        <input type="text" name="username" id="username"
+                               ng-model="username" value=""
+                               ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required /> <span
+                               class="label label-danger"
+                               ng-show="loginForm.username.$invalid && !loginForm.username.$error.required">Email
+                            is invalid</span>
+                        <h5>Password</h5>
+                        <input type="password" name="password" id="password" ng-model="password" value="" required /> 
+                        <button class="send submit" type="submit" name="submit" id="submit">LOGIN</button>
+                    </div>
+                </div>
+                <div class="clear"></div>
 
-	<toaster-container></toaster-container>
+            </form>
+        </div>
+
+        <br />
+        <center>
+            <a href="forgot-password">FORGOT PASSWORD ?</a>
+        </center>
+    </div>
+
+    <toaster-container></toaster-container>
 </div>
 
 </div>

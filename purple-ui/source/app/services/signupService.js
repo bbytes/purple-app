@@ -1,12 +1,12 @@
 rootApp.service('signupService', function ($rootScope, $http, $q) {
-	 return {
+    return {
         submitSignUp: function (user) {
 
             var deferred = $q.defer();
 
             $http({
                 method: 'POST',
-                url: $rootScope.baseUrl+ 'auth/signup',
+                url: $rootScope.baseUrl + 'auth/signup',
                 data: user,
                 headers: {
                     'Content-Type': 'application/json'
@@ -21,5 +21,5 @@ rootApp.service('signupService', function ($rootScope, $http, $q) {
             return deferred.promise;
 
         },
-	};
+    };
 });
