@@ -14,7 +14,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
     $rootScope.settingClass = 'setting-nav';
     $rootScope.feedbackClass = 'feedback-log feedback-show';
     $scope.isSubmit = true;
-    
+
     $scope.submitStatus = function () {
 
         var status = new Object();
@@ -43,7 +43,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
             }
 
         }, function (error) {
-                appNotifyService.error('Error while submitting status');
+            appNotifyService.error('Error while submitting status');
         });
     };
 
@@ -85,7 +85,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
                 });
             }
         });
-    }
+    };
 
     $scope.loadStatusDates = function () {
 
@@ -234,8 +234,8 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
                 appNotifyService.success('Status for ' + response.data.gridData[0].date + ' is updated successfully');
             }
 
-        }, function (error) {      
-                appNotifyService.error('Error while updating status');
+        }, function (error) {
+            appNotifyService.error('Error while updating status');
         });
     };
 
