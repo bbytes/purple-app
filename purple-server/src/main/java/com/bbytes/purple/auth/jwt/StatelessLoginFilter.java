@@ -60,8 +60,9 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 		}
 
 		final MultiTenantAuthenticationToken loginToken = new MultiTenantAuthenticationToken(
-				request.getParameter("username").toString(), request.getParameter("password").toString(),
-				tenantResolverService.findTenantIdForUserEmail(request.getParameter("username").toString()));
+				request.getParameter("username").toLowerCase().toString(), request.getParameter("password").toString(),
+				tenantResolverService
+						.findTenantIdForUserEmail(request.getParameter("username").toLowerCase().toString()));
 
 		return getAuthenticationManager().authenticate(loginToken);
 	}
@@ -83,8 +84,10 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 
 		// Add the authentication to the Security context
 		SecurityContextHolder.getContext().setAuthentication(userAuthentication);
-		
-		/*	Writing user information to response after successful authentication  */
+
+		/*
+		 * Writing user information to response after successful authentication
+		 */
 		com.bbytes.purple.domain.User user = userService.getUserByEmail(authenticatedUser.getUsername());
 		UserDTO userDTO = dataModelToDTOConversionService.convertUser(user);
 		RestResponse authStatus = new RestResponse(true, userDTO);
