@@ -1,7 +1,9 @@
 package com.bbytes.purple.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -32,6 +34,7 @@ import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.StatusResponseDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.utils.GlobalConstants;
+import com.bbytes.purple.utils.StringUtils;
 
 @Service
 public class DataModelToDTOConversionService {
@@ -105,9 +108,7 @@ public class DataModelToDTOConversionService {
 		return projectDTO;
 	}
 
-	public StatusDTO convertStatus(Status status) {
-
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.TIME_FORMAT);
+	public StatusDTO convertStatus(Status status, String statusTime) {
 
 		StatusDTO statusDTO = new StatusDTO();
 		statusDTO.setStatusId(status.getStatusId());
@@ -118,7 +119,7 @@ public class DataModelToDTOConversionService {
 		statusDTO.setWorkingOn(status.getWorkingOn());
 		statusDTO.setHours(status.getHours());
 		statusDTO.setBlockers(status.getBlockers());
-		statusDTO.setTime(simpleDateFormat.format(status.getDateTime()).toString());
+		statusDTO.setTime(statusTime);
 		statusDTO.setCommentCount(status.getCommentCount());
 		return statusDTO;
 	}
@@ -305,11 +306,11 @@ public class DataModelToDTOConversionService {
 		}
 		projectUserCountStatsDTO.setData(data);
 		projectUserCountStatsDTO.setSeries(series.toArray(new String[series.size()]));
-		
+
 		if (aggrType.equals("month")) {
 			labels = convertIntMonthToStringMonthLabels(labels);
 		}
-		
+
 		projectUserCountStatsDTO.setLabels(labels.toArray(new String[labels.size()]));
 
 		return projectUserCountStatsDTO;
@@ -374,11 +375,11 @@ public class DataModelToDTOConversionService {
 		}
 		projectUserCountStatsDTO.setData(data);
 		projectUserCountStatsDTO.setSeries(series.toArray(new String[series.size()]));
-		
+
 		if (aggrType.equals("month")) {
 			labels = convertIntMonthToStringMonthLabels(labels);
 		}
-		
+
 		projectUserCountStatsDTO.setLabels(labels.toArray(new String[labels.size()]));
 
 		return projectUserCountStatsDTO;
@@ -389,21 +390,33 @@ public class DataModelToDTOConversionService {
 		for (String month : labels) {
 			monthlabels.add(getMonthName(Integer.parseInt(month)));
 		}
-		
+
 		return monthlabels;
 	}
-	
+
 	private String getMonthName(Integer month) {
 		return DateTime.now().withMonthOfYear(month).toString("MMM");
 	}
 
-	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses) {
+	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses, User user)
+			throws ParseException {
 
+		String date = null;
+		String time = null;
 		Map<String, List<StatusDTO>> statusMap = new LinkedHashMap<String, List<StatusDTO>>();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+
 		for (Status status : statusses) {
-			String date = simpleDateFormat.format(status.getDateTime());
-			StatusDTO statusDTO = convertStatus(status);
+
+			if (user.getTimeZone() != null) {
+				Date statuDate = StringUtils.getDateByTimezone(status.getDateTime(), user.getTimeZone());
+				date = new SimpleDateFormat(GlobalConstants.DATE_FORMAT).format(statuDate);
+				time = new SimpleDateFormat(GlobalConstants.TIME_FORMAT).format(statuDate);
+			} else {
+				date = new SimpleDateFormat(GlobalConstants.DATE_FORMAT).format(status.getDateTime());
+				time = new SimpleDateFormat(GlobalConstants.TIME_FORMAT).format(status.getDateTime());
+			}
+
+			StatusDTO statusDTO = convertStatus(status, time);
 
 			if (statusMap.containsKey(date)) {
 				statusMap.get(date).add(statusDTO);
@@ -429,7 +442,5 @@ public class DataModelToDTOConversionService {
 		}
 		return statusResponseDTOList;
 	}
-
-	
 
 }

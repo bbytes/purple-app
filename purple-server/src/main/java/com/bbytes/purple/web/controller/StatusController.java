@@ -91,7 +91,8 @@ public class StatusController {
 		Status status = statusService.create(statusDTO, user);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				user);
 
 		logger.debug("Status for project  '" + status.getProject().getProjectName() + "' is added successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
@@ -106,14 +107,18 @@ public class StatusController {
 	 * @param statusId
 	 * @return
 	 * @throws PurpleException
+	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/api/v1/status/{statusid}", method = RequestMethod.GET)
-	public RestResponse getStatus(@PathVariable("statusid") String statusId) throws PurpleException {
+	public RestResponse getStatus(@PathVariable("statusid") String statusId) throws PurpleException, ParseException {
 
+		// We will get current logged in user
+		User user = userService.getLoggedInUser();
 		Status status = statusService.getStatus(statusId);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				user);
 
 		logger.debug("Status for project  '" + status.getProject().getProjectName() + "' is getting successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
@@ -127,15 +132,18 @@ public class StatusController {
 	 * 
 	 * @return
 	 * @throws PurpleException
+	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/api/v1/status", method = RequestMethod.GET)
-	public RestResponse getAllStatus(@RequestParam("timePeriod") String timePeriod) throws PurpleException {
+	public RestResponse getAllStatus(@RequestParam("timePeriod") String timePeriod)
+			throws PurpleException, ParseException {
 
 		// We will get current logged in user
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
 		User user = userService.getLoggedInUser();
 		List<Status> statusList = statusService.getAllStatus(user, timePeriodValue);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				user);
 		logger.debug("All status are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
 				SuccessHandler.GET_STATUS_SUCCESS);
@@ -221,17 +229,19 @@ public class StatusController {
 	 * @param statusDTO
 	 * @return
 	 * @throws PurpleException
+	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/api/v1/status/update/{statusid}", method = RequestMethod.PUT)
 	public RestResponse updateStatus(@PathVariable("statusid") String statusId, @RequestBody StatusDTO statusDTO)
-			throws PurpleException {
+			throws PurpleException, ParseException {
 
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();
 		Status status = statusService.updateStatus(statusId, statusDTO, user);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				user);
 
 		logger.debug("Projects are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
@@ -245,16 +255,18 @@ public class StatusController {
 	 * 
 	 * @return
 	 * @throws PurpleException
+	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/api/v1/status/project/user", method = RequestMethod.POST)
 	public RestResponse getAllStatusByProjectAndUser(@RequestBody UsersAndProjectsDTO usersAndProjectsDTO,
-			@RequestParam("timePeriod") String timePeriod) throws PurpleException {
+			@RequestParam("timePeriod") String timePeriod) throws PurpleException, ParseException {
 
 		User user = userService.getLoggedInUser();
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
 		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user,
 				timePeriodValue);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				user);
 		logger.debug("All status are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
 				SuccessHandler.GET_STATUS_SUCCESS);
