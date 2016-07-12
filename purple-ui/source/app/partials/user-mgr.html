@@ -99,11 +99,9 @@
                                     ng-click="resend(user.userName, user.email)" ng-hide= "'{{user.status}}' != 'Pending'">Re-invite</button></center>
                     </td>
 
-                    <td>
-                        <div ng-click="deleteUser(user.email, $index)"
+                    <td class="delete-img">
+                            <img src="../../assets/img/delete.png" ng-click="deleteUser(user.email, $index)"
                              confirm="Are you sure you want to delete the user?">
-                            <img src="../../assets/img/delete.png">
-                        </div>
                     </td>
                     </tr>
 

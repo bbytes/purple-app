@@ -8,5 +8,6 @@ rootApp.controller('logoutCtrl', function ($scope, $rootScope, $state, logoutSer
         delete $rootScope.statusDateFromLink;
         $sessionStorage.$reset();
         $state.go("login");
+		location.reload();
     };
 });

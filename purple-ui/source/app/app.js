@@ -29,7 +29,9 @@ var rootApp = angular.module('rootApp',
             'duScroll',
             'vesparny.fancyModal',
             'duScroll',
-            'angular-timezone-selector'
+            'angular-timezone-selector',
+			'vAccordion',
+			'duScroll'
         ]);
 
 // avoid the spacing while copy paste in text angular 
@@ -124,6 +126,33 @@ rootApp.config([
                     templateUrl: 'app/partials/home-footer.html'
                 }
             }
+        }).state('terms-of-service', {
+            url: '/terms-of-service',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/terms-of-service.html',
+                    controller: 'termsofserviceCtrl',
+                }
+            }
+
+        }).state('privacy-policy', {
+            url: '/privacy-policy',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/privacy-policy.html',
+                    controller: 'privacypolicyCtrl',
+                }
+            }
+
+        }).state('refund-policy', {
+            url: '/refund-policy',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/refund-policy.html',
+                    controller: 'refundpolicyCtrl',
+                }
+            }
+
         }).state('signup', {
             url: '/signup',
             views: {

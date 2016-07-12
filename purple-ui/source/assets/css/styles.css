@@ -277,9 +277,10 @@ input[type="submit"]:focus, input[type="button"]:focus { outline : none !importa
 
 .current-active{
     background: url(../img/menu-line.png) no-repeat center;
-    padding: 15px;
+    padding-bottom: 15px;
     color:#fff !important;
 }
+
 
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus{
     background-color: #3f3f3f !important;
@@ -2266,8 +2267,14 @@ md-sidenav, md-backdrop {
     box-shadow:none;
 }
 .set-pass li{
-    list-style:none;
-    margin-top:15px;
+     list-style:none;
+    display: inline-block;
+    color: #fff;
+    margin: 12px 12px;
+}
+.set-pass li a{
+	text-transform:uppercase;
+	color : #fff;
 }
 
 #loading-bar-spinner {
@@ -3968,7 +3975,7 @@ tabs-left, .tabs-right {
 .round { border-radius: 50%; }
 
 .feedback-log{
-    display:none;
+    display:none !important;
 }
 .feedback-show{
     display:block;
@@ -4041,4 +4048,19 @@ tabs-left, .tabs-right {
     background: transparent !important;
     color:#777 !important;
     cursor: default !important;
+}
+.header-service{
+	margin:30px auto;
+}
+.header-service h2{
+	padding-bottom:15px;
+}
+.header-service p{
+	padding:10px;
+	font-weight:400;
+	text-shadow:none !important;
+	font-size:16px;
+}
+.delete-img img{
+	cursor:pointer;
 }
