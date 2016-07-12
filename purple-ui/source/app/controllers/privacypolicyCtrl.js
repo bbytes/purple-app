@@ -1,6 +1,6 @@
-rootApp.controller('privacypolicyCtrl', function ($scope, $rootScope, $state, appNotifyService, $sessionStorage) {
-     $rootScope.feedbackClass = 'feedback-log';
-	 $rootScope.bodyClass = 'body-standalone1';
+rootApp.controller('privacypolicyCtrl', function ($rootScope) {
+    $rootScope.feedbackClass = 'feedback-log';
+    $rootScope.bodyClass = 'body-standalone1';
 
- });
+});
 
