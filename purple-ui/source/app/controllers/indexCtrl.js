@@ -1,6 +1,6 @@
 
 rootApp.controller('indexCtrl', function ($scope, $rootScope, $state, $window) {
-
+    window.scrollTo(0, 0);
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.feedbackClass = 'feedback-log';
     $scope.toTheTop = function () {
