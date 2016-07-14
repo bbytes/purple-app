@@ -3975,7 +3975,7 @@ tabs-left, .tabs-right {
 .round { border-radius: 50%; }
 
 .feedback-log{
-    display:none !important;
+    display:none;
 }
 .feedback-show{
     display:block;
