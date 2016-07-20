@@ -30,8 +30,8 @@ var rootApp = angular.module('rootApp',
             'vesparny.fancyModal',
             'duScroll',
             'angular-timezone-selector',
-			'vAccordion',
-			'duScroll'
+            'vAccordion',
+            'duScroll'
         ]);
 
 // avoid the spacing while copy paste in text angular 
