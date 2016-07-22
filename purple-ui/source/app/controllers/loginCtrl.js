@@ -40,13 +40,13 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                 $rootScope.showWelcomeMessage = true;
 
                 $state.go('status');
-            } /*else {
+            } else if (response.data.accountInitialise === false) {
              // Erase the token if the user fails to log in
              delete $window.sessionStorage.token;
              //Login failed. Showing error notification
              appNotifyService.error('Please activate your account before login. Check your email for activation link.');
              }
-             */
+             
         }, function (error) {
             appNotifyService.error('Invalid Username or Password');
         });
