@@ -53,7 +53,7 @@
 
     </head>
     <body class="{{ bodyClass}}" ng-class="{isOpen : isOpen}">    
-    <toaster-container></toaster-container>
+    <toaster-container toaster-options="{'close-button': true,'body-output-type':'trustedHtml','position-class': 'toast-top-center'}"></toaster-container>
 
     <a href fancy-modal template-url="app/partials/feedback.html" ng-click="showModal = !showModal">
         <div id="slideout"  class="{{ feedbackClass}}">
