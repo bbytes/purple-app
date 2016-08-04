@@ -220,7 +220,7 @@ public class StatusService extends AbstractService<Status, String> {
 
 		Status newStatus = null;
 		if ((!statusIdExist(statusId) || (statusDTO.getProjectId() == null || statusDTO.getProjectId().isEmpty())))
-			throw new PurpleException("Error while adding project", ErrorHandler.PROJECT_NOT_FOUND);
+			throw new PurpleException("Error while updating status", ErrorHandler.STATUS_NOT_FOUND);
 
 		cleanUpStatusText(statusDTO);
 

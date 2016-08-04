@@ -70,6 +70,9 @@ rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $i
                     case "update_project_failed":
                         appNotifyService.error('Error while updating project.');
                         break;
+                    case "status_not_found":
+                        appNotifyService.error(response.data.data);
+                        break;
                 }
             }
 
