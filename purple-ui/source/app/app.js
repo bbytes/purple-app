@@ -73,12 +73,8 @@ rootApp.run([
                     $state.go(to.data.redirectTo);
                 }
             }
-
             $rootScope.currentState = to.name;
             $rootScope.previouState = from.name;
-
-            console.log('Previous state:' + from.name);
-            console.log('Current state:' + to.name);
         });
 
         $rootScope.$on('$stateChangeStart', function (evt, to, params, from) {
@@ -131,7 +127,7 @@ rootApp.config([
             views: {
                 '': {
                     templateUrl: 'app/partials/terms-of-service.html',
-                    controller: 'termsofserviceCtrl',
+                    controller: 'termsofserviceCtrl'
                 }
             }
 
@@ -140,7 +136,7 @@ rootApp.config([
             views: {
                 '': {
                     templateUrl: 'app/partials/privacy-policy.html',
-                    controller: 'privacypolicyCtrl',
+                    controller: 'privacypolicyCtrl'
                 }
             }
 
@@ -149,7 +145,7 @@ rootApp.config([
             views: {
                 '': {
                     templateUrl: 'app/partials/refund-policy.html',
-                    controller: 'refundpolicyCtrl',
+                    controller: 'refundpolicyCtrl'
                 }
             }
 
@@ -158,7 +154,7 @@ rootApp.config([
             views: {
                 '': {
                     templateUrl: 'app/partials/signup.html',
-                    controller: 'signupCtrl',
+                    controller: 'signupCtrl'
                 }
 
             }
@@ -167,7 +163,7 @@ rootApp.config([
             views: {
                 '': {
                     templateUrl: 'app/partials/forgot-password.html',
-                    controller: 'forgotPasswordCtrl',
+                    controller: 'forgotPasswordCtrl'
                 }
             }
 
@@ -309,7 +305,7 @@ rootApp.config([
             url: '/settings',
             views: {
                 '': {
-                    templateUrl: 'app/partials/home.html',
+                    templateUrl: 'app/partials/home.html'
                 },
                 'header@settings': {
                     templateUrl: 'app/partials/home-header.html'
@@ -330,7 +326,7 @@ rootApp.config([
             url: '/user-mgr',
             views: {
                 '': {
-                    templateUrl: 'app/partials/home.html',
+                    templateUrl: 'app/partials/home.html'
                 },
                 'header@user-mgr': {
                     templateUrl: 'app/partials/home-header.html'
