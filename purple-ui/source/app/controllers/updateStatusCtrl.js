@@ -25,6 +25,7 @@ rootApp.controller('updateStatusCtrl', function ($rootScope, $state, $q, $http, 
         $rootScope.timeZone = response.data.timeZone;
 
         var userInfo = {
+            accessToken: $rootScope.authToken,
             email: $rootScope.loggedInUser,
             name: $rootScope.userName,
             userRoles: $rootScope.userRole,

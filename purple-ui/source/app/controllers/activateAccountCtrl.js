@@ -3,7 +3,6 @@
  */
 rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state, $q, $http, $window, $sessionStorage, appNotifyService) {
 
-    $scope.init = function () {
         $window.sessionStorage.token = $state.params.token;
         $rootScope.authToken = $state.params.token;
 
@@ -13,7 +12,7 @@ rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state, 
             method: 'GET',
             url: $rootScope.baseUrl + 'api/v1/admin/activateAccount',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
         }).success(function (response) {
 
@@ -23,6 +22,7 @@ rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state, 
             var userInfo = {
                 name: $rootScope.userName,
                 userRoles: $rootScope.userRole,
+                accessToken : $rootScope.authToken
             };
 
             $sessionStorage.userInfo = userInfo;
@@ -41,5 +41,4 @@ rootApp.controller('activateAccountCtrl', function ($scope, $rootScope, $state, 
         });
 
         return deferred.promise;
-    };
 });

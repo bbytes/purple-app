@@ -367,7 +367,6 @@ rootApp.config([
             }
         }).state('activate', {
             url: '/activateAccount?token',
-            templateUrl: 'app/partials/activateAccount.html',
             controller: 'activateAccountCtrl'
         }).state('forgotpassword', {
             url: '/forgotPassword?token',
