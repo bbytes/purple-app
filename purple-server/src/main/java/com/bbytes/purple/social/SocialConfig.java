@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.social.bitbucket.connect.BitBucketConnectionFactory;
 import org.springframework.social.config.annotation.EnableSocial;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionRepository;
@@ -36,6 +37,9 @@ public class SocialConfig {
 		ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
 		registry.addConnectionFactory(new GitHubConnectionFactory(environment.getProperty("spring.social.github.appId"),
 				environment.getProperty("spring.social.github.appSecret")));
+		
+		registry.addConnectionFactory(new BitBucketConnectionFactory(environment.getProperty("spring.social.bitbucket.appId"),
+				environment.getProperty("spring.social.bitbucket.appSecret")));
 		return registry;
 	}
 
