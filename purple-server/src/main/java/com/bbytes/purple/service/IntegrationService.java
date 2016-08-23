@@ -24,6 +24,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	@Autowired
 	private ProjectService projectService;
 
+	
 	@Autowired
 	public IntegrationService(IntegrationRepository integrationRepository) {
 		super(integrationRepository);

@@ -46,7 +46,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		webSecurity.ignoring()
 				// All of Spring Security will ignore the requests.
 				// '/{[path:[^\\.]*}' is to avoid all the angualr internal urls
-				.antMatchers("/").antMatchers("/{[path:[^\\.]*}").antMatchers("/resources/**").antMatchers("/assets/**")
+				.antMatchers("/").antMatchers("/signup/**").antMatchers("/connect/**").antMatchers("/social/**").antMatchers("/{[path:[^\\.]*}").antMatchers("/resources/**").antMatchers("/assets/**")
 				.antMatchers("/favicon.ico").antMatchers("/**/*.html").antMatchers("/resources/**")
 				.antMatchers("/static/**").antMatchers("/app/**").antMatchers("/**/*.css").antMatchers("/**/*.js");
 	}
