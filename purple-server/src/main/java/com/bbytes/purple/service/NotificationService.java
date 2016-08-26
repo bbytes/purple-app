@@ -18,9 +18,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import flowctrl.integration.slack.SlackClientFactory;
-import flowctrl.integration.slack.webapi.SlackWebApiClient;
-
 @Service
 public class NotificationService {
 
@@ -31,12 +28,13 @@ public class NotificationService {
 
 	@Autowired
 	private VelocityEngine templateEngine;
+	
+	@Autowired
+	private IntegrationService integrationService;
 
 	@Value("${spring.mail.from}")
 	private String fromEmail;
 
-	@Value("${slack.channel.name}")
-	private String slackChannelName;
 
 	/**
 	 * Send simple mail api. TODO: Need to implement html email template logic
@@ -89,11 +87,9 @@ public class NotificationService {
 	 * @param message
 	 * @return
 	 */
-	public boolean sendSlackMessage(String token, String message) {
+	public boolean sendSlackMessage(String message) {
 		try {
-			SlackWebApiClient webApiClient = SlackClientFactory.createWebApiClient(token);
-			webApiClient.postMessage(slackChannelName, message);
-			webApiClient.shutdown();
+			integrationService.postMessageToSlack(message);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return false;

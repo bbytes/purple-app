@@ -266,7 +266,7 @@ public class SocialConnectController implements InitializingBean {
 	 */
 	@RequestMapping(value = "/{providerId}", method = RequestMethod.POST)
 	public RedirectView connect(@PathVariable String providerId, NativeWebRequest request) {
-		System.out.println(userService.getLoggedInUserEmail());
+//		System.out.println(userService.getLoggedInUserEmail());
 		
 		ConnectionFactory<?> connectionFactory = connectionFactoryLocator.getConnectionFactory(providerId);
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
@@ -324,7 +324,7 @@ public class SocialConnectController implements InitializingBean {
 	 */
 	@RequestMapping(value = "/{providerId}", method = RequestMethod.GET, params = "code")
 	public String oauth2Callback(@PathVariable String providerId, NativeWebRequest request) {
-		System.out.println(userService.getLoggedInUserEmail());
+//		System.out.println(userService.getLoggedInUserEmail());
 		
 		try {
 			OAuth2ConnectionFactory<?> connectionFactory = (OAuth2ConnectionFactory<?>) connectionFactoryLocator
@@ -359,19 +359,11 @@ public class SocialConnectController implements InitializingBean {
 	 * @return a RedirectView to the connection status page
 	 */
 	@RequestMapping(value = "/{providerId}", method = RequestMethod.GET, params = "error")
-	public RedirectView oauth2ErrorCallback(@PathVariable String providerId, @RequestParam("error") String error,
+	public String oauth2ErrorCallback(@PathVariable String providerId, @RequestParam("error") String error,
 			@RequestParam(value = "error_description", required = false) String errorDescription,
 			@RequestParam(value = "error_uri", required = false) String errorUri, NativeWebRequest request) {
-		Map<String, String> errorMap = new HashMap<String, String>();
-		errorMap.put("error", error);
-		if (errorDescription != null) {
-			errorMap.put("errorDescription", errorDescription);
-		}
-		if (errorUri != null) {
-			errorMap.put("errorUri", errorUri);
-		}
-		sessionStrategy.setAttribute(request, AUTHORIZATION_ERROR_ATTRIBUTE, errorMap);
-		return connectionStatusRedirect(providerId, request);
+		
+		return "redirect:/integration#"+providerId;
 	}
 
 	/**

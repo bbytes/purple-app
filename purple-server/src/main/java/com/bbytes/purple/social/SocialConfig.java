@@ -15,6 +15,7 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.support.ConnectionFactoryRegistry;
 import org.springframework.social.github.connect.GitHubConnectionFactory;
+import org.springframework.social.slack.connect.SlackConnectionFactory;
 
 import com.bbytes.purple.repository.SocialConnectionRepository;
 import com.bbytes.purple.service.UserService;
@@ -40,6 +41,9 @@ public class SocialConfig {
 		
 		registry.addConnectionFactory(new BitBucketConnectionFactory(environment.getProperty("spring.social.bitbucket.appId"),
 				environment.getProperty("spring.social.bitbucket.appSecret")));
+		
+		registry.addConnectionFactory(new SlackConnectionFactory(environment.getProperty("spring.social.slack.appId"),
+				environment.getProperty("spring.social.slack.appSecret")));
 		return registry;
 	}
 

@@ -23,7 +23,7 @@ public class MongoUsersConnectionRepository implements UsersConnectionRepository
 	private final SocialConnectionRepository socialConnectionRepository;
 	private final ConnectionFactoryLocator connectionFactoryLocator;
 	private final MongoConnectionTransformers mongoConnectionTransformers;
-	private ConnectionSignUp connectionSignUp;
+	private  ConnectionSignUp connectionSignUp;
 	private final UserService userService;
 
 	public MongoUsersConnectionRepository(final SocialConnectionRepository socialConnectionRepository,

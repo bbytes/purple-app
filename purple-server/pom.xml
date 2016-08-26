@@ -15,6 +15,14 @@
 
 	<repositories>
 		<repository>
+			<id>spring-social-slack-bbytes</id>
+			<url>https://raw.github.com/bbytes/spring-social-slack/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
@@ -64,6 +72,12 @@
 			<groupId>org.springframework.social</groupId>
 			<artifactId>spring-social-bitbucket</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-slack</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -123,12 +137,6 @@
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.flowctrl</groupId>
-			<artifactId>slack-api</artifactId>
-			<version>v1.1.0.RELEASE</version>
 		</dependency>
 
 		<dependency>
