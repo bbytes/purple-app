@@ -43,6 +43,13 @@
 			</snapshots>
 		</repository>
 		<repository>
+			<id>spring-snapshots</id>
+			<url>http://maven.springframework.org/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
 			<id>atlassian-public</id>
 			<url>https://maven.atlassian.com/repository/public</url>
 			<snapshots>
