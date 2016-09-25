@@ -76,6 +76,7 @@ public class UserService extends AbstractService<User, String> {
 		user.setOrganization(org);
 		user.setPassword(passwordHashService.encodePassword(password));
 		user.setUserRole(UserRole.ADMIN_USER_ROLE);
+		user.setStatus(User.PENDING);;
 		return userRepository.save(user);
 	}
 
