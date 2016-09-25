@@ -59,7 +59,10 @@
 
     <div class="tab-pane" id="slack">
         <div class="intergration-wrapper">
-            <img src="../../assets/img/coming-soon.png" />
+           <form action="/social/slack" method="post">
+				<input type="hidden" name="scope" value="users.profile:read,users:read,channels:read,channels:write,im:read ,im:write,chat:write:bot" />
+				<button type="submit">Connect to Slack</button>
+			</form>
         </div>
     </div>
 

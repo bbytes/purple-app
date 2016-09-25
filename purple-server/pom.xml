@@ -23,6 +23,14 @@
 			</snapshots>
 		</repository>
 		<repository>
+			<id>jira-client-bbytes</id>
+			<url>https://raw.github.com/tanmally/jira-client/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
@@ -171,6 +179,12 @@
 			<artifactId>httpasyncclient</artifactId>
 			<version>4.0-beta3-atlassian-1</version>
 		</dependency>
+
+		 <dependency>
+			<groupId>net.rcarz</groupId>
+			<artifactId>jira-client</artifactId>
+			<version>0.7-SNAPSHOT</version>
+		</dependency> 
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

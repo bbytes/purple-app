@@ -1,10 +1,7 @@
 package com.bbytes.purple.web.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
@@ -23,13 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bbytes.purple.domain.Integration;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
+import com.bbytes.purple.integration.JiraBasicCredentials;
 import com.bbytes.purple.rest.dto.models.IntegrationRequestDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.IntegrationService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
-import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
+
+import net.rcarz.jiraclient.JiraClient;
+import net.rcarz.jiraclient.Project;
+import net.rcarz.jiraclient.Role;
+import net.rcarz.jiraclient.RoleActor;
 
 /**
  * Integration Controller
@@ -58,13 +60,14 @@ public class IntegrationController {
 		User user = userService.getLoggedInUser();
 		final String JIRA_CONNECTION_MSG = "jira is connected successfully";
 		int statusCode;
-		String jiraBaseURL, authHeader;
+		String jiraBaseURL, authHeader, jiraUsername;
 		try {
 
 			jiraBaseURL = integrationRequestDTO.getJiraBaseUrl();
+			jiraUsername = integrationRequestDTO.getUserName();
 
 			HttpGet request = new HttpGet(jiraBaseURL);
-			String authString = integrationRequestDTO.getUserName() + ":" + integrationRequestDTO.getPassword();
+			String authString = jiraUsername + ":" + integrationRequestDTO.getPassword();
 			byte[] encodedAuth = Base64.encodeBase64(authString.getBytes(Charset.forName("ISO-8859-1")));
 			authHeader = BASIC + new String(encodedAuth);
 			request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
@@ -83,11 +86,10 @@ public class IntegrationController {
 			else if (statusCode == 401)
 				throw new PurpleException("Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
 		} else {
-			integrationService.connectToJIRA(user, authHeader, jiraBaseURL);
+			integrationService.connectToJIRA(user, jiraUsername, authHeader, jiraBaseURL);
 		}
 
-		logger.debug(
-				"User with email  '" + integrationRequestDTO.getUserName() + "' is connected to JIRA successfully");
+		logger.debug("User with email  '" + jiraUsername + "' is connected to JIRA successfully");
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
 				SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
@@ -158,51 +160,54 @@ public class IntegrationController {
 		try {
 			Integration integration = integrationService.getJIRAConnection(user);
 
-			String jiraGetProjectsAPIURL = GlobalConstants.JIRA_GETPROJECTS_API_URL;
-			String basicAuthHeader = integration.getJiraBasicAuthHeader();
+			JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(),
+					integration.getJiraBasicAuthHeader());
+			JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
+			List<Project> jiraProjects = jira.getProjects();
+			for (Project project : jiraProjects) {
+				Project projectDetail = jira.getProject(project.getKey());
+				for (String role : projectDetail.getRoles().keySet()) {
+					Role roleObj = jira.getProjectRole(projectDetail.getRoles().get(role));
+					for (RoleActor roleActor : roleObj.getRoleActors()) {
+						if (roleActor.isUser())
+							System.out.println(roleActor.getUser());
+					}
 
-			URL url = new URL(integration.getJiraBaseURL() + jiraGetProjectsAPIURL);
-			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-			urlConnection.setRequestMethod("GET");
-			urlConnection.setRequestProperty(AUTHORIZATION, basicAuthHeader);
-			int statusCode = urlConnection.getResponseCode();
-			if (statusCode != 200) {
-				if (statusCode == 401)
-					throw new PurpleException("Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
+				}
 			}
 
-			// Below Code is for JIRA REST Client -- Giving some issue
+			integrationService.addJiraProjects(jiraProjects, user);
 
-			/*
-			 * URI jiraServerUri = URI.create(integration.getJiraBaseURL());
-			 * 
-			 * AsynchronousJiraRestClientFactory factory = new
-			 * AsynchronousJiraRestClientFactory(); JiraRestClient restClient =
-			 * factory.createWithBasicHttpAuthentication(jiraServerUri,
-			 * "username", "password");
-			 * 
-			 * final int buildNumber =
-			 * restClient.getMetadataClient().getServerInfo().claim().
-			 * getBuildNumber();
-			 * 
-			 * if (buildNumber >= 600) { final Iterable<BasicProject>
-			 * allProjects =
-			 * restClient.getProjectClient().getAllProjects().claim(); for
-			 * (BasicProject project : allProjects) {
-			 * System.out.println(project); } }
-			 */
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		logger.debug("User is connected to JIRA successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
+				SuccessHandler.JIRA_ADD_PROJECTS_SUCCESS);
 
-			StringBuilder sb = new StringBuilder();
-			int cp;
-			String jsonText = null;
-			while ((cp = in.read()) != -1) {
-				jsonText = sb.append((char) cp).toString();
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/integration/jira/getUsers", method = RequestMethod.GET)
+	public RestResponse getJIRAUsers() throws PurpleException {
+
+		final String JIRA_ADD_PROJECT_MSG = "jira users are added successfully";
+		User user = userService.getLoggedInUser();
+		try {
+			Integration integration = integrationService.getJIRAConnection(user);
+
+			JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(),
+					integration.getJiraBasicAuthHeader());
+			JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
+			List<Project> jiraProjects = jira.getProjects();
+			for (Project project : jiraProjects) {
+				Project projectDetail = jira.getProject(project.getKey());
+				for (String role : projectDetail.getRoles().keySet()) {
+					System.out.println(projectDetail.getRoles().get(role));
+				}
 			}
-
-			integrationService.addJiraProjects(jsonText, user);
+			integrationService.addJiraProjects(jiraProjects, user);
 
 		} catch (Throwable e) {
 			e.printStackTrace();

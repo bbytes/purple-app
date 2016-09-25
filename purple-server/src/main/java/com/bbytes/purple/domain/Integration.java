@@ -25,6 +25,9 @@ public class Integration {
 	@Id
 	private String integrationId;
 
+	@Field("jira_user_name")
+	private String jiraUserName;
+	
 	@Field("jira_basic_authHeader")
 	private String jiraBasicAuthHeader;
 

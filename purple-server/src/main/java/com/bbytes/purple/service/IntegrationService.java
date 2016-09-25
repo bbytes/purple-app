@@ -8,8 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.bitbucket.api.BitBucket;
 import org.springframework.social.bitbucket.api.BitBucketChangeset;
@@ -65,13 +63,15 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		return state;
 	}
 
-	public Integration connectToJIRA(User user, String basicAuth, String jiraBaseURL) throws PurpleException {
+	public Integration connectToJIRA(User user, String jiraUserName, String basicAuth, String jiraBaseURL)
+			throws PurpleException {
 		Integration integration = null;
 		try {
 			if (!integrationExist(user)) {
 				integration = new Integration();
 				integration.setJiraBasicAuthHeader(basicAuth);
 				integration.setJiraBaseURL(jiraBaseURL);
+				integration.setJiraUserName(jiraUserName);
 				integration.setUser(user);
 				integrationRepository.save(integration);
 			} else {
@@ -97,16 +97,13 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		return integration;
 	}
 
-	public void addJiraProjects(String jsonText, User user) throws PurpleException {
+	public void addJiraProjects(List<net.rcarz.jiraclient.Project> jiraProjects, User user) throws PurpleException {
 		List<String> jiraProjectList = new LinkedList<String>();
 		List<String> finalProjectListToBeSaved = new LinkedList<String>();
 
 		try {
-			JSONArray jsonarray = new JSONArray(jsonText);
-			for (int i = 0; i < jsonarray.length(); i++) {
-				JSONObject jsonobject = jsonarray.getJSONObject(i);
-				String name = jsonobject.getString("name");
-				jiraProjectList.add(name);
+			for (net.rcarz.jiraclient.Project jiraProject : jiraProjects) {
+				jiraProjectList.add(jiraProject.getName());
 			}
 			List<Project> list = projectService.findAll();
 			List<String> projectListFromDB = new ArrayList<String>();
@@ -130,6 +127,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_CONNECTION_FAILED);
 		}
 	}
+
 
 	public Map<String, String> getSlackChannels() {
 		Slack slack = getSlackApi();
