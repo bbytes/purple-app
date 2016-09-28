@@ -89,11 +89,10 @@
                         <div class="form-sidebar">
 
                             <div class="form-group" >
-                                <select class="form-control" name="project" ng-model="project" 
-                                        required>
+                                <select chosen option="allprojects" ng-model="project" id="projectDropdown">
                                     <option value="">--- Select Project ---</option>
                                     <option ng-repeat="project in allprojects" value="{{project.projectId}}" >{{project.projectName}}</option>
-                                </select> <span style="color: red" ng-show="myForm.project.$error.required"></span>		
+                                </select>
                             </div>
 
                         </div>
@@ -106,7 +105,6 @@
                                         ng-model="hours">
                                     <option value="">Hrs</option>		
                                     <option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
-
                                 </select>
                             </div>
                         </div>
@@ -195,11 +193,10 @@
                     <div class="form-sidebar">
 
                         <div class="form-group" >
-                            <select class="form-control" name="project" ng-model="project" 
-                                    required>
+                            <select chosen option="allprojects" ng-model="project" id="projectDropdown">
                                 <option value="">--- Select Project ---</option>
                                 <option ng-repeat="project in allprojects" value="{{project.projectId}}" >{{project.projectName}}</option>
-                            </select> <span style="color: red" ng-show="myForm.project.$error.required"></span>		
+                            </select>
                         </div>
 
                     </div>

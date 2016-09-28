@@ -89,7 +89,7 @@
 
             </div>
 
-            <div class="project-table" ng-init="loadAllProjects()">
+            <div class="project-table project-img" ng-init="loadAllProjects()">
                 <table ng-repeat="project in allprojects| orderBy:'projectName' | filter:searchText">
                     <tr>
                         <td class="table-user">{{project.projectName}} <br /> </td>

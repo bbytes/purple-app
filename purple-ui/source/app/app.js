@@ -31,7 +31,9 @@ var rootApp = angular.module('rootApp',
             'duScroll',
             'angular-timezone-selector',
             'vAccordion',
-            'duScroll'
+            'duScroll',
+			'angular.chosen',
+			'ui.bootstrap.datetimepicker'
         ]);
 
 // avoid the spacing while copy paste in text angular 

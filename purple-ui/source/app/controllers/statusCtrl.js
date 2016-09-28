@@ -151,6 +151,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
         projectService.getUserproject().then(function (response) {
             if (response.success) {
                 $scope.allprojects = response.data.gridData;
+                $("#projectDropdown").trigger("chosen:updated");
             }
         });
         dropdownListService.getHours().then(function (response) {
