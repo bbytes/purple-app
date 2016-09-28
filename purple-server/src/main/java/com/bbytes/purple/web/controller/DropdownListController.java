@@ -56,9 +56,10 @@ public class DropdownListController {
 
 		return rolesResponse;
 	}
-	
+
 	/**
-	 * getProjectUserDropdownList method is used to return project and user field.
+	 * getProjectUserDropdownList method is used to return project and user
+	 * field.
 	 * 
 	 * @return
 	 */
@@ -72,13 +73,15 @@ public class DropdownListController {
 		List<BaseDTO> projectAndUser = dataModelToDTOConversionService.convertRolesToEntityDTOList(projectUser);
 
 		logger.debug("Getting project and user are successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, projectAndUser, SuccessHandler.DROPDOWNLIST_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, projectAndUser,
+				SuccessHandler.DROPDOWNLIST_SUCCESS);
 
 		return response;
 	}
-	
+
 	/**
-	 * getStatusCountAndHourDropdownList method is used to return statusCount and statusHours field.
+	 * getStatusCountAndHourDropdownList method is used to return statusCount
+	 * and statusHours field.
 	 * 
 	 * @return
 	 */
@@ -89,10 +92,12 @@ public class DropdownListController {
 		statusCountHours.add("Status Hours");
 		statusCountHours.add("Status Count");
 
-		List<BaseDTO> statusCountAndHours = dataModelToDTOConversionService.convertRolesToEntityDTOList(statusCountHours);
+		List<BaseDTO> statusCountAndHours = dataModelToDTOConversionService
+				.convertRolesToEntityDTOList(statusCountHours);
 
 		logger.debug("Getting statusCount and statusHours are successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, statusCountAndHours, SuccessHandler.DROPDOWNLIST_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, statusCountAndHours,
+				SuccessHandler.DROPDOWNLIST_SUCCESS);
 
 		return response;
 	}
@@ -142,6 +147,7 @@ public class DropdownListController {
 	public RestResponse getHoursDropdownList() {
 
 		List<String> hoursList = new LinkedList<String>();
+		hoursList.add("0.5");
 		hoursList.add("1");
 		hoursList.add("1.5");
 		hoursList.add("2");
