@@ -122,7 +122,7 @@
             <div class="left-panel" ng-repeat = "status in statusList">
                 <div class="header-title">
                     <small> 
-                        <ng-letter-avatar data="{{userName}}" shape="round"></ng-letter-avatar>
+                        <ng-letter-avatar data="{{status.userName}}" shape="round"></ng-letter-avatar>
                     </small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <h4># {{status.projectName}} @ {{status.userName}}</h4>
                     <p style="margin-left:60px; font-weight: 600; color: #bcbcbc; font-size: 13px;">{{status.hours}} hrs </p>
