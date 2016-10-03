@@ -403,6 +403,7 @@ public class DataModelToDTOConversionService {
 
 		String date = null;
 		String time = null;
+		StatusDTO statusDTO = null;
 		Map<String, List<StatusDTO>> statusMap = new LinkedHashMap<String, List<StatusDTO>>();
 
 		for (Status status : statusses) {
@@ -416,7 +417,9 @@ public class DataModelToDTOConversionService {
 				time = new SimpleDateFormat(GlobalConstants.TIME_FORMAT).format(status.getDateTime());
 			}
 
-			StatusDTO statusDTO = convertStatus(status, time);
+			if (status.getUser() != null) {
+				statusDTO = convertStatus(status, time);
+			}
 
 			if (statusMap.containsKey(date)) {
 				statusMap.get(date).add(statusDTO);
