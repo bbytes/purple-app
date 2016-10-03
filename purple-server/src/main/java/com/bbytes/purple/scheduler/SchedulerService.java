@@ -213,9 +213,10 @@ public class SchedulerService {
 			for (User user : allUsers) {
 				if (!userList.toString().contains(user.toString()) && user.getProjects().size() > 0) {
 					userListToBeSendMail.add(user);
-					nameList.add(user.getName());
+					if (user.getUserRole().getRoleName().equals("NORMAL"))
+						nameList.add(user.getName());
 				}
-				 // Manager get include as well in email list.
+				// Manager get include as well in email list.
 				if (user.getUserRole().getRoleName().equals("MANAGER"))
 					userListToBeSendMail.add(user);
 			}
