@@ -46,12 +46,19 @@
                         </div>
                         <div class="timeline-body worked-on">
                             <h3>worked on</h3>
-                            <p ng-bind-html="status.workedOn">{{status.workedOn}}</p>
+                            <p>
+							 <hm-read-more hm-text="{{ status.workedOn }}" hm-limit="90" hm-more-text="more"  hm-less-text=" less"hm-dots-class="dots" hm-link-class="links">
+                             </hm-read-more>
+						</p>
                         </div>
 
                         <div class="timeline-body working-on">
                             <h3>working on</h3>
-                            <p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
+							
+                            <p>
+							  <hm-read-more hm-text="{{ status.workingOn }}" hm-limit="90" hm-more-text="more"  hm-less-text="less" hm-dots-class="dots" hm-link-class="links">
+                             </hm-read-more>
+							</p>
                         </div>
 
                         <div class="timeline-body blocker-on">
@@ -75,7 +82,7 @@
 
                     <div class="date-display">
                         <!-- p>{{current_date | date:'MMM dd, yyyy'}}</p -->
-                        <div class="col-md-9" ng-init=" loadStatusDates()">
+                        <div class="col-md-9" ng-init=" loadStatusDates()"  style="padding-right: 4px; padding-left: 15px;">
                             <select class="form-control" id="statusDate" name="statusDate" ng-model="statusDate" 
                                     ng-disabled="isDisable">
                                 <option ng-repeat="date in dateArray" value="{{date}}" >{{date| date:'MMM dd, yyyy'}}</option>
@@ -84,8 +91,8 @@
                     </div>
 
 
-                    <div class="col-md-9" 
-                         ng-init="loadProjects()">
+                    <div class="col-md-8" 
+                         ng-init="loadProjects()" style="padding-right: 4px; padding-left: 15px;">
                         <div class="form-sidebar">
 
                             <div class="form-group" >
@@ -98,10 +105,11 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-sm-2" style="padding-right: 4px; padding-left: 4px;">
                         <div class="form-sidebar">
                             <div class="form-group side-slide-panel">
-                                <select class="form-control turnintodropdown" name="hours"
+					
+                                <select chosen class="form-control turnintodropdown" name="hours"
                                         ng-model="hours">
                                     <option value="">Hrs</option>		
                                     <option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
@@ -109,6 +117,21 @@
                             </div>
                         </div>
                     </div>
+					
+					<!--
+					<div class="col-sm-2" style="padding-right: 4px; padding-left: 4px;">
+                        <div class="form-sidebar">
+                            <div class="form-group side-slide-panel">
+                                <select chosen class="form-control turnintodropdown" name="hours"
+                                        ng-model="hours">
+                                    <option value="">Min</option>		
+                                    <option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+					-->
+					
                 </div>
 
                 <div class="form-group side-slide-panel">

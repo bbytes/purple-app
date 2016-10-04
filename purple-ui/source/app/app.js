@@ -33,7 +33,8 @@ var rootApp = angular.module('rootApp',
             'vAccordion',
             'duScroll',
 			'angular.chosen',
-			'ui.bootstrap.datetimepicker'
+			'ui.bootstrap.datetimepicker',
+			'hm.readmore'
         ]);
 
 // avoid the spacing while copy paste in text angular 

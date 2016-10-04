@@ -4119,5 +4119,16 @@ tabs-left, .tabs-right {
 }
 .right-inner-addon input{
     background:transparent;
-    border:0px aolid;
+    border:0px solid;
+}
+.links{
+	cursor:pointer;
+}
+.chosen-container-single .chosen-search {
+    margin: 0;
+    padding: 3px 5px 3px 4px;
+    position: relative;
+    white-space: nowrap;
+    z-index: 1000;
+    width: 100% !important;
 }

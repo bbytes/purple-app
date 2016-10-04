@@ -312,12 +312,18 @@
 
                         <div class="timeline-body worked-on">
                             <h3>worked on</h3>
-                            <p ng-bind-html="status.workedOn">{{status.workedOn}}</p>
+                            <p>
+							  <hm-read-more hm-text="{{ status.workedOn }}" hm-limit="90" hm-more-text="more"  hm-less-text="  less"hm-dots-class="dots" hm-link-class="links">
+                             </hm-read-more>
+							</p>
                         </div>
 
                         <div class="timeline-body working-on">
                             <h3>working on</h3>
-                            <p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
+                            <p>
+							 <hm-read-more hm-text="{{ status.workingOn }}" hm-limit="90" hm-more-text="more"  hm-less-text="less" hm-dots-class="dots" hm-link-class="links">
+                             </hm-read-more>
+							</p>
                         </div>
 
                         <div class="timeline-body blocker-on">
