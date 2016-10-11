@@ -1,14 +1,14 @@
-/**
+/*
  *  Reset Controller to reset password
  */
-rootApp.controller('resetPasswordCtrl', function ($scope, $rootScope, $state, $window, $sessionStorage, settingsService, appNotifyService) {
+angular.module('rootApp').controller('resetPasswordCtrl', function ($scope, $rootScope, $state, $window, settingsService, appNotifyService) {
 
     $window.sessionStorage.token = $state.params.token;
 
     $rootScope.authToken = $state.params.token;
 
     $scope.updatePassword = function (user) {
-        if (user.newPassword != user.confirmPassword) {
+        if (user.newPassword !== user.confirmPassword) {
             appNotifyService.error('Password is mismatch');
             return false;
         }

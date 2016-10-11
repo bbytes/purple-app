@@ -1,11 +1,11 @@
-/**
- * Dashboard controller to load status timeline
+/*
+ * Dashboard controller
  */
-rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService, appNotifyService, $window, $location, statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
+angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService, appNotifyService, $window, $location, statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
     $scope.commentDesc = '';
     $scope.isActive = function (route) {
         return route === $location.path();
-    }
+    };
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.navClass = 'nav-control';
     $rootScope.navstatusClass = 'nav navbar-nav';
@@ -26,7 +26,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
         }, function (error) {
         });
 
-    }
+    };
     $scope.start = function () {
         cfpLoadingBar.start();
     };
@@ -38,7 +38,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
 
     $scope.loadStatusTimeline = function (time) {
 
-        if (time == null || time == 'undefined')
+        if (time === null || time === undefined)
             time = "Weekly";
         $scope.updateData = {
             projectList: [],
@@ -108,7 +108,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
         });
     };
 
-    /**
+    /*
      * post reply on comment
      */
     $scope.postReply = function (replyObj, commentId) {
@@ -118,7 +118,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
             if (response.success) {
                 replyObj.replyDesc = '';
                 $scope.message = 'Replied Successfully';
-                $scope.openCommentSideBar($scope.selectedStatusId)
+                $scope.openCommentSideBar($scope.selectedStatusId);
             } else {
                 $scope.message = "Reply failed";
             }
@@ -127,7 +127,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
         $scope.loadReply(commentId);
     };
 
-    /**
+    /*
      * Load all projects of logged in user
      */
     $scope.loadUserProjects = function () {
@@ -146,7 +146,8 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
             });
         });
     };
-    /**
+    
+    /*
      * Get status 
      */
     $scope.openCommentSideBar = function (selectedStatusId) {
@@ -161,7 +162,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
 
         $scope.getAllComments(selectedStatusId);
     };
-    /**
+    /*
      * Get all comments of status
      */
     $scope.getAllComments = function (selectedStatusId) {
@@ -173,7 +174,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
         });
     };
 
-    /**
+    /*
      * Get all replies of a comment
      */
     $scope.loadReply = function (commentId) {
@@ -185,7 +186,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
         });
     };
 
-    /**
+    /*
      * Load status timeline by project
      */
     $scope.loadProjectMap = function (project, time) {
@@ -221,7 +222,7 @@ rootApp.controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSid
         });
     };
 
-    /**
+    /*
      * Load status timeline by user
      */
     $scope.loadUserMap = function (user, time) {

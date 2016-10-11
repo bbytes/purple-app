@@ -1,9 +1,7 @@
-/**
+/*
  * Status Controller
  */
-rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
-        $sessionStorage, dropdownListService, statusService, projectService, appNotifyService,
-        $window, $location, settingsService, $filter, cfpLoadingBar) {
+angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope, dropdownListService, statusService, projectService, appNotifyService, settingsService, $filter, cfpLoadingBar) {
 
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.navClass = 'nav-control';
@@ -135,13 +133,13 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
                 });
             }
         });
-    }
+    };
 
     $scope.showEditIcon = function (date) {
         var result = false;
         angular.forEach($rootScope.dateArr, function (value)
         {
-            if (date.valueOf() == value.valueOf())
+            if (date.valueOf() === value.valueOf())
                 result = true;
         });
         return result;
@@ -157,7 +155,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
         dropdownListService.getHours().then(function (response) {
             $scope.selectables = response.data;
         });
-    }
+    };
 
     $scope.deleteStatus = function (id, $index) {
         statusService.deleteStatus(id).then(function (response) {
@@ -167,7 +165,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
             $scope.allstatus.splice($index, 1);
             $scope.usersstatusLoad();
         });
-    }
+    };
 
     /*Update */
     $scope.showUpdatePage = function (id) {
@@ -228,7 +226,7 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
                 $scope.isSubmit = true;
                 $scope.isUpdate = false;
                 $scope.isDisable = false;
-                if ($rootScope.statusDateFromLink == undefined && $rootScope.statusDateFromLink == null)
+                if ($rootScope.statusDateFromLink === undefined && $rootScope.statusDateFromLink === null)
                     $scope.statusDate = $filter('date')(new Date());
                 else
                     $scope.statusDate = $filter('date')(new Date(parseInt($rootScope.statusDateFromLink)));
@@ -248,14 +246,15 @@ rootApp.controller('statusCtrl', function ($scope, $rootScope, $state,
         $scope.workingOn = '';
         $scope.workedOn = '';
         $scope.blockers = '';
-    }
+    };
+
     //Reset status page
     $scope.reset = function () {
 
         $scope.isSubmit = true;
         $scope.isUpdate = false;
         $scope.isDisable = false;
-    }
+    };
 
     // avoid spacing while copy paste in text angular
     $scope.stripFormat = function ($html) {

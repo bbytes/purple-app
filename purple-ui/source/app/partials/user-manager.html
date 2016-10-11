@@ -79,9 +79,10 @@
                             </div></td>
                         <td><img src="../../assets/img/pending.png" ng-if="user.status === 'Pending'">
                             <img src="../../assets/img/join.png" ng-if="user.status === 'Joined'">
-                            {{user.status}}</td>
+                            {{user.status}}
+                        </td>
                         <td>
-                            <select class="form-control" ng-options="roles.value as roles.value for roles in userRoles" ng-model="user.userRole.value" ng-change="roleChange(user.userRole.value, user)">			
+                            <select class="form-control" ng-options="roles.id as roles.value for roles in userRoles" ng-model="user.userRole.id" ng-change="roleChange(user.userRole.id, user)">			
                             </select>
                         </td>
 

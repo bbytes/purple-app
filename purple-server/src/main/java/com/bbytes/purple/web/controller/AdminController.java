@@ -231,7 +231,7 @@ public class AdminController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/user/role", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/v1/user/role", method = RequestMethod.PUT)
 	public RestResponse updateUserRole(@RequestParam(value = "userId") String userId,
 			@RequestParam(value = "role") String role) throws PurpleException {
 
@@ -289,7 +289,7 @@ public class AdminController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/project/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/v1/project/create", method = RequestMethod.POST)
 	public RestResponse createProject(@RequestBody ProjectDTO projectDTO) throws PurpleException {
 
 		final String template = GlobalConstants.EMAIL_INVITE_PROJECT_TEMPLATE;
@@ -300,6 +300,7 @@ public class AdminController {
 		Organization org = user.getOrganization();
 		Project addProject = new Project(projectDTO.getProjectName());
 		addProject.setOrganization(org);
+		addProject.setProjectOwner(user);
 		List<User> usersTobeAdded = new ArrayList<User>();
 		for (String i : projectDTO.getUsers()) {
 			usersTobeAdded.add(userService.getUserByEmail(i));
@@ -359,10 +360,13 @@ public class AdminController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/project", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/project", method = RequestMethod.GET)
 	public RestResponse getAllProject() throws PurpleException {
 
-		List<Project> projects = adminService.getAllProjects();
+		// get logged in user object
+		User user = userService.getLoggedInUser();
+		
+		List<Project> projects = adminService.getAllProjects(user);
 		Map<String, Object> projectsMap = dataModelToDTOConversionService
 				.getResponseMapWithGridDataAndProjectCount(projects);
 		logger.debug("Projects are fetched successfully");

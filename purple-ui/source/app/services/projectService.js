@@ -4,13 +4,14 @@
 
 rootApp.service('projectService', function ($rootScope, $http, $q) {
 
+    // This method is used to create project
     this.createProject = function (project) {
 
         var deferred = $q.defer();
 
         $http({
             method: 'POST',
-            url: $rootScope.baseUrl + 'api/v1/admin/project/create',
+            url: $rootScope.baseUrl + 'api/v1/project/create',
             data: project,
             headers: {
                 'Content-Type': 'application/json'
@@ -20,12 +21,10 @@ rootApp.service('projectService', function ($rootScope, $http, $q) {
 
             deferred.resolve(response);
         }).error(function (response) {
-            // Something went wrong.
             deferred.reject(response);
         });
 
         return deferred.promise;
-
     };
 
     this.getAllprojects = function () {
@@ -34,7 +33,7 @@ rootApp.service('projectService', function ($rootScope, $http, $q) {
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/admin/project',
+            url: $rootScope.baseUrl + 'api/v1/project',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -110,7 +109,7 @@ rootApp.service('projectService', function ($rootScope, $http, $q) {
             url: $rootScope.baseUrl + 'api/v1/admin/project/update/' + id,
             data: data,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
 
         }).success(function (response, status, headers, config) {
@@ -201,6 +200,28 @@ rootApp.service('projectService', function ($rootScope, $http, $q) {
             method: 'GET',
             url: $rootScope.baseUrl + 'api/v1/admin/users/project',
             params: {projectId: projectId},
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function () {
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
+
+        return deferred.promise;
+    };
+
+    this.getUsersToAssignProject = function (projectId) {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/assignproject/' + projectId + '/users',
             headers: {
                 'Content-Type': 'application/json'
             }

@@ -2,6 +2,7 @@ package com.bbytes.purple.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
@@ -35,6 +37,9 @@ public class ProjectController {
 
 	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
+	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
 	@Autowired
 	private UserService userService;
@@ -104,6 +109,27 @@ public class ProjectController {
 
 		logger.debug(users.size() + "' users are fetched successfully");
 		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, users, SuccessHandler.GET_USER_SUCCESS);
+
+		return projectReponse;
+	}
+
+	/**
+	 * The getUsersToAssignProject method is used to get all managers and Admin
+	 * role users change owner of project
+	 * 
+	 * @param projectId
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/assignproject/{projectId}/users", method = RequestMethod.GET)
+	public RestResponse getUsersToAssignProject(@PathVariable("projectId") String projectId) throws PurpleException {
+
+		List<User> users = projectService.getUsersToAssignProject(projectId);
+		Map<String, Object> usersMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndUserStatusCount(users);
+
+		logger.debug(users.size() + "' users are fetched successfully");
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, usersMap, SuccessHandler.GET_USER_SUCCESS);
 
 		return projectReponse;
 	}

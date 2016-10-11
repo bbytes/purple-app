@@ -86,7 +86,7 @@ public class TestProjectController extends PurpleWebBaseApplicationTests {
 		normalUser1.setOrganization(org);
 		userService.save(normalUser1);
 
-		project1.setUser(userService.getUserByRoleName(UserRole.NORMAL_USER_ROLE));
+		project1.setUser(userService.getUsersByRole(UserRole.NORMAL_USER_ROLE));
 		projectService.save(project1);
 
 		String id = projectService.findByProjectName("purple").getProjectId();
@@ -270,7 +270,7 @@ public class TestProjectController extends PurpleWebBaseApplicationTests {
 		normalUser1.setOrganization(org);
 		userService.save(normalUser1);
 
-		project1.setUser(userService.getUserByRoleName(UserRole.NORMAL_USER_ROLE));
+		project1.setUser(userService.getUsersByRole(UserRole.NORMAL_USER_ROLE));
 		projectService.save(project1);
 
 		List<String> userList = new ArrayList<String>();

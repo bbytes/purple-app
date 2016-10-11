@@ -1,0 +1,37 @@
+<div class="modal-header clearfix">
+    <h4 class="modal-title pull-left">{{ title}}</h4>
+    <a class="pull-right glyphicon glyphicon-remove icon-clear"
+       ng-click="cancel()"></a>
+</div>
+<div class="modal-body data-row-body">
+
+    <div class="right-inner-addon ">
+        <i class="fa fa-search"></i> <input ng-model="searchText"
+                                            class="form-control" placeholder="Search...">
+    </div>
+    <div class="scrollbox">
+        <div class="scrollbox-content">
+            <div class="user-show-next">
+
+                <table width="100%">
+                    <tr ng-repeat="user in allusers| orderBy:'userName' | filter:searchText">
+                        <td class="add-user-table"><small> <ng-letter-avatar
+                                    data="{{user.userName}}" shape="round"></ng-letter-avatar>
+                            </small>
+                            <div class="user-label">
+                                <h4>{{user.userName}}</h4>
+                                <p>{{user.email}}</p>
+                            </div></td>
+                        <td class="add-user"><input type="radio" name="user" value="{{user.id}}" ng-checked="user.checked"></td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer add-user">
+    <button class="btn save-close" ng-click="assignProjectToUser()" ng-click="cancel()">SAVE
+        & CLOSE</button>
+</div>

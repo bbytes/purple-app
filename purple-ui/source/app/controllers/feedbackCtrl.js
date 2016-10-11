@@ -1,7 +1,7 @@
-/**
+/*
  * Feedback Controller
  */
-rootApp.controller('feebackCtrl', function ($scope, $rootScope, $q, $http, appNotifyService, $fancyModal) {
+angular.module('rootApp').controller('feebackCtrl', function ($scope, $rootScope, $q, $http, appNotifyService, $fancyModal) {
 
     $scope.sendFeedback = function () {
 
@@ -20,7 +20,7 @@ rootApp.controller('feebackCtrl', function ($scope, $rootScope, $q, $http, appNo
             url: $rootScope.baseUrl + 'api/v1/feedback',
             data: feebackData,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
         }).success(function (response, status, headers, config) {
             deferred.resolve(response);
@@ -29,7 +29,5 @@ rootApp.controller('feebackCtrl', function ($scope, $rootScope, $q, $http, appNo
             deferred.reject(response);
         });
         return deferred.promise;
-
     };
-
 });

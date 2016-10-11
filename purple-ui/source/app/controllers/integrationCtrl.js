@@ -1,7 +1,7 @@
 /**
  * Integration Controller
  */
-rootApp.controller('integrationCtrl', function ($scope, $rootScope, $state, $window, appNotifyService, integrationService) {
+rootApp.controller('integrationCtrl', function ($scope, $rootScope, appNotifyService, integrationService) {
 
     $scope.isActive = function (route) {
         return route === $location.path();

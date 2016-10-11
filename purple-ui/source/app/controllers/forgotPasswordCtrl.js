@@ -1,7 +1,7 @@
 /*
  * Forgot password controller 
  */
-rootApp.controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, forgotPasswordService, appNotifyService) {
+angular.module('rootApp').controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, forgotPasswordService, appNotifyService) {
 
     $rootScope.bodyClass = 'body-standalone';
     $rootScope.feedbackClass = 'feedback-log';

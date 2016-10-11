@@ -1,5 +1,5 @@
 
-rootApp.controller('indexCtrl', function ($scope, $rootScope, $state, $window) {
+angular.module('rootApp').controller('indexCtrl', function ($scope, $rootScope, $state, $window) {
     window.scrollTo(0, 0);
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.feedbackClass = 'feedback-log';
@@ -14,7 +14,6 @@ rootApp.controller('indexCtrl', function ($scope, $rootScope, $state, $window) {
     $scope.navClass = 'big';
     angular.element($window).bind(
             "scroll", function () {
-                console.log(window.pageYOffset);
                 if (window.pageYOffset > 0) {
                     $scope.navClass = 'small';
                 } else {

@@ -1,7 +1,7 @@
-/**
- * Admin Controller
+/*
+ * User Controller
  */
-rootApp.controller('adminCtrl', function ($scope, $rootScope, adminService, dropdownListService, appNotifyService) {
+angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, userService, dropdownListService, appNotifyService) {
 
     $rootScope.navClass = 'nav navbar-nav';
     $rootScope.navstatusClass = 'right-nav-ct';
@@ -15,7 +15,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, adminService, drop
         if ($scope.admin === null) {
             appNotifyService.error('Please enter a valid email and username.');
         } else {
-            adminService.inviteUser($scope.admin).then(function (response) {
+            userService.inviteUser($scope.admin).then(function (response) {
 
                 if (response.success) {
                     appNotifyService.success('Activation link has been sent to your registered email.');
@@ -32,7 +32,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, adminService, drop
     // Used to re invite user who yet to joined
     $scope.resend = function (name, email) {
 
-        adminService.reInviteUser(name, email).then(function (response) {
+        userService.reInviteUser(name, email).then(function (response) {
             if (response.success) {
                 appNotifyService.success('You have been successfully invited to user : ' + name);
             }
@@ -44,7 +44,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, adminService, drop
         dropdownListService.getRole().then(function (response) {
             $scope.userRoles = response.data;
         });
-        adminService.getAllusers().then(function (response) {
+        userService.getAllusers().then(function (response) {
             if (response.success) {
                 if (response) {
                     $scope.userscount = response.data.length;
@@ -61,7 +61,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, adminService, drop
     };
 
     $scope.deleteUser = function (email, $index) {
-        adminService.deleteUser(email).then(function (response) {
+        userService.deleteUser(email).then(function (response) {
             if (response.success) {
                 appNotifyService.success('User has been sucessfully deleted.');
             }
@@ -74,7 +74,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, adminService, drop
     $scope.roleChange = function (userRole, user) {
 
         var userId = user.id;
-        adminService.updateUserRole(userId, userRole).then(function (response) {
+        userService.updateUserRole(userId, userRole).then(function (response) {
             if (response.success) {
                 appNotifyService.success('Users role has been sucessfully changed.');
             }
@@ -88,7 +88,7 @@ rootApp.controller('adminCtrl', function ($scope, $rootScope, adminService, drop
         var file = element.files[0];
         var fd = new FormData();
         fd.append('file', file);
-        adminService.bulkupload(fd).then(function (response) {
+        userService.bulkupload(fd).then(function (response) {
             var len = response.data.length;
             if (response.success) {
 

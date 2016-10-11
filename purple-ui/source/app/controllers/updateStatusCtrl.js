@@ -1,7 +1,7 @@
-/**
+/*
  *  Update Status Controller
  */
-rootApp.controller('updateStatusCtrl', function ($rootScope, $state, $q, $http, $window, $sessionStorage, appNotifyService) {
+angular.module('rootApp').controller('updateStatusCtrl', function ($rootScope, $state, $q, $http, $window, $sessionStorage, appNotifyService) {
 
     $window.sessionStorage.token = $state.params.token;
 
@@ -31,7 +31,7 @@ rootApp.controller('updateStatusCtrl', function ($rootScope, $state, $q, $http, 
             userRoles: $rootScope.userRole,
             timePreference: $rootScope.timePreference,
             emailNotificationState: $rootScope.switchState,
-            timeZone: $rootScope.timeZone,
+            timeZone: $rootScope.timeZone
         };
 
         $sessionStorage.userInfo = userInfo;

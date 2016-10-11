@@ -1,7 +1,7 @@
-/**
+/*
  * Setting controller
  */
-rootApp.controller('adminSettingsCtrl', function ($scope, $rootScope, dropdownListService, settingsService, appNotifyService) {
+angular.module('rootApp').controller('adminSettingsCtrl', function ($scope, $rootScope, dropdownListService, settingsService, appNotifyService) {
 
     $rootScope.navClass = 'nav navbar-nav';
     $rootScope.navstatusClass = 'right-nav-ct';

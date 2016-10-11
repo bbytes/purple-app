@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bbytes.purple.domain.TimePeriod;
+import com.bbytes.purple.enums.TimePeriod;
+import com.bbytes.purple.enums.UserRole;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
@@ -44,12 +45,13 @@ public class DropdownListController {
 	@RequestMapping(value = "/roles", method = RequestMethod.GET)
 	public RestResponse getRoleDropdownList() {
 
-		List<String> userRole = new LinkedList<String>();
-		userRole.add("ADMIN");
-		userRole.add("MANAGER");
-		userRole.add("NORMAL");
+		Map<String, String> userRoleMap = new LinkedHashMap<String, String>();
 
-		List<BaseDTO> roles = dataModelToDTOConversionService.convertRolesToEntityDTOList(userRole);
+		for (UserRole role : UserRole.values()) {
+			userRoleMap.put(role.name(), role.getDisplayName());
+		}
+
+		List<BaseDTO> roles = dataModelToDTOConversionService.convertRolesToEntityDTOList(userRoleMap);
 
 		logger.debug("Getting all users role successfully");
 		RestResponse rolesResponse = new RestResponse(RestResponse.SUCCESS, roles, SuccessHandler.DROPDOWNLIST_SUCCESS);

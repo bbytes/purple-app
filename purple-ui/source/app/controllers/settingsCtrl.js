@@ -1,7 +1,7 @@
-/**
+/*
  * User setting controller
  */
-rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, $sessionStorage, settingsService, appNotifyService, cfpLoadingBar) {
+angular.module('rootApp').controller('settingsCtrl', function ($scope, $rootScope, $sessionStorage, settingsService, appNotifyService, cfpLoadingBar) {
 
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.navClass = 'nav-control';
@@ -16,7 +16,7 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, $sessio
         var oldPassword = user.oldPassword;
         var newPassword = user.newPassword;
         var confirmpassword = $scope.confirmPassword;
-        if (confirmpassword == newPassword && oldPassword != null) {
+        if (confirmpassword === newPassword && oldPassword !== null) {
 
             settingsService.updatePassword($scope.user).then(function (response) {
                 if (response.success) {
@@ -27,7 +27,7 @@ rootApp.controller('settingsCtrl', function ($scope, $rootScope, $state, $sessio
             }, function (error) {
                 appNotifyService.error('Error while changing password');
             });
-        } else if (newPassword != confirmpassword) {
+        } else if (newPassword !== confirmpassword) {
             appNotifyService.error('Password mismatch.');
         } else {
             appNotifyService.error('Please enter your current password');

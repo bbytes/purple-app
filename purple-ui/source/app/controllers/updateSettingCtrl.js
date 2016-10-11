@@ -1,7 +1,7 @@
-/**
+/*
  *  Update Status Controller
  */
-rootApp.controller('updateSettingCtrl', function ($rootScope, $state, $q, $http, $window, $sessionStorage, appNotifyService) {
+angular.module('rootApp').controller('updateSettingCtrl', function ($rootScope, $state, $q, $http, $window, $sessionStorage, appNotifyService) {
 
     $window.sessionStorage.token = $state.params.token;
 

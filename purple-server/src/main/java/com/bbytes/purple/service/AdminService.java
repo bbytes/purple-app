@@ -211,6 +211,7 @@ public class AdminService {
 						ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				project = projectService.save(project);
+				// this is to add reference of project in user object
 				for (User user : users) {
 					List<Project> projectList = new ArrayList<Project>();
 					List<Project> list = new ArrayList<Project>();
@@ -240,11 +241,17 @@ public class AdminService {
 		}
 	}
 
-	public List<Project> getAllProjects() throws PurpleException {
+	public List<Project> getAllProjects(User user) throws PurpleException {
 
 		List<Project> allProjects = new ArrayList<Project>();
 		try {
-			allProjects = projectService.findAll();
+			if (user != null) {
+				if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE))
+					allProjects = projectService.findAll();
+				else if (user.getUserRole().equals(UserRole.MANAGER_USER_ROLE))
+					allProjects = projectService.findProjectByProjectOwner(user);
+			}
+
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
 		}

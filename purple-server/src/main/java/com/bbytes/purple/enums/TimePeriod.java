@@ -1,4 +1,4 @@
-package com.bbytes.purple.domain;
+package com.bbytes.purple.enums;
 
 public enum TimePeriod {
 

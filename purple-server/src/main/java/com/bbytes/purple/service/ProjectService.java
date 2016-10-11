@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.ProjectRepository;
 import com.bbytes.purple.utils.ErrorHandler;
@@ -16,6 +17,9 @@ import com.bbytes.purple.utils.ErrorHandler;
 public class ProjectService extends AbstractService<Project, String> {
 
 	private ProjectRepository projectRepository;
+
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	public ProjectService(ProjectRepository projectRepository) {
@@ -33,6 +37,10 @@ public class ProjectService extends AbstractService<Project, String> {
 
 	public List<Project> findProjectByUser(User user) {
 		return projectRepository.findByUser(user);
+	}
+
+	public List<Project> findProjectByProjectOwner(User user) {
+		return projectRepository.findByProjectOwner(user);
 	}
 
 	public boolean projectNameExist(String name) {
@@ -91,13 +99,34 @@ public class ProjectService extends AbstractService<Project, String> {
 	public List<User> getAllUsers(String projectId) throws PurpleException {
 
 		List<User> users = new ArrayList<User>();
-			try {
-				users = findByProjectId(projectId).getUser();
-			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
-			}
+		try {
+			users = findByProjectId(projectId).getUser();
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
+		}
 		return users;
 	}
-	
-	
+
+	public List<User> getUsersToAssignProject(String projectId) throws PurpleException {
+
+		List<User> users = new ArrayList<User>();
+		try {
+			List<UserRole> userRoleList = new ArrayList<UserRole>();
+			userRoleList.add(UserRole.ADMIN_USER_ROLE);
+			userRoleList.add(UserRole.MANAGER_USER_ROLE);
+
+			// getting project owner
+			User projectOwner = findByProjectId(projectId).getProjectOwner();
+
+			// getting all user who has role "ADMIN" and "Manager"
+			users = userService.getUsersByRole(userRoleList);
+
+			// final user list excluding current project owner
+			users.remove(projectOwner);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
+		}
+		return users;
+	}
+
 }

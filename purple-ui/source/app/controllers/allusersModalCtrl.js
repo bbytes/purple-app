@@ -1,7 +1,7 @@
 /*
  * All User Modal Controller
  */
-rootApp.controller('allusersModalCtrl', function ($scope, options, $uibModalInstance, $uibModal) {
+angular.module('rootApp').controller('allusersModalCtrl', function ($scope, options, $uibModalInstance, $uibModal) {
 
     $scope.selection = [];
     $scope.title = options.title;
@@ -22,7 +22,7 @@ rootApp.controller('allusersModalCtrl', function ($scope, options, $uibModalInst
     };
     $scope.ok = function () {
         $uibModalInstance.close($scope.selection);
-    }
+    };
 
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');

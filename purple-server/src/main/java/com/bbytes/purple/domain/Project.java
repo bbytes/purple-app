@@ -31,6 +31,10 @@ public class Project {
 	@Indexed(unique = true)
 	private String projectName;
 
+	@Field("project_owner")
+	@DBRef
+	private User projectOwner;
+
 	@DBRef
 	private Organization organization;
 

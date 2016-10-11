@@ -45,8 +45,12 @@ public class UserService extends AbstractService<User, String> {
 		return userRepository.findOne(id);
 	}
 
-	public List<User> getUserByRoleName(UserRole role) {
+	public List<User> getUsersByRole(UserRole role) {
 		return userRepository.findByUserRole(role);
+	}
+	
+	public List<User> getUsersByRole(List<UserRole> roleList) {
+		return userRepository.findByUserRoleIn(roleList);
 	}
 
 	public User getUserByEmail(String email) {

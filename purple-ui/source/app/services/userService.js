@@ -1,7 +1,7 @@
-/**
- * Admin Service
+/*
+ * User Service
  */
-rootApp.service('adminService', function ($rootScope, $http, $q, $window) {
+angular.module('rootApp').service('userService', function ($rootScope, $http, $q) {
 
     this.inviteUser = function (admin) {
 
@@ -12,7 +12,7 @@ rootApp.service('adminService', function ($rootScope, $http, $q, $window) {
             url: $rootScope.baseUrl + 'api/v1/admin/user/add',
             data: admin,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
 
         }).success(function (response, status, headers, config) {
@@ -36,7 +36,7 @@ rootApp.service('adminService', function ($rootScope, $http, $q, $window) {
             url: $rootScope.baseUrl + 'api/v1/admin/user/reinvite',
             params: {"name": name, "email": email},
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
 
         }).success(function (response, status, headers, config) {
@@ -73,13 +73,14 @@ rootApp.service('adminService', function ($rootScope, $http, $q, $window) {
         return deferred.promise;
     };
 
+    // This method is used to update user role
     this.updateUserRole = function (userId, role) {
 
         var deferred = $q.defer();
 
         $http({
-            method: 'POST',
-            url: $rootScope.baseUrl + 'api/v1/admin/user/role',
+            method: 'PUT',
+            url: $rootScope.baseUrl + 'api/v1/user/role',
             params: {"userId": userId, "role": role},
             headers: {
                 'Content-Type': 'application/json'

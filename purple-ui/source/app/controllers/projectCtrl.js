@@ -1,7 +1,7 @@
-/**
- * Project controller on project page
+/*
+ * Project controller
  */
-rootApp.controller('projectCtrl', function ($scope, $rootScope, projectService, appNotifyService, $uibModal) {
+angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope, projectService, appNotifyService, $uibModal) {
 
     $scope.isActive = function (route) {
         return route === $location.path();
@@ -106,6 +106,44 @@ rootApp.controller('projectCtrl', function ($scope, $rootScope, projectService, 
                         $scope.newList.push(user);
                     }
                 });
+            });
+        }
+    };
+
+    // Calling method to open the assign project modal for assigning project to user.
+    $scope.openAssignProjectModal = function (projectId) {
+
+        projectService.getUsersToAssignProject(projectId).then(function (response) {
+            if (response.success) {
+                if (response) {
+                    $scope.userscount = response.data.length;
+                }
+                $scope.joinedCount = response.data.joined_count;
+                $scope.pendingCount = response.data.pending_count;
+                $scope.allusers = response.data.gridData;
+                showModal();
+            }
+        });
+
+        function showModal() {
+            var uibModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/partials/assignProject-modal.html',
+                controller: 'assignProjectModalCtrl',
+                backdrop: 'static',
+                size: 'md',
+                resolve: {
+                    options: function () {
+                        return {
+                            "title": 'Assign Manager/Admin to Project',
+                            "data": $scope.allusers
+                        };
+                    }
+                }
+            });
+
+            uibModalInstance.result.then(function (selection) {
+
             });
         }
     };

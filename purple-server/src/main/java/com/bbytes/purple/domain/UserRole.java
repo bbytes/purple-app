@@ -22,5 +22,8 @@ public class UserRole {
 	}
 
 	public static UserRole NORMAL_USER_ROLE = new UserRole("NORMAL");
+	
 	public static UserRole ADMIN_USER_ROLE = new UserRole("ADMIN");
+	
+	public static UserRole MANAGER_USER_ROLE = new UserRole("MANAGER");
 }

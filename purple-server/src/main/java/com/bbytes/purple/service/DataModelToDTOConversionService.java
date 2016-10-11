@@ -53,10 +53,33 @@ public class DataModelToDTOConversionService {
 		return baseDTO;
 	}
 
+	public BaseDTO convertToBaseDTOidValue(String value, String id) {
+		BaseDTO baseDTO = new BaseDTO();
+		baseDTO.setId(id);
+		baseDTO.setValue(value);
+		return baseDTO;
+	}
+
 	public List<BaseDTO> convertRolesToEntityDTOList(List<String> values) {
 		List<BaseDTO> baseDTOList = new ArrayList<BaseDTO>();
 		for (String value : values) {
 			baseDTOList.add(convertToBaseDTO(value));
+		}
+		return baseDTOList;
+	}
+
+	/**
+	 * <code>convertRolesToEntityDTOList</code> method returns id and value in
+	 * list.
+	 * 
+	 * @param mapValues
+	 * @return
+	 */
+	public List<BaseDTO> convertRolesToEntityDTOList(Map<String, String> mapValues) {
+		List<BaseDTO> baseDTOList = new ArrayList<BaseDTO>();
+
+		for (Map.Entry<String, String> entry : mapValues.entrySet()) {
+			baseDTOList.add(convertToBaseDTOidValue(entry.getValue(), entry.getKey()));
 		}
 		return baseDTOList;
 	}
@@ -97,6 +120,7 @@ public class DataModelToDTOConversionService {
 		projectDTO.setProjectName(project.getProjectName());
 		projectDTO.setUserList(userDTOList);
 		projectDTO.setUsersCount(project.getUser().size());
+		projectDTO.setProjectOwner(project.getProjectOwner().getName());
 		return projectDTO;
 	}
 

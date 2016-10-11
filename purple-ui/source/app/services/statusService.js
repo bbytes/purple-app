@@ -13,7 +13,7 @@ rootApp.service('statusService', function ($rootScope, $http, $q, $window, cfpLo
             url: $rootScope.baseUrl + 'api/v1/status/add',
             data: status,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
 
         }).success(function (response, status, headers, config) {

@@ -1,6 +1,6 @@
 
 
-rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $location, cfpLoadingBar, $fancyModal) {
+angular.module('rootApp').controller('navCtrl', ['$scope', '$location', function ($scope, $location, cfpLoadingBar, $fancyModal) {
 
         $scope.isActive = function (viewLocation) {
             var active = (viewLocation === $location.path());
@@ -28,7 +28,6 @@ rootApp.controller('navCtrl', ['$scope', '$location', function ($scope, $locatio
             modalInstance.result.then(function (selectedItem) {
                 $scope.selected = selectedItem;
             }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
             });
         };
 

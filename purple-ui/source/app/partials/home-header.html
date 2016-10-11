@@ -15,7 +15,7 @@
                     </div>
                     <div id="navbar" class="navbar-collapse collapse">
                         <ul class="{{ navClass}} nav-left" ng-controller="navCtrl">
-                            <li><a href="user-mgr" ng-class="{ active: isActive('/user-mgr') }">users</a></li>
+                            <li><a href="user-manager" ng-class="{ active: isActive('/user-manager') }">users</a></li>
                             <li><a href="projects" ng-class="{ active: isActive('/projects') }">projects</a></li>
                             <li><a href="integration" ng-class="{ active: isActive('/integration') }">integration</a></li>
                             <li ng-show="userRole == 'ADMIN'"><a href="admin-settings" ng-class="{ active: isActive('/admin-settings') }">admin settings</a></li>
@@ -49,12 +49,12 @@
                                     <li class="active-user"><a href="#"><i class="fa fa-user" aria-hidden="true"></i> {{userName}}</a></li>
                                     <li class="nav-divider"></li>
                                     <li class="dropdown-header">Settings</li>
-                                    <li><a href="user-mgr"><i class="fa fa-user-plus" aria-hidden="true"></i>Users</a></li>
+                                    <li><a href="user-manager"><i class="fa fa-user-plus" aria-hidden="true"></i>Users</a></li>
                                     <li><a href="projects"><i class="fa fa-server" aria-hidden="true"></i>Projects</a></li>
                                     <li><a href="integration"><i class="fa fa-cogs" aria-hidden="true"></i>Integration</a></li>
                                     <li><a href="admin-settings"><i class="fa fa-cog" aria-hidden="true"></i> Admin</a></li>
                                     <li><a href="settings"><i class="fa fa-users" aria-hidden="true"></i>Profile</a></li>
-                                   <!-- <li><a href fancy-modal template-url="app/partials/feedback.html"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a></li> -->
+                                    <!-- <li><a href fancy-modal template-url="app/partials/feedback.html"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a></li> -->
                                     <li class="nav-divider"></li>
                                     <li><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a></li>
 
@@ -65,11 +65,11 @@
                                     <li class="active-user"><a href="#"><i class="fa fa-user" aria-hidden="true"></i> {{userName}}</a>
                                     <li class="nav-divider"></li>
                                     <li class="dropdown-header">Settings</li>
-                                    <li><a href="user-mgr"><i class="fa fa-user-plus" aria-hidden="true"></i>Users</a></li>
+                                    <li><a href="user-manager"><i class="fa fa-user-plus" aria-hidden="true"></i>Users</a></li>
                                     <li><a href="projects"><i class="fa fa-server" aria-hidden="true"></i>Projects</a></li>
                                     <li><a href="integration"><i class="fa fa-cogs" aria-hidden="true"></i>Integration</a></li>
                                     <li><a href="settings"><i class="fa fa-users" aria-hidden="true"></i>Profile</a></li>
-                                   <!-- <li><a href fancy-modal template-url="app/partials/feedback.html"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a></li> -->
+                                    <!-- <li><a href fancy-modal template-url="app/partials/feedback.html"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a></li> -->
                                     <li class="nav-divider"></li>
                                     <li><a href="#" ng-controller="logoutCtrl"
                                            ng-click="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a></li>
@@ -81,7 +81,7 @@
                                     <li class="active-user"><a href="#"><i class="fa fa-user" aria-hidden="true"></i> {{userName}}</a>
                                     <li class="nav-divider"></li>
                                     <li><a href="settings"><i class="fa fa-users" aria-hidden="true"></i>Profile</a></li>
-                                   <!-- <li><a href fancy-modal template-url="app/partials/feedback.html"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a></li>	-->					
+                                    <!-- <li><a href fancy-modal template-url="app/partials/feedback.html"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a></li>	-->					
                                     <li class="nav-divider"></li>
                                     <!-- <li><a href="settings"><i class="fa fa-cog" aria-hidden="true"></i> SETTINGS</a></li> -->
                                     <li><a href="#" ng-controller="logoutCtrl" ng-click="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a></li>

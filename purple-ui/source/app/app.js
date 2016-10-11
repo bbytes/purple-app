@@ -32,9 +32,9 @@ var rootApp = angular.module('rootApp',
             'angular-timezone-selector',
             'vAccordion',
             'duScroll',
-			'angular.chosen',
-			'ui.bootstrap.datetimepicker',
-			'hm.readmore'
+            'angular.chosen',
+            'ui.bootstrap.datetimepicker',
+            'hm.readmore'
         ]);
 
 // avoid the spacing while copy paste in text angular 
@@ -325,47 +325,25 @@ rootApp.config([
                 authorization: 'user settings',
                 redirectTo: 'login'
             }
-        }).state('user-mgr', {
-            url: '/user-mgr',
+        }).state('user-manager', {
+            url: '/user-manager',
             views: {
                 '': {
                     templateUrl: 'app/partials/home.html'
                 },
-                'header@user-mgr': {
+                'header@user-manager': {
                     templateUrl: 'app/partials/home-header.html'
                 },
-                'main@user-mgr': {
-                    templateUrl: 'app/partials/user-mgr.html',
-                    controller: 'adminCtrl'
+                'main@user-manager': {
+                    templateUrl: 'app/partials/user-manager.html',
+                    controller: 'userCtrl'
                 },
-                'footer@user-mgr': {
+                'footer@user-manager': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
             },
             data: {
                 authorization: 'User Manager',
-                redirectTo: 'login'
-            }
-        }).state('admin', {
-            url: '/admin',
-            controller: 'adminCtrl',
-            redirectTo: 'admin.users',
-            views: {
-                '': {
-                    templateUrl: 'app/partials/home.html'
-                },
-                'header@admin': {
-                    templateUrl: 'app/partials/home-header.html'
-                },
-                'main@admin': {
-                    templateUrl: 'app/partials/admin-main.html'
-                },
-                'footer@admin': {
-                    templateUrl: 'app/partials/home-footer.html'
-                }
-            },
-            data: {
-                authorization: 'admin',
                 redirectTo: 'login'
             }
         }).state('activate', {

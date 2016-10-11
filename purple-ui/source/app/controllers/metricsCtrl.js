@@ -10,7 +10,6 @@ rootApp.controller('metricsCtrl', function ($scope, $rootScope, $state, $mdSiden
     $rootScope.settingClass = 'setting-nav';
 
     $scope.onClick = function (points, evt) {
-        console.log(points, evt);
     };
 
     $scope.loadTimePeriod = function () {
