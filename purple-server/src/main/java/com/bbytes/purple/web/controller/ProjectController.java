@@ -133,4 +133,46 @@ public class ProjectController {
 
 		return projectReponse;
 	}
+
+	/**
+	 * The delete project method is used to delete particular project from
+	 * tenant
+	 * 
+	 * @param projectId
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/project/delete/{projectid}", method = RequestMethod.DELETE)
+	public RestResponse deleteProject(@PathVariable("projectid") String projectId) throws PurpleException {
+
+		projectService.deleteProject(projectId);
+
+		logger.debug("Project with Id  '" + projectId + "' is deleted successfully");
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, SuccessHandler.DELETE_PROJECT_SUCCESS);
+
+		return projectReponse;
+	}
+
+	/**
+	 * The get all projects method is used to fetched all projects from tenant
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/project", method = RequestMethod.GET)
+	public RestResponse getAllProject() throws PurpleException {
+
+		// get loggedIn user object
+		User user = userService.getLoggedInUser();
+
+		List<Project> projects = projectService.getAllProjects(user);
+
+		Map<String, Object> projectsMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndProjectCount(projects);
+
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectsMap,
+				SuccessHandler.GET_PROJECT_SUCCESS);
+
+		return projectReponse;
+	}
 }

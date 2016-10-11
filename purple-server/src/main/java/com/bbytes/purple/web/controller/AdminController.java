@@ -333,49 +333,6 @@ public class AdminController {
 		return projectReponse;
 	}
 
-	/**
-	 * The delete project method is used to delete particular project from
-	 * tenant
-	 * 
-	 * @param projectId
-	 * @return
-	 * @throws PurpleException
-	 */
-	@RequestMapping(value = "/api/v1/admin/project/delete/{projectid}", method = RequestMethod.DELETE)
-	public RestResponse deleteProject(@PathVariable("projectid") String projectId) throws PurpleException {
-
-		final String DELETE_PROJECT_SUCCESS_MSG = "Successfully deleted project";
-		adminService.deleteProject(projectId);
-
-		logger.debug("Project with Id  '" + projectId + "' are deleted successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, DELETE_PROJECT_SUCCESS_MSG,
-				SuccessHandler.DELETE_PROJECT_SUCCESS);
-
-		return projectReponse;
-	}
-
-	/**
-	 * The get all projects method is used to fetched all projects from tenant
-	 * 
-	 * @return
-	 * @throws PurpleException
-	 */
-	@RequestMapping(value = "/api/v1/project", method = RequestMethod.GET)
-	public RestResponse getAllProject() throws PurpleException {
-
-		// get logged in user object
-		User user = userService.getLoggedInUser();
-		
-		List<Project> projects = adminService.getAllProjects(user);
-		Map<String, Object> projectsMap = dataModelToDTOConversionService
-				.getResponseMapWithGridDataAndProjectCount(projects);
-		logger.debug("Projects are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectsMap,
-				SuccessHandler.GET_PROJECT_SUCCESS);
-
-		return projectReponse;
-	}
-
 	@RequestMapping(value = "/api/v1/admin/project/{projectid}", method = RequestMethod.GET)
 	public RestResponse getProject(@PathVariable("projectid") String projectId) throws PurpleException {
 

@@ -32,7 +32,7 @@ public class SuccessHandler {
 
 	public static final String ADD_PROJECT_SUCCESS = "add_project_success";
 
-	public static final String DELETE_PROJECT_SUCCESS = "delete_project_success";
+	public static final String DELETE_PROJECT_SUCCESS = "Successfully deleted project";
 
 	public static final String GET_PROJECT_SUCCESS = "get_projects_success";
 

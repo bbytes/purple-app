@@ -52,10 +52,10 @@ rootApp.service('projectService', function ($rootScope, $http, $q) {
 
         $http({
             method: 'DELETE',
-            url: $rootScope.baseUrl + 'api/v1/admin/project/delete/' + id,
+            url: $rootScope.baseUrl + 'api/v1/project/delete/' + id,
             //data : admin,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
 
         }).success(function (response, status, headers, config) {

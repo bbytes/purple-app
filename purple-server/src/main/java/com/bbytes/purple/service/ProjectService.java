@@ -136,4 +136,46 @@ public class ProjectService extends AbstractService<Project, String> {
 		return users;
 	}
 
+	/**
+	 * Method is used to delete project
+	 * 
+	 * @param projectId
+	 * @throws PurpleException
+	 */
+	public void deleteProject(String projectId) throws PurpleException {
+
+		if (!projectIdExist(projectId))
+			throw new PurpleException("Error while deleting project", ErrorHandler.PROJECT_NOT_FOUND);
+		try {
+			Project project = findByProjectId(projectId);
+			projectRepository.delete(project);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_PROJECT_FAILED);
+		}
+	}
+
+	/**
+	 * Return all user according to user role
+	 * 
+	 * @param user
+	 * @return
+	 * @throws PurpleException
+	 */
+	public List<Project> getAllProjects(User user) throws PurpleException {
+
+		List<Project> allProjects = new ArrayList<Project>();
+		try {
+			if (user != null) {
+				if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE))
+					allProjects = projectRepository.findAll();
+				else if (user.getUserRole().equals(UserRole.MANAGER_USER_ROLE))
+					allProjects = findProjectByProjectOwner(user);
+			}
+
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
+		}
+		return allProjects;
+	}
+
 }

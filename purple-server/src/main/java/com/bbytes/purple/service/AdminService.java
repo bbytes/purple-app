@@ -229,35 +229,6 @@ public class AdminService {
 		return project;
 	}
 
-	public void deleteProject(String projectId) throws PurpleException {
-
-		if (!projectService.projectIdExist(projectId))
-			throw new PurpleException("Error while deleting project", ErrorHandler.PROJECT_NOT_FOUND);
-		try {
-			Project project = projectService.findByProjectId(projectId);
-			projectService.delete(project);
-		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_PROJECT_FAILED);
-		}
-	}
-
-	public List<Project> getAllProjects(User user) throws PurpleException {
-
-		List<Project> allProjects = new ArrayList<Project>();
-		try {
-			if (user != null) {
-				if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE))
-					allProjects = projectService.findAll();
-				else if (user.getUserRole().equals(UserRole.MANAGER_USER_ROLE))
-					allProjects = projectService.findProjectByProjectOwner(user);
-			}
-
-		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
-		}
-		return allProjects;
-	}
-
 	public Project getProject(String projectId) throws PurpleException {
 
 		Project project = null;
