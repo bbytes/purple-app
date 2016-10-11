@@ -175,4 +175,17 @@ public class ProjectController {
 
 		return projectReponse;
 	}
+
+	@RequestMapping(value = "/api/v1/project/{projectid}", method = RequestMethod.GET)
+	public RestResponse getProject(@PathVariable("projectid") String projectId) throws PurpleException {
+
+		Project project = projectService.getProject(projectId);
+		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
+
+		logger.debug("Project with Id  '" + projectId + "' is getting successfully");
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap,
+				SuccessHandler.GET_PROJECT_SUCCESS);
+
+		return projectReponse;
+	}
 }

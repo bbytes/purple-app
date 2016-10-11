@@ -333,19 +333,6 @@ public class AdminController {
 		return projectReponse;
 	}
 
-	@RequestMapping(value = "/api/v1/admin/project/{projectid}", method = RequestMethod.GET)
-	public RestResponse getProject(@PathVariable("projectid") String projectId) throws PurpleException {
-
-		Project project = adminService.getProject(projectId);
-		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
-
-		logger.debug("Projects are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap,
-				SuccessHandler.GET_PROJECT_SUCCESS);
-
-		return projectReponse;
-	}
-
 	/**
 	 * The update project method is used to update project into tenant
 	 * 

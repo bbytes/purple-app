@@ -79,7 +79,7 @@ rootApp.service('projectService', function ($rootScope, $http, $q) {
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/admin/project/' + id,
+            url: $rootScope.baseUrl + 'api/v1/project/' + id,
             //data : admin,
             headers: {
                 'Content-Type': 'application/json'

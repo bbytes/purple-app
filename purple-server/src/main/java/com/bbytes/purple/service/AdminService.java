@@ -229,19 +229,6 @@ public class AdminService {
 		return project;
 	}
 
-	public Project getProject(String projectId) throws PurpleException {
-
-		Project project = null;
-		try {
-			project = projectService.findByProjectId(projectId);
-		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
-		}
-		if (project == null)
-			throw new PurpleException("Error while getting project", ErrorHandler.PROJECT_NOT_FOUND);
-		return project;
-	}
-
 	public Project updateProject(String projectId, Project project) throws PurpleException {
 
 		Project newProject = null;

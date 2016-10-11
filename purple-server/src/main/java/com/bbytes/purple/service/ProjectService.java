@@ -178,4 +178,17 @@ public class ProjectService extends AbstractService<Project, String> {
 		return allProjects;
 	}
 
+	public Project getProject(String projectId) throws PurpleException {
+
+		Project project = null;
+		try {
+			project = findByProjectId(projectId);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
+		}
+		if (project == null)
+			throw new PurpleException("Error while getting project", ErrorHandler.PROJECT_NOT_FOUND);
+		return project;
+	}
+
 }
