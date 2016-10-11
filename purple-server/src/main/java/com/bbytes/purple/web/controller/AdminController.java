@@ -23,17 +23,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Organization;
-import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
-import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.PasswordHashService;
-import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.StringUtils;
@@ -64,10 +61,7 @@ public class AdminController {
 
 	@Autowired
 	private PasswordHashService passwordHashService;
-
-	@Autowired
-	private ProjectService projectService;
-
+	
 	@Autowired
 	private EmailService emailService;
 
@@ -76,9 +70,6 @@ public class AdminController {
 
 	@Value("${email.invite.subject}")
 	private String inviteSubject;
-
-	@Value("${email.invite.project.subject}")
-	private String projectInviteSubject;
 
 	/**
 	 * The add user method is used to add users into tenant
@@ -282,116 +273,4 @@ public class AdminController {
 		return inviteReponse;
 	}
 
-	/**
-	 * The create project method is used to add project in to tenant
-	 * 
-	 * @param projectDTO
-	 * @return
-	 * @throws PurpleException
-	 */
-	@RequestMapping(value = "/api/v1/project/create", method = RequestMethod.POST)
-	public RestResponse createProject(@RequestBody ProjectDTO projectDTO) throws PurpleException {
-
-		final String template = GlobalConstants.EMAIL_INVITE_PROJECT_TEMPLATE;
-		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
-
-		// we assume angular layer will do empty checks for project
-		User user = userService.getLoggedInUser();
-		Organization org = user.getOrganization();
-		Project addProject = new Project(projectDTO.getProjectName());
-		addProject.setOrganization(org);
-		addProject.setProjectOwner(user);
-		List<User> usersTobeAdded = new ArrayList<User>();
-		for (String i : projectDTO.getUsers()) {
-			usersTobeAdded.add(userService.getUserByEmail(i));
-		}
-		addProject.setUser(usersTobeAdded);
-		Project project = adminService.createProject(addProject, usersTobeAdded);
-
-		String postDate = dateFormat.format(new Date());
-		long currentDate = new Date().getTime();
-
-		for (User addedUser : usersTobeAdded) {
-			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(addedUser.getEmail(), 168);
-			Map<String, Object> emailBody = new HashMap<>();
-			List<String> emailList = new ArrayList<String>();
-			emailList.add(addedUser.getEmail());
-			emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
-			emailBody.put(GlobalConstants.USER_NAME, addedUser.getName());
-			emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-			emailBody.put(GlobalConstants.ACTIVATION_LINK,
-					baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
-
-			emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
-		}
-		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
-
-		logger.debug("User with email  '" + projectDTO.getProjectName() + "' are added successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap,
-				SuccessHandler.ADD_PROJECT_SUCCESS);
-
-		return projectReponse;
-	}
-
-	/**
-	 * The update project method is used to update project into tenant
-	 * 
-	 * @param projectId
-	 * @param projectDTO
-	 * @return
-	 * @throws PurpleException
-	 */
-	@RequestMapping(value = "/api/v1/admin/project/update/{projectid}", method = RequestMethod.PUT)
-	public RestResponse updateProject(@PathVariable("projectid") String projectId, @RequestBody ProjectDTO projectDTO)
-			throws PurpleException {
-
-		final String template = GlobalConstants.EMAIL_INVITE_PROJECT_TEMPLATE;
-		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
-
-		// we assume angular layer will do null checks for project object
-		User loggedInuser = userService.getLoggedInUser();
-		Organization org = loggedInuser.getOrganization();
-		Project updateProject = new Project(projectDTO.getProjectName());
-		updateProject.setOrganization(org);
-		List<User> usersTobeAdded = new ArrayList<User>();
-		for (String i : projectDTO.getUsers()) {
-			usersTobeAdded.add(userService.getUserByEmail(i));
-		}
-		List<User> usersFromProject = projectService.findByProjectId(projectId).getUser();
-
-		List<User> updateUserList = new LinkedList<User>();
-		for (User user : usersTobeAdded) {
-
-			if (!usersFromProject.contains(user))
-				updateUserList.add(user);
-		}
-		updateProject.setUser(usersTobeAdded);
-		Project project = adminService.updateProject(projectId, updateProject);
-
-		String postDate = dateFormat.format(new Date());
-		long currentDate = new Date().getTime();
-
-		// Here get newly added user to project.
-		for (User sendMailtoUpdatedUser : updateUserList) {
-			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(sendMailtoUpdatedUser.getEmail(),
-					168);
-			List<String> emailList = new LinkedList<String>();
-			emailList.add(sendMailtoUpdatedUser.getEmail());
-			Map<String, Object> emailBody = new HashMap<>();
-			emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
-			emailBody.put(GlobalConstants.USER_NAME, sendMailtoUpdatedUser.getName());
-			emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-			emailBody.put(GlobalConstants.ACTIVATION_LINK,
-					baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
-
-			emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
-		}
-		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
-
-		logger.debug("Projects are updated successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap,
-				SuccessHandler.UPDATE_PROJECT_SUCCESS);
-
-		return projectReponse;
-	}
 }

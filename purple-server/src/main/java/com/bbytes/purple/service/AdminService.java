@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bbytes.purple.domain.Organization;
-import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
@@ -203,66 +202,4 @@ public class AdminService {
 		return user;
 	}
 
-	public Project createProject(Project project, List<User> users) throws PurpleException {
-
-		if (project.getProjectName() != null) {
-			if (projectService.projectNameExist(project.getProjectName()))
-				throw new PurpleException("Project with given name '" + project.getProjectName() + "' already exist",
-						ErrorHandler.PROJECT_NOT_FOUND);
-			try {
-				project = projectService.save(project);
-				// this is to add reference of project in user object
-				for (User user : users) {
-					List<Project> projectList = new ArrayList<Project>();
-					List<Project> list = new ArrayList<Project>();
-					list = user.getProjects();
-					projectList.add(project);
-					projectList.addAll(list);
-					user.setProjects(projectList);
-					userService.save(user);
-				}
-			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_PROJECT_FAILED);
-			}
-		} else
-			throw new PurpleException("Can not add empty project", ErrorHandler.ADD_PROJECT_FAILED);
-		return project;
-	}
-
-	public Project updateProject(String projectId, Project project) throws PurpleException {
-
-		Project newProject = null;
-		if (project != null) {
-			if (!projectService.projectIdExist(projectId))
-				throw new PurpleException("Error while updating project", ErrorHandler.PROJECT_NOT_FOUND);
-			try {
-				Project updateProject = projectService.findByProjectId(projectId);
-				for (User userTobeRemoved : updateProject.getUser()) {
-					userTobeRemoved.getProjects().remove(updateProject);
-					userService.save(userTobeRemoved);
-				}
-				updateProject.setUser(project.getUser());
-				updateProject.setProjectName(project.getProjectName());
-				newProject = projectService.save(updateProject);
-				for (User user : updateProject.getUser()) {
-					List<Project> projectList = new ArrayList<Project>();
-					List<Project> list = user.getProjects();
-					boolean flag = true;
-					for (Project getProject : list) {
-						if (getProject.getProjectId().equals(newProject.getProjectId()))
-							flag = false;
-					}
-					if (flag)
-						projectList.add(newProject);
-					list.addAll(projectList);
-					user.setProjects(list);
-					userService.save(user);
-				}
-			} catch (Throwable e) {
-				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_PROJECT_FAILED);
-			}
-		} else
-			throw new PurpleException("Can not find empty project", ErrorHandler.PROJECT_NOT_FOUND);
-		return newProject;
-	}
 }
