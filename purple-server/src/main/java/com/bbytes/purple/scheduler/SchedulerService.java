@@ -34,7 +34,6 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.TenantResolverRepository;
-import com.bbytes.purple.service.AdminService;
 import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.NotificationService;
@@ -58,9 +57,6 @@ public class SchedulerService {
 
 	@Autowired
 	protected TokenAuthenticationProvider tokenAuthenticationProvider;
-
-	@Autowired
-	private AdminService adminService;
 
 	@Autowired
 	private ProjectService projectService;
@@ -116,7 +112,7 @@ public class SchedulerService {
 		for (String org : orgId) {
 			TenancyContextHolder.setTenant(org);
 			List<Project> projectList = projectService.findAll();
-			List<User> allUsers = adminService.getAllUsers();
+			List<User> allUsers = userService.getAllUsers();
 			User managerUser = null;
 			boolean flag = true;
 			for (User user : allUsers) {
@@ -125,16 +121,16 @@ public class SchedulerService {
 					flag = false;
 					break;
 				}
-				
+
 			}
 			if (flag) {
 				for (User user : allUsers) {
 
-					if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE)){
+					if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE)) {
 						managerUser = user;
 						break;
 					}
-					
+
 				}
 			}
 			for (Project project : projectList) {
@@ -168,7 +164,7 @@ public class SchedulerService {
 		}
 		for (String org : orgId) {
 			TenancyContextHolder.setTenant(org);
-			List<User> allUsers = adminService.getAllUsers();
+			List<User> allUsers = userService.getAllUsers();
 			for (User user : allUsers) {
 
 				if (user.getTimePreference() == null) {
@@ -253,7 +249,7 @@ public class SchedulerService {
 		}
 		for (String org : orgId) {
 			TenancyContextHolder.setTenant(org);
-			List<User> allUsers = adminService.getAllUsers();
+			List<User> allUsers = userService.getAllUsers();
 			Date startDate = new DateTime(new Date()).minusDays(1).withTimeAtStartOfDay().toDate();
 			Date endDate = new DateTime(new Date()).withTimeAtStartOfDay().toDate();
 
