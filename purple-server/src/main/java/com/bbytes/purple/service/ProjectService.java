@@ -96,7 +96,14 @@ public class ProjectService extends AbstractService<Project, String> {
 		return project;
 	}
 
-	public List<User> getAllUsers(String projectId) throws PurpleException {
+	/**
+	 * Return all users by project
+	 * 
+	 * @param projectId
+	 * @return
+	 * @throws PurpleException
+	 */
+	public List<User> getAllUsersByProject(String projectId) throws PurpleException {
 
 		List<User> users = new ArrayList<User>();
 		try {

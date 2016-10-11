@@ -37,7 +37,7 @@ public class ProjectController {
 
 	@Autowired
 	private ProjectService projectService;
-	
+
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
@@ -52,8 +52,8 @@ public class ProjectController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/project/{projectid}/adduser", method = RequestMethod.POST)
-	public RestResponse addUsersToProject(@PathVariable("projectid") String projectId,
+	@RequestMapping(value = "/api/v1/project/{projectId}/adduser", method = RequestMethod.POST)
+	public RestResponse addUsersToProject(@PathVariable("projectId") String projectId,
 			@RequestBody ProjectDTO projectDTO) throws PurpleException {
 
 		List<User> usersTobeAdded = new ArrayList<User>();
@@ -81,8 +81,8 @@ public class ProjectController {
 	 * @throws PurpleException
 	 */
 
-	@RequestMapping(value = "/api/v1/project/{projectid}/deleteuser", method = RequestMethod.DELETE)
-	public RestResponse deleteUsers(@PathVariable("projectid") String projectId, @RequestBody List<String> emailList)
+	@RequestMapping(value = "/api/v1/project/{projectId}/deleteuser", method = RequestMethod.DELETE)
+	public RestResponse deleteUsers(@PathVariable("projectId") String projectId, @RequestBody List<String> emailList)
 			throws PurpleException {
 
 		Project project = projectService.deleteUsers(projectId, emailList);
@@ -102,10 +102,10 @@ public class ProjectController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/project/{projectid}/users", method = RequestMethod.GET)
-	public RestResponse getUsersOfProject(@PathVariable("projectid") String projectId) throws PurpleException {
+	@RequestMapping(value = "/api/v1/project/{projectId}/user", method = RequestMethod.GET)
+	public RestResponse getUsersOfProject(@PathVariable("projectId") String projectId) throws PurpleException {
 
-		List<User> users = projectService.getAllUsers(projectId);
+		List<User> users = projectService.getAllUsersByProject(projectId);
 
 		logger.debug(users.size() + "' users are fetched successfully");
 		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, users, SuccessHandler.GET_USER_SUCCESS);

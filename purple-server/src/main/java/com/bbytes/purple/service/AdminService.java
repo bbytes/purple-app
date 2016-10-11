@@ -172,7 +172,7 @@ public class AdminService {
 			} else {
 				if (!projectService.projectIdExist(projectId))
 					throw new PurpleException("Error while getting users list", ErrorHandler.PROJECT_NOT_FOUND);
-				List<User> usersOfProject = projectService.getAllUsers(projectId);
+				List<User> usersOfProject = projectService.getAllUsersByProject(projectId);
 				List<User> users = userService.findAll();
 				for (User user : users) {
 					if (user.getStatus().equals(User.JOINED))
