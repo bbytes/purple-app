@@ -97,7 +97,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		return integration;
 	}
 
-	public void addJiraProjects(List<net.rcarz.jiraclient.Project> jiraProjects, User user) throws PurpleException {
+	public void addJiraProjects(List<net.rcarz.jiraclient.Project> jiraProjects, User loggedInUser)
+			throws PurpleException {
 		List<String> jiraProjectList = new LinkedList<String>();
 		List<String> finalProjectListToBeSaved = new LinkedList<String>();
 
@@ -120,14 +121,15 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 			for (String project : finalProjectListToBeSaved) {
 				Project addProject = new Project(project);
-				addProject.setOrganization(user.getOrganization());
+				addProject.setOrganization(loggedInUser.getOrganization());
+				// added loggedIn user as owner of project
+				addProject.setProjectOwner(loggedInUser);
 				addProject = projectService.save(addProject);
 			}
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_CONNECTION_FAILED);
 		}
 	}
-
 
 	public Map<String, String> getSlackChannels() {
 		Slack slack = getSlackApi();
