@@ -233,6 +233,29 @@ public class ProjectController {
 	}
 
 	/**
+	 * The changeProjectOwner method is used to change/assign owner to project
+	 * 
+	 * @param projectId
+	 * @return
+	 * @throws PurpleException
+	 */
+
+	@RequestMapping(value = "/api/v1/project/{projectId}/changeowner/{ownerId}", method = RequestMethod.PUT)
+	public RestResponse changeProjectOwner(@PathVariable("projectId") String projectId,
+			@PathVariable("ownerId") String ownerId) throws PurpleException {
+
+		User newOwner = userService.getUserById(ownerId);
+		Project project = projectService.changeProjectOwner(projectId, newOwner);
+		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
+
+		logger.debug("Owner with name '" + newOwner.getName() + "' of project '" + project.getProjectName()
+				+ "' is changed successfully");
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, projectMap);
+
+		return projectReponse;
+	}
+
+	/**
 	 * The getUsersOfProject method is used to get all users associated with
 	 * project
 	 * 

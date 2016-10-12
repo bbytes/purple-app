@@ -213,6 +213,27 @@ public class ProjectService extends AbstractService<Project, String> {
 		return users;
 	}
 
+	/**
+	 * To Change the owner of project with new user
+	 * 
+	 * @param projectId
+	 * @param projectOwner
+	 * @return
+	 * @throws PurpleException
+	 */
+	public Project changeProjectOwner(String projectId, User projectOwner) throws PurpleException {
+
+		Project project = null;
+		try {
+			project = findByProjectId(projectId);
+			project.setProjectOwner(projectOwner);
+			project = projectRepository.save(project);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.CHANGED_PROJECTOWNER_FALIED);
+		}
+		return project;
+	}
+
 	public List<User> getUsersToAssignProject(String projectId) throws PurpleException {
 
 		List<User> users = new ArrayList<User>();

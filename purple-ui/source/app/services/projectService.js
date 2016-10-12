@@ -237,4 +237,23 @@ rootApp.service('projectService', function ($rootScope, $http, $q) {
         return deferred.promise;
     };
 
+    this.changeProjectOwner = function (projectId, userId) {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'PUT',
+            url: $rootScope.baseUrl + 'api/v1/project/' + projectId + '/changeowner/' + userId,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+
 });

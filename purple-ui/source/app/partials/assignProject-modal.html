@@ -22,7 +22,7 @@
                                 <h4>{{user.userName}}</h4>
                                 <p>{{user.email}}</p>
                             </div></td>
-                        <td class="add-user"><input type="radio" name="user" value="{{user.id}}" ng-checked="user.checked"></td>
+                        <td class="add-user"><input type="radio" ng-model="$parent.radioValue" name="user" value="{{user.id}}" ng-checked="user.checked"></td>
                     </tr>
 
                 </table>
@@ -32,6 +32,6 @@
 </div>
 
 <div class="modal-footer add-user">
-    <button class="btn save-close" ng-click="assignProjectToUser()" ng-click="cancel()">SAVE
+    <button class="btn save-close" ng-click="assignProjectOwner()" ng-click="cancel()">SAVE
         & CLOSE</button>
 </div>

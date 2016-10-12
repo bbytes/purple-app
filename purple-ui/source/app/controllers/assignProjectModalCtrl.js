@@ -1,15 +1,22 @@
 /*
  * Assign Project to User Modal Controller
  */
-angular.module('rootApp').controller('assignProjectModalCtrl', function ($scope, options, $uibModalInstance, $uibModal) {
+angular.module('rootApp').controller('assignProjectModalCtrl', function ($scope, modalData, projectService, $uibModalInstance, $uibModal) {
 
-    $scope.title = options.title;
+    $scope.title = modalData.title;
+    $scope.projectId = modalData.projectId;
+    $scope.allusers = modalData.userData;
 
-    $scope.allusers = options.data;
-    
-    $scope.assignProjectToUser = function () {
+    $scope.assignProjectOwner = function () {
+
+        $scope.ownerId = $scope.radioValue;
+        projectService.changeProjectOwner($scope.projectId, $scope.ownerId).then(function (response) {
+            if (response.success) {
+                $scope.project = response.data;
+                $uibModalInstance.close($scope.project);
+            }
+        });
         
-        $uibModalInstance.close($scope.selection);
     };
 
     $scope.cancel = function () {

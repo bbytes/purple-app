@@ -49,6 +49,8 @@ public class ErrorHandler {
 	public static final String DELETE_USER_FAILED = "delete_user_failed";
 
 	public static final String GET_USER_FAILED = "get_user_failed";
+	
+	public static final String CHANGED_PROJECTOWNER_FALIED = "changed_projectowner_falied";
 
 	public static final String ADD_PROJECT_FAILED = "add_project_failed";
 

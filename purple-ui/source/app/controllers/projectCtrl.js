@@ -11,7 +11,8 @@ angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope
     $rootScope.navstatusClass = 'right-nav-ct';
     $rootScope.bodyClass = 'body-standalone1';
     $scope.showpage = false;
-
+    // variable to store information of all project list
+    $scope.allprojects;
     // Method is used to create project
     $scope.createProject = function (project) {
 
@@ -27,9 +28,10 @@ angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope
 
         projectService.createProject($scope.project).then(function (response) {
             if (response.success) {
+                $scope.project = response.data;
+                $scope.allprojects.unshift($scope.project);
                 $scope.project = '';
                 $scope.newList = '';
-                $scope.loadAllProjects();
 
             } else {
                 appNotifyService.error(response.data);
@@ -111,21 +113,16 @@ angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope
     };
 
     // Calling method to open the assign project modal for assigning project to user.
-    $scope.openAssignProjectModal = function (projectId) {
+    $scope.openAssignProjectModal = function (projectId, index) {
 
         projectService.getUsersToAssignProject(projectId).then(function (response) {
             if (response.success) {
-                if (response) {
-                    $scope.userscount = response.data.length;
-                }
-                $scope.joinedCount = response.data.joined_count;
-                $scope.pendingCount = response.data.pending_count;
                 $scope.allusers = response.data.gridData;
-                showModal();
+                showModal(projectId, index);
             }
         });
 
-        function showModal() {
+        function showModal(projectId, index) {
             var uibModalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'app/partials/assignProject-modal.html',
@@ -133,17 +130,19 @@ angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope
                 backdrop: 'static',
                 size: 'md',
                 resolve: {
-                    options: function () {
+                    modalData: function () {
                         return {
                             "title": 'Assign Manager/Admin to Project',
-                            "data": $scope.allusers
+                            "userData": $scope.allusers,
+                            "projectId": projectId
                         };
                     }
                 }
             });
 
-            uibModalInstance.result.then(function (selection) {
-
+            uibModalInstance.result.then(function (project) {
+                $scope.allprojects.splice(index, 1);
+                $scope.allprojects.unshift(project);
             });
         }
     };
@@ -247,13 +246,12 @@ angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope
     };
 
     // Delete project
-    $scope.deleteProject = function (id, $index) {
+    $scope.deleteProject = function (id, index) {
         projectService.deleteProject(id).then(function (response) {
             if (response.success) {
                 appNotifyService.success('Project has been successfully deleted.');
             }
-            $scope.allprojects.splice($index, 1);
-            $scope.loadAllProjects();
+            $scope.allprojects.splice(index, 1);
         });
     };
 
