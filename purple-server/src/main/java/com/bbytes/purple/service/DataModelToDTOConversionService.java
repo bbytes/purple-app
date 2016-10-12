@@ -103,6 +103,7 @@ public class DataModelToDTOConversionService {
 		userDTO.setTimePreference(user.getTimePreference());
 		userDTO.setEmailNotificationState(user.isEmailNotificationState());
 		userDTO.setTimeZone(user.getTimeZone());
+		userDTO.setDisableState(user.isDisableState());
 		return userDTO;
 	}
 

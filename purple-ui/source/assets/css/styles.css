@@ -4050,6 +4050,11 @@ tabs-left, .tabs-right {
     width: 30px;
     float: right;
 }
+.disable-light img{
+    margin-top: -2px;
+    float: right;
+    cursor:pointer;
+}
 .active-user a{
     background: transparent !important;
     color:#777 !important;

@@ -1,5 +1,6 @@
 package com.bbytes.purple.repository.event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,16 @@ import org.springframework.data.mongodb.core.mapping.event.BeforeSaveEvent;
 import org.springframework.stereotype.Component;
 
 import com.bbytes.purple.domain.Comment;
+import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.exception.PurpleException;
+import com.bbytes.purple.repository.ProjectRepository;
 import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.TenantResolverService;
+import com.bbytes.purple.service.UserService;
 import com.mongodb.DBObject;
 
 /**
@@ -34,11 +39,14 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 	@Autowired
 	private TenantResolverService tenantResolverService;
 
-//	@Autowired
-//	private ProjectRepository projectRepository;
+	@Autowired
+	private ProjectRepository projectRepository;
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private StatusService statusService;
@@ -92,18 +100,24 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 	public void onBeforeDelete(BeforeDeleteEvent<User> event) {
 		final DBObject userDeleted = event.getSource();
 		User user = userRepository.findOne(userDeleted.get("userId").toString());
-//		List<Project> projectsToBeSaved = new ArrayList<>();
-//		if (user != null && user.getProjects() != null) {
-//			for (Project project : user.getProjects()) {
-//				project.getUser().remove(user);
-//				projectsToBeSaved.add(project);
-//			}
-//		}
+		List<Project> projectListOfUser = new ArrayList<Project>();
+		try {
+			projectListOfUser = userService.getProjects(user);
+		} catch (Throwable e) {
+			e.getMessage();
+		}
+		List<Project> projectsToBeSaved = new ArrayList<>();
+		if (user != null && projectListOfUser != null) {
+			for (Project project : projectListOfUser) {
+				project.getUser().remove(user);
+				projectsToBeSaved.add(project);
+			}
+		}
 		List<Status> statusFromDB = statusService.getStatusByUser(user);
 		List<Comment> commentFromDB = commentService.getCommentByStatus(statusFromDB);
 		commentService.delete(commentFromDB);
 		statusService.delete(statusFromDB);
-		//projectRepository.save(projectsToBeSaved);
+		projectRepository.save(projectsToBeSaved);
 	}
 
 }

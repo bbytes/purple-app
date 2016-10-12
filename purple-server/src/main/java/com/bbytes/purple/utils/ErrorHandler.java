@@ -47,6 +47,8 @@ public class ErrorHandler {
 	public static final String REINVITE_FAILED = "reinvite_failed";
 
 	public static final String DELETE_USER_FAILED = "delete_user_failed";
+	
+	public static final String DISABLE_USER_FAILED = "disable_user_failed";
 
 	public static final String GET_USER_FAILED = "get_user_failed";
 	

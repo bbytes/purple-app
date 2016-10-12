@@ -162,7 +162,7 @@ public class UserController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/user/delete/{email:.+}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/v1/user/delete/{email:.+}", method = RequestMethod.DELETE)
 	public RestResponse deleteUser(@PathVariable("email") String email) throws PurpleException {
 
 		final String DELETE_USER_SUCCESS_MSG = "Successfully deleted user";
@@ -171,6 +171,27 @@ public class UserController {
 		logger.debug("User with email  '" + email + "' are deleted successfully");
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, DELETE_USER_SUCCESS_MSG,
 				SuccessHandler.DELETE_USER_SUCCESS);
+
+		return userReponse;
+	}
+
+	/**
+	 * disableUser method is used to disable particular user from tenant
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws PurpleException
+	 */
+
+	@RequestMapping(value = "/api/v1/user/disable/{userId}", method = RequestMethod.PUT)
+	public RestResponse disableUser(@PathVariable("userId") String userId, @RequestParam(value = "state") String state)
+			throws PurpleException {
+
+		User user = userService.disableUser(userId, state);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
+
+		logger.debug("User with email  '" + user.getEmail() + "' are disabled successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO);
 
 		return userReponse;
 	}

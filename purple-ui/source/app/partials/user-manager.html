@@ -90,11 +90,21 @@
                     <center><button type="button" class="btn btn-default"
                                     ng-click="resend(user.userName, user.email)" ng-hide= "'{{user.status}}' != 'Pending'">Re-invite</button></center>
                     </td>
-
-                    <td class="delete-img">
-                        <img src="../../assets/img/delete.png" ng-click="deleteUser(user.email, $index)"
-                             confirm="Are you sure you want to delete the user?">
+                    <td class="disable-light">
+                        <a href="#" ng-show="user.disableState"
+                           ng-click="disableUser(user.id, allusers.indexOf(user), false)"
+                           confirm="Are you sure you want to enable this user?"> <img
+                                src="../../assets/img/disabled_dark.png" tooltips tooltip-template="Enable User"></a>
+                        <a href="#" ng-hide="user.disableState"
+                           ng-click="disableUser(user.id, allusers.indexOf(user), true)"
+                           confirm="Are you sure you want to disable this user?"> <img
+                                src="../../assets/img/disabled_light.png" tooltips tooltip-template="Disable User"></a>
                     </td>
+                    <td class="delete-img">
+                        <a href="#"
+                           ng-click="deleteUser(user.email, allusers.indexOf(user))"
+                           confirm="Are you sure you want to delete the project?"> <img
+                                src="../../assets/img/delete.png" tooltips tooltip-template="Delete"></a></td>
                     </tr>
                 </table>
             </div>

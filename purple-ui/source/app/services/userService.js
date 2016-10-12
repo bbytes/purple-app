@@ -100,8 +100,7 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
 
         $http({
             method: 'DELETE',
-            url: $rootScope.baseUrl + 'api/v1/admin/user/delete/' + email,
-            //data : admin,
+            url: $rootScope.baseUrl + 'api/v1/user/delete/' + email,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -136,6 +135,34 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
         });
 
         return deferred.promise;
+    };
+
+    // this method is used to enable/disable user
+    this.disableUser = function (userId, state) {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'PUT',
+            url: $rootScope.baseUrl + 'api/v1/user/disable/' + userId,
+            params: {"state": state},
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        }).success(function (response, status, headers, config) {
+
+            deferred.resolve(response);
+        }).error(function () {
+            // Something went wrong.
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
+
+        return deferred.promise;
+
     };
 
 });

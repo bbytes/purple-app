@@ -6,6 +6,9 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
     $rootScope.navClass = 'nav navbar-nav';
     $rootScope.navstatusClass = 'right-nav-ct';
     $rootScope.bodyClass = 'body-standalone1';
+    // variable to store information about all list of user
+    $scope.allusers;
+
     $scope.invite = function (isValid) {
 
         if (!isValid) {
@@ -19,7 +22,8 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
 
                 if (response.success) {
                     appNotifyService.success('Activation link has been sent to your registered email.');
-                    $scope.loadUsers();
+                    $scope.user = response.data;
+                    $scope.allusers.unshift($scope.user);
                     $scope.admin = '';
                     $scope.isSubmitted = true;
                 }
@@ -60,13 +64,26 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
         $scope.loadUsers();
     };
 
-    $scope.deleteUser = function (email, $index) {
+    $scope.disableUser = function (userId, index, state) {
+        userService.disableUser(userId, state).then(function (response) {
+            if (response.success) {
+                $scope.updatedUser = response.data;
+                $scope.allusers.splice(index, 1);
+                $scope.allusers.unshift($scope.updatedUser);
+                if ($scope.updatedUser.disableState)
+                    appNotifyService.success('User has been sucessfully disabled.');
+                else
+                    appNotifyService.success('User has been sucessfully enabled.');
+            }
+        });
+    };
+
+    $scope.deleteUser = function (email, index) {
         userService.deleteUser(email).then(function (response) {
             if (response.success) {
+                $scope.allusers.splice(index, 1);
                 appNotifyService.success('User has been sucessfully deleted.');
             }
-            $scope.allusers.splice($index, 1);
-            $scope.loadUsers();
         });
     };
 

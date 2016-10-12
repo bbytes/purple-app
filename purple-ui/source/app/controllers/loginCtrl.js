@@ -15,7 +15,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
         }
         // Calling login service
         loginService.login($scope.username, $scope.password).then(function (response) {
-            if (response.headers["x-auth-token"] && response.data.accountInitialise == true) {
+            if (response.headers["x-auth-token"] && response.data.accountInitialise === true && response.data.disableState === false) {
                 $window.sessionStorage.token = response.headers["x-auth-token"];
                 $rootScope.loggedStatus = true;
                 $rootScope.loggedInUser = $scope.username;
@@ -41,12 +41,17 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
 
                 $state.go('status');
             } else if (response.data.accountInitialise === false) {
-             // Erase the token if the user fails to log in
-             delete $window.sessionStorage.token;
-             //Login failed. Showing error notification
-             appNotifyService.error('Please activate your account before login. Check your email for activation link.');
-             }
-             
+                // Erase the token if the user fails to log in
+                delete $window.sessionStorage.token;
+                //Login failed. Showing error notification
+                appNotifyService.error('Please activate your account before login. Check your email for activation link.');
+            } else if (response.data.disableState === true) {
+                // Erase the token if the user fails to log in
+                delete $window.sessionStorage.token;
+                //Login failed. Showing error notification
+                appNotifyService.error('Currenlty you have been disabled, Please contact Admin to enable');
+            }
+
         }, function (error) {
             appNotifyService.error('Invalid Username or Password');
         });

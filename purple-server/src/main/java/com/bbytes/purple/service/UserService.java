@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -53,6 +54,11 @@ public class UserService extends AbstractService<User, String> {
 
 	public boolean userEmailExist(String email) {
 		boolean state = userRepository.findOneByEmail(email) == null ? false : true;
+		return state;
+	}
+
+	public boolean userExistById(String userId) {
+		boolean state = getUserById(userId) == null ? false : true;
 		return state;
 	}
 
@@ -307,6 +313,28 @@ public class UserService extends AbstractService<User, String> {
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_USER_FAILED);
 		}
+	}
+
+	/**
+	 * Return user with disable state with date and time
+	 * 
+	 * @param email
+	 * @throws PurpleException
+	 */
+	public User disableUser(String userId, String state) throws PurpleException {
+
+		User userToBeDisbale = null;
+		if (!userExistById(userId))
+			throw new PurpleException("Error while disabling user", ErrorHandler.USER_NOT_FOUND);
+		try {
+			userToBeDisbale = getUserById(userId);
+			userToBeDisbale.setDisableState(Boolean.parseBoolean(state));
+
+			userToBeDisbale = userRepository.save(userToBeDisbale);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_USER_FAILED);
+		}
+		return userToBeDisbale;
 	}
 
 	public List<User> getAllUsers() throws PurpleException {
