@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -293,7 +294,8 @@ public class StatusController {
 		Date endDate = startEndDates[1];
 		ProjectUserCountStatsDTO projectUserCountStatsDTO = null;
 
-		Set<User> users = userService.getUsersbyProjects(user.getProjects());
+		List<Project> projectOfUser = userService.getProjects(user);
+		Set<User> users = userService.getUsersbyProjects(new HashSet<Project>(projectOfUser));
 		List<User> allUsers = new ArrayList<User>();
 		allUsers.addAll(users);
 
@@ -301,9 +303,9 @@ public class StatusController {
 
 		if (usersAndProjectsDTO.getProjectList().isEmpty() && usersAndProjectsDTO.getProjectUser().equals(PROJECT)) {
 			if (aggrType.equals("day")) {
-				result = statusAnalyticsService.getProjectPerDayCountHours(user.getProjects(), startDate, endDate);
+				result = statusAnalyticsService.getProjectPerDayCountHours(new HashSet<Project>(projectOfUser), startDate, endDate);
 			} else {
-				result = statusAnalyticsService.getProjectPerMonthCountHours(user.getProjects(), startDate, endDate);
+				result = statusAnalyticsService.getProjectPerMonthCountHours(new HashSet<Project>(projectOfUser), startDate, endDate);
 			}
 			List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
 			if (result != null) {
@@ -334,7 +336,7 @@ public class StatusController {
 		} else if (usersAndProjectsDTO.getProjectList().get(0) != null) {
 
 			Project project = projectService.findByProjectId(usersAndProjectsDTO.getProjectList().get(0));
-			List<Project> projectList = new ArrayList<Project>();
+			Set<Project> projectList = new HashSet<Project>();
 			projectList.add(project);
 
 			if (aggrType.equals("day")) {

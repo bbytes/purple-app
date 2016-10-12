@@ -9,7 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -90,7 +92,7 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testGetAllProjectByUser() throws Exception {
 
-		List<User> userList = new ArrayList<User>();
+		Set<User> userList = new HashSet<User>();
 		userList.add(normalUser);
 		userList.add(user1);
 
@@ -123,11 +125,11 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testGetAllUsersByProjectsMapPasses() throws Exception {
 
-		List<User> userList1 = new ArrayList<User>();
+		Set<User> userList1 = new HashSet<User>();
 		userList1.add(user1);
 		userList1.add(user2);
 
-		List<User> userList2 = new ArrayList<User>();
+		Set<User> userList2 = new HashSet<User>();
 		userList2.add(user2);
 
 		project1.setUser(userList1);
@@ -162,11 +164,11 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testGetAllUsersByProjectsPasses() throws Exception {
 
-		List<User> userList1 = new ArrayList<User>();
+		Set<User> userList1 = new HashSet<User>();
 		userList1.add(user1);
 		userList1.add(user2);
 
-		List<User> userList2 = new ArrayList<User>();
+		Set<User> userList2 = new HashSet<User>();
 		userList2.add(user2);
 
 		project1.setUser(userList1);

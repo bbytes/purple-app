@@ -1,8 +1,6 @@
 package com.bbytes.purple.domain;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -48,15 +46,15 @@ public class User {
 
 	@Field("time_preference")
 	private String timePreference;
-	
+
 	@Field("email_notification_state")
 	private boolean emailNotificationState = true;
 
 	@DBRef
 	private Organization organization;
-
-	@DBRef(lazy = true)
-	private List<Project> projects = new ArrayList<>();
+//
+//	@DBRef(lazy = true)
+//	private Set<Project> projects = new HashSet<>();
 
 	// embedded
 	private UserRole userRole = UserRole.NORMAL_USER_ROLE;
@@ -75,4 +73,33 @@ public class User {
 	public static String PENDING = "Pending";
 	public static String JOINED = "Joined";
 	public static String DEFAULT_EMAIL_REMINDER_TIME = "1970-01-01T12:30:00.000Z";
+
+//	public void addProject(Project projectToBeAdded) {
+//
+//		if (getProjects() != null) {
+//			getProjects().add(projectToBeAdded);
+//			setProjects(getProjects());
+//		}
+//	}
+//
+//	public void addProject(Collection<Project> projectList) {
+//
+//		for (Project Project : projectList) {
+//			addProject(Project);
+//		}
+//	}
+//
+//	public void removeProject(Project projectToBeRemove) {
+//
+//		if (getProjects() != null) {
+//			getProjects().remove(projectToBeRemove);
+//		}
+//	}
+//
+//	public void removeProject(Collection<Project> projectList) {
+//
+//		for (Project project : projectList) {
+//			removeProject(project);
+//		}
+//	}
 }

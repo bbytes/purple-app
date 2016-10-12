@@ -159,7 +159,7 @@ public class UserService extends AbstractService<User, String> {
 		return allUsers;
 	}
 
-	public Set<User> getUsersbyProjects(List<Project> projectList) throws PurpleException {
+	public Set<User> getUsersbyProjects(Set<Project> projectList) throws PurpleException {
 
 		Set<User> allUsers = new HashSet<User>();
 		try {
@@ -334,7 +334,7 @@ public class UserService extends AbstractService<User, String> {
 			} else {
 				if (!projectService.projectIdExist(projectId))
 					throw new PurpleException("Error while getting users list", ErrorHandler.PROJECT_NOT_FOUND);
-				List<User> usersOfProject = projectService.getAllUsersByProject(projectId);
+				Set<User> usersOfProject = projectService.getAllUsersByProject(projectId);
 				List<User> users = userRepository.findAll();
 				for (User user : users) {
 					if (user.getStatus().equals(User.JOINED))

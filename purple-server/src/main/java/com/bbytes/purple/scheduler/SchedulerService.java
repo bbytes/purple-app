@@ -112,36 +112,62 @@ public class SchedulerService {
 		for (String org : orgId) {
 			TenancyContextHolder.setTenant(org);
 			List<Project> projectList = projectService.findAll();
-			List<User> allUsers = userService.getAllUsers();
-			User managerUser = null;
-			boolean flag = true;
-			for (User user : allUsers) {
-				if (user.getUserRole().equals(UserRole.MANAGER_USER_ROLE)) {
-					managerUser = user;
-					flag = false;
-					break;
-				}
 
-			}
-			if (flag) {
-				for (User user : allUsers) {
-
-					if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE)) {
-						managerUser = user;
-						break;
-					}
-
-				}
-			}
 			for (Project project : projectList) {
 
+				User managerUser = null;
+				boolean flag = true;
+				Set<User> usersFromProject = project.getUser();
 				if (project.getProjectOwner() == null) {
-					if (managerUser != null) {
-						project.setProjectOwner(managerUser);
-						projectService.save(project);
+					boolean isRoleExist = false;
+					for (User user : usersFromProject) {
+						if (user.getUserRole().equals(UserRole.MANAGER_USER_ROLE)) {
+							managerUser = user;
+							flag = false;
+							isRoleExist = true;
+							break;
+						}
+
 					}
+					if (flag) {
+						for (User user : usersFromProject) {
+
+							if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE)) {
+								managerUser = user;
+								isRoleExist = true;
+								break;
+							}
+
+						}
+					}
+					if (!isRoleExist) {
+						List<User> allUsers = userService.findAll();
+						boolean isRole = true;
+						for (User user : allUsers) {
+							if (user.getUserRole().equals(UserRole.MANAGER_USER_ROLE)) {
+								managerUser = user;
+								isRole = false;
+								break;
+							}
+
+						}
+						if (isRole) {
+							for (User user : allUsers) {
+
+								if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE)) {
+									managerUser = user;
+									break;
+								}
+
+							}
+						}
+						project.addUser(managerUser);
+					}
+					project.setProjectOwner(managerUser);
+					projectService.save(project);
 				}
 			}
+
 		}
 		TenancyContextHolder.setDefaultTenant();
 	}
@@ -263,10 +289,13 @@ public class SchedulerService {
 			Set<String> nameList = new LinkedHashSet<String>();
 
 			for (User user : allUsers) {
-				if (!userList.toString().contains(user.toString()) && user.getProjects().size() > 0) {
-					userListToBeSendMail.add(user);
-					if (user.getUserRole().getRoleName().equals("NORMAL"))
-						nameList.add(user.getName());
+				List<Project> projectList = userService.getProjects(user);
+				if (projectList != null && !projectList.isEmpty()) {
+					if (!userList.toString().contains(user.toString())) {
+						userListToBeSendMail.add(user);
+						if (user.getUserRole().getRoleName().equals("NORMAL"))
+							nameList.add(user.getName());
+					}
 				}
 				// Manager get include as well in email list.
 				if (user.getUserRole().getRoleName().equals("MANAGER"))

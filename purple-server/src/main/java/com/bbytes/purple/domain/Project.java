@@ -1,8 +1,9 @@
 package com.bbytes.purple.domain;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -39,7 +40,7 @@ public class Project {
 	private Organization organization;
 
 	@DBRef(lazy = true)
-	private List<User> user = new ArrayList<>();
+	private Set<User> user = new HashSet<User>();
 
 	@CreatedDate
 	private Date creationDate;
@@ -48,8 +49,38 @@ public class Project {
 	private Date lastModified;
 
 	public Project(String projectName) {
-
 		this.projectName = projectName;
 	}
 
+	public void addUser(User userToBeAdded) {
+		if (user != null) {
+			user.add(userToBeAdded);
+			// userToBeAdded.addProject(this);
+		}
+	}
+
+	public void addUser(Collection<User> userList) {
+		// clear old user list
+		// removeUser(getUser());
+
+		// add new user list
+		for (User user : userList) {
+			addUser(user);
+		}
+	}
+
+	// public void removeUser(User userToBeRemove) {
+	//
+	// if (getUser() != null) {
+	// getUser().remove(userToBeRemove);
+	// userToBeRemove.removeProject(this);
+	// }
+	// }
+	//
+	// public void removeUser(Collection<User> userList) {
+	//
+	// for (User user : userList) {
+	// removeUser(user);
+	// }
+	// }
 }

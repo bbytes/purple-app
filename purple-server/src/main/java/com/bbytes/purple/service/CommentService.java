@@ -40,6 +40,10 @@ public class CommentService extends AbstractService<Comment, String> {
 	public List<Comment> getCommentByStatus(Status status) {
 		return commentRepository.findByStatus(status);
 	}
+	
+	public List<Comment> getCommentByStatus(List<Status> statuses) {
+		return commentRepository.findByStatusIn(statuses);
+	}
 
 	public long getCountByStatus(Status status) {
 		return commentRepository.countByStatus(status);

@@ -1,15 +1,17 @@
 package com.bbytes.purple.web.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -86,7 +88,9 @@ public class TestProjectController extends PurpleWebBaseApplicationTests {
 		normalUser1.setOrganization(org);
 		userService.save(normalUser1);
 
-		project1.setUser(userService.getUsersByRole(UserRole.NORMAL_USER_ROLE));
+		List<User> userList = userService.getUsersByRole(UserRole.NORMAL_USER_ROLE);
+		Set<User> projectSet = new HashSet<User>(userList);
+		project1.setUser(projectSet);
 		projectService.save(project1);
 
 		String id = projectService.findByProjectName("purple").getProjectId();
@@ -270,7 +274,10 @@ public class TestProjectController extends PurpleWebBaseApplicationTests {
 		normalUser1.setOrganization(org);
 		userService.save(normalUser1);
 
-		project1.setUser(userService.getUsersByRole(UserRole.NORMAL_USER_ROLE));
+		List<User> userListWithNormalRole = userService.getUsersByRole(UserRole.NORMAL_USER_ROLE);
+		Set<User> projectSet = new HashSet<User>(userListWithNormalRole);
+		
+		project1.setUser(projectSet);
 		projectService.save(project1);
 
 		List<String> userList = new ArrayList<String>();

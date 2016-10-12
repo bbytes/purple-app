@@ -8,6 +8,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort.Direction;
@@ -98,7 +99,7 @@ public class StatusAnalyticsService {
 	/**
 	 * Group by Project , day wise with date filter.
 	 */
-	public Iterable<ProjectUserCountStats> getProjectPerDayCountHours(List<Project> projects , Date startDate, Date endDate) {
+	public Iterable<ProjectUserCountStats> getProjectPerDayCountHours(Set<Project> projects , Date startDate, Date endDate) {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate).and("project").in(projects)),
 				project().and("dateTime").extractDayOfYear().as("dayOfYear") //
@@ -163,7 +164,7 @@ public class StatusAnalyticsService {
 	/**
 	 * Group by Project hours by month wise with date filter.
 	 */
-	public Iterable<ProjectUserCountStats> getProjectPerMonthCountHours(List<Project> projects ,Date startDate, Date endDate) {
+	public Iterable<ProjectUserCountStats> getProjectPerMonthCountHours(Set<Project> projects ,Date startDate, Date endDate) {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate).and("project").in(projects)),
 				project().and("dateTime").extractMonth().as("month").and("hours").as("hours").and("project")

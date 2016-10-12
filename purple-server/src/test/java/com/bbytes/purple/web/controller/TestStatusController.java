@@ -11,7 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -426,11 +428,11 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		user2.setOrganization(org);
 		userService.save(user2);
 
-		List<User> userList1 = new ArrayList<User>();
+		Set<User> userList1 = new HashSet<User>();
 		userList1.add(normalUser);
 		userList1.add(user1);
 
-		List<User> userList2 = new ArrayList<User>();
+		Set<User> userList2 = new HashSet<User>();
 		userList2.add(user1);
 		userList2.add(user2);
 
@@ -492,11 +494,11 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		user2.setOrganization(org);
 		userService.save(user2);
 
-		List<User> userList1 = new ArrayList<User>();
+		Set<User> userList1 = new HashSet<User>();
 		userList1.add(normalUser);
 		userList1.add(user1);
 
-		List<User> userList2 = new ArrayList<User>();
+		Set<User> userList2 = new HashSet<User>();
 		userList2.add(user1);
 		userList2.add(user2);
 
@@ -560,15 +562,15 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		project2.setOrganization(org);
 		projectService.save(project2);
 
-		List<Project> projectList1 = new ArrayList<Project>();
+		Set<Project> projectList1 = new HashSet<Project>();
 		projectList1.add(project);
 
-		List<Project> projectList2 = new ArrayList<Project>();
+		Set<Project> projectList2 = new HashSet<Project>();
 		projectList2.add(project1);
 
 		normalUser = new User("akshay", "akshay@gmail.com");
 		normalUser.setOrganization(org);
-		normalUser.setProjects(projectList1);
+		//normalUser.setProjects(projectList1);
 		userService.save(normalUser);
 		userService.updatePassword("test123", normalUser);
 

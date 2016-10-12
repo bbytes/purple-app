@@ -10,7 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -273,7 +275,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		normalUser1.setStatus(User.JOINED);
 		userService.save(normalUser1);
 
-		List<User> userList = new ArrayList<User>();
+		Set<User> userList = new HashSet<User>();
 		userList.add(normalUser);
 
 		Project project1 = new Project("purple");
@@ -438,7 +440,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 		user2.setOrganization(org);
 		userService.save(user2);
 
-		List<User> userList = new ArrayList<User>();
+		Set<User> userList = new HashSet<User>();
 		userList.add(user1);
 		userList.add(user2);
 

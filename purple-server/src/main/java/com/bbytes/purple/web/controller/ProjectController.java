@@ -5,9 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,12 +82,13 @@ public class ProjectController {
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 		// we assume angular layer will do empty checks for project
-		User user = userService.getLoggedInUser();
-		Organization org = user.getOrganization();
+		User loggedInUser = userService.getLoggedInUser();
+		Organization org = loggedInUser.getOrganization();
 		Project addProject = new Project(projectDTO.getProjectName());
 		addProject.setOrganization(org);
-		addProject.setProjectOwner(user);
-		List<User> usersTobeAdded = new ArrayList<User>();
+		addProject.setProjectOwner(loggedInUser);
+
+		Set<User> usersTobeAdded = new HashSet<User>();
 		for (String i : projectDTO.getUsers()) {
 			usersTobeAdded.add(userService.getUserByEmail(i));
 		}
@@ -137,11 +140,11 @@ public class ProjectController {
 		Organization org = loggedInuser.getOrganization();
 		Project updateProject = new Project(projectDTO.getProjectName());
 		updateProject.setOrganization(org);
-		List<User> usersTobeAdded = new ArrayList<User>();
+		Set<User> usersTobeAdded = new HashSet<User>();
 		for (String i : projectDTO.getUsers()) {
 			usersTobeAdded.add(userService.getUserByEmail(i));
 		}
-		List<User> usersFromProject = projectService.findByProjectId(projectId).getUser();
+		Set<User> usersFromProject = projectService.findByProjectId(projectId).getUser();
 
 		List<User> updateUserList = new LinkedList<User>();
 		for (User user : usersTobeAdded) {
@@ -191,7 +194,7 @@ public class ProjectController {
 	public RestResponse addUsersToProject(@PathVariable("projectId") String projectId,
 			@RequestBody ProjectDTO projectDTO) throws PurpleException {
 
-		List<User> usersTobeAdded = new ArrayList<User>();
+		Set<User> usersTobeAdded = new HashSet<User>();
 		for (String i : projectDTO.getUsers()) {
 			if (!userService.userEmailExist(i))
 				throw new PurpleException("Error while adding users", ErrorHandler.ADD_USER_FAILED);
@@ -240,7 +243,7 @@ public class ProjectController {
 	@RequestMapping(value = "/api/v1/project/{projectId}/user", method = RequestMethod.GET)
 	public RestResponse getUsersOfProject(@PathVariable("projectId") String projectId) throws PurpleException {
 
-		List<User> users = projectService.getAllUsersByProject(projectId);
+		Set<User> users = projectService.getAllUsersByProject(projectId);
 
 		logger.debug(users.size() + "' users are fetched successfully");
 		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, users, SuccessHandler.GET_USER_SUCCESS);

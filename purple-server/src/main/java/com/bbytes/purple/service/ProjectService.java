@@ -1,7 +1,9 @@
 package com.bbytes.purple.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,7 @@ public class ProjectService extends AbstractService<Project, String> {
 	 * @return
 	 * @throws PurpleException
 	 */
-	public Project createProject(Project project, List<User> users) throws PurpleException {
+	public Project createProject(Project project, Set<User> users) throws PurpleException {
 
 		if (project.getProjectName() != null) {
 			if (projectNameExist(project.getProjectName()))
@@ -70,15 +72,15 @@ public class ProjectService extends AbstractService<Project, String> {
 			try {
 				project = projectRepository.save(project);
 				// this is to add reference of project in user object
-				for (User user : users) {
-					List<Project> projectList = new ArrayList<Project>();
-					List<Project> list = new ArrayList<Project>();
-					list = user.getProjects();
-					projectList.add(project);
-					projectList.addAll(list);
-					user.setProjects(projectList);
-					userService.save(user);
-				}
+				// for (User user : users) {
+				// Set<Project> projectList = new HashSet<Project>();
+				// Set<Project> list = new HashSet<Project>();
+				// list = user.getProjects();
+				// projectList.add(project);
+				// projectList.addAll(list);
+				// user.setProjects(projectList);
+				// userService.save(user);
+				// }
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_PROJECT_FAILED);
 			}
@@ -87,44 +89,70 @@ public class ProjectService extends AbstractService<Project, String> {
 		return project;
 	}
 
-	public Project updateProject(String projectId, Project project) throws PurpleException {
+	public Project updateProject(String projectId, Project projectToBeUpdated) throws PurpleException {
 
-		Project newProject = null;
-		if (project != null) {
+		Project updateProject = null;
+		if (projectToBeUpdated != null) {
 			if (!projectIdExist(projectId))
 				throw new PurpleException("Error while updating project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
-				Project updateProject = findByProjectId(projectId);
-				for (User userTobeRemoved : updateProject.getUser()) {
-					userTobeRemoved.getProjects().remove(updateProject);
-					userService.save(userTobeRemoved);
-				}
-				updateProject.setUser(project.getUser());
-				updateProject.setProjectName(project.getProjectName());
-				newProject = projectRepository.save(updateProject);
-				for (User user : updateProject.getUser()) {
-					List<Project> projectList = new ArrayList<Project>();
-					List<Project> list = user.getProjects();
-					boolean flag = true;
-					for (Project getProject : list) {
-						if (getProject.getProjectId().equals(newProject.getProjectId()))
-							flag = false;
-					}
-					if (flag)
-						projectList.add(newProject);
-					list.addAll(projectList);
-					user.setProjects(list);
-					userService.save(user);
-				}
+				updateProject = findByProjectId(projectId);
+				/*
+				 * this is to first remove reference of project from all user
+				 * associate with it one by one and setting all project list
+				 * later (only need while updating)
+				 */
+
+				// List<User> usersToBeSaved = new ArrayList<>();
+				// for (User userTobeRemoved : updateProject.getUser()) {
+				// List<Project> projectListFromUser =
+				// userTobeRemoved.getProjects();
+				// // creating a hashset using the list
+				// Set<Project> projectSet = new
+				// HashSet<Project>(projectListFromUser);
+				// // remove all the elements from the list
+				// projectListFromUser.clear();
+				// // add all the elements of the set to create a
+				// // list with out duplicates
+				// projectListFromUser.addAll(projectSet);
+				// projectListFromUser.remove(updateProject);
+				// usersToBeSaved.add(userTobeRemoved);
+				// }
+				// userService.save(usersToBeSaved);
+
+				updateProject.setUser(projectToBeUpdated.getUser());
+				updateProject.setProjectName(projectToBeUpdated.getProjectName());
+				updateProject = projectRepository.save(updateProject);
+
+				// List<User> updateUserList = new ArrayList<User>();
+				// for (User user : updateProject.getUser()) {
+				//
+				// List<Project> projectListFromUser = user.getProjects();
+				// // creating a hashset using the list
+				// Set<Project> projectSet = new
+				// HashSet<Project>(projectListFromUser);
+				// // adding updated project into set which will assign to user
+				// projectSet.add(updateProject);
+				// // remove all the elements from the list
+				// projectListFromUser.clear();
+				// // add all the elements of the set to create a
+				// // list with out duplicates
+				// projectListFromUser.addAll(projectSet);
+				//
+				// user.setProjects(projectListFromUser);
+				// updateUserList.add(user);
+				//
+				// }
+				// userService.save(updateUserList);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_PROJECT_FAILED);
 			}
 		} else
 			throw new PurpleException("Can not find empty project", ErrorHandler.PROJECT_NOT_FOUND);
-		return newProject;
+		return updateProject;
 	}
 
-	public Project addUsers(String projectId, List<User> users) throws PurpleException {
+	public Project addUsers(String projectId, Set<User> users) throws PurpleException {
 
 		Project project = null;
 		if (!projectId.equals("null") && users != null && !users.isEmpty()) {
@@ -151,7 +179,7 @@ public class ProjectService extends AbstractService<Project, String> {
 		}
 		try {
 			Project userProject = findByProjectId(projectId);
-			List<User> existUsers = userProject.getUser();
+			Set<User> existUsers = userProject.getUser();
 			List<User> temp = new ArrayList<User>();
 			for (User user : existUsers) {
 				if (toBeRemoved.contains(user.getEmail()))
@@ -174,9 +202,9 @@ public class ProjectService extends AbstractService<Project, String> {
 	 * @return
 	 * @throws PurpleException
 	 */
-	public List<User> getAllUsersByProject(String projectId) throws PurpleException {
+	public Set<User> getAllUsersByProject(String projectId) throws PurpleException {
 
-		List<User> users = new ArrayList<User>();
+		Set<User> users = new HashSet<User>();
 		try {
 			users = findByProjectId(projectId).getUser();
 		} catch (Throwable e) {
