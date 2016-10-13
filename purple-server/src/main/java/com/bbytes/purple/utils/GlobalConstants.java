@@ -21,7 +21,7 @@ public class GlobalConstants {
 	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
 
 	public static final String COMMENT_EMAIL_TEMPLATE = "email-text-comment.html";
-	
+
 	public static final String UPDATE_COMMENT_EMAIL_TEMPLATE = "email-text-update-comment.html";
 
 	public static final String FEEDBACK_SEND_EMAIL_TEMPLATE = "email-text-feedback-send.html";
@@ -63,7 +63,7 @@ public class GlobalConstants {
 	public static final String TIME_FORMAT = "h:mm a";
 
 	public static final String DATE_FORMAT = "MMM d, yyyy";
-	
+
 	public static final String DATE_TIME_FORMAT = "dd-M-yyyy hh:mm a";
 
 	public static final String DATE_HOLIDAY_FORMAT = "dd/MM/yyyy";
@@ -89,4 +89,6 @@ public class GlobalConstants {
 	public static final String STATUSNAP_EMAIL_ADDRESS = "statusnap@beyondbytes.co.in";
 
 	public static final String SALES_EMAIL_ADDRESS = "sales@beyondbytes.co.in";
+
+	public static final String SAMPLE_BULKUPLOAD_FILE = "./sample-bulk_upload-format.csv";
 }

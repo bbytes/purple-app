@@ -2,15 +2,15 @@
 <div class="col-md-offset-2 col-md-8">
     <div class="main-title">
         <h4>INVITE</h4>
-        
-         <div class="upload ">
+
+        <div class="upload ">
             <label for="file-upload" class="custom-file-upload"> <img
                     src="../../assets/img/upload.png"> BULK UPLOAD
             </label> <input id="file-upload" file-model = "myFile" type="file" onchange="angular.element(this).scope().bulkupload(this)"/>
         </div>
         <div class="cvg-user">
-            <label > <img
-                    src="../../assets/img/csv.png" tooltips tooltip-template="Sample CSV Format">
+            <label > <img ng-click="sampleBulkUploadDownload()"
+                          src="../../assets/img/csv.png" tooltips tooltip-template="Sample CSV Format">
             </label> 
         </div>
     </div>
@@ -47,7 +47,7 @@
             </div>
             <button type="button" class="btn btn-default create"
                     ng-click="invite(myForm.$valid)">send invite</button>
-            
+
         </form>
     </div>
 
@@ -89,7 +89,7 @@
                             {{user.status}}
                         </td>
                         <td>
-                            <select class="form-control" ng-readonly="userRole !== 'ADMIN'" ng-options="roles.id as roles.value for roles in userRoles" ng-model="user.userRole.id" ng-change="roleChange(user.userRole.id, user,allusers.indexOf(user))">			
+                            <select class="form-control" ng-readonly="userRole !== 'ADMIN'" ng-options="roles.id as roles.value for roles in userRoles" ng-model="user.userRole.id" ng-change="roleChange(user.userRole.id, user, allusers.indexOf(user))">			
                             </select>
                         </td>
 
@@ -120,7 +120,7 @@
 
                     <td >
                         <a href="" ng-show="user.markDeleteState"
-                          csv-download-user="user.id">Download Data</a>
+                           csv-download-user="user.id">Download Data</a>
                     </td>
                     </tr>
                 </table>

@@ -1,5 +1,6 @@
 package com.bbytes.purple.web.controller;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,10 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -427,6 +432,23 @@ public class UserController {
 				SuccessHandler.UPDATE_USER_SUCCESS);
 
 		return userReponse;
+	}
+
+	/**
+	 * The get csv for all status related to project for current user
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/bulkupload/sample/download", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public FileSystemResource getCSVForAllStatus(HttpServletResponse response) throws PurpleException {
+
+		File file = new File(GlobalConstants.SAMPLE_BULKUPLOAD_FILE);
+		response.setContentType("text/csv");
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
+		response.setHeader("purple-file-name", file.getName());
+
+		return new FileSystemResource(file);
 	}
 
 }

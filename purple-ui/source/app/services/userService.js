@@ -173,10 +173,36 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
             headers: {
                 'Content-Type': 'application/json'
             }
-
         }).success(function (response, status, headers, config) {
-
             deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+
+    // method is used to download sample bulk upload file format
+    this.downloadSampleBulkUploadFile = function () {
+
+        var deferred = $q.defer();
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/bulkupload/sample/download',
+            headers: {
+                'Content-Type': 'text/csv'
+            }
+        }).success(function (response, status, headers, config) {
+            var fileName = headers('purple-file-name') || 'sampleBulkUploadFile.csv';
+            var blob = new Blob([response], {type: "text/csv"});
+            var objectUrl = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = objectUrl;
+            a.target = '_blank';
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+
         }).error(function (response) {
             deferred.reject(response);
         });

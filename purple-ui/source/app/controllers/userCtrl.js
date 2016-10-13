@@ -98,7 +98,7 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
                     appNotifyService.success('User has been sucessfully mark for delete');
                 else
                     appNotifyService.success('All user information has been restored.');
-            }else {
+            } else {
                 $scope.oldUser = response.data;
                 $scope.allusers.splice(index, 1);
                 $scope.allusers.unshift($scope.oldUser);
@@ -113,6 +113,15 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
                 $scope.allusers.splice(index, 1);
                 appNotifyService.success('User has been sucessfully deleted.');
             }
+        });
+    };
+
+    $scope.sampleBulkUploadDownload = function () {
+        userService.downloadSampleBulkUploadFile().then(function (response) {
+            if (response.success) {
+            }
+        }, function (error) {
+            appNotifyService.error('Error while downloading. Please check back again!');
         });
     };
 
