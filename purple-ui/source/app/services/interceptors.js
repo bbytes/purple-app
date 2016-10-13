@@ -1,5 +1,7 @@
-/* Interceptor declaration */
-rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $injector, $location, appNotifyService) {
+/* 
+ * Interceptor declaration Service 
+ */
+angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $injector, $location, appNotifyService) {
     return {
         request: function (config) {
             config.headers = config.headers || {};
@@ -109,6 +111,6 @@ rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $i
     };
 });
 
-rootApp.config(['$httpProvider', function ($httpProvider) {
+angular.module('rootApp').config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('authInterceptor');
     }]);
