@@ -98,6 +98,11 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
                     appNotifyService.success('User has been sucessfully mark for delete');
                 else
                     appNotifyService.success('All user information has been restored.');
+            }else {
+                $scope.oldUser = response.data;
+                $scope.allusers.splice(index, 1);
+                $scope.allusers.unshift($scope.oldUser);
+                appNotifyService.error('Atleast one Admin should be mandatory');
             }
         });
     };
@@ -112,12 +117,17 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
     };
 
     // Method is used to assigning user role
-    $scope.roleChange = function (userRole, user) {
+    $scope.roleChange = function (userRole, user, index) {
 
         var userId = user.id;
         userService.updateUserRole(userId, userRole).then(function (response) {
             if (response.success) {
                 appNotifyService.success('Users role has been sucessfully changed.');
+            } else {
+                $scope.oldUser = response.data;
+                $scope.allusers.splice(index, 1);
+                $scope.allusers.unshift($scope.oldUser);
+                appNotifyService.error('Atleast one Admin should be mandatory');
             }
         }, function (error) {
             appNotifyService.error('Error while assigning users role. Please check back again!');

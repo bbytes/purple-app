@@ -86,6 +86,24 @@ public class UserService extends AbstractService<User, String> {
 		userRepository.deleteAll();
 	}
 
+	/**
+	 * Return total number of role count
+	 * 
+	 * @param roleName
+	 * @return
+	 */
+	public long totalRoleCount(UserRole role) {
+		return userRepository.countByUserRole(role);
+	}
+
+	public boolean isMoreAdminExist(String roleName) {
+		if (roleName.equals(UserRole.ADMIN_USER_ROLE.getRoleName())) {
+			boolean state = totalRoleCount(new UserRole(roleName)) == 1 ? true : false;
+			return state;
+		} else
+			return false;
+	}
+
 	public User create(String email, String name, Organization org) {
 		User user = new User(name, email);
 		user.setOrganization(org);
@@ -344,10 +362,11 @@ public class UserService extends AbstractService<User, String> {
 
 		if (!userExistById(userId))
 			throw new PurpleException("Error while marking delete user", ErrorHandler.USER_NOT_FOUND);
-		
+
 		markDeleteUser = getUserById(userId);
 		if (projectService.projectOwnerExist(markDeleteUser))
-			throw new PurpleException("Deletion of project owner is not allowed", ErrorHandler.PROJECT_OWNER_DELETE_FAILED);
+			throw new PurpleException("Deletion of project owner is not allowed",
+					ErrorHandler.PROJECT_OWNER_DELETE_FAILED);
 		try {
 			boolean state = Boolean.parseBoolean(markDeleteState);
 			// markDeleteState=true means set user as mark for delete

@@ -103,6 +103,10 @@ public class ErrorHandler {
 	public static final String PROJECT_OWNER_DELETE_FAILED = "project_owner_delete_failed";
 
 	public static final String UPDATE_USERROLE_FAILED = "update_userrole_failed";
+	
+	public static final String ROLE_CHANGED_NOT_ALLOWED = "role_changed_not_allowed";
+	
+	public static final String DELETION_NOT_ALLOWED = "deletion_not_allowed";
 
 	public static final String UPDATE_USER_PROFILE_FAILED = "update_user_profile_failed";
 

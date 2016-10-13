@@ -184,8 +184,8 @@ public class UserController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/user/disable/{userId}", method = RequestMethod.PUT)
-	public RestResponse disableUser(@PathVariable("userId") String userId, @RequestParam(value = "disableState") String state)
-			throws PurpleException {
+	public RestResponse disableUser(@PathVariable("userId") String userId,
+			@RequestParam(value = "disableState") String state) throws PurpleException {
 
 		User user = userService.disableUser(userId, state);
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
@@ -208,13 +208,23 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/api/v1/user/markdelete/{userId}", method = RequestMethod.DELETE)
 	public RestResponse markForDeleteUser(@PathVariable("userId") String userId,
-			@RequestParam(value = "markdeleteState") String markdeleteState,@RequestParam(value = "days") int days) throws PurpleException {
-		// note: days is capturing from angular side to delete user data after these many no of days.
-		User user = userService.markForDeleteUser(userId,markdeleteState,days);
-		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
+			@RequestParam(value = "markdeleteState") String markdeleteState, @RequestParam(value = "days") int days)
+			throws PurpleException {
 
-		logger.debug("User with email  '" + user.getEmail() + "' is set mark for delete successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO);
+		RestResponse userReponse = null;
+		User user = userService.getUserById(userId);
+		if (userService.isMoreAdminExist(userService.getUserById(userId).getUserRole().getRoleName())) {
+			UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
+			userReponse = new RestResponse(RestResponse.FAILED, responseDTO, ErrorHandler.DELETION_NOT_ALLOWED);
+			return userReponse;
+		}
+		// note: days is capturing from angular side to delete user data after
+		// these many no of days.
+		User updatedUser = userService.markForDeleteUser(userId, markdeleteState, days);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(updatedUser);
+
+		logger.debug("User with email  '" + updatedUser.getEmail() + "' is set mark for delete successfully");
+		userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO);
 
 		return userReponse;
 	}
@@ -269,10 +279,17 @@ public class UserController {
 	public RestResponse updateUserRole(@RequestParam(value = "userId") String userId,
 			@RequestParam(value = "role") String role) throws PurpleException {
 
-		User user = userService.updateUserRole(userId, role);
-		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
+		RestResponse userReponse = null;
+		User user = userService.getUserById(userId);
+		if (userService.isMoreAdminExist(userService.getUserById(userId).getUserRole().getRoleName())) {
+			UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
+			userReponse = new RestResponse(RestResponse.FAILED, responseDTO, ErrorHandler.ROLE_CHANGED_NOT_ALLOWED);
+			return userReponse;
+		}
+		User updatedUser = userService.updateUserRole(userId, role);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(updatedUser);
 		logger.debug("User role is updated successfully");
-		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.GET_USER_SUCCESS);
+		userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO, SuccessHandler.GET_USER_SUCCESS);
 
 		return userReponse;
 	}

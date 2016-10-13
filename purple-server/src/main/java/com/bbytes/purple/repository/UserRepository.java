@@ -20,5 +20,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 	List<User> findByUserRole(UserRole role);
 	
 	List<User> findByUserRoleIn(List<UserRole> role);
+	
+	long countByUserRole(UserRole role);
 
 }
