@@ -128,7 +128,7 @@ public class ProjectController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/project/update/{projectid}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/api/v1/project/update/{projectid}", method = RequestMethod.PUT)
 	public RestResponse updateProject(@PathVariable("projectid") String projectId, @RequestBody ProjectDTO projectDTO)
 			throws PurpleException {
 

@@ -1,8 +1,7 @@
-/**
+/*
  * Project Service
  */
-
-rootApp.service('projectService', function ($rootScope, $http, $q) {
+angular.module('rootApp').service('projectService', function ($rootScope, $http, $q) {
 
     // This method is used to create project
     this.createProject = function (project) {
@@ -106,7 +105,7 @@ rootApp.service('projectService', function ($rootScope, $http, $q) {
 
         $http({
             method: 'PUT',
-            url: $rootScope.baseUrl + 'api/v1/admin/project/update/' + id,
+            url: $rootScope.baseUrl + 'api/v1/project/update/' + id,
             data: data,
             headers: {
                 'Content-Type': 'application/json'

@@ -1,8 +1,8 @@
-/**
- * Graph Service
+/*
+ * Metrics Service
  */
 
-rootApp.service('metricsService', function ($rootScope, $http, $q, $window) {
+angular.module('rootApp').service('metricsService', function ($rootScope, $http, $q) {
 
     this.getAllStatusAnalytics = function (updateData, time) {
 
@@ -26,7 +26,6 @@ rootApp.service('metricsService', function ($rootScope, $http, $q, $window) {
         });
 
         return deferred.promise;
-
     };
 
 });
