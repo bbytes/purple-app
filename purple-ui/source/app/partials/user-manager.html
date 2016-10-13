@@ -98,16 +98,18 @@
                                     ng-click="resend(user.userName, user.email)" ng-hide= "user.status !== 'Pending'">Re-invite</button></center>
                     </td>
                     <td class="disable-light">
-                        <a href="" ng-show="user.disableState"
-                           ng-click="disableUser(user.id, allusers.indexOf(user), false)"
-                           confirm="Are you sure you want to enable this user?"> <img
-                                src="../../assets/img/disabled_dark.png" tooltips tooltip-template="Enable User"></a>
-                        <a href="" ng-hide="user.disableState"
-                           ng-click="disableUser(user.id, allusers.indexOf(user), true)"
-                           confirm="Are you sure you want to disable this user?"> <img
-                                src="../../assets/img/disabled_light.png" tooltips tooltip-template="Disable User"></a>
+                        <div ng-show="userName !== user.userName">
+                            <a href="" ng-show="user.disableState"
+                               ng-click="disableUser(user.id, allusers.indexOf(user), false)"
+                               confirm="Are you sure you want to enable this user?"> <img
+                                    src="../../assets/img/disabled_dark.png" tooltips tooltip-template="Enable User"></a>
+                            <a href="" ng-hide="user.disableState"
+                               ng-click="disableUser(user.id, allusers.indexOf(user), true)"
+                               confirm="Are you sure you want to disable this user?"> <img
+                                    src="../../assets/img/disabled_light.png" tooltips tooltip-template="Disable User"></a>
+                        </div>
                     </td>
-                    <td >
+                    <td ng-show="userName !== user.userName">
                         <a class="delete-img" href="" ng-show="user.markDeleteState"
                            ng-click="markForDelete(user.id, allusers.indexOf(user), false)"
                            confirm="Do you want to restore this user?"> <img
