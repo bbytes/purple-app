@@ -184,16 +184,24 @@ public class StatusController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/status/csv", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public FileSystemResource getCSVForAllStatus(@RequestParam("timePeriod") String timePeriod,
-			HttpServletResponse response) throws PurpleException {
+	public FileSystemResource getCSVForAllStatus(
+			@RequestParam(value = "timePeriod", required = false) String timePeriod,
+			@RequestParam(value = "userId", required = false) String userId, HttpServletResponse response)
+			throws PurpleException {
 
-		// We will get current logged in user
-		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
-		User user = userService.getLoggedInUser();
-		List<Status> statusList = statusService.getAllStatus(user, timePeriodValue);
+		Integer timePeriodValue = null;
+		List<Status> statusList = null;
+		if (userId != null && !userId.isEmpty()) {
+			statusList = statusService.getAllStatusByUserforCSVDownload(userId);
+		} else {
+			// We will get current logged in user
+			User user = userService.getLoggedInUser();
+			timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
+			statusList = statusService.getAllStatus(user, timePeriodValue);
+		}
+
 		response.setContentType("text/csv");
-		String csvFileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss")
-				+ ".csv";
+		String csvFileName = "status" + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss") + ".csv";
 		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", csvFileName));
 		response.setHeader("purple-file-name", csvFileName);
 
@@ -303,9 +311,11 @@ public class StatusController {
 
 		if (usersAndProjectsDTO.getProjectList().isEmpty() && usersAndProjectsDTO.getProjectUser().equals(PROJECT)) {
 			if (aggrType.equals("day")) {
-				result = statusAnalyticsService.getProjectPerDayCountHours(new HashSet<Project>(projectOfUser), startDate, endDate);
+				result = statusAnalyticsService.getProjectPerDayCountHours(new HashSet<Project>(projectOfUser),
+						startDate, endDate);
 			} else {
-				result = statusAnalyticsService.getProjectPerMonthCountHours(new HashSet<Project>(projectOfUser), startDate, endDate);
+				result = statusAnalyticsService.getProjectPerMonthCountHours(new HashSet<Project>(projectOfUser),
+						startDate, endDate);
 			}
 			List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
 			if (result != null) {

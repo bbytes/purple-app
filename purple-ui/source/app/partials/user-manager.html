@@ -2,10 +2,16 @@
 <div class="col-md-offset-2 col-md-8">
     <div class="main-title">
         <h4>INVITE</h4>
-        <div class="upload">
+        
+         <div class="upload ">
             <label for="file-upload" class="custom-file-upload"> <img
                     src="../../assets/img/upload.png"> BULK UPLOAD
             </label> <input id="file-upload" file-model = "myFile" type="file" onchange="angular.element(this).scope().bulkupload(this)"/>
+        </div>
+        <div class="cvg-user">
+            <label > <img
+                    src="../../assets/img/csv.png" tooltips tooltip-template="Sample CSV Format">
+            </label> 
         </div>
     </div>
 
@@ -41,6 +47,7 @@
             </div>
             <button type="button" class="btn btn-default create"
                     ng-click="invite(myForm.$valid)">send invite</button>
+            
         </form>
     </div>
 
@@ -91,20 +98,30 @@
                                     ng-click="resend(user.userName, user.email)" ng-hide= "'{{user.status}}' != 'Pending'">Re-invite</button></center>
                     </td>
                     <td class="disable-light">
-                        <a href="#" ng-show="user.disableState"
+                        <a href="" ng-show="user.disableState"
                            ng-click="disableUser(user.id, allusers.indexOf(user), false)"
                            confirm="Are you sure you want to enable this user?"> <img
                                 src="../../assets/img/disabled_dark.png" tooltips tooltip-template="Enable User"></a>
-                        <a href="#" ng-hide="user.disableState"
+                        <a href="" ng-hide="user.disableState"
                            ng-click="disableUser(user.id, allusers.indexOf(user), true)"
                            confirm="Are you sure you want to disable this user?"> <img
                                 src="../../assets/img/disabled_light.png" tooltips tooltip-template="Disable User"></a>
                     </td>
-                    <td class="delete-img">
-                        <a href="#"
-                           ng-click="deleteUser(user.email, allusers.indexOf(user))"
-                           confirm="Are you sure you want to delete the project?"> <img
-                                src="../../assets/img/delete.png" tooltips tooltip-template="Delete"></a></td>
+                    <td >
+                        <a class="delete-img" href="" ng-show="user.markDeleteState"
+                           ng-click="markForDelete(user.id, allusers.indexOf(user), false)"
+                           confirm="Do you want to restore this user?"> <img
+                                src="../../assets/img/delete.png" tooltips tooltip-template="Unmark for delete"></a>
+                        <a class="delete-light-img" href="" ng-hide="user.markDeleteState"
+                           ng-click="markForDelete(user.id, allusers.indexOf(user), true)"
+                           confirm="User has been marked for delete. All user related data will be deleted after {{days}} days from today. Do you want to continue?"> <img
+                                src="../../assets/img/cross.png" tooltips tooltip-template="Mark for delete"></a>
+                    </td>
+
+                    <td >
+                        <a href="" ng-show="user.markDeleteState"
+                          csv-download-user="user.id">Download Data</a>
+                    </td>
                     </tr>
                 </table>
             </div>

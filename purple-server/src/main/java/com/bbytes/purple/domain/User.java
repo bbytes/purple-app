@@ -53,6 +53,12 @@ public class User {
 	@Field("disable_state")
 	private boolean disableState = false;
 
+	@Field("mark_delete")
+	private boolean markDelete = false;
+
+	@Field("mark_delete_date")
+	private Date markDeleteDate;
+
 	@DBRef
 	private Organization organization;
 	//

@@ -2174,6 +2174,13 @@ md-sidenav, md-backdrop {
 .cvg{
     width:70%;
 }
+.cvg-user{
+    width:4%;
+    margin-top: -34px;
+    float: right;
+    display: inline-block;
+    line-height: 22 px;
+}
 .search-filter li{
     list-style: none;
     display: inline-block;
@@ -4048,6 +4055,11 @@ tabs-left, .tabs-right {
 .delete-img img{
     margin-top: 0px;
     width: 30px;
+    float: right;
+}
+.delete-light-img img{
+    margin-top: -2px;
+    width: 37px;
     float: right;
 }
 .disable-light img{

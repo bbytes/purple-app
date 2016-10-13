@@ -8,6 +8,8 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
     $rootScope.bodyClass = 'body-standalone1';
     // variable to store information about all list of user
     $scope.allusers;
+    // this varibale is used to pass no of days the user data need to deleted
+    $scope.days = 15;
 
     $scope.invite = function (isValid) {
 
@@ -64,7 +66,10 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
         $scope.loadUsers();
     };
 
+    // method is used to disable user 
     $scope.disableUser = function (userId, index, state) {
+        // calling user service for disabling user with state as "true/false"
+        // e.g. state=true means user is disable
         userService.disableUser(userId, state).then(function (response) {
             if (response.success) {
                 $scope.updatedUser = response.data;
@@ -74,6 +79,25 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
                     appNotifyService.success('User has been sucessfully disabled.');
                 else
                     appNotifyService.success('User has been sucessfully enabled.');
+            }
+        });
+    };
+
+    // method is used to set user as mark for delete
+    //(user and their statuses,comments will be deleted after 30 Days, it been taking care by server side)
+    $scope.markForDelete = function (userId, index, state) {
+        // calling user service for marking delete user with state as "true/false"
+        // e.g. state=true means user is set as mark for delete
+        // $scope.days initialise globally above, the mentioned no of days will be taken care to delete user data after $scope.days
+        userService.markForDelete(userId, state, $scope.days).then(function (response) {
+            if (response.success) {
+                $scope.updatedUser = response.data;
+                $scope.allusers.splice(index, 1);
+                $scope.allusers.unshift($scope.updatedUser);
+                if ($scope.updatedUser.markDeleteState)
+                    appNotifyService.success('User has been sucessfully mark for delete');
+                else
+                    appNotifyService.success('All user information has been restored.');
             }
         });
     };

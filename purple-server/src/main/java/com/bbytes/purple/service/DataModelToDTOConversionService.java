@@ -104,6 +104,7 @@ public class DataModelToDTOConversionService {
 		userDTO.setEmailNotificationState(user.isEmailNotificationState());
 		userDTO.setTimeZone(user.getTimeZone());
 		userDTO.setDisableState(user.isDisableState());
+		userDTO.setMarkDeleteState(user.isMarkDelete());
 		return userDTO;
 	}
 

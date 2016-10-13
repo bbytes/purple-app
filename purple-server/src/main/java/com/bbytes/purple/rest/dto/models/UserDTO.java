@@ -33,6 +33,8 @@ public class UserDTO implements Serializable {
 	
 	private boolean disableState;
 	
+	private boolean markDeleteState;
+	
 	private String timeZone;
 
 }

@@ -1,7 +1,7 @@
-/**
+/*
  *  Login Controller
  */
-rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginService, appNotifyService, $sessionStorage, $window, $filter) {
+angular.module('rootApp').controller('loginCtrl', function ($scope, $rootScope, $state, loginService, appNotifyService, $sessionStorage, $window, $filter) {
 
     $rootScope.bodyClass = 'body-standalone';
     $rootScope.feedbackClass = 'feedback-log';
@@ -15,7 +15,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
         }
         // Calling login service
         loginService.login($scope.username, $scope.password).then(function (response) {
-            if (response.headers["x-auth-token"] && response.data.accountInitialise === true && response.data.disableState === false) {
+            if (response.headers["x-auth-token"] && response.data.accountInitialise === true && response.data.disableState === false && response.data.markDeleteState === false) {
                 $window.sessionStorage.token = response.headers["x-auth-token"];
                 $rootScope.loggedStatus = true;
                 $rootScope.loggedInUser = $scope.username;
@@ -33,7 +33,7 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                     userRoles: $rootScope.userRole,
                     timePreference: $rootScope.timePreference,
                     emailNotificationState: $rootScope.switchState,
-                    timeZone: $rootScope.timeZone,
+                    timeZone: $rootScope.timeZone
                 };
 
                 $sessionStorage.userInfo = userInfo;
@@ -50,6 +50,11 @@ rootApp.controller('loginCtrl', function ($scope, $rootScope, $state, loginServi
                 delete $window.sessionStorage.token;
                 //Login failed. Showing error notification
                 appNotifyService.error('Currenlty you have been disabled, Please contact Admin to enable');
+            } else if (response.data.markDeleteState === true) {
+                // Erase the token if the user fails to log in
+                delete $window.sessionStorage.token;
+                //Login failed. Showing error notification
+                appNotifyService.error('Your User Name has been marked for delete. Please contact Admin to revoke the same.');
             }
 
         }, function (error) {

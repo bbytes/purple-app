@@ -14,7 +14,7 @@
                     <div class="panel-body">
                         <ul class="list-group project-nav">
                             <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
-                                <a ng-click="loadAllStatusGraph()" >ALL</a>
+                                <a ng-click="loadAllStatusGraph(mytime)" >ALL</a>
                             </li>
 
                             <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects| orderBy:'projectName'">

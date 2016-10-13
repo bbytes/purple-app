@@ -99,6 +99,8 @@ public class ErrorHandler {
 	public static final String SET_TIMEZONE_TIMEPREFERENCE_FAILED = "set timezone or timepreference failed";
 
 	public static final String HOURS_EXCEEDED = "hours_exceeded";
+	
+	public static final String PROJECT_OWNER_DELETE_FAILED = "project_owner_delete_failed";
 
 	public static final String UPDATE_USERROLE_FAILED = "update_userrole_failed";
 

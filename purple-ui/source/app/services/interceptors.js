@@ -73,6 +73,9 @@ rootApp.factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $i
                     case "status_not_found":
                         appNotifyService.error(response.data.data);
                         break;
+                    case "project_owner_delete_failed":
+                        appNotifyService.error('User is owner of few projects. Please reassign the project owner to delete selected user');
+                        break;
                 }
             }
 

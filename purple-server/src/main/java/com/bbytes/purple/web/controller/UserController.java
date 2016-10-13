@@ -168,7 +168,7 @@ public class UserController {
 		final String DELETE_USER_SUCCESS_MSG = "Successfully deleted user";
 		userService.deleteUser(email);
 
-		logger.debug("User with email  '" + email + "' are deleted successfully");
+		logger.debug("User with email  '" + email + "' is deleted successfully");
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, DELETE_USER_SUCCESS_MSG,
 				SuccessHandler.DELETE_USER_SUCCESS);
 
@@ -179,18 +179,41 @@ public class UserController {
 	 * disableUser method is used to disable particular user from tenant
 	 * 
 	 * @param userId
+	 * @param state
 	 * @return
 	 * @throws PurpleException
 	 */
-
 	@RequestMapping(value = "/api/v1/user/disable/{userId}", method = RequestMethod.PUT)
-	public RestResponse disableUser(@PathVariable("userId") String userId, @RequestParam(value = "state") String state)
+	public RestResponse disableUser(@PathVariable("userId") String userId, @RequestParam(value = "disableState") String state)
 			throws PurpleException {
 
 		User user = userService.disableUser(userId, state);
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 
-		logger.debug("User with email  '" + user.getEmail() + "' are disabled successfully");
+		logger.debug("User with email  '" + user.getEmail() + "' is disabled successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO);
+
+		return userReponse;
+	}
+
+	/**
+	 * markForDeleteUser method is used to set mark for delete user (User and
+	 * their statues, comments will be deleted after 30 days with running thread
+	 * logic)
+	 * 
+	 * @param userId
+	 * @param markdeleteState
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/user/markdelete/{userId}", method = RequestMethod.DELETE)
+	public RestResponse markForDeleteUser(@PathVariable("userId") String userId,
+			@RequestParam(value = "markdeleteState") String markdeleteState,@RequestParam(value = "days") int days) throws PurpleException {
+		// note: days is capturing from angular side to delete user data after these many no of days.
+		User user = userService.markForDeleteUser(userId,markdeleteState,days);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
+
+		logger.debug("User with email  '" + user.getEmail() + "' is set mark for delete successfully");
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO);
 
 		return userReponse;

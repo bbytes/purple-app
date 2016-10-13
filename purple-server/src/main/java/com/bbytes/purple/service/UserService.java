@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -320,20 +321,47 @@ public class UserService extends AbstractService<User, String> {
 	 * @param email
 	 * @throws PurpleException
 	 */
-	public User disableUser(String userId, String state) throws PurpleException {
+	public User disableUser(String userId, String disableState) throws PurpleException {
 
 		User userToBeDisbale = null;
 		if (!userExistById(userId))
 			throw new PurpleException("Error while disabling user", ErrorHandler.USER_NOT_FOUND);
 		try {
 			userToBeDisbale = getUserById(userId);
-			userToBeDisbale.setDisableState(Boolean.parseBoolean(state));
+			// disableState=true means set user in disable state
+			userToBeDisbale.setDisableState(Boolean.parseBoolean(disableState));
 
 			userToBeDisbale = userRepository.save(userToBeDisbale);
 		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_USER_FAILED);
+			throw new PurpleException(e.getMessage(), ErrorHandler.DISABLE_USER_FAILED);
 		}
 		return userToBeDisbale;
+	}
+
+	public User markForDeleteUser(String userId, String markDeleteState, int days) throws PurpleException {
+
+		User markDeleteUser = null;
+
+		if (!userExistById(userId))
+			throw new PurpleException("Error while marking delete user", ErrorHandler.USER_NOT_FOUND);
+		
+		markDeleteUser = getUserById(userId);
+		if (projectService.projectOwnerExist(markDeleteUser))
+			throw new PurpleException("Deletion of project owner is not allowed", ErrorHandler.PROJECT_OWNER_DELETE_FAILED);
+		try {
+			boolean state = Boolean.parseBoolean(markDeleteState);
+			// markDeleteState=true means set user as mark for delete
+			markDeleteUser.setMarkDelete(state);
+			if (state)
+				markDeleteUser.setMarkDeleteDate(DateTime.now().plusDays(days).toDate());
+			else
+				markDeleteUser.setMarkDeleteDate(null);
+
+			markDeleteUser = userRepository.save(markDeleteUser);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_USER_FAILED);
+		}
+		return markDeleteUser;
 	}
 
 	public List<User> getAllUsers() throws PurpleException {

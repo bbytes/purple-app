@@ -70,11 +70,11 @@ rootApp.controller('metricsCtrl', function ($scope, $rootScope, $state, $mdSiden
 
     $scope.loadAllStatusGraph = function (time, projectuser, counthours) {
 
-        if (time == null || time == 'undefined')
+        if (time === null || time === undefined)
             time = "Weekly";
-        if (projectuser == null || projectuser == 'undefined')
+        if (projectuser === null || projectuser === undefined)
             projectuser = "Project";
-        if (counthours == null || counthours == 'undefined')
+        if (counthours === null || counthours === undefined)
             counthours = "Status Hours";
         $scope.updateData = {
             projectList: [],

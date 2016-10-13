@@ -257,8 +257,9 @@ pageslideDirective.directive('pageslide', [
         };
     }
 ]);
+
 // Directive for csv file download of status                          
-rootApp.directive('purpleCsvDownload', function ($document, $timeout, statusService) {
+angular.module('rootApp').directive('purpleCsvDownload', function ($document, $timeout, statusService) {
     return {
         restrict: 'AC',
         scope: {
@@ -302,9 +303,54 @@ rootApp.directive('purpleCsvDownload', function ($document, $timeout, statusServ
     };
 });
 
+// Directive for csv file download of all statuses by user                          
+angular.module('rootApp').directive('csvDownloadUser', function ($document, $timeout, statusService) {
+    return {
+        restrict: 'AC',
+        scope: {
+            csvData: '=csvDownloadUser'
+        },
+        link: function (scope, element, attrs) {
+
+            function doClick() {
+                statusService.csvDownloadAllStatusByUser(scope.csvData).then(function (response) {
+                    scope.csv = response.data;
+                    var charset = scope.charset || "utf-8";
+                    var blob = new Blob([scope.csv], {
+                        type: "text/csv;charset=" + charset + ";"
+                    });
+
+                    if (window.navigator.msSaveOrOpenBlob) {
+                        navigator.msSaveBlob(blob, response.fileName);
+                    } else {
+                        var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
+                        var downloadLink = angular.element(downloadContainer.children()[0]);
+                        downloadLink.attr('href', window.URL.createObjectURL(blob));
+                        downloadLink.attr('download', response.fileName);
+                        downloadLink.attr('target', '_blank');
+
+                        $document.find('body').append(downloadContainer);
+
+                        $timeout(function () {
+                            downloadLink[0].click();
+                            downloadLink.remove();
+                        }, null);
+                    }
+                });
+            }
+
+            element.bind('click', function (e) {
+                if (scope.csvData) {
+                    doClick();
+                }
+            });
+        }
+    };
+});
+
 
 // Directive for csv file download of timeline
-rootApp.directive('csvDownload', function ($document, $timeout, statusService) {
+angular.module('rootApp').directive('csvDownload', function ($document, $timeout, statusService) {
     return {
         restrict: 'AC',
         scope: {
@@ -313,7 +359,6 @@ rootApp.directive('csvDownload', function ($document, $timeout, statusService) {
         link: function (scope, element, attrs) {
 
             function doClick() {
-                console.log(scope.csvData);
                 statusService.csvDownloadByProjectAndUser(scope.csvData).then(function (response) {
                     scope.csv = response.data;
                     var charset = scope.charset || "utf-8";

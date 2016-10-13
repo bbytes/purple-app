@@ -205,6 +205,28 @@ public class StatusService extends AbstractService<Status, String> {
 		return statuses;
 	}
 
+	/**
+	 * Return all statues by user
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws PurpleException
+	 */
+	public List<Status> getAllStatusByUserforCSVDownload(String userId) throws PurpleException {
+		List<Status> statuses = new ArrayList<Status>();
+		try {
+
+			User user = userService.findOne(userId);
+			statuses = getStatusByUser(user);
+			Collections.sort(statuses, Collections.reverseOrder());
+
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
+		}
+
+		return statuses;
+	}
+
 	public void deleteStatus(String statusId) throws PurpleException {
 		if (!statusIdExist(statusId))
 			throw new PurpleException("Error while deleting status", ErrorHandler.STATUS_NOT_FOUND);

@@ -325,4 +325,35 @@ public class SchedulerService {
 		TenancyContextHolder.setDefaultTenant();
 	}
 
+	/**
+	 * cleanUpMarkForDeleteData Method is used to clean up the all users,
+	 * statuses and comment data from db if user is set as mark for delete
+	 * 
+	 * @throws PurpleException
+	 * @throws ParseException
+	 */
+
+	/* Cron Runs every day at 8 am */
+	@Scheduled(cron = "	0 0 8 * * ?")
+	public void cleanUpMarkForDeleteData() throws PurpleException {
+
+		List<TenantResolver> tenantResolver = tenantResolverRepository.findAll();
+		Set<String> orgId = new LinkedHashSet<String>();
+		for (TenantResolver tr : tenantResolver) {
+			orgId.add(tr.getOrgId());
+		}
+		for (String org : orgId) {
+			TenancyContextHolder.setTenant(org);
+			List<User> allUsers = userService.getAllUsers();
+
+			for (User userFromDb : allUsers) {
+				if (userFromDb.isMarkDelete() && userFromDb.getMarkDeleteDate() != null) {
+					if (userFromDb.getMarkDeleteDate().before(DateTime.now().toDate()))
+						userService.delete(userFromDb);
+				}
+			}
+		}
+		TenancyContextHolder.setDefaultTenant();
+	}
+
 }

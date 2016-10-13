@@ -138,14 +138,14 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
     };
 
     // this method is used to enable/disable user
-    this.disableUser = function (userId, state) {
+    this.disableUser = function (userId, disableState) {
 
         var deferred = $q.defer();
 
         $http({
             method: 'PUT',
             url: $rootScope.baseUrl + 'api/v1/user/disable/' + userId,
-            params: {"state": state},
+            params: {"disableState": disableState},
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -153,12 +153,32 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
         }).success(function (response, status, headers, config) {
 
             deferred.resolve(response);
-        }).error(function () {
-            // Something went wrong.
-            deferred.reject({
-                'success': false,
-                'msg': 'Oops! Something went wrong. Please try again later.'
-            });
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+
+    // this method is used to set user as mark for delete (user and their statuses,comments
+    // will be deleted after 30 Days, it been taking care by server side)
+    this.markForDelete = function (userId, markDeleteState, days) {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'DELETE',
+            url: $rootScope.baseUrl + 'api/v1/user/markdelete/' + userId,
+            params: {"markdeleteState": markDeleteState, "days": days},
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        }).success(function (response, status, headers, config) {
+
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
         });
 
         return deferred.promise;

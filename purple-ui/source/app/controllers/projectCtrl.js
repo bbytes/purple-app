@@ -143,6 +143,7 @@ angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope
             uibModalInstance.result.then(function (project) {
                 $scope.allprojects.splice(index, 1);
                 $scope.allprojects.unshift(project);
+                appNotifyService.success(project.projectOwner + ' is currently owner of Project - ' + project.projectName);
             });
         }
     };

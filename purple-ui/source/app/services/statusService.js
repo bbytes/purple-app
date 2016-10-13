@@ -201,6 +201,7 @@ rootApp.service('statusService', function ($rootScope, $http, $q, $window, cfpLo
         return deferred.promise;
     };
 
+    // method is used to download all status by timeperiod
     this.csvDownloadAllStatus = function (time) {
 
         var deferred = $q.defer();
@@ -208,7 +209,34 @@ rootApp.service('statusService', function ($rootScope, $http, $q, $window, cfpLo
         $http({
             method: 'GET',
             url: $rootScope.baseUrl + 'api/v1/status/csv',
-            params: {"timePeriod": timePeriod},
+            params: {
+                "timePeriod": timePeriod
+            },
+            headers: {
+                'Content-Type': 'text/csv'
+            }
+        }).success(function (response, status, headers, config) {
+            var result = {};
+            result.fileName = headers('purple-file-name') || 'statusData.csv';
+            result.data = response;
+            deferred.resolve(result);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+
+    // method is used to download all status by user
+    this.csvDownloadAllStatusByUser = function (userId) {
+
+        var deferred = $q.defer();
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/status/csv',
+            params: {
+                "userId": userId
+            },
             headers: {
                 'Content-Type': 'text/csv'
             }

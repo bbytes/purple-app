@@ -45,6 +45,11 @@ public class ProjectService extends AbstractService<Project, String> {
 		return projectRepository.findByProjectOwner(user);
 	}
 
+	public boolean projectOwnerExist(User user) {
+		boolean state = projectRepository.findByProjectOwner(user).size() > 0 ? true : false;
+		return state;
+	}
+
 	public boolean projectNameExist(String name) {
 		boolean state = projectRepository.findOneByProjectName(name) == null ? false : true;
 		return state;
