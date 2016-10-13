@@ -9,7 +9,7 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
 
         $http({
             method: 'POST',
-            url: $rootScope.baseUrl + 'api/v1/admin/user/add',
+            url: $rootScope.baseUrl + 'api/v1/user/add',
             data: admin,
             headers: {
                 'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/admin/user/reinvite',
+            url: $rootScope.baseUrl + 'api/v1/user/reinvite',
             params: {"name": name, "email": email},
             headers: {
                 'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/admin/user',
+            url: $rootScope.baseUrl + 'api/v1/user',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -123,7 +123,7 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
     this.bulkupload = function (file) {
 
         var deferred = $q.defer();
-        $http.post($rootScope.baseUrl + 'api/v1/admin/user/bulkupload', file, {
+        $http.post($rootScope.baseUrl + 'api/v1/user/bulkupload', file, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
 
@@ -162,7 +162,5 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
         });
 
         return deferred.promise;
-
     };
-
 });

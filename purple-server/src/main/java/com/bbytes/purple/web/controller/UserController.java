@@ -77,7 +77,7 @@ public class UserController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/user/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/v1/user/add", method = RequestMethod.POST)
 	public RestResponse addUser(@RequestBody UserDTO userDTO) throws PurpleException {
 
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
@@ -121,7 +121,7 @@ public class UserController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/user/bulkupload", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/v1/user/bulkupload", method = RequestMethod.POST)
 	public RestResponse bulkUploadUsers(@RequestParam("file") MultipartFile file) throws PurpleException {
 
 		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
@@ -202,7 +202,7 @@ public class UserController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/user", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/user", method = RequestMethod.GET)
 	public RestResponse getAllUsers() throws PurpleException {
 
 		List<User> users = userService.getAllUsers();
@@ -221,7 +221,7 @@ public class UserController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/admin/users/project", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/users/project", method = RequestMethod.GET)
 	public RestResponse getuserListToBeAddedToProject(@RequestParam(required = false) String projectId)
 			throws PurpleException {
 
@@ -262,7 +262,7 @@ public class UserController {
 	 * @throws PurpleException
 	 */
 
-	@RequestMapping(value = "/api/v1/admin/user/reinvite", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/user/reinvite", method = RequestMethod.GET)
 	public RestResponse reInvite(@RequestParam("name") String name, @RequestParam("email") String email)
 			throws PurpleException {
 

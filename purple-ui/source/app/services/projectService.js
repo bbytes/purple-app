@@ -52,7 +52,6 @@ angular.module('rootApp').service('projectService', function ($rootScope, $http,
         $http({
             method: 'DELETE',
             url: $rootScope.baseUrl + 'api/v1/project/delete/' + id,
-            //data : admin,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -79,7 +78,6 @@ angular.module('rootApp').service('projectService', function ($rootScope, $http,
         $http({
             method: 'GET',
             url: $rootScope.baseUrl + 'api/v1/project/' + id,
-            //data : admin,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -168,13 +166,14 @@ angular.module('rootApp').service('projectService', function ($rootScope, $http,
         return deferred.promise;
     };
 
+    // get all user who's status is "JOINED"
     this.getAllUsersToAdd = function () {
 
         var deferred = $q.defer();
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/admin/users/project',
+            url: $rootScope.baseUrl + 'api/v1/users/project',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -190,14 +189,14 @@ angular.module('rootApp').service('projectService', function ($rootScope, $http,
         return deferred.promise;
     };
 
-
+    // get all JOINED user who are not part of respective project
     this.getMoreUsersToAdd = function (projectId) {
 
         var deferred = $q.defer();
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/admin/users/project',
+            url: $rootScope.baseUrl + 'api/v1/users/project',
             params: {projectId: projectId},
             headers: {
                 'Content-Type': 'application/json'
