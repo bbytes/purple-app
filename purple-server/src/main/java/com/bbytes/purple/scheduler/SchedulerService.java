@@ -6,9 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,13 +27,15 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
+import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Project;
-import com.bbytes.purple.domain.ProjectUserCountStats;
+import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TenantResolver;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.TenantResolverRepository;
+import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.NotificationService;
@@ -68,6 +70,9 @@ public class SchedulerService {
 	private StatusService statusService;
 
 	@Autowired
+	private CommentService commentService;
+
+	@Autowired
 	private EmailService emailService;
 
 	@Autowired
@@ -94,6 +99,28 @@ public class SchedulerService {
 	private void init() {
 		ScheduledExecutorService localExecutor = Executors.newScheduledThreadPool(25);
 		taskScheduler = new ConcurrentTaskScheduler(localExecutor);
+	}
+
+	@PostConstruct
+	private void cleanUpOrghanStatus() throws PurpleException {
+
+		List<TenantResolver> tenantResolver = tenantResolverRepository.findAll();
+		Set<String> orgId = new LinkedHashSet<String>();
+		for (TenantResolver tr : tenantResolver) {
+			orgId.add(tr.getOrgId());
+		}
+		for (String org : orgId) {
+			TenancyContextHolder.setTenant(org);
+			List<Status> statusList = statusService.findAll();
+			for (Status statusFromDb : statusList) {
+				if (statusFromDb.getUser() == null) {
+					List<Comment> commentFromDB = commentService.getCommentByStatus(statusFromDb);
+					commentService.delete(commentFromDB);
+					statusService.delete(statusFromDb);
+				}
+			}
+		}
+
 	}
 
 	/**
@@ -263,6 +290,7 @@ public class SchedulerService {
 
 	/* Cron Runs every Tuesday-Saturday at 10 am */
 	@Scheduled(cron = "	0 0 10 ? * TUE,WED,THU,FRI,SAT")
+	// @Scheduled(cron = " 0/10 * * * * *")
 	public void sendEmailforStatusUpdate() throws PurpleException, ParseException {
 
 		final String template = GlobalConstants.ASSOCIATES_EMAIL_TEMPLATE;
@@ -274,53 +302,133 @@ public class SchedulerService {
 			orgId.add(tr.getOrgId());
 		}
 		for (String org : orgId) {
+
 			TenancyContextHolder.setTenant(org);
-			List<User> allUsers = userService.getAllUsers();
+
 			Date startDate = new DateTime(new Date()).minusDays(1).withTimeAtStartOfDay().toDate();
 			Date endDate = new DateTime(new Date()).withTimeAtStartOfDay().toDate();
 
-			Iterable<ProjectUserCountStats> result = statusService.getUserofStatus(startDate, endDate);
-			Set<User> userList = new LinkedHashSet<User>();
-			for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
-				ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
-				userList.add(projectUserCountStats.getUser());
-			}
-			List<User> userListToBeSendMail = new LinkedList<User>();
-			Set<String> nameList = new LinkedHashSet<String>();
+			List<User> defaulterUsers = userService.getDefaulterUsers(startDate, endDate);
+			Map<User, Set<User>> defaulterMap = new LinkedHashMap<User, Set<User>>();
 
-			for (User user : allUsers) {
-				List<Project> projectList = userService.getProjects(user);
-				if (projectList != null && !projectList.isEmpty()) {
-					if (!userList.toString().contains(user.toString())) {
-						userListToBeSendMail.add(user);
-						if (user.getUserRole().getRoleName().equals("NORMAL"))
-							nameList.add(user.getName());
+			for (User userFromDb : defaulterUsers) {
+
+				List<Project> projectList = projectService.findProjectByUser(userFromDb);
+				boolean flag = true;
+				for (Project project : projectList) {
+					Set<User> usersFromProject = project.getUser();
+					for (User userToSendList : usersFromProject) {
+						if (userToSendList.getUserRole().equals(UserRole.MANAGER_USER_ROLE)) {
+
+							if (defaulterMap.containsKey(userToSendList)) {
+								defaulterMap.get(userToSendList).add(userFromDb);
+							} else {
+								Set<User> defaulterUserList = new HashSet<User>();
+								defaulterUserList.add(userFromDb);
+								defaulterMap.put(userToSendList, defaulterUserList);
+							}
+							flag = false;
+						}
+
+					}
+					if (flag) {
+						for (User userToSendList : usersFromProject) {
+							if (userToSendList.getUserRole().equals(UserRole.ADMIN_USER_ROLE)) {
+
+								if (defaulterMap.containsKey(userToSendList)) {
+									defaulterMap.get(userToSendList).add(userFromDb);
+								} else {
+									Set<User> defaulterUserList = new HashSet<User>();
+									defaulterUserList.add(userFromDb);
+									defaulterMap.put(userToSendList, defaulterUserList);
+								}
+							}
+						}
 					}
 				}
-				// Manager get include as well in email list.
-				if (user.getUserRole().getRoleName().equals("MANAGER"))
-					userListToBeSendMail.add(user);
-			}
-			List<String> emailList = new ArrayList<String>();
 
-			for (User userFromList : userListToBeSendMail) {
-				emailList.add(userFromList.getEmail());
 			}
 
-			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-			for (String name : nameList) {
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("name", name);
-				list.add(map);
+			Set<String> finalEmailList = new HashSet<String>();
+			for (Map.Entry<User, Set<User>> entry : defaulterMap.entrySet()) {
+				Set<String> emailSet = new LinkedHashSet<String>();
+				Set<Map<String, String>> nameListMap = new LinkedHashSet<Map<String, String>>();
+				emailSet.add(entry.getKey().getEmail());
+				for (User user : entry.getValue()) {
+					if (!finalEmailList.contains(user.getEmail())) {
+						emailSet.add(user.getEmail());
+						finalEmailList.add(user.getEmail());
+					}
+					if (user.getUserRole().getRoleName().equals("NORMAL")) {
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("name", user.getName());
+						nameListMap.add(map);
+					}
+				}
+
+				List<String> emailList = new ArrayList<String>();
+				emailList.addAll(emailSet);
+
+				String postDate = dateFormat.format(startDate);
+
+				Map<String, Object> emailBody = new HashMap<>();
+				emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
+				emailBody.put(GlobalConstants.USER_NAME, nameListMap);
+
+				if (!nameListMap.isEmpty() && !emailList.isEmpty())
+					emailService.sendEmail(emailList, emailBody, associateChecklistSubject, template);
+
 			}
-			String postDate = dateFormat.format(startDate);
 
-			Map<String, Object> emailBody = new HashMap<>();
-			emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
-			emailBody.put(GlobalConstants.USER_NAME, list);
-
-			if (!nameList.isEmpty())
-				emailService.sendEmail(emailList, emailBody, associateChecklistSubject, template);
+			// List<User> allUsers = userService.getAllUsers();
+			//
+			// Iterable<ProjectUserCountStats> result =
+			// statusService.getUserofStatus(startDate, endDate);
+			// Set<User> userList = new LinkedHashSet<User>();
+			// for (Iterator<ProjectUserCountStats> iterator =
+			// result.iterator(); iterator.hasNext();) {
+			// ProjectUserCountStats projectUserCountStats =
+			// (ProjectUserCountStats) iterator.next();
+			// userList.add(projectUserCountStats.getUser());
+			// }
+			// List<User> userListToBeSendMail = new LinkedList<User>();
+			// Set<String> nameList = new LinkedHashSet<String>();
+			//
+			// for (User user : allUsers) {
+			// List<Project> projectList = userService.getProjects(user);
+			// if (projectList != null && !projectList.isEmpty()) {
+			// if (!userList.toString().contains(user.toString())) {
+			// userListToBeSendMail.add(user);
+			// if (user.getUserRole().getRoleName().equals("NORMAL"))
+			// nameList.add(user.getName());
+			// }
+			// }
+			// // Manager get include as well in email list.
+			// if (user.getUserRole().getRoleName().equals("MANAGER"))
+			// userListToBeSendMail.add(user);
+			// }
+			// List<String> emailList = new ArrayList<String>();
+			//
+			// for (User userFromList : userListToBeSendMail) {
+			// emailList.add(userFromList.getEmail());
+			// }
+			//
+			// List<Map<String, String>> list = new ArrayList<Map<String,
+			// String>>();
+			// for (String name : nameList) {
+			// Map<String, String> map = new HashMap<String, String>();
+			// map.put("name", name);
+			// list.add(map);
+			// }
+			// String postDate = dateFormat.format(startDate);
+			//
+			// Map<String, Object> emailBody = new HashMap<>();
+			// emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
+			// emailBody.put(GlobalConstants.USER_NAME, list);
+			//
+			//// if (!nameList.isEmpty())
+			//// emailService.sendEmail(emailList, emailBody,
+			// associateChecklistSubject, template);
 		}
 		TenancyContextHolder.setDefaultTenant();
 	}
