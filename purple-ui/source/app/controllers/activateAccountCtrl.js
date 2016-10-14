@@ -33,7 +33,7 @@ angular.module('rootApp').controller('activateAccountCtrl', function ($rootScope
             $state.go("settings");
         } else {
             appNotifyService.success('Your account has been activated successfully. Why dont you invite users?');
-            $state.go("user-mgr");
+            $state.go("user-manager");
         }
     }).error(function (response) {
         deferred.reject(response);
