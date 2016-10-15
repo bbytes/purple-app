@@ -154,6 +154,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         });
         dropdownListService.getHours().then(function (response) {
             $scope.selectables = response.data;
+            $("#hoursDropdown").trigger("chosen:updated");
         });
     };
 
