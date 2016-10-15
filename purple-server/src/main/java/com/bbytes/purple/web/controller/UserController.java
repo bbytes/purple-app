@@ -441,7 +441,7 @@ public class UserController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/bulkupload/sample/download", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public FileSystemResource getCSVForAllStatus(HttpServletResponse response) throws PurpleException {
+	public FileSystemResource getSampleBulkUploadFile(HttpServletResponse response) throws PurpleException {
 
 		File file = new File(GlobalConstants.SAMPLE_BULKUPLOAD_FILE);
 		response.setContentType("text/csv");

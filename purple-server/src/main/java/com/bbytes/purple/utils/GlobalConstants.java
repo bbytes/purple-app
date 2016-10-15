@@ -90,5 +90,5 @@ public class GlobalConstants {
 
 	public static final String SALES_EMAIL_ADDRESS = "sales@beyondbytes.co.in";
 
-	public static final String SAMPLE_BULKUPLOAD_FILE = "./sample-bulk_upload-format.csv";
+	public static final String SAMPLE_BULKUPLOAD_FILE = "./src/main/resources/testfiles/sample-bulk_upload-format.csv";
 }
