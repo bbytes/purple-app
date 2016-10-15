@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.bitbucket.api.BitBucket;
 import org.springframework.social.bitbucket.api.BitBucketChangeset;
@@ -26,14 +28,23 @@ import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.SocialConnection;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
+import com.bbytes.purple.integration.JiraBasicCredentials;
 import com.bbytes.purple.repository.IntegrationRepository;
 import com.bbytes.purple.repository.SocialConnectionRepository;
 import com.bbytes.purple.social.MongoConnectionTransformers;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.web.controller.IntegrationController;
+
+import net.rcarz.jiraclient.JiraClient;
+import net.rcarz.jiraclient.JiraException;
+import net.rcarz.jiraclient.Role;
+import net.rcarz.jiraclient.RoleActor;
 
 @Service
 public class IntegrationService extends AbstractService<Integration, String> {
 
+	private static final Logger logger = LoggerFactory.getLogger(IntegrationService.class);
+	
 	private IntegrationRepository integrationRepository;
 
 	@Autowired
@@ -97,6 +108,29 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		return integration;
 	}
 
+	public List<net.rcarz.jiraclient.Project> syncJiraProjectWithUser(Integration integration) throws JiraException {
+		JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(),
+				integration.getJiraBasicAuthHeader());
+		JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
+		List<net.rcarz.jiraclient.Project> jiraProjects = jira.getProjects();
+		try {
+			for (net.rcarz.jiraclient.Project project : jiraProjects) {
+				net.rcarz.jiraclient.Project projectDetail = jira.getProject(project.getKey());
+				for (String role : projectDetail.getRoles().keySet()) {
+					Role roleObj = jira.getProjectRole(projectDetail.getRoles().get(role));
+					for (RoleActor roleActor : roleObj.getRoleActors()) {
+						if (roleActor.isUser())
+							System.out.println(roleActor.getUser());
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+		}
+		
+		return jiraProjects;
+	}
+	
 	public void addJiraProjects(List<net.rcarz.jiraclient.Project> jiraProjects, User loggedInUser)
 			throws PurpleException {
 		List<String> jiraProjectList = new LinkedList<String>();

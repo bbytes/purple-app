@@ -29,6 +29,7 @@ import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
 import net.rcarz.jiraclient.JiraClient;
+import net.rcarz.jiraclient.JiraException;
 import net.rcarz.jiraclient.Project;
 import net.rcarz.jiraclient.Role;
 import net.rcarz.jiraclient.RoleActor;
@@ -160,26 +161,12 @@ public class IntegrationController {
 		try {
 			Integration integration = integrationService.getJIRAConnection(user);
 
-			JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(),
-					integration.getJiraBasicAuthHeader());
-			JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
-			List<Project> jiraProjects = jira.getProjects();
-			for (Project project : jiraProjects) {
-				Project projectDetail = jira.getProject(project.getKey());
-				for (String role : projectDetail.getRoles().keySet()) {
-					Role roleObj = jira.getProjectRole(projectDetail.getRoles().get(role));
-					for (RoleActor roleActor : roleObj.getRoleActors()) {
-						if (roleActor.isUser())
-							System.out.println(roleActor.getUser());
-					}
-
-				}
-			}
+			List<Project> jiraProjects = integrationService.syncJiraProjectWithUser(integration);
 
 			integrationService.addJiraProjects(jiraProjects, user);
 
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("User is connected to JIRA successfully");
