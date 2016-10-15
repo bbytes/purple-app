@@ -359,7 +359,8 @@ public class SchedulerService {
 						emailSet.add(user.getEmail());
 						finalEmailList.add(user.getEmail());
 					}
-					if (user.getUserRole().getRoleName().equals("NORMAL")) {
+					if (user.getUserRole().equals(UserRole.NORMAL_USER_ROLE) && user.isAccountInitialise()
+							&& !user.isDisableState() && !user.isMarkDelete()) {
 						Map<String, String> map = new HashMap<String, String>();
 						map.put("name", user.getName());
 						nameListMap.add(map);

@@ -47,18 +47,18 @@
                         <div class="timeline-body worked-on">
                             <h3>worked on</h3>
                             <p>
-							 <hm-read-more hm-text="{{ status.workedOn }}" hm-limit="90" hm-more-text="more"  hm-less-text=" less"hm-dots-class="dots" hm-link-class="links">
-                             </hm-read-more>
-						</p>
+                            <hm-read-more hm-text="{{ status.workedOn}}" hm-limit="90" hm-more-text="more"  hm-less-text=" less"hm-dots-class="dots" hm-link-class="links">
+                            </hm-read-more>
+                            </p>
                         </div>
 
                         <div class="timeline-body working-on">
                             <h3>working on</h3>
-							
+
                             <p>
-							  <hm-read-more hm-text="{{ status.workingOn }}" hm-limit="90" hm-more-text="more"  hm-less-text="less" hm-dots-class="dots" hm-link-class="links">
-                             </hm-read-more>
-							</p>
+                            <hm-read-more hm-text="{{ status.workingOn}}" hm-limit="90" hm-more-text="more"  hm-less-text="less" hm-dots-class="dots" hm-link-class="links">
+                            </hm-read-more>
+                            </p>
                         </div>
 
                         <div class="timeline-body blocker-on">
@@ -108,30 +108,30 @@
                     <div class="col-sm-2" style="padding-right: 4px; padding-left: 4px;">
                         <div class="form-sidebar">
                             <div class="form-group side-slide-panel">
-					
+
                                 <select chosen class="form-control turnintodropdown" name="hours"
-                                        ng-model="hours">
+                                        ng-model="hours" id="hoursDropdown">
                                     <option value="">Hrs</option>		
                                     <option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-					
-					
-<!--                    					<div class="col-sm-2" style="padding-right: 4px; padding-left: 4px;">
-                                            <div class="form-sidebar">
-                                                <div class="form-group side-slide-panel">
-                                                    <select chosen class="form-control turnintodropdown" name="hours"
-                                                            ng-model="hours">
-                                                        <option value="">Min</option>		
-                                                        <option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                                        </div>-->
-					
-					
+
+
+                    <!--                    					<div class="col-sm-2" style="padding-right: 4px; padding-left: 4px;">
+                                                                <div class="form-sidebar">
+                                                                    <div class="form-group side-slide-panel">
+                                                                        <select chosen class="form-control turnintodropdown" name="hours"
+                                                                                ng-model="hours">
+                                                                            <option value="">Min</option>		
+                                                                            <option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                            </div>-->
+
+
                 </div>
 
                 <div class="form-group side-slide-panel">
@@ -228,11 +228,10 @@
                 <div class="col-md-3">
                     <div class="form-sidebar">
                         <div class="form-group side-slide-panel">
-                            <select class="form-control turnintodropdown" name="hours"
-                                    ng-model="hours">
+                            <select chosen class="form-control turnintodropdown" name="hours"
+                                    ng-model="hours" id="hoursDropdown">
                                 <option value="">Hrs</option>		
                                 <option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
-
                             </select>
                         </div>
                     </div>
