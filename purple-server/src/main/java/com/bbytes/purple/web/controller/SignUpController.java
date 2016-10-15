@@ -93,7 +93,7 @@ public class SignUpController {
 		if (ValidateEmailDomain.isEmailDomainNotValid(signUpRequestDTO.getEmail()))
 			throw new PurpleException(ErrorHandler.DISPOSABLE_EMAIL_DOMAIN, ErrorHandler.INVALID_EMAIL);
 
-		User user = new User(orgId, signUpRequestDTO.getEmail());
+		User user = new User(signUpRequestDTO.getOrgName().trim(), signUpRequestDTO.getEmail());
 		user.setEmail(signUpRequestDTO.getEmail().toLowerCase());
 		user.setPassword(signUpRequestDTO.getPassword());
 		user.setOrganization(organization);
