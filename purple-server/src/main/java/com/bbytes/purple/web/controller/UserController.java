@@ -1,6 +1,7 @@
 package com.bbytes.purple.web.controller;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,11 +14,12 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,12 +68,15 @@ public class UserController {
 	@Autowired
 	private EmailService emailService;
 
+	@Autowired
+	private ResourceLoader resourceloader;
+
 	@Value("${base.url}")
 	private String baseUrl;
 
 	@Value("${email.invite.subject}")
 	private String inviteSubject;
-	
+
 	@Value("${sample.bulkuplaod.file}")
 	private String sampleBulkuploadFile;
 
@@ -442,16 +447,16 @@ public class UserController {
 	 * 
 	 * @return
 	 * @throws PurpleException
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/api/v1/bulkupload/sample/download", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public FileSystemResource getSampleBulkUploadFile(HttpServletResponse response) throws PurpleException {
-
-		File file = new File(sampleBulkuploadFile);
+	public void getSampleBulkUploadFile(HttpServletResponse response) throws PurpleException, IOException {
+		InputStream fileStream = resourceloader.getResource(sampleBulkuploadFile).getInputStream();
 		response.setContentType("text/csv");
-		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
-		response.setHeader("purple-file-name", file.getName());
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", "sample-user-upload.csv"));
+		IOUtils.copy(fileStream, response.getOutputStream());
+		response.flushBuffer();
 
-		return new FileSystemResource(file);
 	}
 
 }
