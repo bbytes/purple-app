@@ -71,6 +71,9 @@ public class UserController {
 
 	@Value("${email.invite.subject}")
 	private String inviteSubject;
+	
+	@Value("${sample.bulkuplaod.file}")
+	private String sampleBulkuploadFile;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
@@ -443,7 +446,7 @@ public class UserController {
 	@RequestMapping(value = "/api/v1/bulkupload/sample/download", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	public FileSystemResource getSampleBulkUploadFile(HttpServletResponse response) throws PurpleException {
 
-		File file = new File(GlobalConstants.SAMPLE_BULKUPLOAD_FILE);
+		File file = new File(sampleBulkuploadFile);
 		response.setContentType("text/csv");
 		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
 		response.setHeader("purple-file-name", file.getName());
