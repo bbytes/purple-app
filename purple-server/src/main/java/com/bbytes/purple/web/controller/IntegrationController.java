@@ -29,10 +29,7 @@ import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
 import net.rcarz.jiraclient.JiraClient;
-import net.rcarz.jiraclient.JiraException;
 import net.rcarz.jiraclient.Project;
-import net.rcarz.jiraclient.Role;
-import net.rcarz.jiraclient.RoleActor;
 
 /**
  * Integration Controller
