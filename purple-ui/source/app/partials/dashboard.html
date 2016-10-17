@@ -81,7 +81,8 @@
                             <li ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)" role="menu" aria-labelledby="dropdownMenu"  ng-repeat="project in userprojects| orderBy:'projectName' | filter:searchProjects">
                                 <a ng-click="loadProjectMap(project, mytime)">{{project.projectName}}</a>
                             </li>
-                            <li ng-show="(userprojects | filter:searchProjects).length == 0" class="null-results"><p>No results found for <span style="font-weight:bold; color:#222;">"{{searchProjects}}"</span></p></li>
+                            <li ng-show="userprojects.length != 0 && (userprojects | filter:searchProjects).length == 0" class="null-results"><p>No results found for <span style="font-weight:bold; color:#222;">"{{searchProjects}}"</span></p></li>
+                            <li ng-show="userprojects.length == 0" class="null-results"><p>No Projects found</p></li>
                         </ul>
                     </div>
                 </div>
@@ -104,7 +105,8 @@
                             <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers| orderBy:'userName' | filter:searchUsers" >
                                 <a ng-click="loadUserMap(users, mytime)">{{users.userName}}</a>
                             </li>
-                            <li ng-show="(projectUsers | filter:searchUsers).length == 0" class="null-results"><p>No results found <span style="font-weight:bold; color:#222;">"{{searchUsers}}"</span></p></li>
+                            <li ng-show="projectUsers.length != 0 && (projectUsers | filter:searchUsers).length == 0" class="null-results"><p>No results found <span style="font-weight:bold; color:#222;">"{{searchUsers}}"</span></p></li>
+                            <li ng-show="projectUsers.length == 0" class="null-results"><p>No Users found</p></li>
                         </ul>
                     </div>
 

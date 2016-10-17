@@ -47,7 +47,6 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
 
         $scope.loadConfigSetting();
         $scope.loadTimePeriods();
-        $scope.loadProjects();
     };
 
     // getting all config setting (status enable days)
@@ -171,12 +170,10 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         projectService.getUserproject().then(function (response) {
             if (response.success) {
                 $scope.allprojects = response.data.gridData;
-                $("#projectDropdown").trigger("chosen:updated");
             }
         });
         dropdownListService.getHours().then(function (response) {
             $scope.selectables = response.data;
-            $("#hoursDropdown").trigger("chosen:updated");
         });
     };
 

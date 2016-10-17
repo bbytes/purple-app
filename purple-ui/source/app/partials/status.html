@@ -83,7 +83,7 @@
     <form name="myForm">
         <div class="col-md-4">
             <div class="side">
-                <div class="row">
+                <div class="row" ng-init="loadProjects()">
 
                     <div class="date-display">
                         <!-- p>{{current_date | date:'MMM dd, yyyy'}}</p -->
@@ -100,9 +100,10 @@
                         <div class="form-sidebar">
 
                             <div class="form-group" >
-                                <select chosen option="allprojects" ng-model="project" id="projectDropdown">
-                                    <option value="">--- Select Project ---</option>
-                                    <option ng-repeat="project in allprojects" value="{{project.projectId}}" >{{project.projectName}}</option>
+                                <select chosen="allprojects" ng-model="project" id="projectDropdown" data-placeholder="--- Select Project ---"
+                                        ng-options="p.projectId as p.projectName for p in allprojects">
+                                    <!--                                    <option value="">--- Select Project ---</option>-->
+
                                 </select>
                             </div>
 
@@ -111,14 +112,15 @@
 
                     <div class="col-sm-2" style="padding-right: 4px; padding-left: 4px;">
                         <div class="form-sidebar">
-                            <div class="form-group side-slide-panel">
 
-                                <select chosen class="form-control turnintodropdown" name="hours"
-                                        ng-model="hours" id="hoursDropdown">
-                                    <option value="">Hrs</option>		
-                                    <option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
+                            <div class="form-group" >
+                                <select chosen="selectables" ng-model="hours" id="hoursDropdown" data-placeholder="Hrs"
+                                        ng-options="hr.id as hr.value for hr in selectables">
+                                    <!--                                    <option value="">--- Select Project ---</option>-->
+
                                 </select>
                             </div>
+
                         </div>
                     </div>
 

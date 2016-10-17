@@ -393,3 +393,25 @@ angular.module('rootApp').directive('csvDownload', function ($document, $timeout
         }
     };
 });
+
+// This directive to load searchable dropdowns dynamically
+angular.module('rootApp').directive('chosen', function ($timeout) {
+
+    var linker = function (scope, element, attr) {
+
+        scope.$watch(attr.chosen, function () {
+            $timeout(function () {
+                element.trigger('chosen:updated');
+            }, 0, false);
+        }, true);
+
+        $timeout(function () {
+            element.chosen();
+        }, 0, false);
+    };
+
+    return {
+        restrict: 'AC',
+        link: linker
+    };
+});
