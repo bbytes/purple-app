@@ -75,6 +75,9 @@ angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $
                     case "status_not_found":
                         appNotifyService.error(response.data.data);
                         break;
+                    case "sign_up_failed":
+                        appNotifyService.error(response.data.data);
+                        break;
                     case "project_owner_delete_failed":
                         appNotifyService.error('The user that you are trying to delete is an owner of other project(s). Please change the owner and then try delete again.');
                         break;

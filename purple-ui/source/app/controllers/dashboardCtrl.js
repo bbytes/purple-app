@@ -14,6 +14,9 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
     $rootScope.dashboardClass = 'dashboard-current';
     $rootScope.settingClass = 'setting-nav';
 
+    // variable to store the information about timeline data
+    $scope.timelineData;
+
     /**
      * Get all status timeline
      */
@@ -35,7 +38,6 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
         cfpLoadingBar.complete();
     };
 
-
     $scope.loadStatusTimeline = function (time) {
 
         if (time === null || time === undefined)
@@ -47,11 +49,8 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
 
         statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
             if (response.success) {
-                $scope.artists = [];
-                angular.forEach(response.data.gridData, function (value, key) {
-                    $scope.artists.push(value);
-                });
-                $scope.allstatus = response.data.gridData;
+                $scope.timelineData = response.data.gridData;
+
                 $scope.isActive = true;
                 $scope.isProject = false;
                 $scope.isUser = false;
@@ -209,10 +208,7 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
         statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
             if (response.success) {
 
-                $scope.artists = [];
-                angular.forEach(response.data.gridData, function (value, key) {
-                    $scope.artists.push(value);
-                });
+                $scope.timelineData = response.data.gridData;
 
                 $scope.selected = project;
                 $scope.isProject = true;
@@ -234,10 +230,7 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
         statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
             if (response.success) {
 
-                $scope.artists = [];
-                angular.forEach(response.data.gridData, function (value, key) {
-                    $scope.artists.push(value);
-                });
+                $scope.timelineData = response.data.gridData;
                 $scope.selected = user;
                 $scope.isUser = true;
                 $scope.isProject = false;

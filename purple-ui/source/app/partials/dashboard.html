@@ -59,8 +59,8 @@
 
 
 <div class="leftSidebar">
-    <div class="theiaStickySidebar" ng-init="loadTimePeriod(); loadStatusTimeline()">
-        <div class="panel-group" id="accordion" ng-init="loadUserProjects()">
+    <div class="theiaStickySidebar" >
+        <div class="panel-group" id="accordion">
             <div class="panel panel-default">
                 <div class="panel-heading project-active">
                     <h4 class="panel-title">
@@ -104,7 +104,7 @@
                             <li  ng-class="{'selected':$index == selectedUser}" ng-click="setClickedUser($index)" ng-model = "users" ng-repeat="users in projectUsers| orderBy:'userName' | filter:searchUsers" >
                                 <a ng-click="loadUserMap(users, mytime)">{{users.userName}}</a>
                             </li>
-                           <li ng-show="(projectUsers | filter:searchUsers).length == 0" class="null-results"><p>No results found <span style="font-weight:bold; color:#222;">"{{searchUsers}}"</span></p></li>
+                            <li ng-show="(projectUsers | filter:searchUsers).length == 0" class="null-results"><p>No results found <span style="font-weight:bold; color:#222;">"{{searchUsers}}"</span></p></li>
                         </ul>
                     </div>
 
@@ -277,12 +277,12 @@
             </div>
 
             <!--timeline-->
-            <ul class="timeline newid" ng-repeat="artist in artists">
+            <ul class="timeline newid" ng-repeat="data in timelineData">
                 <div class="date-time">
-                    <p>{{artist.date}}</p>
+                    <p>{{data.date}}</p>
                 </div>
 
-                <li ng-repeat="status in artist.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
+                <li ng-repeat="status in data.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
                     <div class="timeline-badge"></div>
                     <div class="timeline-panel">
 
@@ -307,23 +307,23 @@
                             <h4 ng-show="isUser"><span class="hash"># </span> {{status.projectName}}
                                 <span  style="float:right"> {{status.time}}</span>
                             </h4>
-                            <p>{{status.hours}}hrs, {{artist.date}}, <a href="#" ng-click="openCommentSideBar(status.statusId); openSideNavPanel(mytime)">{{status.commentCount}} Comments</a></p> 
+                            <p>{{status.hours}}hrs, {{data.date}}, <a href="#" ng-click="openCommentSideBar(status.statusId); openSideNavPanel(mytime)">{{status.commentCount}} Comments</a></p> 
                         </div>
 
                         <div class="timeline-body worked-on">
                             <h3>worked on</h3>
                             <p>
-							  <hm-read-more hm-text="{{ status.workedOn }}" hm-limit="90" hm-more-text="more"  hm-less-text="  less"hm-dots-class="dots" hm-link-class="links">
-                             </hm-read-more>
-							</p>
+                            <hm-read-more hm-text="{{ status.workedOn}}" hm-limit="90" hm-more-text="more"  hm-less-text="  less"hm-dots-class="dots" hm-link-class="links">
+                            </hm-read-more>
+                            </p>
                         </div>
 
                         <div class="timeline-body working-on">
                             <h3>working on</h3>
                             <p>
-							 <hm-read-more hm-text="{{ status.workingOn }}" hm-limit="90" hm-more-text="more"  hm-less-text="less" hm-dots-class="dots" hm-link-class="links">
-                             </hm-read-more>
-							</p>
+                            <hm-read-more hm-text="{{ status.workingOn}}" hm-limit="90" hm-more-text="more"  hm-less-text="less" hm-dots-class="dots" hm-link-class="links">
+                            </hm-read-more>
+                            </p>
                         </div>
 
                         <div class="timeline-body blocker-on">
