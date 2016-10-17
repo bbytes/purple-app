@@ -131,7 +131,7 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
                 $scope.oldUser = response.data;
                 $scope.allusers.splice(index, 1);
                 $scope.allusers.unshift($scope.oldUser);
-                appNotifyService.error('Atleast one Admin should be mandatory');
+                appNotifyService.error('You cannot change Role until there is another admin user. It is mandatory to have atleast one Admin for the application.');
             }
         }, function (error) {
             appNotifyService.error('Error while assigning users role. Please check back again!');

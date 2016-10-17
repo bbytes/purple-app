@@ -82,7 +82,7 @@ angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $
                         appNotifyService.error('The user that you are trying to delete is an owner of other project(s). Please change the owner and then try delete again.');
                         break;
                     case "deletion_not_allowed":
-                        appNotifyService.error('Atleast one Admin should be mandatory');
+                        appNotifyService.error('You cannot delete the ONLY Admin user. It is mandatory to have atleast one Admin for the application.');
                         break;
                 }
             }
