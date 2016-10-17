@@ -98,11 +98,6 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
                     appNotifyService.success('User has been sucessfully mark for delete');
                 else
                     appNotifyService.success('All user information has been restored.');
-            } else {
-                $scope.oldUser = response.data;
-                $scope.allusers.splice(index, 1);
-                $scope.allusers.unshift($scope.oldUser);
-                appNotifyService.error('Atleast one Admin should be mandatory');
             }
         });
     };
