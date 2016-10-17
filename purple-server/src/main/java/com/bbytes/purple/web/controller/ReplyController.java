@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class ReplyController {
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
-	
+
 	@Value("${email.reply.subject}")
 	private String replySubject;
 
@@ -80,9 +81,10 @@ public class ReplyController {
 
 		Comment comment = replyService.postReply(commentId, replyDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
-		
+
 		int replySize = comment.getReplies().size();
-		String postDate = dateFormat.format(comment.getCreationDate());;
+		String postDate = dateFormat.format(comment.getCreationDate());
+		;
 
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
@@ -91,7 +93,14 @@ public class ReplyController {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize-1).getReplyDesc());
+		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize - 1).getReplyDesc());
+		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
+		emailBody.put(GlobalConstants.WORKED_ON,
+				Jsoup.parse(status.getWorkedOn() != null ? status.getWorkedOn() : "").text());
+		emailBody.put(GlobalConstants.WORKING_ON,
+				Jsoup.parse(status.getWorkingOn() != null ? status.getWorkingOn() : "").text());
+		emailBody.put(GlobalConstants.BLOCKERS,
+				Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
 
 		emailService.sendEmail(emailList, emailBody, replySubject, template);
 

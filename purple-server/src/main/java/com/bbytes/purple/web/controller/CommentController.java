@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,12 @@ public class CommentController {
 		emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
+		emailBody.put(GlobalConstants.WORKED_ON,
+				Jsoup.parse(status.getWorkedOn() != null ? status.getWorkedOn() : "").text());
+		emailBody.put(GlobalConstants.WORKING_ON,
+				Jsoup.parse(status.getWorkingOn() != null ? status.getWorkingOn() : "").text());
+		emailBody.put(GlobalConstants.BLOCKERS,
+				Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
 		emailBody.put("userName", user.getName());
 
 		emailService.sendEmail(emailList, emailBody, commentSubject, template);
@@ -111,26 +118,33 @@ public class CommentController {
 	public RestResponse updateComment(@PathVariable("commentId") String commentId, @RequestBody CommentDTO commentDTO)
 			throws PurpleException {
 
-		/*final String template = GlobalConstants.UPDATE_COMMENT_EMAIL_TEMPLATE;
-		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
-
-		User user = userService.getLoggedInUser();*/
+		/*
+		 * final String template =
+		 * GlobalConstants.UPDATE_COMMENT_EMAIL_TEMPLATE; DateFormat dateFormat
+		 * = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		 * 
+		 * User user = userService.getLoggedInUser();
+		 */
 		Comment comment = commentService.updateComment(commentId, commentDTO);
-		/*Status status = statusService.findOne(comment.getStatus().getStatusId());
-
-		final String updateCommentSub = "Statusnap - " + " " + status.getUser().getName() + " " + updateCommentSubject;
-		String postDate = dateFormat.format(status.getDateTime());
-		List<String> emailList = new ArrayList<String>();
-		emailList.add(status.getUser().getEmail());
-
-		Map<String, Object> emailBody = new HashMap<>();
-		emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
-		emailBody.put("userName", user.getName());
-
-		emailService.sendEmail(emailList, emailBody, updateCommentSub, template);
-*/
+		/*
+		 * Status status =
+		 * statusService.findOne(comment.getStatus().getStatusId());
+		 * 
+		 * final String updateCommentSub = "Statusnap - " + " " +
+		 * status.getUser().getName() + " " + updateCommentSubject; String
+		 * postDate = dateFormat.format(status.getDateTime()); List<String>
+		 * emailList = new ArrayList<String>();
+		 * emailList.add(status.getUser().getEmail());
+		 * 
+		 * Map<String, Object> emailBody = new HashMap<>();
+		 * emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
+		 * emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		 * emailBody.put(GlobalConstants.COMMENT_DESC,
+		 * comment.getCommentDesc()); emailBody.put("userName", user.getName());
+		 * 
+		 * emailService.sendEmail(emailList, emailBody, updateCommentSub,
+		 * template);
+		 */
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 
 		logger.debug("Comment is updated successfully");

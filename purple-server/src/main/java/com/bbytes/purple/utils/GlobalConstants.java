@@ -44,6 +44,12 @@ public class GlobalConstants {
 
 	public static final String COMMENT_DESC = "comment_desc";
 
+	public static final String WORKED_ON = "workedOn";
+
+	public static final String WORKING_ON = "workingOn";
+
+	public static final String BLOCKERS = "blockers";
+
 	public static final String REPLY_DESC = "reply_desc";
 
 	public static final String ACTIVATION_LINK = "activationLink";
