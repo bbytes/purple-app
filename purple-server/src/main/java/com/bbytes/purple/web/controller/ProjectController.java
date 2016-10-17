@@ -99,17 +99,19 @@ public class ProjectController {
 		long currentDate = new Date().getTime();
 
 		for (User addedUser : usersTobeAdded) {
-			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(addedUser.getEmail(), 168);
-			Map<String, Object> emailBody = new HashMap<>();
-			List<String> emailList = new ArrayList<String>();
-			emailList.add(addedUser.getEmail());
-			emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
-			emailBody.put(GlobalConstants.USER_NAME, addedUser.getName());
-			emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-			emailBody.put(GlobalConstants.ACTIVATION_LINK,
-					baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
+			if (addedUser.isAccountInitialise() && User.JOINED.equals(addedUser.getStatus())) {
+				final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(addedUser.getEmail(), 168);
+				Map<String, Object> emailBody = new HashMap<>();
+				List<String> emailList = new ArrayList<String>();
+				emailList.add(addedUser.getEmail());
+				emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
+				emailBody.put(GlobalConstants.USER_NAME, addedUser.getName());
+				emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+				emailBody.put(GlobalConstants.ACTIVATION_LINK,
+						baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
 
-			emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
+				emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
+			}
 		}
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 
@@ -160,18 +162,20 @@ public class ProjectController {
 
 		// Here get newly added user to project.
 		for (User sendMailtoUpdatedUser : updateUserList) {
-			final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(sendMailtoUpdatedUser.getEmail(),
-					168);
-			List<String> emailList = new LinkedList<String>();
-			emailList.add(sendMailtoUpdatedUser.getEmail());
-			Map<String, Object> emailBody = new HashMap<>();
-			emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
-			emailBody.put(GlobalConstants.USER_NAME, sendMailtoUpdatedUser.getName());
-			emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-			emailBody.put(GlobalConstants.ACTIVATION_LINK,
-					baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
+			if (sendMailtoUpdatedUser.isAccountInitialise() && User.JOINED.equals(sendMailtoUpdatedUser.getStatus())) {
+				final String xauthToken = tokenAuthenticationProvider
+						.getAuthTokenForUser(sendMailtoUpdatedUser.getEmail(), 168);
+				List<String> emailList = new LinkedList<String>();
+				emailList.add(sendMailtoUpdatedUser.getEmail());
+				Map<String, Object> emailBody = new HashMap<>();
+				emailBody.put(GlobalConstants.PROJECT_NAME, projectDTO.getProjectName());
+				emailBody.put(GlobalConstants.USER_NAME, sendMailtoUpdatedUser.getName());
+				emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+				emailBody.put(GlobalConstants.ACTIVATION_LINK,
+						baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
 
-			emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
+				emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
+			}
 		}
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 

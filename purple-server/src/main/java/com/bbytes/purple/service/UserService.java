@@ -405,22 +405,13 @@ public class UserService extends AbstractService<User, String> {
 	public List<User> getUsersToBeAdded(String projectId) throws PurpleException {
 
 		List<User> userList = new LinkedList<User>();
+
 		try {
-			if (projectId == null || projectId.isEmpty()) {
-				List<User> users = userRepository.findAll();
-				for (User user : users) {
-					if (user.getStatus().equals(User.JOINED))
-						userList.add(user);
-				}
-			} else {
+			userList = userRepository.findAll();
+			if (projectId != null && !projectId.isEmpty()) {
 				if (!projectService.projectIdExist(projectId))
 					throw new PurpleException("Error while getting users list", ErrorHandler.PROJECT_NOT_FOUND);
 				Set<User> usersOfProject = projectService.getAllUsersByProject(projectId);
-				List<User> users = userRepository.findAll();
-				for (User user : users) {
-					if (user.getStatus().equals(User.JOINED))
-						userList.add(user);
-				}
 				userList.removeAll(usersOfProject);
 			}
 
