@@ -78,7 +78,7 @@
                     <thead>
                         <tr>
                             <th ng-click="sort('userName')">User Name
-                                <span class="glyphicon sort-icon" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                <span class="glyphicon sort-icon" ng-hide="isSortKeyIcon" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
                             </th>
                             <th ng-click="sort('status')">Status
                                 <span class="glyphicon sort-icon" ng-show="sortKey === 'status'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>

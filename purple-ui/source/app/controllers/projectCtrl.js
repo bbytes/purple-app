@@ -260,6 +260,11 @@ angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope
     };
 
     $scope.sort = function (keyname) {
+        // below code is just hide and show sort icon based on key
+        if (keyname !== 'projectName')
+            $scope.isSortKeyIcon = true;
+        else
+            $scope.isSortKeyIcon = false;
         $scope.sortKey = keyname;   //set the sortKey to the param passed
         $scope.reverse = !$scope.reverse; //if true make it false and vice versa
     };

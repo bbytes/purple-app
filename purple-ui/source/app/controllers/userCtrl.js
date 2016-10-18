@@ -163,6 +163,11 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
     };
 
     $scope.sort = function (keyname) {
+        // below code is just hide and show sort icon based on key
+        if (keyname !== 'userName')
+            $scope.isSortKeyIcon = true;
+        else
+            $scope.isSortKeyIcon = false;
         $scope.sortKey = keyname;   //set the sortKey to the param passed
         $scope.reverse = !$scope.reverse; //if true make it false and vice versa
     };

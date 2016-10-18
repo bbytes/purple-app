@@ -94,7 +94,7 @@
                     <thead>
                         <tr>
                             <th ng-click="sort('projectName')">Project Name
-                                <span class="glyphicon sort-icon" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                <span class="glyphicon sort-icon" ng-hide="isSortKeyIcon" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
                             </th>
                             <th></th>
                             <th ng-click="sort('projectOwner')">Project Owner
@@ -229,7 +229,7 @@
                     <thead>
                         <tr>
                             <th ng-click="sort('projectName')">Project Name
-                                <span class="glyphicon sort-icon" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                <span class="glyphicon sort-icon" ng-hide="isSortKeyIcon" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
                             </th>
                             <th></th>
                             <th ng-click="sort('projectOwner')">Project Owner
