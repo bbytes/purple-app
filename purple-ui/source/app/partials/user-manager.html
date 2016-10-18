@@ -75,25 +75,39 @@
             </div>
             <div class="project-table" ng-init="initUser()">
                 <table>
-                    <tr ng-repeat="user in allusers| orderBy:'userName'  | filter:searchText">
-                        <td class="table-user"><small> <ng-letter-avatar
-                                    data="{{user.userName}}" shape="round"></ng-letter-avatar>
-                            </small>
+                    <thead>
+                        <tr>
+                            <th ng-click="sort('userName')">User Name
+                                <span class="glyphicon sort-icon" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                            <th ng-click="sort('status')">Status
+                                <span class="glyphicon sort-icon" ng-show="sortKey === 'status'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                            <th ng-click="sort('userRole.id')">Role
+                                <span class="glyphicon sort-icon" ng-show="sortKey === 'userRole.id'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="user in allusers|orderBy:sortKey:reverse| filter:searchText|itemsPerPage:10">
+                            <td class="table-user"><small> <ng-letter-avatar
+                                        data="{{user.userName}}" shape="round"></ng-letter-avatar>
+                                </small>
 
-                            <div class="user-label">
-                                <h4>{{user.userName}}</h4>
-                                <p>{{user.email}}</p>
-                            </div></td>
-                        <td><img src="../../assets/img/pending.png" ng-if="user.status === 'Pending'">
-                            <img src="../../assets/img/join.png" ng-if="user.status === 'Joined'">
-                            {{user.status}}
-                        </td>
-                        <td>
-                            <select class="form-control" ng-readonly="userRole !== 'ADMIN'" ng-options="roles.id as roles.value for roles in userRoles" ng-model="user.userRole.id" ng-change="roleChange(user.userRole.id, user, allusers.indexOf(user))">			
-                            </select>
-                        </td>
+                                <div class="user-label">
+                                    <h4>{{user.userName}}</h4>
+                                    <p>{{user.email}}</p>
+                                </div></td>
+                            <td><img src="../../assets/img/pending.png" ng-if="user.status === 'Pending'">
+                                <img src="../../assets/img/join.png" ng-if="user.status === 'Joined'">
+                                {{user.status}}
+                            </td>
+                            <td>
+                                <select class="form-control" ng-readonly="userRole !== 'ADMIN'" ng-options="roles.id as roles.value for roles in userRoles" ng-model="user.userRole.id" ng-change="roleChange(user.userRole.id, user, allusers.indexOf(user))">			
+                                </select>
+                            </td>
 
-                        <td class="re-invite">
+                            <td class="re-invite">
                     <center><button type="button" class="btn btn-default"
                                     ng-click="resend(user.userName, user.email)" ng-hide= "user.status !== 'Pending'">Re-invite</button></center>
                     </td>
@@ -125,7 +139,13 @@
                            csv-download-user="user.id">Download Data</a>
                     </td>
                     </tr>
+                    </tbody>
                 </table>
+                <dir-pagination-controls
+                    max-size="10"
+                    direction-links="true"
+                    boundary-links="true" >
+                </dir-pagination-controls>
             </div>
         </div>
     </div>

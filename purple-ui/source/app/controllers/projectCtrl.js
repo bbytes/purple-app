@@ -13,6 +13,9 @@ angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope
     $scope.showpage = false;
     // variable to store information of all project list
     $scope.allprojects;
+    //when page is loading, showing sort by username
+    $scope.sortKey = 'projectName';
+    
     // Method is used to create project
     $scope.createProject = function (project) {
 
@@ -254,6 +257,11 @@ angular.module('rootApp').controller('projectCtrl', function ($scope, $rootScope
             }
             $scope.allprojects.splice(index, 1);
         });
+    };
+
+    $scope.sort = function (keyname) {
+        $scope.sortKey = keyname;   //set the sortKey to the param passed
+        $scope.reverse = !$scope.reverse; //if true make it false and vice versa
     };
 
     $scope.show = true;

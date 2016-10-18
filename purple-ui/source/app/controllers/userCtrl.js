@@ -9,7 +9,9 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
     // variable to store information about all list of user
     $scope.allusers;
     // this varibale is used to pass no of days the user data need to deleted
-    $scope.days = 15;
+    $scope.days = 1;
+    //when page is loading, showing sort by username
+    $scope.sortKey = 'userName';
 
     $scope.invite = function (isValid) {
 
@@ -158,6 +160,11 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
         }, function (error) {
             appNotifyService.error('Invalid file format');
         });
+    };
+
+    $scope.sort = function (keyname) {
+        $scope.sortKey = keyname;   //set the sortKey to the param passed
+        $scope.reverse = !$scope.reverse; //if true make it false and vice versa
     };
 
 });

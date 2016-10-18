@@ -34,7 +34,8 @@ var rootApp = angular.module('rootApp',
             'duScroll',
             'angular.chosen',
             'ui.bootstrap.datetimepicker',
-            'hm.readmore'
+            'hm.readmore',
+            'angularUtils.directives.dirPagination'
         ]);
 
 // avoid the spacing while copy paste in text angular 
