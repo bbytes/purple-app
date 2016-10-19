@@ -100,10 +100,9 @@
                         <div class="form-sidebar">
 
                             <div class="form-group" >
-                                <select chosen="allprojects" ng-model="project" id="projectDropdown" data-placeholder="--- Select Project ---"
-                                        ng-options="p.projectId as p.projectName for p in allprojects">
-                                    <!--                                    <option value="">--- Select Project ---</option>-->
-
+                                <select chosen="allprojects" ng-model="project" id="projectDropdown">
+                                    <option value="">--- Select Project ---</option>
+                                    <option ng-repeat="project in allprojects" value="{{project.projectId}}" >{{project.projectName}}</option>
                                 </select>
                             </div>
 
@@ -114,10 +113,9 @@
                         <div class="form-sidebar">
 
                             <div class="form-group" >
-                                <select chosen="selectables" ng-model="hours" id="hoursDropdown" data-placeholder="Hrs"
-                                        ng-options="hr.id as hr.value for hr in selectables">
-                                    <!--                                    <option value="">--- Select Project ---</option>-->
-
+                                <select chosen="selectables" ng-model="hours" id="hoursDropdown" >
+                                    <option value="">Hrs</option>
+                                    <option ng-repeat="hr in selectables" value="{{hr.id}}" >{{hr.id}}</option>
                                 </select>
                             </div>
 
@@ -176,8 +174,7 @@
 
                 <div class="col-md-8"> 
                     <div class="row">		  
-                        <button type="button" class="btn btn-default status-submit" ng-click="submitStatus()" ng-show="isSubmit">SUBMIT</button>
-                        <button type="button" class="btn btn-default status-submit" ng-click="updateStatus()" ng-show="isUpdate">UPDATE</button>       
+                        <button type="button" class="btn btn-default status-submit" ng-click="isSubmit ? submitStatus() : updateStatus()()" ng-click="submitStatus()" >{{submitButtonText}}</button>
                     </div>
                 </div>
 

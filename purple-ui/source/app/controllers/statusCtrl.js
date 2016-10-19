@@ -20,6 +20,8 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     // variable to store the information abou all user statuses
     $scope.allstatus;
 
+    $scope.submitButtonText = "SUBMIT";
+
     initialise();
 
     function initialise() {
@@ -192,24 +194,20 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         statusService.getStatusWithId(id).then(function (response) {
             if (response.success) {
 
-                $scope.statusdata = response.data.gridData;
+                // always return one object when query to get status by statusId
+                $scope.statusdata = response.data.gridData[0];
 
-                angular.forEach(response.data.gridData, function (value, key) {
-
-                    $scope.allstatus = value.statusList;
-                    $scope.project = $scope.allstatus[0].projectId;
-                    $scope.hours = $scope.allstatus[0].hours.toString();
-                    $scope.workingOn = $scope.allstatus[0].workingOn;
-                    $scope.workedOn = $scope.allstatus[0].workedOn;
-                    $rootScope.statusId = $scope.allstatus[0].statusId;
-                    $scope.blockers = $scope.allstatus[0].blockers;
-                    $scope.statusDate = value.date;
-                    $scope.isUpdate = true;
-                    $scope.isSubmit = false;
-                    $scope.loadProjects();
-                    $scope.isDisable = true;
-
-                });
+                $scope.status = $scope.statusdata.statusList;
+                $scope.project = $scope.status[0].projectId;
+                $scope.hours = $scope.status[0].hours.toString();
+                $scope.workingOn = $scope.status[0].workingOn;
+                $scope.workedOn = $scope.status[0].workedOn;
+                $rootScope.statusId = $scope.status[0].statusId;
+                $scope.blockers = $scope.status[0].blockers;
+                $scope.statusDate = $scope.statusdata.date;
+                $scope.submitButtonText = "UPDATE";
+                $scope.isSubmit = false;
+                $scope.isDisable = true;
             }
         });
     };
@@ -243,13 +241,14 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                 $scope.clearStatus();
                 $scope.usersstatusLoad();
                 $scope.isSubmit = true;
-                $scope.isUpdate = false;
+                $scope.submitButtonText = "SUBMIT";
                 $scope.isDisable = false;
-                if ($rootScope.statusDateFromLink === undefined && $rootScope.statusDateFromLink === null)
+                if ($rootScope.statusDateFromLink === undefined || $rootScope.statusDateFromLink === null)
                     $scope.statusDate = $filter('date')(new Date());
                 else
                     $scope.statusDate = $filter('date')(new Date(parseInt($rootScope.statusDateFromLink)));
                 appNotifyService.success('Status for ' + response.data.gridData[0].date + ' is updated successfully');
+
             }
 
         }, function (error) {
@@ -260,8 +259,8 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     // Clearing the text area for status page
     $scope.clearStatus = function () {
 
-        $scope.project = '';
-        $scope.hours = '';
+        $scope.project = "";
+        $scope.hours = "";
         $scope.workingOn = '';
         $scope.workedOn = '';
         $scope.blockers = '';
@@ -270,8 +269,11 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     //Reset status page
     $scope.reset = function () {
 
+        $scope.project = "";
+        $scope.hours = "";
+        $scope.statusDate = $filter('date')(new Date());
         $scope.isSubmit = true;
-        $scope.isUpdate = false;
+        $scope.submitButtonText = "SUBMIT";
         $scope.isDisable = false;
     };
 
