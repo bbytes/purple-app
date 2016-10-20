@@ -3,9 +3,9 @@ package com.bbytes.purple.service;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.utils.CSVWriter;
+import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class UtilityService {
@@ -28,9 +29,9 @@ public class UtilityService {
 			csvFile = File.createTempFile(fileName, ".csv");
 			csv = new CSVWriter(new FileWriter(csvFile));
 
-			String[] header = new String[] { "Project" , "User", "Worked On", "Working on" ,"Blocker" ,"Hours" ,"Date"};
+			String[] header = new String[] { "Project", "User", "Worked On", "Working on", "Blocker", "Hours", "Date" };
 			csv.writeNext(header);
-			
+
 			if (statusList != null && !statusList.isEmpty()) {
 				for (Status status : statusList) {
 					String[] data = new String[header.length];
@@ -40,7 +41,7 @@ public class UtilityService {
 					data[3] = Jsoup.parse(status.getWorkingOn() != null ? status.getWorkingOn() : "").text();
 					data[4] = Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text();
 					data[5] = Double.toString(status.getHours());
-					data[6] = new DateTime(status.getDateTime()).toString();
+					data[6] = new SimpleDateFormat(GlobalConstants.DATE_FORMAT).format(status.getDateTime());
 					csv.writeNext(data);
 				}
 
