@@ -4156,3 +4156,18 @@ tabs-left, .tabs-right {
     background-color: #7c6991;
     border-color: #7c6991;
 }
+
+.content {
+    overflow: hidden;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    line-height: 18px;
+}
+.less {
+    max-height: 90px;
+}
+.show-link{
+    cursor: pointer;
+    color:#9932CC;
+    font-weight: 500;
+}

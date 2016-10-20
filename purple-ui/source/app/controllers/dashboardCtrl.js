@@ -17,7 +17,10 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
     // variable to store the information about timeline data
     $scope.timelineData;
 
-    /**
+    $scope.workedOnHidden = true;
+    $scope.workingOnHidden = true;
+    $scope.blockerHidden = true;
+    /*
      * Get all status timeline
      */
     $scope.loadTimePeriod = function () {
@@ -145,7 +148,7 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
             });
         });
     };
-    
+
     /*
      * Get status 
      */

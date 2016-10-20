@@ -49,28 +49,27 @@
 
                             <p>{{status.hours}}hrs, {{userStatus.date}}</p>
                         </div>
-                        <div class="timeline-body worked-on">
+                        <div class="timeline-body worked-on content" ng-class="{ less: workedOnHidden }">
                             <h3>worked on</h3>
-                            <p>
-                            <hm-read-more hm-text="{{ status.workedOn}}" hm-limit="90" hm-more-text="more"  hm-less-text=" less"hm-dots-class="dots" hm-link-class="links">
-                            </hm-read-more>
-                            </p>
+                            <p ng-bind-html="status.workedOn">{{status.workedOn}}</p>
+                        </div>
+                        <div>
+                            <a class="show-link" ng-click="workedOnHidden = !workedOnHidden" ng-show="status.workingOn">{{workedOnHidden ? '... More' : '... Less'}}</a>
                         </div>
 
-                        <div class="timeline-body working-on">
+                        <div class="timeline-body working-on content" ng-class="{ less: workingOnHidden }">
                             <h3>working on</h3>
 
-                            <p>
-                            <hm-read-more hm-text="{{ status.workingOn}}" hm-limit="90" hm-more-text="more"  hm-less-text="less" hm-dots-class="dots" hm-link-class="links">
-                            </hm-read-more>
-                            </p>
+                            <p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
                         </div>
-
-                        <div class="timeline-body blocker-on">
+                        <div>
+                            <a class="show-link" ng-click="workingOnHidden = !workingOnHidden" ng-show="status.workingOn">{{workingOnHidden ? '... More' : '... Less'}}</a>
+                        </div>
+                        <div class="timeline-body blocker-on content" ng-class="{ less: blockerHidden }">
                             <h3>blockers</h3>
                             <p ng-bind-html="status.blockers">{{status.blockers}}</p>
                         </div>
-
+                        <a class="show-link" ng-click="blockerHidden = !blockerHidden" ng-show="status.blockers">{{blockerHidden ? '... More' : '... Less'}}</a>
                     </div>
                 </li>
                 <li class="clearfix no-float"></li>
