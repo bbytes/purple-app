@@ -99,8 +99,16 @@ public class UserService extends AbstractService<User, String> {
 	 * @param roleName
 	 * @return
 	 */
-	public long totalRoleCount(UserRole role) {
+	public Long totalRoleCount(UserRole role) {
 		return userRepository.countByUserRole(role);
+	}
+
+	public Long countByMarkDelete(boolean markDelete) {
+		return userRepository.countByMarkDelete(markDelete);
+	}
+
+	public Long countByDisableState(boolean disableState) {
+		return userRepository.countByDisableState(disableState);
 	}
 
 	public boolean isMoreAdminExist(String roleName) {

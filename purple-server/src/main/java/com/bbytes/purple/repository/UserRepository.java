@@ -22,5 +22,9 @@ public interface UserRepository extends MongoRepository<User, String> {
 	List<User> findByUserRoleIn(List<UserRole> role);
 	
 	long countByUserRole(UserRole role);
+	
+	long countByMarkDelete(boolean markDelete);
+	
+	long countByDisableState(boolean disableState);
 
 }

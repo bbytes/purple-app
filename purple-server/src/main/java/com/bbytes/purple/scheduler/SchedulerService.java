@@ -19,6 +19,8 @@ import javax.annotation.PostConstruct;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.TaskScheduler;
@@ -26,8 +28,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Component;
 
+import com.bbytes.plutus.client.PlutusClient;
+import com.bbytes.plutus.client.PlutusClientException;
+import com.bbytes.plutus.enums.AppProfile;
+import com.bbytes.plutus.model.ProductPlanStats;
+import com.bbytes.plutus.response.ProductStatsRestResponse;
+import com.bbytes.plutus.util.BillingConstant;
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Comment;
+import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TenantResolver;
@@ -39,6 +48,7 @@ import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.NotificationService;
+import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
@@ -53,6 +63,8 @@ import com.bbytes.purple.utils.TenancyContextHolder;
  */
 @Component
 public class SchedulerService {
+
+	private static final Logger logger = LoggerFactory.getLogger(SchedulerService.class);
 
 	@Autowired
 	private TenantResolverRepository tenantResolverRepository;
@@ -70,6 +82,9 @@ public class SchedulerService {
 	private StatusService statusService;
 
 	@Autowired
+	private OrganizationService organizationService;
+
+	@Autowired
 	private CommentService commentService;
 
 	@Autowired
@@ -83,6 +98,9 @@ public class SchedulerService {
 
 	@Value("${base.url}")
 	private String baseUrl;
+
+	@Value("${plutus.base.url}")
+	private String plutusBaseUrl;
 
 	@Value("${email.scheduler.subject}")
 	private String schedulerSubject;
@@ -447,12 +465,12 @@ public class SchedulerService {
 	public void cleanUpMarkForDeleteData() throws PurpleException {
 
 		List<TenantResolver> tenantResolver = tenantResolverRepository.findAll();
-		Set<String> orgId = new LinkedHashSet<String>();
+		Set<String> orgIds = new LinkedHashSet<String>();
 		for (TenantResolver tr : tenantResolver) {
-			orgId.add(tr.getOrgId());
+			orgIds.add(tr.getOrgId());
 		}
-		for (String org : orgId) {
-			TenancyContextHolder.setTenant(org);
+		for (String orgId : orgIds) {
+			TenancyContextHolder.setTenant(orgId);
 			List<User> allUsers = userService.getAllUsers();
 
 			for (User userFromDb : allUsers) {
@@ -462,7 +480,37 @@ public class SchedulerService {
 				}
 			}
 		}
-		TenancyContextHolder.setDefaultTenant();
+
+		TenancyContextHolder.clearContext();
 	}
 
+	/* runs every 4 hours */
+	@Scheduled(cron = "0 0 0/6 * * ?")
+	public void sendStatsToPlutusServer() throws PurpleException, PlutusClientException {
+
+		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
+
+		for (TenantResolver tr : tenantResolverList) {
+			TenancyContextHolder.setTenant(tr.getOrgId());
+			Organization organization = organizationService.findByOrgId(tr.getOrgId());
+			
+			if (organization!=null && organization.getSubscriptionKey() == null) {
+				logger.warn("Subscription Key not available for organization with id " + tr.getOrgId());
+				continue;
+			}
+			
+			PlutusClient plutusClient = PlutusClient.create(plutusBaseUrl, organization.getSubscriptionKey(),
+					organization.getSubscriptionSecret(), AppProfile.saas);
+
+			ProductPlanStats productPlanStats = new ProductPlanStats();
+			productPlanStats.addStats(BillingConstant.STATUSNAP_USER_COUNT, userService.countByMarkDelete(false));
+			productPlanStats.addStats(BillingConstant.STATUSNAP_PROJECT_COUNT, projectService.count());
+			ProductStatsRestResponse response = plutusClient.sendStats(productPlanStats);
+			if (!response.isSuccess()) {
+				logger.warn("Product stats updated failed for tenant " + tr.getOrgId());
+			}
+		}
+
+		TenancyContextHolder.clearContext();
+	}
 }

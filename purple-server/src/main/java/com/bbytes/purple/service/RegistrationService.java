@@ -1,8 +1,21 @@
 package com.bbytes.purple.service;
 
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.bbytes.plutus.client.PlutusClient;
+import com.bbytes.plutus.client.PlutusClientException;
+import com.bbytes.plutus.enums.AppProfile;
+import com.bbytes.plutus.enums.BillingCycle;
+import com.bbytes.plutus.enums.Currency;
+import com.bbytes.plutus.enums.ProductName;
+import com.bbytes.plutus.model.SubscriptionInfo;
+import com.bbytes.plutus.response.SubscriptionRegisterRestResponse;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
@@ -12,6 +25,8 @@ import com.bbytes.purple.utils.TenancyContextHolder;
 @Service
 public class RegistrationService {
 
+	private static final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
+
 	@Autowired
 	private OrganizationService orgService;
 
@@ -20,6 +35,16 @@ public class RegistrationService {
 
 	@Autowired
 	private TenantResolverService tenantResolverService;
+
+	@Value("${plutus.base.url}")
+	private String plutusBaseUrl;
+
+	private PlutusClient plutusClient;
+
+	@PostConstruct
+	private void init() {
+		plutusClient = PlutusClient.create(plutusBaseUrl, AppProfile.saas);
+	}
 
 	public void signUp(Organization org, User user) throws PurpleException {
 
@@ -32,13 +57,58 @@ public class RegistrationService {
 				throw new PurpleException("Error while sign up", ErrorHandler.ORG_NOT_UNIQUE);
 
 			try {
-				TenancyContextHolder.setTenant(org.getOrgId());
-				orgService.save(org);
-				userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
+				// update Plutus server for billing information and other
+				// details for saas subscription
+				SubscriptionRegisterRestResponse response = createPlutusSubscription(org.getOrgId(), org.getOrgName(),
+						user.getEmail(), user.getName());
+				if (response.isSuccess()) {
+					org.setSubscriptionKey(response.getSubscriptionKey());
+					org.setSubscriptionSecret(response.getSubscriptionSecret());
+
+					TenancyContextHolder.setTenant(org.getOrgId());
+					org = orgService.save(org);
+					userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
+
+				} else {
+					logger.error("Subscription failed as plutus server response failed for org '" + org.getOrgName()
+							+ "' with email " + user.getEmail());
+					throw new PurpleException("Subscription creation failed", ErrorHandler.SIGN_UP_FAILED);
+				}
+			} catch (PlutusClientException ex) {
+				logger.error(ex.getMessage(), ex);
+				throw new PurpleException("Subscription failed", ErrorHandler.SIGN_UP_FAILED);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.SIGN_UP_FAILED, e);
 			}
 		}
+	}
+
+	/**
+	 * Create new Subscription in plutus for the new organization account in
+	 * statusnap
+	 * 
+	 * @param tenantId
+	 * @param orgName
+	 * @param email
+	 * @param userName
+	 * @return
+	 * @throws PlutusClientException
+	 */
+	private SubscriptionRegisterRestResponse createPlutusSubscription(String tenantId, String orgName, String email,
+			String userName) throws PlutusClientException {
+		SubscriptionInfo subscriptionInfo = new SubscriptionInfo();
+		subscriptionInfo.setAppProfile(AppProfile.saas);
+		subscriptionInfo.setBillingAddress("N/A");
+		subscriptionInfo.setBillingCycle(BillingCycle.Monthy);
+		subscriptionInfo.setContactNo("N/A");
+		subscriptionInfo.setCurrency(Currency.USD);
+		subscriptionInfo.setCustomerName(orgName);
+		subscriptionInfo.setEmail(email);
+		subscriptionInfo.setContactPerson(userName);
+		subscriptionInfo.setProductName(ProductName.Statusnap.toString());
+		subscriptionInfo.setTenantId(tenantId);
+
+		return plutusClient.register(subscriptionInfo);
 	}
 
 	public User activateAccount(User activeUser) throws PurpleException {
@@ -54,7 +124,7 @@ public class RegistrationService {
 		}
 		return activeUser;
 	}
-	
+
 	public User resendActivation(String email) throws PurpleException {
 		User user = null;
 		if (email != null && !email.isEmpty()) {
@@ -64,7 +134,7 @@ public class RegistrationService {
 				throw new PurpleException("Error while resend activation link", ErrorHandler.USER_NOT_FOUND);
 			try {
 				user = userService.getUserByEmail(email);
-				
+
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.RESEND_ACTIVATION_FAILURE);
 			}
