@@ -17,7 +17,7 @@ public class ErrorHandler {
 	public static final String AUTH_FAILURE = "authentication_failure";
 
 	public static final String BAD_GATEWAY = "bad_gateway";
-	
+
 	public static final String RESET_FAILED = "reset_failed";
 
 	public static final String ACCOUNT_ACTIVATION_FAILURE = "account_inactive";
@@ -41,17 +41,17 @@ public class ErrorHandler {
 	public static final String NOTIFICATION_FAILED = "notification_failed";
 
 	public static final String ADD_USER_FAILED = "add_user_failed";
-	
+
 	public static final String BULD_UPLAOD_FAILED = "buld_uplaod_failed";
 
 	public static final String REINVITE_FAILED = "reinvite_failed";
 
 	public static final String DELETE_USER_FAILED = "delete_user_failed";
-	
+
 	public static final String DISABLE_USER_FAILED = "disable_user_failed";
 
 	public static final String GET_USER_FAILED = "get_user_failed";
-	
+
 	public static final String CHANGED_PROJECTOWNER_FALIED = "changed_projectowner_falied";
 
 	public static final String ADD_PROJECT_FAILED = "add_project_failed";
@@ -99,13 +99,13 @@ public class ErrorHandler {
 	public static final String SET_TIMEZONE_TIMEPREFERENCE_FAILED = "set timezone or timepreference failed";
 
 	public static final String HOURS_EXCEEDED = "hours_exceeded";
-	
+
 	public static final String PROJECT_OWNER_DELETE_FAILED = "project_owner_delete_failed";
 
 	public static final String UPDATE_USERROLE_FAILED = "update_userrole_failed";
-	
+
 	public static final String ROLE_CHANGED_NOT_ALLOWED = "role_changed_not_allowed";
-	
+
 	public static final String DELETION_NOT_ALLOWED = "deletion_not_allowed";
 
 	public static final String UPDATE_USER_PROFILE_FAILED = "update_user_profile_failed";
@@ -117,6 +117,8 @@ public class ErrorHandler {
 	public static final String JIRA_CONNECTION_FAILED = "jira_connection_failed";
 
 	public static final String DISPOSABLE_EMAIL_DOMAIN = "Email domain is not supported";
+
+	public static final String NORMAL_USER_URL_ACCESS_DENIED = "normal_user_url_access_denied";
 
 	public static final String INVALID_EMAIL = "invalid_email";
 

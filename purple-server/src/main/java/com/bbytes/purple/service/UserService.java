@@ -111,7 +111,7 @@ public class UserService extends AbstractService<User, String> {
 		return userRepository.countByDisableState(disableState);
 	}
 
-	public boolean isMoreAdminExist(String roleName) {
+	public boolean doesAdminRoleExistInDB(String roleName) {
 		if (roleName.equals(UserRole.ADMIN_USER_ROLE.getRoleName())) {
 			boolean state = totalRoleCount(new UserRole(roleName)) == 1 ? true : false;
 			return state;
@@ -465,6 +465,21 @@ public class UserService extends AbstractService<User, String> {
 		}
 		allUsers.removeAll(userList);
 		return allUsers;
+	}
+
+	/**
+	 * check the user is active or not, active means should be activate their
+	 * account, not in disable or mark delete state
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public boolean isActiveUser(User user) {
+		if (user.isAccountInitialise() && !user.isDisableState() && !user.isMarkDelete()
+				&& User.JOINED.equals(user.getStatus()))
+			return true;
+		else
+			return false;
 	}
 
 }

@@ -102,8 +102,11 @@ angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $
             errorResponse.status = (errorResponse.status <= 0) ? 500 : errorResponse.status;
             switch (errorResponse.status) {
                 case 401:
-                case 403:
-                    stateService.go('login');
+                case 403: //Below code for checking external url access denied for applciation urls
+                    if (errorResponse.data.reason === 'normal_user_url_access_denied')
+                        $location.path('/accessDenied');
+                    else
+                        stateService.go('login');
                     break;
                 case 404:
                     $location.path('/404');

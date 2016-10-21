@@ -10,7 +10,7 @@ rootApp.service('activateAccountService', function ($rootScope, $http, $q, $wind
             method: 'GET',
             url: $rootScope.baseUrl + 'api/v1/admin/activateAccount',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
 
         }).success(function (response, status, headers, config) {

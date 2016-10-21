@@ -13,7 +13,13 @@
 	<name>purple-server</name>
 	<description>The backend rest api server for purple app</description>
 
+	<properties>
+		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
+		<github.global.server>github</github.global.server>
+	</properties>
+
 	<repositories>
+
 		<repository>
 			<id>spring-social-slack-bbytes</id>
 			<url>https://raw.github.com/bbytes/spring-social-slack/mvn-repo/</url>
@@ -29,18 +35,6 @@
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
-		</repository>
-		<repository>
-			<id>plutus</id>
-			<url>https://raw.github.com/bbytes/plutus/mvn-repo/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
 		</repository>
 		<repository>
 			<id>spring-milestones</id>
@@ -69,6 +63,18 @@
 				<enabled>true</enabled>
 				<checksumPolicy>warn</checksumPolicy>
 			</releases>
+		</repository>
+		<repository>
+			<id>lib</id>
+			<name>lib</name>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<url>file://${project.basedir}/lib</url>
 		</repository>
 	</repositories>
 
@@ -210,13 +216,13 @@
 			<artifactId>httpcore-nio</artifactId>
 			<version>4.3</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.bbytes</groupId>
 			<artifactId>plutus-client</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>

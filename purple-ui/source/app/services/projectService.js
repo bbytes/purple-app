@@ -166,7 +166,7 @@ angular.module('rootApp').service('projectService', function ($rootScope, $http,
         return deferred.promise;
     };
 
-    // get all user who's status is "JOINED"
+    // get all user
     this.getAllUsersToAdd = function () {
 
         var deferred = $q.defer();
@@ -189,7 +189,7 @@ angular.module('rootApp').service('projectService', function ($rootScope, $http,
         return deferred.promise;
     };
 
-    // get all JOINED user who are not part of respective project
+    // get all user who are not part of respective project
     this.getMoreUsersToAdd = function (projectId) {
 
         var deferred = $q.defer();

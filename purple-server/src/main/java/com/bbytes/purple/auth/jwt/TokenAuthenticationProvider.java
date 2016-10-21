@@ -28,7 +28,7 @@ public class TokenAuthenticationProvider {
 
 	@Autowired
 	private AuthUserDetailsService authUserDetailsService;
-	
+
 	@Autowired
 	private SpringProfileService springProfileService;
 
@@ -36,7 +36,7 @@ public class TokenAuthenticationProvider {
 
 	@PostConstruct
 	public void setupTokenHandler() {
-		tokenHandler = new TokenHandler(secret,springProfileService.isSaasMode());
+		tokenHandler = new TokenHandler(secret, springProfileService.isSaasMode());
 	}
 
 	/**
@@ -67,8 +67,9 @@ public class TokenAuthenticationProvider {
 	public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationServiceException {
 		String jwtStringToken = request.getHeader(GlobalConstants.HEADER_AUTH_TOKEN);
-		
-		// if direct access without login based on url access token : Use case email embedded link to ui 
+
+		// if direct access without login based on url access token : Use case
+		// email embedded link to ui
 		if (jwtStringToken == null) {
 			jwtStringToken = request.getParameter(GlobalConstants.URL_AUTH_TOKEN);
 			if (jwtStringToken != null)

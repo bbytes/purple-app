@@ -347,6 +347,9 @@ rootApp.config([
                 authorization: 'User Manager',
                 redirectTo: 'login'
             }
+        }).state('access-denied', {
+            url: '/accessDenied',
+            templateUrl: 'app/partials/access-denied.html'
         }).state('activate', {
             url: '/activateAccount?token',
             controller: 'activateAccountCtrl'

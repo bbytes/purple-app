@@ -226,7 +226,7 @@ public class UserController {
 
 		RestResponse userReponse = null;
 		User user = userService.getUserById(userId);
-		if (userService.isMoreAdminExist(userService.getUserById(userId).getUserRole().getRoleName())) {
+		if (userService.doesAdminRoleExistInDB(userService.getUserById(userId).getUserRole().getRoleName())) {
 			UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 			userReponse = new RestResponse(RestResponse.FAILED, responseDTO, ErrorHandler.DELETION_NOT_ALLOWED);
 			return userReponse;
@@ -294,7 +294,7 @@ public class UserController {
 
 		RestResponse userReponse = null;
 		User user = userService.getUserById(userId);
-		if (userService.isMoreAdminExist(userService.getUserById(userId).getUserRole().getRoleName())) {
+		if (userService.doesAdminRoleExistInDB(userService.getUserById(userId).getUserRole().getRoleName())) {
 			UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 			userReponse = new RestResponse(RestResponse.FAILED, responseDTO, ErrorHandler.ROLE_CHANGED_NOT_ALLOWED);
 			return userReponse;

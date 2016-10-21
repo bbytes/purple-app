@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
@@ -167,7 +168,7 @@ public class SignUpController {
 		RestResponse userReponse = null;
 
 		User user = registrationService.resendActivation(email);
-		if (!user.getUserRole().getRoleName().equals("ADMIN")) {
+		if (!user.getUserRole().getRoleName().equals(UserRole.ADMIN_USER_ROLE.getRoleName())) {
 			userReponse = new RestResponse(RestResponse.FAILED, "Resend activation link failed",
 					SuccessHandler.RESEND_ACTIVATION_LINK_SUCCESS);
 			return userReponse;

@@ -99,7 +99,7 @@ public class ProjectController {
 		long currentDate = new Date().getTime();
 
 		for (User addedUser : usersTobeAdded) {
-			if (addedUser.isAccountInitialise() && User.JOINED.equals(addedUser.getStatus())) {
+			if (userService.isActiveUser(addedUser)) {
 				final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(addedUser.getEmail(), 168);
 				Map<String, Object> emailBody = new HashMap<>();
 				List<String> emailList = new ArrayList<String>();
@@ -162,7 +162,7 @@ public class ProjectController {
 
 		// Here get newly added user to project.
 		for (User sendMailtoUpdatedUser : updateUserList) {
-			if (sendMailtoUpdatedUser.isAccountInitialise() && User.JOINED.equals(sendMailtoUpdatedUser.getStatus())) {
+			if (userService.isActiveUser(sendMailtoUpdatedUser)) {
 				final String xauthToken = tokenAuthenticationProvider
 						.getAuthTokenForUser(sendMailtoUpdatedUser.getEmail(), 168);
 				List<String> emailList = new LinkedList<String>();
