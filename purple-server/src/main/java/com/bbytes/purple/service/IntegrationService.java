@@ -33,7 +33,6 @@ import com.bbytes.purple.repository.IntegrationRepository;
 import com.bbytes.purple.repository.SocialConnectionRepository;
 import com.bbytes.purple.social.MongoConnectionTransformers;
 import com.bbytes.purple.utils.ErrorHandler;
-import com.bbytes.purple.web.controller.IntegrationController;
 
 import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.JiraException;

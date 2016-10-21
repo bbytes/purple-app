@@ -17,7 +17,6 @@ import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
-import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.ProjectRepository;
 import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.service.CommentService;

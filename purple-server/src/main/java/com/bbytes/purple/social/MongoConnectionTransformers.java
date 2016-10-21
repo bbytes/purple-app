@@ -2,13 +2,14 @@ package com.bbytes.purple.social;
 
 import java.util.Date;
 
-import com.bbytes.purple.domain.SocialConnection;
-import com.google.common.base.Function;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.connect.ConnectionFactory;
 import org.springframework.social.connect.ConnectionFactoryLocator;
+
+import com.bbytes.purple.domain.SocialConnection;
+import com.google.common.base.Function;
 
 public class MongoConnectionTransformers {
 
