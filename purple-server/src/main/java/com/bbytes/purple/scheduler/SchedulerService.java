@@ -171,6 +171,8 @@ public class SchedulerService {
 				User managerUser = null;
 				boolean flag = true;
 				Set<User> usersFromProject = project.getUser();
+				// checking project owner exist or not, if not then assigning
+				// with below logic
 				if (project.getProjectOwner() == null) {
 					boolean isRoleExist = false;
 					for (User user : usersFromProject) {

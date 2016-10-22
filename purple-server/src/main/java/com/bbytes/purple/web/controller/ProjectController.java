@@ -249,6 +249,8 @@ public class ProjectController {
 			@PathVariable("ownerId") String ownerId) throws PurpleException {
 
 		User newOwner = userService.getUserById(ownerId);
+		if (newOwner == null)
+			throw new PurpleException("User does not exist", ErrorHandler.USER_NOT_FOUND);
 		Project project = projectService.changeProjectOwner(projectId, newOwner);
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
 

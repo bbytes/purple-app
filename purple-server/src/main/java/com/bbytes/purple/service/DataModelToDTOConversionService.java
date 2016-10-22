@@ -122,7 +122,8 @@ public class DataModelToDTOConversionService {
 		projectDTO.setProjectName(project.getProjectName());
 		projectDTO.setUserList(userDTOList);
 		projectDTO.setUsersCount(project.getUser().size());
-		projectDTO.setProjectOwner(project.getProjectOwner().getName());
+		if (project.getProjectOwner() != null)
+			projectDTO.setProjectOwner(project.getProjectOwner().getName());
 		return projectDTO;
 	}
 
