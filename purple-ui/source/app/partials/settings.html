@@ -25,52 +25,51 @@
     </div>
     <div class="clear" style="clear:both; padding-bottom:40px;">
         <!--profile ends-->
+        <form name="preferenceForm" role="form">
+            <div class="main-title" >
+                <h4>preference</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-7">
 
-        <div class="main-title" >
-            <h4>preference</h4>
-        </div>
-        <div class="row">
-            <div class="col-md-7">
+                    <div class="form-group">
+                        <label class="settings" for="pwd">DAILY EMAIL REMINDER</label>
 
-                <div class="form-group">
-                    <label class="settings" for="pwd">DAILY EMAIL REMINDER</label>
+                        <toggle-switch ng-model="switchState"></toggle-switch>
 
-                    <toggle-switch ng-model="switchState"></toggle-switch>
+                    </div>
+
 
                 </div>
 
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="comment" class="settings">EMAIL REMINDER TIME</label>
+                        <input type="text" size="8" class="form-control"  ng-model="timePreference" data-time-format="h:mm a" data-autoclose="1" placeholder="Time" bs-timepicker ng-required="true" />
 
-            </div>
-
-            <div class="col-md-5">
-                <div class="form-group">
-                    <label for="comment" class="settings">EMAIL REMINDER TIME</label>
-                    <input type="text" size="8" class="form-control"  ng-model="timePreference" data-time-format="h:mm a" data-autoclose="1" placeholder="Time" bs-timepicker />
-
+                    </div>
                 </div>
+
             </div>
 
-        </div>
+            <div class="row">
+                <div class="col-md-7">
 
-        <div class="row">
-            <div class="col-md-7">
-                <form name="timeForm">
                     <label class="settings">TIMEZONE</label>
 
-                    <timezone-selector ng-model="timeZone"/> 
-            </div>
+                    <timezone-selector ng-model="timeZone" ng-required="true"/> 
+                </div>
 
+                <div class="col-md-5">
+
+                </div>
+            </div>
             <div class="col-md-5">
-
+                <div class="row">
+                    <button type="button" class="btn btn-default create" ng-disabled="preferenceForm.$invalid" ng-click="updateSetting()" style="float: left; width: 55.2%;">save</button>
+                </div>	
             </div>
-        </div>
-        <div class="col-md-5">
-            <div class="row">
-                <button type="button" class="btn btn-default create" ng-click="updateSetting()" style="float: left; width: 55.2%;">save</button>
-                </form>
-            </div>	
-        </div>
-
+        </form>
 
         <div class="col-md-12">
             <div class="row">
@@ -118,7 +117,7 @@
 
                     </div>
                     <button type="button" class="btn btn-default create"
-                            style="float: left; width: 35%;"
+                            style="float: left; width: 35%;" ng-disabled="signupForm.$invalid"
                             ng-click="updatePassword(user, confirmPassword)">save</button>
                     <div class="col-md-4"></div>
                 </div>
