@@ -58,7 +58,7 @@ import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
 /**
- * Scheduler Service for distributing emails.
+ * Scheduler Service for distributing email's.
  * 
  * @author Akshay
  *
@@ -145,16 +145,16 @@ public class SchedulerService {
 				}
 			}
 		}
-
+		TenancyContextHolder.clearContext();
 	}
 
 	/**
-	 * This method is used to initialize the new values to existing db
+	 * This method is used to initialize the project owners to existing db
 	 * 
 	 * @throws PurpleException
 	 */
 	@PostConstruct
-	private void initialiseToDB() throws PurpleException {
+	private void initialiseProjectOwnerToDB() throws PurpleException {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
 		// creating a hashset to store orgId's
@@ -169,11 +169,16 @@ public class SchedulerService {
 			for (Project project : projectList) {
 
 				User managerUser = null;
+				// flag is just check whether manager exist or not, if not then
+				// assign ADMIN
 				boolean flag = true;
 				Set<User> usersFromProject = project.getUser();
 				// checking project owner exist or not, if not then assigning
 				// with below logic
 				if (project.getProjectOwner() == null) {
+					// below flag is to check if MANAGER or ADMIN present in
+					// project or not, if not then look for global manager or
+					// ADMIN
 					boolean isRoleExist = false;
 					for (User user : usersFromProject) {
 						if (user.getUserRole().equals(UserRole.MANAGER_USER_ROLE)) {
@@ -216,6 +221,7 @@ public class SchedulerService {
 
 							}
 						}
+						// adding first manager or ADMIN to project if not there
 						project.addUser(managerUser);
 					}
 					project.setProjectOwner(managerUser);
@@ -224,7 +230,7 @@ public class SchedulerService {
 			}
 
 		}
-		TenancyContextHolder.setDefaultTenant();
+		TenancyContextHolder.clearContext();
 	}
 
 	/**
@@ -236,7 +242,7 @@ public class SchedulerService {
 
 	/* Cron Runs every 30 minutes */
 	@Scheduled(cron = "0 0/30 * * * ?")
-	public void emailSchedule() throws PurpleException, ParseException {
+	public void dailyEmailSchedule() throws PurpleException, ParseException {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
 		// creating a hashset to store orgId's
@@ -325,6 +331,7 @@ public class SchedulerService {
 							emailBody.put(GlobalConstants.VALID_HOURS, validHours);
 
 							emailList.add(user.getEmail());
+							// this is to schedule task for particular time
 							taskScheduler.schedule(
 									new EmailSendJob(emailBody, emailList, notificationService, schedulerSubject),
 									dateTime.toDate());
@@ -334,7 +341,7 @@ public class SchedulerService {
 				}
 			}
 		}
-		TenancyContextHolder.setDefaultTenant();
+		TenancyContextHolder.clearContext();
 	}
 
 	/**
@@ -348,7 +355,7 @@ public class SchedulerService {
 	/* Cron Runs every Tuesday-Saturday at 10 am */
 	@Scheduled(cron = "	0 0 10 ? * TUE,WED,THU,FRI,SAT")
 	// @Scheduled(cron = " 0/10 * * * * *")
-	public void sendEmailforStatusUpdate() throws PurpleException, ParseException {
+	public void sendEmailToDefaulter() throws PurpleException, ParseException {
 
 		final String template = GlobalConstants.ASSOCIATES_EMAIL_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
@@ -467,7 +474,7 @@ public class SchedulerService {
 
 			}
 		}
-		TenancyContextHolder.setDefaultTenant();
+		TenancyContextHolder.clearContext();
 	}
 
 	/**
