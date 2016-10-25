@@ -86,6 +86,8 @@
                             <th ng-click="sort('userRole.id')">Role
                                 <span class="glyphicon sort-icon" ng-show="sortKey === 'userRole.id'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
                             </th>
+							<th></th>
+							<th  style="text-align:center;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,17 +104,19 @@
                                 <img src="../../assets/img/join.png" ng-if="user.status === 'Joined'">
                                 {{user.status}}
                             </td>
-                            <td>
+                            <td width="180">
                                 <select class="form-control" ng-readonly="userRole !== 'ADMIN'" ng-options="roles.id as roles.value for roles in userRoles" ng-model="user.userRole.id" ng-change="roleChange(user.userRole.id, user, allusers.indexOf(user))">			
                                 </select>
                             </td>
 
-                            <td class="re-invite">
-                    <center><button type="button" class="btn btn-default"
-                                    ng-click="resend(user.userName, user.email)" ng-hide= "user.status !== 'Pending'">Re-invite</button></center>
+                            <td class="re-invite" width="80">
+                    <center><a href="#" ng-click="resend(user.userName, user.email)" ng-hide= "user.status !== 'Pending'"><img src="../../assets/img/re-invite.png"  tooltips tooltip-template="Re-invite User" style="width:25px;"></a></center>
                     </td>
-                    <td class="disable-light">
-                        <div ng-show="userName !== user.userName">
+					
+                    <td class="disable-light" style="text-align:right;">
+                        <span ng-show="userName !== user.userName">
+						<toggle-switch ng-model="state" ng-change="disableUser(user.id, allusers.indexOf(user))" on-label="Active" off-label="Disabled" style="margin-top: -22px;"></toggle-switch>
+						<!--
                             <a href="" ng-show="user.disableState"
                                ng-click="disableUser(user.id, allusers.indexOf(user), false)"
                                confirm="Are you sure you want to enable this user?"> <img
@@ -121,23 +125,24 @@
                                ng-click="disableUser(user.id, allusers.indexOf(user), true)"
                                confirm="Are you sure you want to disable this user?"> <img
                                     src="../../assets/img/disabled_light.png" tooltips tooltip-template="Disable User"></a>
-                        </div>
-                    </td>
-                    <td ng-show="userName !== user.userName">
-                        <a class="delete-img" href="" ng-show="user.markDeleteState"
+									-->
+									
+							<a class="delete-img" href="" ng-show="user.markDeleteState"
                            ng-click="markForDelete(user.id, allusers.indexOf(user), false)"
                            confirm="Do you want to restore this user?"> <img
-                                src="../../assets/img/delete.png" tooltips tooltip-template="Unmark for delete"></a>
+                                src="../../assets/img/delete.png" tooltips tooltip-template="Unmark for delete" style="width:20px;"></a>
                         <a class="delete-light-img" href="" ng-hide="user.markDeleteState"
                            ng-click="markForDelete(user.id, allusers.indexOf(user), true)"
                            confirm="User has been marked for delete. All user related data will be deleted after {{days}} days from today. Do you want to continue?"> <img
                                 src="../../assets/img/cross.png" tooltips tooltip-template="Mark for delete"></a>
+                        </span>
+						 <a href="" ng-show="user.markDeleteState"
+                           csv-download-user="user.id"><img
+                          src="../../assets/img/csv.png" tooltips tooltip-template="Download Data" style="width:18px;"></a>
                     </td>
+                   
 
-                    <td >
-                        <a href="" ng-show="user.markDeleteState"
-                           csv-download-user="user.id">Download Data</a>
-                    </td>
+                   
                     </tr>
                     </tbody>
                 </table>

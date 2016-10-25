@@ -533,7 +533,7 @@ select:first-child, select#f {
     margin-bottom: 10px;
 }
 .worked-on > h3, .timeline-body > ul {
-    text-transform: uppercase;
+    text-transform: uppercase ;
     font-size: 12px;
     background: #aa6489;
     display: inline;
@@ -756,7 +756,7 @@ select:first-child, select#f {
     padding-bottom: 5px;
 }
 .project-img img{
-    width:30px;
+    width:25px;
 }
 .table-user{
     width:30%;
@@ -4059,7 +4059,7 @@ tabs-left, .tabs-right {
 }
 .delete-light-img img{
     margin-top: -2px;
-    width: 37px;
+    width: 30px;
     float: right;
 }
 .disable-light img{
@@ -4157,7 +4157,7 @@ tabs-left, .tabs-right {
 }
 
 .content {
-    overflow: hidden;
+    overflow: hidden !important;
     word-wrap: break-word;
     text-overflow: ellipsis;
     line-height: 18px;
@@ -4169,4 +4169,12 @@ tabs-left, .tabs-right {
     cursor: pointer;
     color:#9932CC;
     font-weight: 500;
+}
+.project_actions li{
+	list-style:none;
+	display:inline;
+	border-bottom: 0;
+}
+.ats-switch span {
+	font-size:10px;
 }

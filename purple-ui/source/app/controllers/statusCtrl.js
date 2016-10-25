@@ -284,6 +284,5 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     // avoid spacing while copy paste in text angular
     $scope.stripFormat = function ($html) {
         return $filter('htmlToPlaintext')($html);
-    };
-
+    };	
 });

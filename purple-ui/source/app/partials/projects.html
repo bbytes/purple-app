@@ -100,6 +100,7 @@
                             <th ng-click="sort('projectOwner')">Project Owner
                                 <span class="glyphicon sort-icon" ng-show="sortKey === 'projectOwner'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
                             </th>
+							<th><center>Actions</center></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,20 +108,26 @@
                             <td class="table-user">{{project.projectName}} </td>
                             <td style="width:15%;"><a href="#" ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png">
                                     {{project.usersCount}} Users</a></td>
-                            <td style="width:30%;">Current Owner - {{project.projectOwner}}</td> 
-                            <td style="width:40%;">
-                    <center><button type="button" class="btn btn-default"
-                                    ng-click="openAssignProjectModal(project.projectId, allprojects.indexOf(project))" >Change Owner</button></center>
-                    </td>
-                    <td><a href="#" role="tab"
+                            <td style="width:40%;">Current Owner - {{project.projectOwner}}</td> 
+                            <td>
+							 <ul class="project_actions">
+                            <li> <a href="#" role="tab" data-toggle="tab"
+                                    ng-click="openAssignProjectModal(project.projectId, allprojects.indexOf(project))" ><img
+                                src="../../assets/img/owner.png" tooltips tooltip-template="Change Owner" style="width:22px;"></a></li>
+								
+							<li><a href="#" role="tab"
                            data-toggle="tab" ng-click="showEditPage(project.projectId); scrollToTop(); reset()"><img
-                                src="../../assets/img/edit.png" tooltips tooltip-template="Edit"></a></td>
-                    <td><a href="#"
+                                src="../../assets/img/edit.png" tooltips tooltip-template="Edit"></a></li>
+
+                         	<li><a href="#"
                            ng-click="deleteProject(project.projectId, allprojects.indexOf(project))"
                            confirm="Are you sure you want to delete the project?"> <img
-                                src="../../assets/img/delete.png" tooltips tooltip-template="Delete"></a></td>
+                                src="../../assets/img/delete.png" tooltips tooltip-template="Delete"></a></li>							
+							</ul>	
+                    </td>
+                   
                     </tr>
-                    <tbody>
+                    </tbody>
                 </table>
                 <dir-pagination-controls
                     max-size="10"
@@ -235,25 +242,32 @@
                             <th ng-click="sort('projectOwner')">Project Owner
                                 <span class="glyphicon sort-icon" ng-show="sortKey === 'projectOwner'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
                             </th>
+							<th><center>Actions</center></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="project in allprojects| orderBy:'projectName' | filter:searchText">
+                        <tr dir-paginate="project in allprojects| orderBy:sortKey:reverse | filter:searchText|itemsPerPage:10">
                             <td class="table-user">{{project.projectName}} </td>
                             <td style="width:15%;"><a href="#" ng-click="viewMembers(project.userList)"><img src="../../assets/img/user.png">
                                     {{project.usersCount}} Users</a></td>
-                            <td style="width:30%;">Current Owner - {{project.projectOwner}}</td> 
-                            <td style="width:40%;">
-                    <center><button type="button" class="btn btn-default"
-                                    ng-click="openAssignProjectModal(project.projectId, allprojects.indexOf(project))" >Change Owner</button></center>
-                    </td>
-                    <td><a href="#" role="tab"
+                            <td style="width:40%;">Current Owner - {{project.projectOwner}}</td> 
+                            <td>
+							 <ul class="project_actions">
+                            <li> <a href="#" role="tab" data-toggle="tab"
+                                    ng-click="openAssignProjectModal(project.projectId, allprojects.indexOf(project))" ><img
+                                src="../../assets/img/owner.png" tooltips tooltip-template="Change Owner" style="width:25px;"></a></li>
+								
+							<li><a href="#" role="tab"
                            data-toggle="tab" ng-click="showEditPage(project.projectId); scrollToTop(); reset()"><img
-                                src="../../assets/img/edit.png" tooltips tooltip-template="Edit"></a></td>
-                    <td><a href="#"
+                                src="../../assets/img/edit.png" tooltips tooltip-template="Edit"></a></li>
+
+                         	<li><a href="#"
                            ng-click="deleteProject(project.projectId, allprojects.indexOf(project))"
                            confirm="Are you sure you want to delete the project?"> <img
-                                src="../../assets/img/delete.png" tooltips tooltip-template="Delete"></a></td>
+                                src="../../assets/img/delete.png" tooltips tooltip-template="Delete"></a></li>							
+							</ul>	
+                    </td>
+                   
                     </tr>
                     </tbody>
                 </table>

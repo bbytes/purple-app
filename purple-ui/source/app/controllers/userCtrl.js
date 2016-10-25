@@ -68,8 +68,8 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
         $scope.loadUsers();
     };
 
-    // method is used to disable user 
-    $scope.disableUser = function (userId, index, state) {
+    // method is used to disable user
+     $scope.disableUser = function (userId, index, state) {
         // calling user service for disabling user with state as "true/false"
         // e.g. state=true means user is disable
         userService.disableUser(userId, state).then(function (response) {
@@ -83,7 +83,8 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
                     appNotifyService.success('User has been sucessfully enabled.');
             }
         });
-    };
+	
+};
 
     // method is used to set user as mark for delete
     //(user and their statuses,comments will be deleted after 30 Days, it been taking care by server side)
