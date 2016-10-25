@@ -4155,8 +4155,8 @@ tabs-left, .tabs-right {
     background-color: #7c6991;
     border-color: #7c6991;
 }
-
-.content {
+// below code require if more and less feature would try to implement
+/*.content {
     overflow: hidden !important;
     word-wrap: break-word;
     text-overflow: ellipsis;
@@ -4169,12 +4169,12 @@ tabs-left, .tabs-right {
     cursor: pointer;
     color:#9932CC;
     font-weight: 500;
-}
+}*/
 .project_actions li{
-	list-style:none;
-	display:inline;
-	border-bottom: 0;
+    list-style:none;
+    display:inline;
+    border-bottom: 0;
 }
 .ats-switch span {
-	font-size:10px;
+    font-size:10px;
 }

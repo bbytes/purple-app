@@ -13,10 +13,6 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     $rootScope.feedbackClass = 'feedback-log feedback-show';
     $scope.isSubmit = true;
 
-    $scope.workedOnHidden = true;
-    $scope.workingOnHidden = true;
-    $scope.blockerHidden = true;
-
     // variable is used to intialise time period first time when page get load
     var time = "Weekly";
     // variable to store the information about status enable days

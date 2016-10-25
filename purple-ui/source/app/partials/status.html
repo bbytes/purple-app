@@ -49,29 +49,21 @@
 
                             <p>{{status.hours}}hrs, {{userStatus.date}}</p>
                         </div>
-                        <div class="timeline-body worked-on content" ng-class="{ less: workedOnHidden }">
+                        <div class="timeline-body worked-on">
                             <h3>worked on</h3>
                             <p ng-bind-html="status.workedOn">{{status.workedOn}}</p>
                         </div>
-                        <div>
-                            <a class="show-link" ng-hide="status.workedOn.length < 130" ng-click="workedOnHidden = !workedOnHidden" ng-show="status.workingOn">{{workedOnHidden ? '... More' : '... Less'}}</a>
-							
-                        </div>
 
-                        <div class="timeline-body working-on content" ng-class="{ less: workingOnHidden }">
+                        <div class="timeline-body working-on">
                             <h3>working on</h3>
 
-                            <p ng-bind-html="status.workingOn">{{status.workingOn}} <span ng-bind="status.workingOn.counter">ff</span></p>
+                            <p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
                         </div>
-                        <div>
-                            <a class="show-link" ng-hide="status.workingOn.length < 130" ng-click="workingOnHidden = !workingOnHidden" ng-show="status.workingOn">{{workingOnHidden ? '... More' : '... Less'}}</a>
-							
-                        </div>
-                        <div class="timeline-body blocker-on content" ng-class="{ less: blockerHidden }">
+
+                        <div class="timeline-body blocker-on">
                             <h3>blockers</h3>
                             <p ng-bind-html="status.blockers">{{status.blockers}}</p>
                         </div>
-                        <a class="show-link" ng-hide="status.blockers.length < 130" ng-click="blockerHidden = !blockerHidden" ng-show="status.blockers">{{blockerHidden ? '... More' : '... Less'}}</a>
                     </div>
                 </li>
                 <li class="clearfix no-float"></li>
