@@ -115,7 +115,7 @@
 					
                     <td class="disable-light" style="text-align:right;">
                         <span ng-show="userName !== user.userName">
-						<toggle-switch ng-model="state" ng-change="disableUser(user.id, allusers.indexOf(user))" on-label="Active" off-label="Disabled" style="margin-top: -22px;"></toggle-switch>
+						<toggle-switch ng-model="user.disableState" ng-change="disableUser(user.id, allusers.indexOf(user),user.disableState)" off-label="Active" on-label="Disabled" style="margin-top: -22px;"></toggle-switch>
 						<!--
                             <a href="" ng-show="user.disableState"
                                ng-click="disableUser(user.id, allusers.indexOf(user), false)"
