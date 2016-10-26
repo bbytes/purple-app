@@ -9,7 +9,7 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
     // variable to store information about all list of user
     $scope.allusers;
     // this varibale is used to pass no of days the user data need to deleted
-    $scope.days = 1;
+    $scope.days = 15;
     //when page is loading, showing sort by username
     $scope.sortKey = 'userName';
 
