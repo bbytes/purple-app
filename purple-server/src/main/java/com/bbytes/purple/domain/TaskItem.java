@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.bbytes.purple.enums.TaskState;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
 
@@ -48,6 +49,7 @@ public class TaskItem implements Comparable<TaskItem> {
 	@DBRef
 	private Project project;
 
+	@JsonBackReference
 	@DBRef
 	private TaskList taskList;
 

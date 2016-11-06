@@ -3,6 +3,8 @@ package com.bbytes.purple.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.ApplicationPath;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +73,7 @@ public class TaskController {
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/tasklist/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/v1/tasklist/create", method = RequestMethod.POST)
 	public RestResponse saveTaskList(@RequestBody TaskListDTO taskListDTO) throws PurpleException {
 
 		TaskList taskList = null;
@@ -97,6 +99,28 @@ public class TaskController {
 
 		logger.debug("Task list with name '" + taskList.getName() + "' added successfully");
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskList, SuccessHandler.ADD_TASK_LIST_SUCCESS);
+
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/tasklist/{taskListId}", method = RequestMethod.DELETE)
+	public RestResponse deleteTaskList(@PathVariable String taskListId) throws PurpleException {
+
+		taskListService.delete(taskListId);
+
+		logger.debug("Task list with id '" + taskListId + "' deleted successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Task list with id '" + taskListId + "' deleted successfully");
+
+		return response;
+	}
+	
+	@RequestMapping(value = "/api/v1/taskitem/{taskItemId}", method = RequestMethod.DELETE)
+	public RestResponse deleteTaskItem(@PathVariable String taskItemId) throws PurpleException {
+
+		taskItemService.delete(taskItemId);
+		
+		logger.debug("Task Item with id '" + taskItemId + "' deleted successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Task Item with id '" + taskItemId + "' deleted successfully");
 
 		return response;
 	}
