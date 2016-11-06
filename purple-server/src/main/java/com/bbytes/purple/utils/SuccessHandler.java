@@ -57,6 +57,10 @@ public class SuccessHandler {
 	public static final String UPDATE_STATUS_SUCCESS = "update_status_success";
 
 	public static final String ADD_COMMENT_SUCCESS = "add_comment_success";
+	
+	public static final String ADD_TASK_LIST_SUCCESS = "add_task_list_success";
+	
+	public static final String ADD_TASK_ITEM_SUCCESS = "add_task_item_success";
 
 	public static final String DELETE_COMMENT_SUCCESS = "delete_comment_success";
 
