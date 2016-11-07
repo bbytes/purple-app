@@ -5,68 +5,182 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <div class="row" ng-controller="navCtrl">
- 
-     <div class="collapse navbar-collapse" id="adminNavbar">
-                                    <ul class="nav navbar-nav">
-                                        <li ng-class="{active:activeAdminTab('billinginfo')}"><a  href="javascript://" ng-click="setAdminTab('billinginfo')" >Billing Info</a></li>
-                                        <li ng-class="{active:activeAdminTab('invoicedetails')}"><a href="javascript://" ng-click="setAdminTab('invoicedetails')">Invoice Details</a></li>
-                                        <li ng-class="{active:activeAdminTab('productplans')}"><a  href="javascript://" ng-click="setAdminTab('productplans')">Product plans                   
-                                            </a></li> 
-                                       
-                                    </ul>
-                                </div>
-     <div class="tab-content">
-                        <nav class="navbar navbar-admin" ng-if="activeAdminTab('billinginfo')">
-                            <div class="container-fluid">
-                                <div class="navbar-header">
-                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#adminNavbar">
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span> 
-                                    </button>
-                                </div>
-                                <div class="collapse navbar-collapse" id="adminNavbar">
-                                    <ul class="nav navbar-nav">
-                                        <li><a ui-sref=".users" ng-class="{active:$state.includes('*.users')}">test</a></li>
 
-                                    </ul>
-                                </div>
-                            </div>
-                        </nav>
-                        <nav class="navbar navbar-admin" ng-if="activeAdminTab('invoicedetails')">
-                            <div class="container-fluid">
-                                <div class="navbar-header">
-                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#adminSettingsNavbar">
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span> 
-                                    </button>
-                                </div>
-                                <div class="collapse navbar-collapse" id="adminSettingsNavbar">
-                                    <ul class="nav navbar-nav">
-                                        <li><a ui-sref=".globalPreferences" ng-class="{active:$state.includes('*.globalPreferences')}">test1</a></li>
+    <div class="collapse navbar-collapse" id="adminNavbar">
+        <ul class="nav navbar-nav">
+            <li ng-class="{active:activeAdminTab('billinginfo')}"><a  href="javascript://" ng-click="setAdminTab('billinginfo')" >Billing Info</a></li>
+            <li ng-class="{active:activeAdminTab('invoicedetails')}"><a href="javascript://" ng-click="setAdminTab('invoicedetails')">Invoice Details</a></li>
+            <li ng-class="{active:activeAdminTab('productplans')}"><a  href="javascript://" ng-click="setAdminTab('productplans')">Product plans                   
+                </a></li> 
 
-                                    </ul>
+        </ul>
+    </div>
+    <div class="tab-content">
+        <nav class="navbar navbar-admin" ng-if="activeAdminTab('billinginfo')">
+            <div class="col-md-offset-2 col-md-8">
+                <div></div>
+                <br><br><br>
+                <div class="create-project">
+                    <form name="myForm">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <!--label for="comment" class="settings" >Customer Name</label-->
+                                        <input type="text" ng-model="customer" name="customer"
+                                               placeholder='Customer Name' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
+                                        <span style="color: red"
+                                              ng-show="!isSubmitted && myForm.customer.$dirty && myForm.customer.$error.required">The
+                                            name is required.</span> <span style="color: red" ng-show="myForm.customer.$dirty && myForm.customer.$error.pattern">name
+                                            is invalid</span>
+                                    </div>
                                 </div>
                             </div>
-                        </nav>
-                         <nav class="navbar navbar-admin" ng-if="activeAdminTab('productplans')">
-                            <div class="container-fluid">
-                                <div class="navbar-header">
-                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#adminSettingsNavbar">
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span> 
-                                    </button>
-                                </div>
-                                <div class="collapse navbar-collapse" id="adminSettingsNavbar">
-                                    <ul class="nav navbar-nav">
-                                        <li><a ui-sref=".globalPreferences" ng-class="{active:$state.includes('*.globalPreferences')}">test2</a></li>
-                                       
-                                    </ul>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <!--label for="comment" class="settings" >Customer Name</label-->
+                                        <input
+                                            type="email" placeholder='Email ID' name="email" ng-model="email"
+                                            class="form-control" required> <span style="color: red"
+                                            ng-show="myForm.email.$dirty && myForm.email.$invalid"> <span
+                                                ng-show=" !isSubmitted && myForm.email.$error.required">Email is required.</span>
+                                            <span ng-show="myForm.email.$error.email">Invalid email
+                                                address.</span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </nav>
-                        <div ui-view></div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <!--label for="comment" class="settings" >Customer Name</label-->
+                                        <input type="text" ng-model="mobile" name="mobile"
+                                               placeholder='Mobile No' class="form-control" ng-required="true" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required>
+                                        <span style="color: red"
+                                              ng-show="!isSubmitted && myForm.mobile.$dirty && myForm.mobile.$error.required">The
+                                            mobile number is required.</span> <span style="color: red"
+                                                                                ng-show="myForm.mobile.$dirty && myForm.mobile.$error.pattern">
+                                            invalid mobile number</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <!--label for="comment" class="settings" >Customer Name</label-->
+                                        <input type="text" ng-model="adress1" name="adress1"
+                                               placeholder='Full Billing Adress' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
+                                        <span style="color: red"
+                                              ng-show="!isSubmitted && myForm.adress1.$dirty && myForm.adress1.$error.required">The
+                                            name is required.</span> <span style="color: red"
+                                                                       ng-show="myForm.adress1.$dirty && myForm.adress1.$error.pattern">name
+                                            is invalid</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <!--label for="comment" class="settings" >Customer Name</label-->
+                                        <input type="text" ng-model="adress2" name="adress2"
+                                               placeholder='Billing Related adress' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
+                                        <span style="color: red"
+                                              ng-show="!isSubmitted && myForm.adress2.$dirty && myForm.adress2.$error.required">The
+                                            name is required.</span> <span style="color: red"
+                                                                       ng-show="myForm.adress2.$dirty && myForm.adress2.$error.pattern">name
+                                            is invalid</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <!--label for="comment" class="settings" >Customer Name</label-->
+                                <input type="text" ng-model="website" name="website"
+                                       placeholder='Website' class="form-control" ng-pattern="/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/" required>
+                                <span style="color: red"
+                                      ng-show="!isSubmitted && myForm.website.$dirty && myForm.website.$error.required">The
+                                    name is required.</span> <span style="color: red"
+                                                               ng-show="myForm.website.$dirty && myForm.website.$error.pattern">
+                                    invalid website</span>
+                            </div>
+                        </div>
+                </div>
+                <button type="button" class="btn btn-default create" ng-disabled="myForm.$invalid"
+                        ng-click="saveChanges(myForm.$valid)">Save Changes</button>
+
+                </form>
+            </div>
+        </nav>
+        <nav class="navbar navbar-admin" ng-if="activeAdminTab('invoicedetails')">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="main-title">
+                    <h4>Current Invoice</h4>
+                </div>
+                <div class="col-md-6">
+
+                    <label for="comment" class="settings" >Current Invoice:</label>
+                    <label for="comment" class="settings" >Pay By date:</label>
+                    <label for="comment" class="settings" >Invoice Number:</label>
+                    <label for="comment" class="settings" >Details:</label>
+                    <button type="button"  ng-click="saveChanges(myForm.$valid)">Pay My Bill</button><a href="#"><img
+                            src="../../assets/img/download-arrow.png"></a><a href="#"><img src="../../assets/img/mail.png"></a>
+                </div>
+                <div class="col-md-6">
+
+                    <label for="comment" class="settings" >Current plan:</label>
+                    <label for="comment" class="settings" >Expiry Date:</label>
+                    <label for="comment" class="settings" >Status:</label>     
+                </div>
+                <div class="col-md-12">
+                    <div class="main-title">
+                        <h4>Current Invoice</h4>
                     </div>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-admin" ng-if="activeAdminTab('productplans')">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="main-title">
+                    <h4>Current Plans</h4>
+                </div>
+                <div class="create-project">
+                    <div class="col-md-6">
+
+                        <label for="comment" class="settings" >Plan Name:</label>
+                        <label for="comment" class="settings" >Expiry Date:</label>
+                        <label for="comment" class="settings" >Details:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="comment" class="settings" >Status:</label>           
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-default" ng-disabled="myForm.$invalid" ng-click="saveChanges(myForm.$valid)">Deactivate</button>
+                    </div>
+
+                    <div class="main-title">
+                        <h4>Product Plans</h4>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div ui-view></div>
+    </div>
 </div>
