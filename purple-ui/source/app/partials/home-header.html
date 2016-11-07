@@ -19,7 +19,32 @@
                             <li><a href="projects" ng-class="{ active: isActive('/projects') }">projects</a></li>
                             <li><a href="integration" ng-class="{ active: isActive('/integration') }">integration</a></li>
                             <li ng-show="userRole == 'ADMIN'"><a href="admin-settings" ng-class="{ active: isActive('/admin-settings') }">admin settings</a></li>
+                            <li ng-show="userRole == 'ADMIN'"><a href="billing" ng-class="{ active: isActive('/billing') }" ng-click="setAdminTab('billinginfo')" >Billing</a></li>
+                            <!-- <li ng-show="userRole == 'ADMIN'"><a  href="#" ng-click="loadTabs()">Billing</a></li>-->
+                       <!--<li class="dropdown mega-dropdown">
+          <a href="#" ng-click="loadTabs()" class="dropdown-toggle" data-toggle="dropdown">Billing <span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
+
+          <ul class="dropdown-menu mega-dropdown-menu row">
+            <li class="col-sm-3">
+              <ul>
+             
+             <li ng-if="showTabs === true" ng-repeat="tab in tabList" active="tab.active" ng-init="tab.active = $index === 0">
+        <a  href="{{tab.id}}">{{tab.name}}</a>
+    
+               
+                                 </li>
+                              
+              </ul>
+            </li>
+            
+            
+          </ul>
+
+        </li>-->
+                                  
                         </ul>
+                                 
+                                
                         <ul ng-show="userRole == 'ADMIN' || userRole == 'MANAGER'"  class="{{ navstatusClass}} nav-left" ng-controller="navCtrl">
                             <li><a href="status" ng-class="{ active: isActive('/status') }">status</a></li>
                             <li><a href="dashboard" ng-class="{ active: isActive('/dashboard') }">timeline</a></li>
@@ -92,6 +117,7 @@
                         </ul>
 
                     </div><!--/.nav-collapse -->
+                
                 </div>
             </nav>
 
