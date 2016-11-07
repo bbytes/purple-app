@@ -369,42 +369,6 @@ rootApp.config([
                 authorization: 'User Manager',
                 redirectTo: 'login'
             }
-        }).state('billinginfo', {
-             url: '/billinginfo',
-           views: {
-                '': {
-                    templateUrl: 'app/partials/home.html'
-                },
-                'header@billinginfo': {
-                    templateUrl: 'app/partials/home-header.html'
-                },             
-                'main@billinginfo': {
-                    templateUrl: 'app/partials/billinginfo.html',
-                    //controller: 'navCtrl'
-                },
-                'nav@billinginfo': {
-                    templateUrl: 'app/partials/billing-nav.html',
-                    controller: 'navCtrl'
-                },
-                'footer@billinginfo': {
-                    templateUrl: 'app/partials/home-footer.html'
-                }
-            },
-            data: {
-                authorization: 'User Manager',
-                redirectTo: 'login'
-            }
-        }).state('billing.invoicedetails', {
-            templateUrl: 'app/partials/invoicedetails.html',
-            controller: 'invoicedetailsCtrl',
-             data: {
-                authorization: 'User Manager',
-                redirectTo: 'login'
-            }
-        }).state('billing.monitors', {
-            templateUrl: 'app/partials/plantview-monitors.html',
-            controller: 'plantviewMonitorsCtrl'
-            
         }).state('access-denied', {
             url: '/accessDenied',
             templateUrl: 'app/partials/access-denied.html'
