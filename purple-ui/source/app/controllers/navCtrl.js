@@ -1,6 +1,5 @@
 
-
-angular.module('rootApp').controller('navCtrl', ['$scope','$rootScope', '$location','$state', function ($scope,$rootScope, $location, $state,cfpLoadingBar, $fancyModal) {
+angular.module('rootApp').controller('navCtrl',function ($scope,$rootScope, $location,toaster,appNotifyService, $state,cfpLoadingBar,billingInfoService, $fancyModal) {
 
         $scope.isActive = function (viewLocation) {
             var active = (viewLocation === $location.path());
@@ -48,5 +47,30 @@ angular.module('rootApp').controller('navCtrl', ['$scope','$rootScope', '$locati
             }, function () {
             });
         };
+        
+    $scope.addBillingInfo = function (isValid,customer) {
+            // Validating login form
+        if (!isValid) {
+            toaster.pop({type: 'error', body: 'Please valid inputs.', toasterId: 1});
+            return false;
+        }
+        $scope.variables= {
+            "contactNo":customer.contactNo,
+                    "email":$scope.loggedInUser,
+                    "name":$scope.userName,
+                    "website":customer.website,
+                    "billingAddress":customer.billingAddress
+        };
+        
+        billingInfoService.addBillingDetails($scope.variables).then(function (response) {
+            if (response.success) {
+                appNotifyService.error('Your details are saved');
+                $scope.billngDetails = response.data;
+                customer.website=[];
+                customer.billingAddress=[];
+                customer.contactNo=[];
+            }
+        });
+    };
 
-    }]);
+    });
