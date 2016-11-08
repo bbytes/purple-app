@@ -42,8 +42,6 @@ public class IntegrationController {
 
 	private static final Logger logger = LoggerFactory.getLogger(IntegrationController.class);
 
-	private static final String AUTHORIZATION = "Authorization";
-
 	private static final String BASIC = "Basic ";
 
 	@Autowired

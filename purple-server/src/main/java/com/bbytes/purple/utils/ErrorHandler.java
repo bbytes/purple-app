@@ -29,6 +29,8 @@ public class ErrorHandler {
 	public static final String PASSWORD_MISMATCH = "password_mistach";
 
 	public static final String PROJECT_NOT_FOUND = "project_not_found";
+	
+	public static final String TASK_LIST_NOT_FOUND = "task_list_not_found";
 
 	public static final String PROJECT_ALREADY_EXIST = "project_already_exist";
 

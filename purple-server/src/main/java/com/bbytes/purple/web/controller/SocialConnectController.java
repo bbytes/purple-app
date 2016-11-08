@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,7 +42,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.WebUtils;
 
-import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.social.GithubConnectInterceptor;
 
 @Controller
@@ -69,9 +67,6 @@ public class SocialConnectController implements InitializingBean {
 	private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
 	private String applicationUrl = null;
-	
-	@Autowired
-	private UserService userService;
 
 	/**
 	 * Constructs a ConnectController.
@@ -83,9 +78,9 @@ public class SocialConnectController implements InitializingBean {
 	 *            the current user's {@link ConnectionRepository} needed to
 	 *            persist connections; must be a proxy to a request-scoped bean
 	 */
-	@Inject
-	public SocialConnectController(ConnectionFactoryLocator connectionFactoryLocator,
-			ConnectionRepository connectionRepository , UsersConnectionRepository usersConnectionRepository) {
+	@Autowired
+	public SocialConnectController(ConnectionFactoryLocator connectionFactoryLocator, ConnectionRepository connectionRepository,
+			UsersConnectionRepository usersConnectionRepository) {
 		this.connectionFactoryLocator = connectionFactoryLocator;
 		this.connectionRepository = connectionRepository;
 	}
@@ -184,8 +179,7 @@ public class SocialConnectController implements InitializingBean {
 	 *            the connect interceptor to add
 	 */
 	public void addInterceptor(ConnectInterceptor<?> interceptor) {
-		Class<?> serviceApiType = GenericTypeResolver.resolveTypeArgument(interceptor.getClass(),
-				ConnectInterceptor.class);
+		Class<?> serviceApiType = GenericTypeResolver.resolveTypeArgument(interceptor.getClass(), ConnectInterceptor.class);
 		connectInterceptors.add(serviceApiType, interceptor);
 	}
 
@@ -197,8 +191,7 @@ public class SocialConnectController implements InitializingBean {
 	 *            the connect interceptor to add
 	 */
 	public void addDisconnectInterceptor(DisconnectInterceptor<?> interceptor) {
-		Class<?> serviceApiType = GenericTypeResolver.resolveTypeArgument(interceptor.getClass(),
-				DisconnectInterceptor.class);
+		Class<?> serviceApiType = GenericTypeResolver.resolveTypeArgument(interceptor.getClass(), DisconnectInterceptor.class);
 		disconnectInterceptors.add(serviceApiType, interceptor);
 	}
 
@@ -265,8 +258,8 @@ public class SocialConnectController implements InitializingBean {
 	 */
 	@RequestMapping(value = "/{providerId}", method = RequestMethod.POST)
 	public RedirectView connect(@PathVariable String providerId, NativeWebRequest request) {
-//		System.out.println(userService.getLoggedInUserEmail());
-		
+		// System.out.println(userService.getLoggedInUserEmail());
+
 		ConnectionFactory<?> connectionFactory = connectionFactoryLocator.getConnectionFactory(providerId);
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
 		preConnect(connectionFactory, parameters, request);
@@ -302,8 +295,8 @@ public class SocialConnectController implements InitializingBean {
 			addConnection(connection, connectionFactory, request);
 		} catch (Exception e) {
 			sessionStrategy.setAttribute(request, PROVIDER_ERROR_ATTRIBUTE, e);
-			logger.warn("Exception while handling OAuth1 callback (" + e.getMessage() + "). Redirecting to "
-					+ providerId + " connection status page.");
+			logger.warn("Exception while handling OAuth1 callback (" + e.getMessage() + "). Redirecting to " + providerId
+					+ " connection status page.");
 		}
 		return connectionStatusRedirect(providerId, request);
 	}
@@ -323,8 +316,8 @@ public class SocialConnectController implements InitializingBean {
 	 */
 	@RequestMapping(value = "/{providerId}", method = RequestMethod.GET, params = "code")
 	public String oauth2Callback(@PathVariable String providerId, NativeWebRequest request) {
-//		System.out.println(userService.getLoggedInUserEmail());
-		
+		// System.out.println(userService.getLoggedInUserEmail());
+
 		try {
 			OAuth2ConnectionFactory<?> connectionFactory = (OAuth2ConnectionFactory<?>) connectionFactoryLocator
 					.getConnectionFactory(providerId);
@@ -332,12 +325,11 @@ public class SocialConnectController implements InitializingBean {
 			addConnection(connection, connectionFactory, request);
 		} catch (Exception e) {
 			sessionStrategy.setAttribute(request, PROVIDER_ERROR_ATTRIBUTE, e);
-			logger.warn("Exception while handling OAuth2 callback (" + e.getMessage() + "). Redirecting to "
-					+ providerId + " connection status page.");
+			logger.warn("Exception while handling OAuth2 callback (" + e.getMessage() + "). Redirecting to " + providerId
+					+ " connection status page.");
 		}
-		return "redirect:/integration#"+providerId;
+		return "redirect:/integration#" + providerId;
 	}
-
 
 	/**
 	 * Process an error callback from an OAuth 2 authorization as described at
@@ -361,8 +353,8 @@ public class SocialConnectController implements InitializingBean {
 	public String oauth2ErrorCallback(@PathVariable String providerId, @RequestParam("error") String error,
 			@RequestParam(value = "error_description", required = false) String errorDescription,
 			@RequestParam(value = "error_uri", required = false) String errorUri, NativeWebRequest request) {
-		
-		return "redirect:/integration#"+providerId;
+
+		return "redirect:/integration#" + providerId;
 	}
 
 	/**
@@ -403,8 +395,7 @@ public class SocialConnectController implements InitializingBean {
 	 * @return a RedirectView to the connection status page
 	 */
 	@RequestMapping(value = "/{providerId}/{providerUserId}", method = RequestMethod.DELETE)
-	public RedirectView removeConnection(@PathVariable String providerId, @PathVariable String providerUserId,
-			NativeWebRequest request) {
+	public RedirectView removeConnection(@PathVariable String providerId, @PathVariable String providerUserId, NativeWebRequest request) {
 		ConnectionFactory<?> connectionFactory = connectionFactoryLocator.getConnectionFactory(providerId);
 		preDisconnect(connectionFactory, request);
 		connectionRepository.removeConnection(new ConnectionKey(providerId, providerUserId));
@@ -412,11 +403,11 @@ public class SocialConnectController implements InitializingBean {
 		return connectionStatusRedirect(providerId, request);
 	}
 
-	
-//	@RequestMapping(value = "/{providerId}/callback", method = RequestMethod.GET)
-//	public void callBackURL(WebRequest request) {
-//		System.out.println(request.getSessionId());
-//	}
+	// @RequestMapping(value = "/{providerId}/callback", method =
+	// RequestMethod.GET)
+	// public void callBackURL(WebRequest request) {
+	// System.out.println(request.getSessionId());
+	// }
 
 	// subclassing hooks
 	/**
@@ -492,7 +483,7 @@ public class SocialConnectController implements InitializingBean {
 		if (applicationUrl != null) {
 			this.connectSupport.setApplicationUrl(applicationUrl);
 		}
-		
+
 		addInterceptor(new GithubConnectInterceptor());
 	}
 
@@ -528,8 +519,7 @@ public class SocialConnectController implements InitializingBean {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void preConnect(ConnectionFactory<?> connectionFactory, MultiValueMap<String, String> parameters,
-			WebRequest request) {
+	private void preConnect(ConnectionFactory<?> connectionFactory, MultiValueMap<String, String> parameters, WebRequest request) {
 		for (ConnectInterceptor interceptor : interceptingConnectionsTo(connectionFactory)) {
 			interceptor.preConnect(connectionFactory, parameters, request);
 		}
@@ -557,8 +547,7 @@ public class SocialConnectController implements InitializingBean {
 	}
 
 	private List<ConnectInterceptor<?>> interceptingConnectionsTo(ConnectionFactory<?> connectionFactory) {
-		Class<?> serviceType = GenericTypeResolver.resolveTypeArgument(connectionFactory.getClass(),
-				ConnectionFactory.class);
+		Class<?> serviceType = GenericTypeResolver.resolveTypeArgument(connectionFactory.getClass(), ConnectionFactory.class);
 		List<ConnectInterceptor<?>> typedInterceptors = connectInterceptors.get(serviceType);
 		if (typedInterceptors == null) {
 			typedInterceptors = Collections.emptyList();
@@ -567,8 +556,7 @@ public class SocialConnectController implements InitializingBean {
 	}
 
 	private List<DisconnectInterceptor<?>> interceptingDisconnectionsTo(ConnectionFactory<?> connectionFactory) {
-		Class<?> serviceType = GenericTypeResolver.resolveTypeArgument(connectionFactory.getClass(),
-				ConnectionFactory.class);
+		Class<?> serviceType = GenericTypeResolver.resolveTypeArgument(connectionFactory.getClass(), ConnectionFactory.class);
 		List<DisconnectInterceptor<?>> typedInterceptors = disconnectInterceptors.get(serviceType);
 		if (typedInterceptors == null) {
 			typedInterceptors = Collections.emptyList();
@@ -579,8 +567,7 @@ public class SocialConnectController implements InitializingBean {
 	private void processFlash(WebRequest request, Model model) {
 		convertSessionAttributeToModelAttribute(DUPLICATE_CONNECTION_ATTRIBUTE, request, model);
 		convertSessionAttributeToModelAttribute(PROVIDER_ERROR_ATTRIBUTE, request, model);
-		model.addAttribute(AUTHORIZATION_ERROR_ATTRIBUTE,
-				sessionStrategy.getAttribute(request, AUTHORIZATION_ERROR_ATTRIBUTE));
+		model.addAttribute(AUTHORIZATION_ERROR_ATTRIBUTE, sessionStrategy.getAttribute(request, AUTHORIZATION_ERROR_ATTRIBUTE));
 		sessionStrategy.removeAttribute(request, AUTHORIZATION_ERROR_ATTRIBUTE);
 	}
 
