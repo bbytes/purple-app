@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,10 +13,12 @@ import com.bbytes.plutus.client.PlutusClient;
 import com.bbytes.plutus.client.PlutusClientException;
 import com.bbytes.plutus.enums.AppProfile;
 import com.bbytes.plutus.enums.ProductName;
+import com.bbytes.plutus.model.BillingInfo;
 import com.bbytes.plutus.response.ProductStatsRestResponse;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
 
@@ -53,5 +56,18 @@ public class BillingController {
 		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData()) ;
 		return response;
 	}
+	@RequestMapping(value = "/api/v1/billing/billingInfo", method = RequestMethod.POST)
+	public RestResponse createBillingInfo(@RequestBody BillingInfo billingInfo) throws PurpleException, PlutusClientException {
 
+		Organization organization = userService.getLoggedInUser().getOrganization();
+		PlutusClient plutusClient = getPlutusClient(organization);
+		if (plutusClient == null)
+			throw new PurpleException("Subscription information not available for organization" + organization.getOrgId(),
+					ErrorHandler.SERVER_ERROR);
+		
+		ProductStatsRestResponse plutusResponse = plutusClient.saveBillingInfo(billingInfo);
+		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData()) ;
+		return response;
+	}
+	
 }
