@@ -189,6 +189,47 @@ public class UserController {
 	}
 
 	/**
+	 * The addDeviceToken method is used to save the device token for push
+	 * notification in mobile app.
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/user/devicetoken/add", method = RequestMethod.PUT)
+	public RestResponse addDeviceToken(@RequestParam("deviceToken") String deviceToken) throws PurpleException {
+
+		User user = userService.getLoggedInUser();
+		User updatedUser = userService.saveDeviceToken(user.getUserId(), deviceToken);
+
+		logger.debug("User with email  '" + updatedUser.getEmail() + "' is saved device token successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, updatedUser,
+				SuccessHandler.ADD_DEVICE_TOKEN_SUCCESS);
+
+		return userReponse;
+	}
+
+	/**
+	 * The isDeviceTokenAvailable method is used to check whether device token
+	 * is available or not
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/user/devicetoken", method = RequestMethod.GET)
+	public RestResponse isDeviceTokenAvailable() throws PurpleException {
+
+		User user = userService.getLoggedInUser();
+		boolean deviceTokenAvailable = userService.isDeviceTokenAvailable(user.getUserId());
+
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, deviceTokenAvailable,
+				SuccessHandler.GET_DEVICE_TOKEN_SUCCESS);
+
+		return userReponse;
+	}
+
+	/**
 	 * disableUser method is used to disable particular user from tenant
 	 * 
 	 * @param userId
@@ -453,7 +494,8 @@ public class UserController {
 	public void getSampleBulkUploadFile(HttpServletResponse response) throws PurpleException, IOException {
 		InputStream fileStream = resourceloader.getResource(sampleBulkuploadFile).getInputStream();
 		response.setContentType("text/csv");
-		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", "sample-user-upload.csv"));
+		response.setHeader("Content-Disposition",
+				String.format("attachment; filename=\"%s\"", "sample-user-upload.csv"));
 		IOUtils.copy(fileStream, response.getOutputStream());
 		response.flushBuffer();
 

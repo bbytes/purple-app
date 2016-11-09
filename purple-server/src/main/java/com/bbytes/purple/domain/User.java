@@ -56,6 +56,9 @@ public class User {
 	@Field("mark_delete")
 	private boolean markDelete = false;
 
+	@Field("device_token")
+	private String deviceToken;
+
 	@Field("mark_delete_date")
 	private Date markDeleteDate;
 

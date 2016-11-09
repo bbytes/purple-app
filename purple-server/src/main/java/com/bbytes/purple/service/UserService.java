@@ -371,6 +371,48 @@ public class UserService extends AbstractService<User, String> {
 		return userToBeDisbale;
 	}
 
+	/**
+	 * Return user with saved device token
+	 * 
+	 * @param userId
+	 * @param deviceToken
+	 * @return
+	 * @throws PurpleException
+	 */
+	public User saveDeviceToken(String userId, String deviceToken) throws PurpleException {
+
+		User user = null;
+		if (!userExistById(userId))
+			throw new PurpleException("Error while saving device token", ErrorHandler.USER_NOT_FOUND);
+		try {
+			user = getUserById(userId);
+			// adding device token in user for push notification for mobile app
+			user.setDeviceToken(deviceToken);
+			user = userRepository.save(user);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.DEVICE_TOKEN_ADD_FAILED);
+		}
+		return user;
+	}
+
+	/**
+	 * return true or false based on device token availability
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws PurpleException
+	 */
+	public boolean isDeviceTokenAvailable(String userId) throws PurpleException {
+
+		if (!userExistById(userId))
+			throw new PurpleException("Error while getting device token", ErrorHandler.USER_NOT_FOUND);
+
+		User user = getUserById(userId);
+		// checking device token available or not
+		boolean isDeviceToken = user.getDeviceToken() == null ? false : true;
+		return isDeviceToken;
+	}
+
 	public User markForDeleteUser(String userId, String markDeleteState, int days) throws PurpleException {
 
 		User markDeleteUser = null;

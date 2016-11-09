@@ -207,4 +207,27 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 	}
+
+	@Test
+	public void testaddDeviceTokenPasses() throws Exception {
+
+		String deviceToken = "cdjcdndsjc";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
+		mockMvc.perform(put("/api/v1/user/devicetoken/add").param("deviceToken", deviceToken)
+				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
+
+	@Test
+	public void testisDeviceTokenPasses() throws Exception {
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
+		mockMvc.perform(get("/api/v1/user/devicetoken").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
 }

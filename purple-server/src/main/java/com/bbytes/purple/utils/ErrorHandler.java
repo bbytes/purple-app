@@ -51,6 +51,8 @@ public class ErrorHandler {
 	public static final String DELETE_USER_FAILED = "delete_user_failed";
 
 	public static final String DISABLE_USER_FAILED = "disable_user_failed";
+	
+	public static final String DEVICE_TOKEN_ADD_FAILED = "device_token_add_failed";
 
 	public static final String GET_USER_FAILED = "get_user_failed";
 
