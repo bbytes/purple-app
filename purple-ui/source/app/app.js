@@ -347,6 +347,28 @@ rootApp.config([
                 authorization: 'User Manager',
                 redirectTo: 'login'
             }
+        }).state('billing', {
+            url: '/billing',
+            //redirectTo: 'billinginfo',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/home.html'
+                },
+                'header@billing': {
+                    templateUrl: 'app/partials/home-header.html'
+                },             
+                'main@billing': {
+                    templateUrl: 'app/partials/billing-nav.html',
+                    controller: 'navCtrl'
+                },
+                'footer@billing': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            },
+            data: {
+                authorization: 'User Manager',
+                redirectTo: 'login'
+            }
         }).state('access-denied', {
             url: '/accessDenied',
             templateUrl: 'app/partials/access-denied.html'
