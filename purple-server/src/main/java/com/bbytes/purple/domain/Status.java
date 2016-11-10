@@ -1,6 +1,8 @@
 package com.bbytes.purple.domain;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -55,8 +57,8 @@ public class Status implements Comparable<Status> {
 	@LastModifiedDate
 	private Date lastModified;
 
-	// @Field("mention_user")
-	// private Set<User> mentionUser;
+	@DBRef(lazy = true)
+	private Set<User> mentionUser = new HashSet<User>();
 
 	public Status(String workingOn, String workedOn, double hours, Date dateTime) {
 
@@ -69,6 +71,19 @@ public class Status implements Comparable<Status> {
 	@Override
 	public int compareTo(Status status) {
 		return getDateTime().compareTo(status.getDateTime());
+	}
+
+	public void addMentionUser(User userToBeAdded) {
+		if (mentionUser != null) {
+			mentionUser.add(userToBeAdded);
+		}
+	}
+
+	public void addMentionUser(Collection<User> userList) {
+
+		for (User user : userList) {
+			addMentionUser(user);
+		}
 	}
 
 }
