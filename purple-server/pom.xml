@@ -65,16 +65,8 @@
 			</releases>
 		</repository>
 		<repository>
-			<id>lib</id>
-			<name>lib</name>
-			<releases>
-				<enabled>true</enabled>
-				<checksumPolicy>ignore</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<url>file://${project.basedir}/lib</url>
+			<id>repo.bbytes.co</id>
+			<url>s3://repo.bbytes.co/release</url>
 		</repository>
 	</repositories>
 
