@@ -416,135 +416,112 @@ angular.module('rootApp').directive('chosen', function ($timeout) {
     };
 });
 
-
-angular.module('rootApp').directive('counter', [function () {
-        return {
-            restrict: 'A',
+// text angular with @ mention for working on 
+angular.module('rootApp').directive('workingonTextAngularMentio', ['$rootScope', function ($rootScope) {
+        var directiveDefinitionObject = {
+            restrict: 'E',
+            templateUrl: "app/partials/workingonTextAngularWithMentio.html",
+            require: '^ngModel',
             scope: {
-                counter: '='
+                ngModel: '='
             },
-            require: '?ngModel',
-            link: function (scope, el, attr, model) {
-                if (!model) {
-                    return;
-                }
-                model.$viewChangeListeners.push(function () {
-                    var count = model.$viewValue.split(/\b/g).filter(function (i) {
-                        return !/^\s+$/.test(i);
-                    }).length;
+            controller: ['$scope', function ($scope) {
+                    $scope.setup = function (element) {
+                        element.attr('mentio', 'mentio');
+                        element.attr('mentio-typed-term', 'typedTerm');
+                        element.attr('mentio-require-leading-space', 'true');
+                        element.attr('mentio-id', "'content-editor+$id+1'");
+                    };
 
-                    scope.counter = count;
-                });
-            }
+                    $scope.searchPeople = function (term) {
+                        var peopleList = [];
+
+                        angular.forEach($rootScope.projectUsers, function (value, key) {
+                            if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
+                                peopleList.push(value);
+                            }
+                        });
+                        $scope.people = peopleList;
+                    };
+
+                    $scope.getPeopleText = function (item) {
+                        return '@[' + item.email + ']';
+                    };
+                }]
         };
+
+        return directiveDefinitionObject;
     }]);
 
-// text angular with @ mention for working on 
-angular.module('rootApp').directive('workingonTextAngularMentio', function ($rootScope) {
-    var directiveDefinitionObject = {
-        restrict: 'E',
-        templateUrl: "app/partials/workingonTextAngularWithMentio.html",
-        require: '^ngModel',
-        scope: {
-            ngModel: '='
-        },
-        controller: function ($scope) {
-            $scope.setup = function (element) {
-                element.attr('mentio', 'mentio');
-                element.attr('mentio-typed-term', 'typedTerm');
-                element.attr('mentio-require-leading-space', 'true');
-                element.attr('mentio-id', "'content-editor+$id+1'");
-            };
-
-            $scope.searchPeople = function (term) {
-                var peopleList = [];
-
-                angular.forEach($rootScope.projectUsers, function (value, key) {
-                    if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
-                        peopleList.push(value);
-                    }
-                });
-                $scope.people = peopleList;
-            };
-
-            $scope.getPeopleText = function (item) {
-                return '@[' + item.email + ']';
-            };
-        }
-    };
-
-    return directiveDefinitionObject;
-});
-
 // text angular with @ mention for worked on 
-angular.module('rootApp').directive('workedonTextAngularMentio', function ($rootScope) {
-    var directiveDefinitionObject = {
-        restrict: 'E',
-        templateUrl: "app/partials/workedonTextAngularWithMentio.html",
-        require: '^ngModel',
-        scope: {
-            ngModel: '='
-        },
-        controller: function ($scope) {
-            $scope.setup = function (element) {
-                element.attr('mentio', 'mentio');
-                element.attr('mentio-typed-term', 'typedTerm');
-                element.attr('mentio-require-leading-space', 'true');
-                element.attr('mentio-id', "'content-editor-{{$id}}'");
-            };
+angular.module('rootApp').directive('workedonTextAngularMentio', ['$rootScope', function ($rootScope) {
+        var directiveDefinitionObject = {
+            restrict: 'E',
+            templateUrl: "app/partials/workedonTextAngularWithMentio.html",
+            require: '^ngModel',
+            scope: {
+                ngModel: '='
+            },
+            controller: ['$scope', function ($scope) {
+                    $scope.setup = function (element) {
+                        element.attr('mentio', 'mentio');
+                        element.attr('mentio-typed-term', 'typedTerm');
+                        element.attr('mentio-require-leading-space', 'true');
+                        element.attr('mentio-id', "'content-editor-{{$id}}'");
+                    };
 
-            $scope.searchPeople = function (term) {
-                var peopleList = [];
+                    $scope.searchPeople = function (term) {
+                        var peopleList = [];
 
-                angular.forEach($rootScope.projectUsers, function (value, key) {
-                    if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
-                        peopleList.push(value);
-                    }
-                });
-                $scope.people = peopleList;
-            };
+                        angular.forEach($rootScope.projectUsers, function (value, key) {
+                            if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
+                                peopleList.push(value);
+                            }
+                        });
+                        $scope.people = peopleList;
+                    };
 
-            $scope.getPeopleText = function (item) {
-                return '@[' + item.email + ']';
-            };
-        }
-    };
+                    $scope.getPeopleText = function (item) {
+                        return '@[' + item.email + ']';
+                    };
+                }]
+        };
 
-    return directiveDefinitionObject;
-});
+        return directiveDefinitionObject;
+    }]);
 
 // text angular with @ mention for blockers
-angular.module('rootApp').directive('blockersTextAngularMentio', function ($rootScope) {
-    var directiveDefinitionObject = {
-        restrict: 'E',
-        templateUrl: "app/partials/blockersTextAngularWithMentio.html",
-        require: '^ngModel',
-        scope: {
-            ngModel: '='
-        },
-        controller: function ($scope) {
-            $scope.setup = function (element) {
-                element.attr('mentio', 'mentio');
-                element.attr('mentio-typed-term', 'typedTerm');
-                element.attr('mentio-require-leading-space', 'true');
-                element.attr('mentio-id', "'content-editor+$id'");
-            };
+angular.module('rootApp').directive('blockersTextAngularMentio', ['$rootScope', function ($rootScope) {
+        var directiveDefinitionObject = {
+            restrict: 'E',
+            templateUrl: "app/partials/blockersTextAngularWithMentio.html",
+            require: '^ngModel',
+            scope: {
+                ngModel: '='
+            },
+            controller: ['$scope', function ($scope) {
+                    $scope.setup = function (element) {
+                        element.attr('mentio', 'mentio');
+                        element.attr('mentio-typed-term', 'typedTerm');
+                        element.attr('mentio-require-leading-space', 'true');
+                        element.attr('mentio-id', "'content-editor+$id'");
+                    };
 
-            $scope.searchPeople = function (term) {
-                var peopleList = [];
-                angular.forEach($rootScope.projectUsers, function (value, key) {
-                    if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
-                        peopleList.push(value);
-                    }
-                });
-                $scope.people = peopleList;
-            };
+                    $scope.searchPeople = function (term) {
+                        var peopleList = [];
+                        angular.forEach($rootScope.projectUsers, function (value, key) {
+                            if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
+                                peopleList.push(value);
+                            }
+                        });
+                        $scope.people = peopleList;
+                    };
 
-            $scope.getPeopleText = function (item) {
-                return '@[' + item.email + ']';
-            };
-        }
-    };
+                    $scope.getPeopleText = function (item) {
+                        return '@[' + item.email + ']';
+                    };
+                }]
+        };
 
-    return directiveDefinitionObject;
-});
+        return directiveDefinitionObject;
+    }]);

@@ -59,13 +59,14 @@
 
     <div class="tab-pane" id="slack">
         <div class="intergration-wrapper">
-            <img src="../../assets/img/coming-soon.png" />
-
-            <!--        below code commented because from angular side integration is pending 
-            <form action="/social/slack" method="post">
-                                            <input type="hidden" name="scope" value="users.profile:read,users:read,channels:read,channels:write,im:read ,im:write,chat:write:bot" />
-                                            <button type="submit">Connect to Slack</button>
-                                    </form>-->
+            <div class="row">
+                <form action="/social/slack" method="post">
+                    <div class="col-md-4"> 
+                        <input type="hidden" name="scope" value="users.profile:read,users:read,channels:read,channels:write,im:read ,im:write,chat:write:bot" />
+                        <button class="btn btn-default status-submit"><img src="../../assets/img/slack-icon.png" class="jira" /> Add to Slack</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -90,10 +91,10 @@
     <div class="tab-pane" id="bit-bucket">
         <div class="intergration-wrapper">
             <img src="../../assets/img/coming-soon.png" />
-<!--            <img src="../../assets/img/coming-soon.png" />
-<form action="/social/bitbucket" method="post">
-                <button type="submit">Connect to Bitbucket</button>
-            </form>-->
+            <!--            <img src="../../assets/img/coming-soon.png" />
+            <form action="/social/bitbucket" method="post">
+                            <button type="submit">Connect to Bitbucket</button>
+                        </form>-->
         </div>
     </div>
 </div>
