@@ -65,7 +65,11 @@
 			</releases>
 		</repository>
 		<repository>
-			<id>repo.bbytes.co</id>
+			<id>release.repo.bbytes.co</id>
+			<url>s3://repo.bbytes.co/snapshot</url>
+		</repository>
+		<repository>
+			<id>snapshot.repo.bbytes.co</id>
 			<url>s3://repo.bbytes.co/release</url>
 		</repository>
 	</repositories>
@@ -247,6 +251,14 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+
+		<extensions>
+			<extension>
+				<groupId>org.springframework.build</groupId>
+				<artifactId>aws-maven</artifactId>
+				<version>5.0.0.RELEASE</version>
+			</extension>
+		</extensions>
 	</build>
 
 
