@@ -21,14 +21,6 @@
 	<repositories>
 
 		<repository>
-			<id>spring-social-slack-bbytes</id>
-			<url>https://raw.github.com/bbytes/spring-social-slack/mvn-repo/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-		<repository>
 			<id>jira-client-bbytes</id>
 			<url>https://raw.github.com/tanmally/jira-client/mvn-repo/</url>
 			<snapshots>
@@ -71,6 +63,14 @@
 		<repository>
 			<id>snapshot.repo.bbytes.co</id>
 			<url>s3://repo.bbytes.co/release</url>
+		</repository>
+		<repository>
+			<id>release.public.repo.bbytes.co</id>
+			<url>s3://public.repo.bbytes.co/snapshot</url>
+		</repository>
+		<repository>
+			<id>snapshot.public.repo.bbytes.co</id>
+			<url>s3://public.repo.bbytes.co/release</url>
 		</repository>
 	</repositories>
 
