@@ -4276,3 +4276,14 @@ tabs-left, .tabs-right {
 .mega-dropdown-menu .form-group {
   margin-bottom: 3px;
 }
+
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+    z-index: 2;
+    color: #fff;
+    background-color: rgb(124, 105, 145);
+    border-color: rgb(124, 105, 145);
+}
+
+.text-primary {
+    color: rgb(124, 105, 145);
+}
