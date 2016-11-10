@@ -460,7 +460,7 @@ angular.module('rootApp').directive('workingonTextAngularMentio', function ($roo
                 var peopleList = [];
 
                 angular.forEach($rootScope.projectUsers, function (value, key) {
-                    if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
+                    if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
                         peopleList.push(value);
                     }
                 });
@@ -497,7 +497,7 @@ angular.module('rootApp').directive('workedonTextAngularMentio', function ($root
                 var peopleList = [];
 
                 angular.forEach($rootScope.projectUsers, function (value, key) {
-                    if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
+                    if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
                         peopleList.push(value);
                     }
                 });
@@ -533,7 +533,7 @@ angular.module('rootApp').directive('blockersTextAngularMentio', function ($root
             $scope.searchPeople = function (term) {
                 var peopleList = [];
                 angular.forEach($rootScope.projectUsers, function (value, key) {
-                    if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
+                    if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
                         peopleList.push(value);
                     }
                 });

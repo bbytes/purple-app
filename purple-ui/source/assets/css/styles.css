@@ -4280,10 +4280,16 @@ tabs-left, .tabs-right {
 .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
     z-index: 2;
     color: #fff;
-    background-color: rgb(124, 105, 145);
+    background-color: rgb(173, 154, 193);
     border-color: rgb(124, 105, 145);
 }
 
 .text-primary {
-    color: rgb(124, 105, 145);
+    color: #333;
+}
+.demo-scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto ;
+    position: fixed;
 }
