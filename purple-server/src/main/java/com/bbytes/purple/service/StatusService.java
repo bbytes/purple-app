@@ -10,10 +10,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
@@ -52,6 +60,12 @@ public class StatusService extends AbstractService<Status, String> {
 
 	@Autowired
 	private ConfigSettingService configSettingService;
+
+	@Autowired
+	private EmailService emailService;
+
+	@Value("${email.tag.subject}")
+	private String tagSubject;
 
 	@Autowired
 	public StatusService(StatusRepository statusRepository) {
@@ -369,5 +383,74 @@ public class StatusService extends AbstractService<Status, String> {
 				ProjectUserCountStats.class);
 		return result;
 	}
-	
+
+	public StatusDTO checkMentionUser(StatusDTO statusDTO) {
+
+		// getting logged in user object
+		User loggedInUser = userService.getLoggedInUser();
+
+		final String template = GlobalConstants.MENTION_EMAIL_TEMPLATE;
+		final String subject = loggedInUser.getName() + " " + tagSubject;
+
+		Matcher workedOnMatcher = null;
+		Matcher workingOnMatcher = null;
+		Matcher blockerOnMatcher = null;
+
+		String pattern = GlobalConstants.MENTION_REGEX_PATTERN;
+
+		// Create a Pattern object
+		Pattern r = Pattern.compile(pattern);
+
+		Set<String> emailTagList = new LinkedHashSet<String>();
+
+		// Now create matcher object.
+		if (statusDTO.getWorkedOn() != null && !statusDTO.getWorkedOn().isEmpty()) {
+			workedOnMatcher = r.matcher(statusDTO.getWorkedOn());
+			while (workedOnMatcher.find()) {
+				emailTagList.add(workedOnMatcher.group(1));
+				User mentionUser = userService.getUserByEmail(workedOnMatcher.group(1));
+				String str = statusDTO.getWorkedOn().replaceAll("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
+						.trim();
+				statusDTO.setWorkedOn(str);
+			}
+		}
+		if (statusDTO.getWorkingOn() != null && !statusDTO.getWorkingOn().isEmpty()) {
+			workingOnMatcher = r.matcher(statusDTO.getWorkingOn());
+			while (workingOnMatcher.find()) {
+				emailTagList.add(workingOnMatcher.group(1));
+				User mentionUser = userService.getUserByEmail(workingOnMatcher.group(1));
+				String str = statusDTO.getWorkingOn().replaceAll("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
+						.trim();
+				statusDTO.setWorkingOn(str);
+			}
+		}
+		if (statusDTO.getBlockers() != null && !statusDTO.getBlockers().isEmpty()) {
+			blockerOnMatcher = r.matcher(statusDTO.getBlockers());
+			while (blockerOnMatcher.find()) {
+				emailTagList.add(blockerOnMatcher.group(1));
+				User mentionUser = userService.getUserByEmail(blockerOnMatcher.group(1));
+				String str = statusDTO.getBlockers().replaceAll("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
+						.trim();
+				statusDTO.setBlockers(str);
+			}
+		}
+
+		List<String> emailList = new ArrayList<String>();
+		emailList.addAll(emailTagList);
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, statusDTO.getDateTime());
+		emailBody.put(GlobalConstants.WORKED_ON,
+				Jsoup.parse(statusDTO.getWorkedOn() != null ? statusDTO.getWorkedOn() : "").text());
+		emailBody.put(GlobalConstants.WORKING_ON,
+				Jsoup.parse(statusDTO.getWorkingOn() != null ? statusDTO.getWorkingOn() : "").text());
+		emailBody.put(GlobalConstants.BLOCKERS,
+				Jsoup.parse(statusDTO.getBlockers() != null ? statusDTO.getBlockers() : "").text());
+
+		if (emailList != null && !emailList.isEmpty())
+			emailService.sendEmail(emailList, emailBody, subject, template);
+		return statusDTO;
+	}
+
 }

@@ -21,6 +21,8 @@ public class GlobalConstants {
 	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
 
 	public static final String COMMENT_EMAIL_TEMPLATE = "email-text-comment.html";
+	
+	public static final String MENTION_EMAIL_TEMPLATE = "email-text-mention.html";
 
 	public static final String UPDATE_COMMENT_EMAIL_TEMPLATE = "email-text-update-comment.html";
 
@@ -95,5 +97,7 @@ public class GlobalConstants {
 	public static final String STATUSNAP_EMAIL_ADDRESS = "statusnap@beyondbytes.co.in";
 
 	public static final String SALES_EMAIL_ADDRESS = "sales@beyondbytes.co.in";
+	
+	public static final String MENTION_REGEX_PATTERN = "@\\[(.*?)\\]";
 
 }

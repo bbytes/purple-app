@@ -49,6 +49,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
 
         $scope.loadConfigSetting();
         $scope.loadTimePeriods();
+        $scope.loadUserProjects();
     };
 
     // getting all config setting (status enable days)
@@ -155,6 +156,26 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                     $scope.dateArr.push(dateResult);
                 }
             }
+        });
+    };
+    
+    /*
+     * Load all projects of logged in user
+     */
+    $scope.loadUserProjects = function () {
+        projectService.getUserproject().then(function (response) {
+            var projectIds = [];
+            if (response.success) {
+                $scope.userprojects = response.data.gridData;
+                angular.forEach(response.data.gridData, function (value, key) {
+                    projectIds.push(value.projectId);
+                });
+            }
+            projectService.getprojectsUsers(projectIds).then(function (response) {
+                if (response.success) {
+                    $rootScope.projectUsers = response.data.gridData;
+                }
+            });
         });
     };
 

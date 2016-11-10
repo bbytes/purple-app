@@ -133,37 +133,17 @@
 
                 <div class="form-group side-slide-panel">
                     <label for="comment">WORKED ON</label>
-
-                    <div text-angular-toolbar class="toolbar button-toolbar" name="workedOn" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]">
-                    </div>
-
-                    <div class="status-text">
-                        <div text-angular ta-target-toolbars="workedOn" ng-model="workedOn" name="workedOn" id="workedOn" ta-paste="stripFormat($html)"></div>
-                    </div>
-
+                    <workedon-text-angular-mentio ng-model="workedOn"></workedon-text-angular-mentio>
                 </div>
 
                 <div class="form-group side-slide-panel">
                     <label for="comment">WORKING ON</label>
-
-                    <div text-angular-toolbar class="toolbar button-toolbar" name="workingOn" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]" >
-                    </div>
-                    <div class="status-text">
-                        <div text-angular ta-target-toolbars="workingOn" ng-model="workingOn" name="workingOn" id="workingOn" ta-paste="stripFormat($html)"></div>
-                    </div>
-
+                    <workingon-text-angular-mentio ng-model="workingOn"></workingon-text-angular-mentio>
                 </div>	
-                <div class="form-group side-slide-panel">
+               <div class="form-group side-slide-panel">
                     <label for="comment">BLOCKERS</label>
-
-                    <div text-angular-toolbar class="toolbar button-toolbar" name="blockers" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]">
-                    </div>
-                    <div class="status-text">
-                        <div text-angular ta-target-toolbars="blockers" ng-model="blockers" name="blockers" id="blockers" ta-paste="stripFormat($html)"></div>
-                    </div>
-
-                </div>	
-
+                    <blockers-text-angular-mentio ng-model="blockers"></blockers-text-angular-mentio>
+                </div>
 
                 <div class="col-md-8"> 
                     <div class="row">		  

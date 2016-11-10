@@ -89,7 +89,8 @@ public class StatusController {
 
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();
-		Status status = statusService.create(statusDTO, user);
+		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO);
+		Status status = statusService.create(statusDTOwithMentionCheck, user);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
 		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
@@ -246,7 +247,8 @@ public class StatusController {
 
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();
-		Status status = statusService.updateStatus(statusId, statusDTO, user);
+		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO);
+		Status status = statusService.updateStatus(statusId, statusDTOwithMentionCheck, user);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
 		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
