@@ -70,4 +70,17 @@ public class BillingController {
 		return response;
 	}
 	
+	@RequestMapping(value = "/api/v1/billing/invoiceDetails", method = RequestMethod.GET)
+	public RestResponse getAllInvoiceDetails() throws PurpleException, PlutusClientException {
+
+		Organization organization = userService.getLoggedInUser().getOrganization();
+		PlutusClient plutusClient = getPlutusClient(organization);
+		if (plutusClient == null)
+			throw new PurpleException("Subscription information not available for organization" + organization.getOrgId(),
+					ErrorHandler.SERVER_ERROR);
+		
+		ProductStatsRestResponse plutusResponse = plutusClient.getPaymentHistory();
+		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData()) ;
+		return response;
+	}
 }

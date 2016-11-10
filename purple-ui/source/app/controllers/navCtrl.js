@@ -72,5 +72,23 @@ angular.module('rootApp').controller('navCtrl',function ($scope,$rootScope, $loc
             }
         });
     };
+    
+    
+    $scope.getPricingPlans = function () {
+        billingInfoService.getPricingPlans().then(function (response) {
+            if (response.success) {
+                $scope.pricingPlans = response.data;
+                
+            }
+        });
+    };
+    $scope.getInvoiceDetails = function () {
+        billingInfoService.getInvoiceDetails().then(function (response) {
+            if (response.success) {
+                $scope.pricingPlans = response.data;
+                
+            }
+        });
+    };
 
     });
