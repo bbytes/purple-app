@@ -160,6 +160,7 @@ public class StatusService extends AbstractService<Status, String> {
 
 			savedStatus.setProject(project);
 			savedStatus.setUser(user);
+			savedStatus.addMentionUser(statusDTO.getMentionUser());
 			savedStatus.setBlockers(statusDTO.getBlockers());
 			try {
 				savedStatus = statusRepository.save(savedStatus);
@@ -274,6 +275,7 @@ public class StatusService extends AbstractService<Status, String> {
 		updateStatus.setBlockers(statusDTO.getBlockers());
 		updateStatus.setHours(statusDTO.getHours());
 		updateStatus.setProject(project);
+		updateStatus.addMentionUser(statusDTO.getMentionUser());
 		try {
 			newStatus = statusRepository.save(updateStatus);
 		} catch (Throwable e) {
@@ -409,7 +411,8 @@ public class StatusService extends AbstractService<Status, String> {
 			while (workedOnMatcher.find()) {
 				emailTagList.add(workedOnMatcher.group(1));
 				User mentionUser = userService.getUserByEmail(workedOnMatcher.group(1));
-				String str = statusDTO.getWorkedOn().replaceAll("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
+				statusDTO.addMentionUser(mentionUser);
+				String str = statusDTO.getWorkedOn().replaceFirst("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
 						.trim();
 				statusDTO.setWorkedOn(str);
 			}
@@ -419,7 +422,8 @@ public class StatusService extends AbstractService<Status, String> {
 			while (workingOnMatcher.find()) {
 				emailTagList.add(workingOnMatcher.group(1));
 				User mentionUser = userService.getUserByEmail(workingOnMatcher.group(1));
-				String str = statusDTO.getWorkingOn().replaceAll("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
+				statusDTO.addMentionUser(mentionUser);
+				String str = statusDTO.getWorkingOn().replaceFirst("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
 						.trim();
 				statusDTO.setWorkingOn(str);
 			}
@@ -429,7 +433,8 @@ public class StatusService extends AbstractService<Status, String> {
 			while (blockerOnMatcher.find()) {
 				emailTagList.add(blockerOnMatcher.group(1));
 				User mentionUser = userService.getUserByEmail(blockerOnMatcher.group(1));
-				String str = statusDTO.getBlockers().replaceAll("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
+				statusDTO.addMentionUser(mentionUser);
+				String str = statusDTO.getBlockers().replaceFirst("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
 						.trim();
 				statusDTO.setBlockers(str);
 			}
