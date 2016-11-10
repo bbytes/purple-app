@@ -21,14 +21,6 @@
 	<repositories>
 
 		<repository>
-			<id>jira-client-bbytes</id>
-			<url>https://raw.github.com/tanmally/jira-client/mvn-repo/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-		<repository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
 			<url>https://repo.spring.io/libs-milestone</url>
