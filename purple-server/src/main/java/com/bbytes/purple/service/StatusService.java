@@ -401,45 +401,60 @@ public class StatusService extends AbstractService<Status, String> {
 		String pattern = GlobalConstants.MENTION_REGEX_PATTERN;
 
 		// Create a Pattern object
-		Pattern r = Pattern.compile(pattern);
+		Pattern patternObj = Pattern.compile(pattern);
 
 		Set<String> emailTagList = new LinkedHashSet<String>();
 
-		// Now create matcher object.
 		if (statusDTO.getWorkedOn() != null && !statusDTO.getWorkedOn().isEmpty()) {
-			workedOnMatcher = r.matcher(statusDTO.getWorkedOn());
+			// Now create matcher object for worked on.
+			workedOnMatcher = patternObj.matcher(statusDTO.getWorkedOn());
+			// looping all @mention users, adding into emailList and storing
+			// into db
 			while (workedOnMatcher.find()) {
 				emailTagList.add(workedOnMatcher.group(1));
 				User mentionUser = userService.getUserByEmail(workedOnMatcher.group(1));
 				statusDTO.addMentionUser(mentionUser);
-				String str = statusDTO.getWorkedOn().replaceFirst("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
+				// replacing @mention pattern with @username
+				String str = statusDTO.getWorkedOn()
+						.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>")
 						.trim();
 				statusDTO.setWorkedOn(str);
 			}
 		}
 		if (statusDTO.getWorkingOn() != null && !statusDTO.getWorkingOn().isEmpty()) {
-			workingOnMatcher = r.matcher(statusDTO.getWorkingOn());
+			// Now create matcher object working on.
+			workingOnMatcher = patternObj.matcher(statusDTO.getWorkingOn());
+			// looping all @mention users, adding into emailList and storing
+			// into db
 			while (workingOnMatcher.find()) {
 				emailTagList.add(workingOnMatcher.group(1));
 				User mentionUser = userService.getUserByEmail(workingOnMatcher.group(1));
 				statusDTO.addMentionUser(mentionUser);
-				String str = statusDTO.getWorkingOn().replaceFirst("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
+				// replacing @mention pattern with @username
+				String str = statusDTO.getWorkingOn()
+						.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>")
 						.trim();
 				statusDTO.setWorkingOn(str);
 			}
 		}
 		if (statusDTO.getBlockers() != null && !statusDTO.getBlockers().isEmpty()) {
-			blockerOnMatcher = r.matcher(statusDTO.getBlockers());
+			// Now create matcher object blockers.
+			blockerOnMatcher = patternObj.matcher(statusDTO.getBlockers());
+			// looping all @mention users, adding into emailList and storing
+			// into db
 			while (blockerOnMatcher.find()) {
 				emailTagList.add(blockerOnMatcher.group(1));
 				User mentionUser = userService.getUserByEmail(blockerOnMatcher.group(1));
 				statusDTO.addMentionUser(mentionUser);
-				String str = statusDTO.getBlockers().replaceFirst("@\\[(.*?)\\]", "<a>" + mentionUser.getName() + "</a>")
+				// replacing @mention pattern with @username
+				String str = statusDTO.getBlockers()
+						.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>")
 						.trim();
 				statusDTO.setBlockers(str);
 			}
 		}
 
+		// sending email to all tagged users with status details
 		List<String> emailList = new ArrayList<String>();
 		emailList.addAll(emailTagList);
 
