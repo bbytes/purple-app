@@ -386,10 +386,7 @@ public class StatusService extends AbstractService<Status, String> {
 		return result;
 	}
 
-	public StatusDTO checkMentionUser(StatusDTO statusDTO) {
-
-		// getting logged in user object
-		User loggedInUser = userService.getLoggedInUser();
+	public StatusDTO checkMentionUser(StatusDTO statusDTO, User loggedInUser) {
 
 		final String template = GlobalConstants.MENTION_EMAIL_TEMPLATE;
 		final String subject = loggedInUser.getName() + " " + tagSubject;

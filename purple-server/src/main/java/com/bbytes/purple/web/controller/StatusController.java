@@ -89,7 +89,7 @@ public class StatusController {
 
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();
-		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO);
+		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO, user);
 		Status status = statusService.create(statusDTOwithMentionCheck, user);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
@@ -247,7 +247,7 @@ public class StatusController {
 
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();
-		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO);
+		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO, user);
 		Status status = statusService.updateStatus(statusId, statusDTOwithMentionCheck, user);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
