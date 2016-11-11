@@ -15,6 +15,7 @@ import com.bbytes.plutus.enums.AppProfile;
 import com.bbytes.plutus.enums.ProductName;
 import com.bbytes.plutus.model.BillingInfo;
 import com.bbytes.plutus.response.ProductStatsRestResponse;
+import com.bbytes.plutus.response.SubscriptionStatusRestResponse;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
@@ -81,6 +82,20 @@ public class BillingController {
 		
 		ProductStatsRestResponse plutusResponse = plutusClient.getPaymentHistory();
 		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData()) ;
+		return response;
+	}
+	
+	@RequestMapping(value = "/api/v1/billing/currentPlan", method = RequestMethod.GET)
+	public RestResponse getCurrentPlan() throws PurpleException, PlutusClientException {
+
+		Organization organization = userService.getLoggedInUser().getOrganization();
+		PlutusClient plutusClient = getPlutusClient(organization);
+		if (plutusClient == null)
+			throw new PurpleException("Subscription information not available for organization" + organization.getOrgId(),
+					ErrorHandler.SERVER_ERROR);
+		
+		SubscriptionStatusRestResponse plutusResponse = plutusClient.validateSubscription();
+		RestResponse response = new RestResponse(plutusResponse.isSuccess(), ((SubscriptionStatusRestResponse) plutusResponse).getCurrentPlan()) ;
 		return response;
 	}
 }

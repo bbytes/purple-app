@@ -38,13 +38,33 @@ angular.module('rootApp').service('billingInfoService', function ($rootScope, $h
 
         return deferred.promise;
     };
-    this.getInvoiceDetails = function () {
+    
+    this.getPricingPlans = function () {
 
         var deferred = $q.defer();
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/billing/invoiceDetails',
+            url: $rootScope.baseUrl + 'api/v1/billing/pricingPlans',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function () {
+            deferred.reject({'success': false, 'msg': 'Oops! Something went wrong. Please try again later.'});
+        });
+
+        return deferred.promise;
+    };
+   
+    this.getOnlyCurrentPlan = function () {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/billing/currentPlan',
             headers: {
                 'Content-Type': 'application/json'
             }
