@@ -1,8 +1,6 @@
 package com.bbytes.purple.web.controller;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +13,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.slack.api.Slack;
-import org.springframework.social.slack.api.impl.model.SlackChannel;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -207,24 +202,18 @@ public class IntegrationController {
 
 	@RequestMapping(value = "/api/v1/integration/slack/channels", method = RequestMethod.GET)
 	public RestResponse getSlackChannels() throws PurpleException {
-		List<Connection<?>> results = mongoConnectionRepository.findConnections("slack");
-		if (results == null || results.isEmpty())
+		List<Map<String, String>> channelInfo = integrationService.getSlackChannels();
+		if (channelInfo == null)
 			throw new PurpleException("Slack not connected", ErrorHandler.NOT_CONNECTED);
 
-		Connection<Slack> connection = (Connection<Slack>) results.get(0);
-		Slack slack = connection.getApi();
-		List<SlackChannel> lists = slack.channelOperations().getAllChannels();
-		List<Map<String,String>> channelInfo = new ArrayList<>();
-		
-		for (SlackChannel slackChannel : lists) {
-			Map<String,String> channel = new HashMap<>(); 
-			channel.put("id", slackChannel.getId());
-			channel.put("name", "#"+slackChannel.getName());
-			channelInfo.add(channel);
-		}
-
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, channelInfo);
+		return response;
+	}
 
+	@RequestMapping(value = "/api/v1/integration/slack/channel/{channelId}", method = RequestMethod.POST)
+	public RestResponse setSlackChannels(String channelId) throws PurpleException {
+		integrationService.setSlackChannel(channelId);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack Channel updated successfully");
 		return response;
 	}
 

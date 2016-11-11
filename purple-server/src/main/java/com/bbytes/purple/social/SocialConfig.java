@@ -1,6 +1,5 @@
 package com.bbytes.purple.social;
 
-import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +19,6 @@ import org.springframework.social.slack.connect.SlackConnectionFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import com.bbytes.purple.auth.jwt.SocialSessionUtils;
-import com.bbytes.purple.domain.User;
 import com.bbytes.purple.repository.SocialConnectionRepository;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
