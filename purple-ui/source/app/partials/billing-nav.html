@@ -188,15 +188,14 @@ and open the template in the editor.
                 </div>
                 <div class="create-project">
                     <div class="col-md-6">
-                        <label for="comment" class="settings" >Plan Name:{{plans.name}}</label>
-                        <label for="comment" class="settings" >Expiry Date:</label>
-                        <label for="comment" class="settings" >Details:</label>
+                        <label for="comment" class="settings" >Plan Name:{{currentPlan.name}}</label>
+                        <label for="comment" class="settings" >Details:{{currentPlan.desc}}</label>
                     </div>
                     <div class="col-md-6">
-                        <label for="comment" class="settings" >Status:</label>           
+                            
                     </div>
                     <div>
-                        <button type="button" class="btn btn-default" ng-disabled="myForm.$invalid" ng-click="saveChanges(myForm.$valid)">Deactivate</button>
+                        <button type="button" class="btn btn-default" ng-disabled="myForm.$invalid" ng-click="saveChanges(myForm.$valid)"</button>
                     </div>
 
                      <div class="project-table">
@@ -216,7 +215,7 @@ and open the template in the editor.
                     <tbody>
                         <tr ng-repeat="plans in pricingPlans">                        
                             <td style="width:20%;">{{plans.name}}</td>
-                            <td style="width:30%;">{{plans.product.desc}}</td>
+                            <td style="width:30%;">{{plans.desc}}</td>
                             <td style="width:20%;">{{plans.billingCycle}}</td>
                             <td style="width:10%;">{{plans.currency}}</td>
                         <td style="width:25%;"><button type="button"  style="width:110%;" class="btn btn-default create" ng-click="edit(pro.id)">Choose Plan</button></td>

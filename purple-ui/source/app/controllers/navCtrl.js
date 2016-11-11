@@ -81,6 +81,15 @@ angular.module('rootApp').controller('navCtrl',function ($scope,$rootScope, $loc
                 
             }
         });
+        
+        /*To get Current Plan */
+      
+        billingInfoService.getOnlyCurrentPlan().then(function (response) {
+            if (response.success) {
+                $scope.currentPlan = response.data;
+                
+            }
+        });
     };
     $scope.getInvoiceDetails = function () {
         billingInfoService.getInvoiceDetails().then(function (response) {
