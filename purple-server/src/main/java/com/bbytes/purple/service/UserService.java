@@ -157,8 +157,12 @@ public class UserService extends AbstractService<User, String> {
 	 * @return
 	 */
 	public String getLoggedInUserEmail() {
-		final String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		return email;
+		if (SecurityContextHolder.getContext().getAuthentication() != null) {
+			final String email = SecurityContextHolder.getContext().getAuthentication().getName();
+			return email;
+		}
+		return null;
+		
 	}
 
 	/**
@@ -167,9 +171,13 @@ public class UserService extends AbstractService<User, String> {
 	 * @return
 	 */
 	public User getLoggedInUser() {
-		final String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = getUserByEmail(email);
-		return user;
+		if (SecurityContextHolder.getContext().getAuthentication() != null) {
+			final String email = SecurityContextHolder.getContext().getAuthentication().getName();
+			User user = getUserByEmail(email);
+			return user;
+		}
+		return null;
+
 	}
 
 	public List<Project> getProjects(User user) throws PurpleException {
@@ -309,8 +317,7 @@ public class UserService extends AbstractService<User, String> {
 				} catch (AddressException e) {
 					result = false;
 				}
-				if ((!userEmailExist(addUser.getEmail()) || !tenantResolverService.emailExist(addUser.getEmail()))
-						&& result) {
+				if ((!userEmailExist(addUser.getEmail()) || !tenantResolverService.emailExist(addUser.getEmail())) && result) {
 					try {
 						User user = userRepository.save(addUser);
 						bulkUsers.put(generatePassword, user);
@@ -422,8 +429,7 @@ public class UserService extends AbstractService<User, String> {
 
 		markDeleteUser = getUserById(userId);
 		if (projectService.projectOwnerExist(markDeleteUser))
-			throw new PurpleException("Deletion of project owner is not allowed",
-					ErrorHandler.PROJECT_OWNER_DELETE_FAILED);
+			throw new PurpleException("Deletion of project owner is not allowed", ErrorHandler.PROJECT_OWNER_DELETE_FAILED);
 		try {
 			boolean state = Boolean.parseBoolean(markDeleteState);
 			// markDeleteState=true means set user as mark for delete
@@ -517,8 +523,7 @@ public class UserService extends AbstractService<User, String> {
 	 * @return
 	 */
 	public boolean isActiveUser(User user) {
-		if (user.isAccountInitialise() && !user.isDisableState() && !user.isMarkDelete()
-				&& User.JOINED.equals(user.getStatus()))
+		if (user.isAccountInitialise() && !user.isDisableState() && !user.isMarkDelete() && User.JOINED.equals(user.getStatus()))
 			return true;
 		else
 			return false;

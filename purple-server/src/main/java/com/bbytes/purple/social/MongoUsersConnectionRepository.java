@@ -64,9 +64,9 @@ public class MongoUsersConnectionRepository implements UsersConnectionRepository
 
 	@Override
 	public ConnectionRepository createConnectionRepository(final String userId) {
-//		if (userId == null)
-//			throw new IllegalArgumentException("userId must be defined");
-		return new MongoConnectionRepository(userService, socialConnectionRepository, connectionFactoryLocator,
+		if (userId == null)
+			throw new IllegalArgumentException("userId must be defined");
+		return new MongoConnectionRepository(userId, socialConnectionRepository, connectionFactoryLocator,
 				mongoConnectionTransformers);
 	}
 }

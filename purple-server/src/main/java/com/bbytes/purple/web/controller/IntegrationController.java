@@ -1,7 +1,10 @@
 package com.bbytes.purple.web.controller;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
@@ -12,6 +15,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.slack.api.Slack;
+import org.springframework.social.slack.api.impl.model.SlackChannel;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,6 +57,9 @@ public class IntegrationController {
 	@Autowired
 	private IntegrationService integrationService;
 
+	@Autowired
+	private ConnectionRepository mongoConnectionRepository;
+
 	@RequestMapping(value = "/api/v1/integration/jira/addAuthentication", method = RequestMethod.POST)
 	public RestResponse connectToJIRA(@RequestBody IntegrationRequestDTO integrationRequestDTO) throws PurpleException {
 
@@ -86,8 +96,7 @@ public class IntegrationController {
 		}
 
 		logger.debug("User with email  '" + jiraUsername + "' is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
-				SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return response;
 	}
@@ -129,21 +138,18 @@ public class IntegrationController {
 
 		if (statusCode != 200) {
 			if (statusCode == 502) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
-						ErrorHandler.BAD_GATEWAY);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.BAD_GATEWAY);
 
 				return jiraRestResponse;
 			} else if (statusCode == 401) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
-						ErrorHandler.AUTH_FAILURE);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
 
 				return jiraRestResponse;
 			}
 		}
 
 		logger.debug("User is connected to JIRA successfully");
-		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
-				SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return jiraRestResponse;
 	}
@@ -165,8 +171,7 @@ public class IntegrationController {
 		}
 
 		logger.debug("User is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
-				SuccessHandler.JIRA_ADD_PROJECTS_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG, SuccessHandler.JIRA_ADD_PROJECTS_SUCCESS);
 
 		return response;
 	}
@@ -179,8 +184,7 @@ public class IntegrationController {
 		try {
 			Integration integration = integrationService.getJIRAConnection(user);
 
-			JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(),
-					integration.getJiraBasicAuthHeader());
+			JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(), integration.getJiraBasicAuthHeader());
 			JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
 			List<Project> jiraProjects = jira.getProjects();
 			for (Project project : jiraProjects) {
@@ -196,8 +200,30 @@ public class IntegrationController {
 		}
 
 		logger.debug("User is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
-				SuccessHandler.JIRA_ADD_PROJECTS_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG, SuccessHandler.JIRA_ADD_PROJECTS_SUCCESS);
+
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/integration/slack/channels", method = RequestMethod.GET)
+	public RestResponse getSlackChannels() throws PurpleException {
+		List<Connection<?>> results = mongoConnectionRepository.findConnections("slack");
+		if (results == null || results.isEmpty())
+			throw new PurpleException("Slack not connected", ErrorHandler.NOT_CONNECTED);
+
+		Connection<Slack> connection = (Connection<Slack>) results.get(0);
+		Slack slack = connection.getApi();
+		List<SlackChannel> lists = slack.channelOperations().getAllChannels();
+		List<Map<String,String>> channelInfo = new ArrayList<>();
+		
+		for (SlackChannel slackChannel : lists) {
+			Map<String,String> channel = new HashMap<>(); 
+			channel.put("id", slackChannel.getId());
+			channel.put("name", "#"+slackChannel.getName());
+			channelInfo.add(channel);
+		}
+
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, channelInfo);
 
 		return response;
 	}

@@ -19,7 +19,6 @@ import org.springframework.util.MultiValueMap;
 
 import com.bbytes.purple.domain.SocialConnection;
 import com.bbytes.purple.repository.SocialConnectionRepository;
-import com.bbytes.purple.service.UserService;
 import com.google.common.collect.ImmutableList;
 
 public class MongoConnectionRepository implements ConnectionRepository {
@@ -27,12 +26,11 @@ public class MongoConnectionRepository implements ConnectionRepository {
 	private final SocialConnectionRepository socialConnectionRepository;
 	private final ConnectionFactoryLocator connectionFactoryLocator;
 	private final MongoConnectionTransformers mongoConnectionTransformers;
-	private final UserService userService;
+	private String userId;
 
-	public MongoConnectionRepository(final UserService userService, final SocialConnectionRepository socialConnectionRepository,
-			final ConnectionFactoryLocator connectionFactoryLocator,
-			final MongoConnectionTransformers mongoConnectionTransformers) {
-		this.userService = userService;
+	public MongoConnectionRepository(final String userId, final SocialConnectionRepository socialConnectionRepository,
+			final ConnectionFactoryLocator connectionFactoryLocator, final MongoConnectionTransformers mongoConnectionTransformers) {
+		this.userId = userId;
 		this.socialConnectionRepository = socialConnectionRepository;
 		this.connectionFactoryLocator = connectionFactoryLocator;
 		this.mongoConnectionTransformers = mongoConnectionTransformers;
@@ -40,7 +38,6 @@ public class MongoConnectionRepository implements ConnectionRepository {
 
 	@Override
 	public MultiValueMap<String, Connection<?>> findAllConnections() {
-		String userId = userService.getLoggedInUserEmail();
 		List<Connection<?>> results = transform(socialConnectionRepository.findByUserId(userId),
 				mongoConnectionTransformers.toConnection());
 		final MultiValueMap<String, Connection<?>> connections = new LinkedMultiValueMap<>();
@@ -59,9 +56,7 @@ public class MongoConnectionRepository implements ConnectionRepository {
 
 	@Override
 	public List<Connection<?>> findConnections(final String providerId) {
-		String userId = userService.getLoggedInUserEmail();
-		List<Connection<?>> results = transform(
-				socialConnectionRepository.findByUserIdAndProviderId(userId, providerId),
+		List<Connection<?>> results = transform(socialConnectionRepository.findByUserIdAndProviderId(userId, providerId),
 				mongoConnectionTransformers.toConnection());
 		return ImmutableList.copyOf(results);
 	}
@@ -74,8 +69,7 @@ public class MongoConnectionRepository implements ConnectionRepository {
 	}
 
 	@Override
-	public MultiValueMap<String, Connection<?>> findConnectionsToUsers(
-			final MultiValueMap<String, String> providerUsers) {
+	public MultiValueMap<String, Connection<?>> findConnectionsToUsers(final MultiValueMap<String, String> providerUsers) {
 		if (providerUsers == null || providerUsers.isEmpty()) {
 			throw new IllegalArgumentException("Unable to execute find: no providerUsers provided");
 		}
@@ -109,10 +103,8 @@ public class MongoConnectionRepository implements ConnectionRepository {
 
 	@Override
 	public Connection<?> getConnection(final ConnectionKey connectionKey) {
-		String userId = userService.getLoggedInUserEmail();
-		final Connection<?> connection = mongoConnectionTransformers.toConnection()
-				.apply(socialConnectionRepository.findByUserIdAndProviderIdAndProviderUserId(userId,
-						connectionKey.getProviderId(), connectionKey.getProviderUserId()));
+		final Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialConnectionRepository
+				.findByUserIdAndProviderIdAndProviderUserId(userId, connectionKey.getProviderId(), connectionKey.getProviderUserId()));
 
 		if (connection == null) {
 			throw new NoSuchConnectionException(connectionKey);
@@ -150,12 +142,11 @@ public class MongoConnectionRepository implements ConnectionRepository {
 	@Override
 	public void addConnection(final Connection<?> connection) {
 		try {
-			String userId = userService.getLoggedInUserEmail();
-			final SocialConnection mongoConnection = mongoConnectionTransformers.fromConnection(userId)
-					.apply(connection);
-			SocialConnection mongoConnectionFromDB = socialConnectionRepository
-					.findByUserIdAndProviderIdAndProviderUserId(mongoConnection.getUserId(),
-							mongoConnection.getProviderId(), mongoConnection.getProviderUserId());
+			
+			final SocialConnection mongoConnection = mongoConnectionTransformers.fromConnection(userId).apply(connection);
+			mongoConnection.setUserId(userId);
+			SocialConnection mongoConnectionFromDB = socialConnectionRepository.findByUserIdAndProviderIdAndProviderUserId(
+					mongoConnection.getUserId(), mongoConnection.getProviderId(), mongoConnection.getProviderUserId());
 			if (mongoConnectionFromDB == null) {
 				socialConnectionRepository.save(mongoConnection);
 			}
@@ -166,31 +157,36 @@ public class MongoConnectionRepository implements ConnectionRepository {
 
 	@Override
 	public void updateConnection(final Connection<?> connection) {
-		String userId = userService.getLoggedInUserEmail();
 		final SocialConnection mongoConnection = mongoConnectionTransformers.fromConnection(userId).apply(connection);
+		mongoConnection.setUserId(userId);
 		socialConnectionRepository.save(mongoConnection);
 	}
 
 	@Override
 	public void removeConnections(final String providerId) {
-		String userId = userService.getLoggedInUserEmail();
 		socialConnectionRepository.deleteByUserIdAndProviderId(userId, providerId);
 	}
 
 	@Override
 	public void removeConnection(final ConnectionKey connectionKey) {
-		String userId = userService.getLoggedInUserEmail();
 		socialConnectionRepository.deleteByUserIdAndProviderIdAndProviderUserId(userId, connectionKey.getProviderId(),
 				connectionKey.getProviderUserId());
 	}
 
 	private Connection<?> findPrimaryConnection(String providerId) {
-		String userId = userService.getLoggedInUserEmail();
 		return mongoConnectionTransformers.toConnection()
 				.apply(socialConnectionRepository.findByUserIdAndProviderId(userId, providerId).get(0));
 	}
 
 	private <A> String getProviderId(Class<A> apiType) {
 		return connectionFactoryLocator.getConnectionFactory(apiType).getProviderId();
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

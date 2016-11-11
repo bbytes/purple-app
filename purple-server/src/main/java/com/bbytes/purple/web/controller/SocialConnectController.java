@@ -328,7 +328,7 @@ public class SocialConnectController implements InitializingBean {
 			logger.warn("Exception while handling OAuth2 callback (" + e.getMessage() + "). Redirecting to " + providerId
 					+ " connection status page.");
 		}
-		return "redirect:/integration#" + providerId;
+		return "redirect:/integration?app=" + providerId;
 	}
 
 	/**

@@ -89,6 +89,8 @@ public class ErrorHandler {
 	public static final String SERVER_ERROR = "server_error";
 
 	public static final String ADD_COMMENT_FAILED = "add_comment_failed";
+	
+	public static final String NOT_CONNECTED = "not_connected";
 
 	public static final String ADD_REPLY_FAILED = "add_reply_failed";
 
