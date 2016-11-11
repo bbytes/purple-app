@@ -31,13 +31,6 @@ import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
-/**
- * Comment Controller
- * 
- * @author aditya
- *
- */
-
 @RestController
 public class TaskController {
 	private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
@@ -70,6 +63,16 @@ public class TaskController {
 		Project project = projectService.findOne(projectId);
 		User user = userService.getLoggedInUser();
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListService.findByProjectAndUsers(project, user));
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/tasklist/{projectId}/{state}", method = RequestMethod.GET)
+	public RestResponse getTaskListForProjectAndState(@PathVariable String projectId, @PathVariable String state) throws PurpleException {
+		Project project = projectService.findOne(projectId);
+		User user = userService.getLoggedInUser();
+		TaskState taskState = TaskState.valueOf(state);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS,
+				taskListService.findByProjectAndStateAndUsers(project, taskState, user));
 		return response;
 	}
 
@@ -113,12 +116,12 @@ public class TaskController {
 
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/api/v1/taskitem/{taskItemId}", method = RequestMethod.DELETE)
 	public RestResponse deleteTaskItem(@PathVariable String taskItemId) throws PurpleException {
 
 		taskItemService.delete(taskItemId);
-		
+
 		logger.debug("Task Item with id '" + taskItemId + "' deleted successfully");
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Task Item with id '" + taskItemId + "' deleted successfully");
 
