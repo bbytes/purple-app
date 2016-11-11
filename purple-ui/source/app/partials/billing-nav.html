@@ -82,7 +82,7 @@ and open the template in the editor.
                                     <div class="form-group">
                             <!--label for="comment" class="settings" >Customer Name</label-->
                             <textarea ng-model="customer.billingAddress" name="billingadress"
-                                      placeholder='Full Billing Address' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required></textarea>
+                                      placeholder='Full Billing Address' class="form-control"  required></textarea>
                             <span style="color: red"
                                   ng-show="!isSubmitted && myForm.billingadress.$dirty && myForm.billingadress.$error.required">The
                                 name is required.</span> <span style="color: red"

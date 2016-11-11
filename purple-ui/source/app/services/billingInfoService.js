@@ -39,13 +39,13 @@ angular.module('rootApp').service('billingInfoService', function ($rootScope, $h
         return deferred.promise;
     };
     
-    this.getPricingPlans = function () {
+    this.getInvoiceDetails = function () {
 
         var deferred = $q.defer();
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/billing/pricingPlans',
+            url: $rootScope.baseUrl + 'api/v1/billing/invoiceDetails',
             headers: {
                 'Content-Type': 'application/json'
             }
