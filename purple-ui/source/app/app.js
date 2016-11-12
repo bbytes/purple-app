@@ -261,6 +261,30 @@ rootApp.config([
                 authorization: 'My Status',
                 redirectTo: 'login'
             }
+        }).state('tasks', {
+            url: '/tasks',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/home.html'
+
+
+                },
+                'header@tasks': {
+                    templateUrl: 'app/partials/home-header.html'
+                },
+                'main@tasks': {
+                    templateUrl: 'app/partials/tasks.html',
+                    controller: 'tasksCtrl'
+
+                },
+                'footer@tasks': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            },
+            data: {
+                authorization: 'tasks',
+                redirectTo: 'login'
+            }
         }).state('projects', {
             url: '/projects',
             views: {
@@ -340,6 +364,28 @@ rootApp.config([
                     controller: 'userCtrl'
                 },
                 'footer@user-manager': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            },
+            data: {
+                authorization: 'User Manager',
+                redirectTo: 'login'
+            }
+        }).state('billing', {
+            url: '/billing',
+            //redirectTo: 'billinginfo',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/home.html'
+                },
+                'header@billing': {
+                    templateUrl: 'app/partials/home-header.html'
+                },             
+                'main@billing': {
+                    templateUrl: 'app/partials/billing-nav.html',
+                    controller: 'navCtrl'
+                },
+                'footer@billing': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
             },

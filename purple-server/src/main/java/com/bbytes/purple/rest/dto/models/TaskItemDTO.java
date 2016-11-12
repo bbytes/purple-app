@@ -18,12 +18,16 @@ import lombok.Data;
 public class TaskItemDTO implements Serializable {
 
 	private static final long serialVersionUID = 1990692949942837646L;
+	
+	private String taskItemId;
 
 	private String name;
 
 	private String desc;
 
 	private double estimatedHours;
+
+	private double spendHours;
 
 	private Date dueDate;
 

@@ -1,0 +1,130 @@
+<a class="tiny button" href="" ng-click="toggle()"><i
+	class="fa fa-list" aria-hidden="true"></i></a>
+<div class="taskLeftSidebar" style="width: 22.5%">
+	<div class="theiaStickySidebar">
+		<div class="panel-group" id="accordion">
+			<div class="panel panel-default" ng-init="loadStates()">
+				<div class="panel-heading project-active">
+					<h4 class="panel-title">
+						<a class="accordion-toggle" data-toggle="collapse"
+							data-target="#collapseOne"> <i class="fa fa-flag"></i> <span>STATE</span></a>
+					</h4>
+				</div>
+				<div id="collapseOne" class="panel-collapse collapse in">
+					<div class="panel-body">
+						<ul class="list-group project-nav">
+							<li ng-class="{'selected':$index == selectedRow}" role="menu"
+								aria-labelledby="dropdownMenu"
+								ng-repeat="taskState in taskStates"><a
+								ng-click="loadStateProjectTasks(taskState)">{{taskState.value}}</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default" ng-init="loadUserProjects()">
+				<div class="panel-heading project-active">
+					<h4 class="panel-title">
+						<a class="accordion-toggle" data-toggle="collapse"
+							data-target="#collapseTwo"> <i class="fa fa-file"></i> <span>PROJECTS</span></a>
+					</h4>
+				</div>
+
+				<div id="collapseTwo" class="panel-collapse collapse in">
+					<div class="panel-body">
+						<ul class="list-group project-nav">
+							<li ng-class="{'selected':$index == selectedRow}" role="menu"
+								aria-labelledby="dropdownMenu"
+								ng-repeat="project in userprojects| orderBy:'projectName' | filter:searchProjects">
+								<a ng-click="loadProjectStateTasks(project)">{{project.projectName}}</a>
+							</li>
+							<li
+								ng-show="userprojects.length != 0 && (userprojects | filter:searchProjects).length == 0"
+								class="null-results"><p>
+									No results found for <span
+										style="font-weight: bold; color: #222;">"{{searchProjects}}"</span>
+								</p></li>
+							<li ng-show="userprojects.length == 0" class="null-results"><p>No
+									Projects found</p></li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<div class="midColbar">
+	<div class="theiaStickySidebar">
+		<div class="panel-group" id="taskListDiv">
+			<div class="panel panel-default">
+				<div class="panel-heading project-active">
+					<h4 class="panel-title">
+						<span style="font-weight: bold;">TASK LIST</span> <a
+							class="fa fa-plus" style="padding-left: 250px"
+							ng-click="showTaskListModal()"></a>
+					</h4>
+				</div>
+				<div id="tasksList">
+					<div class="panel-body">
+						<ul class="task-list-group project-nav">
+							<li ng-class="{'selected':$index == selectedRow}" role="menu"
+								aria-labelledby="dropdownMenu" ng-repeat="taskList in taskLists"><div
+									style="padding: 10px 20px; border-bottom: 1px solid #dcd8d8;"
+									ng-click="loadTaskItems(taskList)">
+									<label>{{taskList.name}}</label> <label>{{taskList.spentHours}}
+										Hrs of {{taskList.estimatedHours}} Hrs</label>
+									<div style="padding-left: 300px; width: 75px">
+										<a class="fa fa-close" style="float: left"
+											ng-click="deleteTaskList(taskList);"></a><span
+											ng-click="deleteTaskList(taskList);">Delete</span>
+									</div>
+								</div></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="task-content ng-scope">
+	<div class="panel-group" id="taskItemsDiv">
+		<div class="panel panel-default">
+			<div class="panel-heading project-active">
+				<h4 class="panel-title">
+					<a class="fa fa-search" style="padding-left: 20px"></a> <a
+						class="fa fa-plus" style="padding-left: 550px"
+						ng-click="showTaskItemModal()"></a>
+				</h4>
+			</div>
+			<div id="tasksItemsList">
+				<div class="panel-body">
+					<ul class="task-list-group project-nav">
+						<li ng-class="{'selected':$index == selectedRow}" role="menu"
+							aria-labelledby="dropdownMenu"
+							ng-repeat="taskItem in taskItemsLists"><div
+								style="padding: 10px 20px; border-bottom: 1px solid #dcd8d8;">
+								<label>{{taskItem.name}}</label> <label>{{taskItem.spentHours}}
+									Hrs of {{taskItem.estimatedHours}} Hrs</label> <label>{{taskItem.dueDate|
+									date:'dd/MMM' }}</label> <label>{{taskItem.desc}}</label> <label>{{taskItem.users}}</label>
+								<div style="padding-left: 540px; width: 75px">
+									<a class="fa fa-close" style="float: left"
+										ng-click="deleteTaskItem(taskItem);"></a><span
+										ng-click="deleteTaskItem(taskItem);">Delete</span>
+								</div>
+							</div></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		$(document).ready(function() {
+			$('.taskLeftSidebar, .content, .rightSidebar').theiaStickySidebar({
+				additionalMarginTop : 53
+			});
+		});
+	</script>
+</div>

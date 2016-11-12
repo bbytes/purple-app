@@ -31,6 +31,8 @@ public class SuccessHandler {
 	public static final String UPDATE_USER_SUCCESS = "update_user_success";
 
 	public static final String ADD_PROJECT_SUCCESS = "add_project_success";
+	
+	public static final String ADD_DEVICE_TOKEN_SUCCESS = "add_device_token_success";
 
 	public static final String DELETE_PROJECT_SUCCESS = "Successfully deleted project";
 
@@ -45,6 +47,8 @@ public class SuccessHandler {
 	public static final String ADD_STATUS_SUCCESS = "add_status_success";
 
 	public static final String GET_STATUS_SUCCESS = "get_status_success";
+	
+	public static final String GET_DEVICE_TOKEN_SUCCESS = "get_device_token_success";
 
 	public static final String GET_STATUS_ANALYTICS_SUCCESS = "get_status_analytics_success";
 
@@ -73,5 +77,7 @@ public class SuccessHandler {
 	public static final String UPDATE_USERROLE_SUCCESS = "update_userrole_success";
 
 	public static final String DROPDOWNLIST_SUCCESS = "dropdownlist_success";
+
+	public static final String TASK_STATE_SUCCESS = "task_state_success";
 
 }

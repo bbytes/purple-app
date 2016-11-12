@@ -40,4 +40,7 @@ public interface TaskListRepository extends MongoRepository<TaskList, String> {
 
 	List<TaskList> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate, List<Project> projects, List<User> users);
 
+	// List<TaskList> findByStateProjectAndUsers(Project project, TaskState
+	// state, User user);
+
 }
