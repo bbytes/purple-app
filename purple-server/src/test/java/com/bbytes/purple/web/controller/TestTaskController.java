@@ -33,10 +33,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-/**
- * @author aditya
- *
- */
 
 public class TestTaskController extends PurpleWebBaseApplicationTests {
 
@@ -84,7 +80,7 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testGetTaskStates() throws Exception {
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
-		mockMvc.perform(get("/api/v1/tasks/taskStates").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(get("/api/v1/task/taskStates").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 	}
@@ -109,7 +105,7 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		
 		
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
-		mockMvc.perform(get("/api/v1/statetasklist/"+TaskState.YET_TO_START.toString()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(get("/api/v1/task/taskList/state/"+TaskState.YET_TO_START.toString()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 	}
@@ -133,7 +129,7 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		System.out.println(requestJson);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/tasklist/create").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/task/taskList").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
@@ -152,7 +148,7 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(taskListDTO);
 		
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/tasklist/create").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/task/taskList/").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
@@ -167,7 +163,7 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		System.out.println(requestJson);
 
 
-		mockMvc.perform(post("/api/v1/taskitem/" + taskList.getTaskListId()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/task/taskItem/" + taskList.getTaskListId()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
@@ -186,14 +182,14 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(taskListDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/tasklist/create").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/task/taskList/").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 		
 		TaskList taskList = taskListRepository.findAll().get(0);
 
-		mockMvc.perform(delete("/api/v1/tasklist/" + taskList.getTaskListId()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
+		mockMvc.perform(delete("/api/v1/task/taskList/" + taskList.getTaskListId()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
 				.andExpect(status().isOk()).andDo(print()).andExpect(content().string(containsString("{\"success\":true")))
 				.andExpect(status().isOk());
 
@@ -212,7 +208,7 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(taskListDTO);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/tasklist/create").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/task/taskList").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
@@ -225,14 +221,14 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 
 		requestJson = ow.writeValueAsString(taskItemDTO);
 
-		mockMvc.perform(post("/api/v1/taskitem/" + taskList.getTaskListId()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/task/taskItem/" + taskList.getTaskListId()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 		
 		TaskItem taskItem = taskItemRepository.findAll().get(0);
 
-		mockMvc.perform(delete("/api/v1/taskitem/" + taskItem.getTaskItemId()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
+		mockMvc.perform(delete("/api/v1/task/taskItem/" + taskItem.getTaskItemId()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
 				.andExpect(status().isOk()).andDo(print()).andExpect(content().string(containsString("{\"success\":true")))
 				.andExpect(status().isOk());
 

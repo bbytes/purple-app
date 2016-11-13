@@ -57,7 +57,7 @@ public class TaskController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/api/v1/tasks/taskStates", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/task/taskStates", method = RequestMethod.GET)
 	public RestResponse getTaskStates() {
 
 		Map<String, String> taskStateMap = new LinkedHashMap<String, String>();
@@ -67,48 +67,38 @@ public class TaskController {
 		List<BaseDTO> taskStates = dataModelToDTOConversionService.convertRolesToEntityDTOList(taskStateMap);
 
 		logger.debug("Getting taskStates successfully");
-		RestResponse taskStatesResponse = new RestResponse(RestResponse.SUCCESS, taskStates,
-				SuccessHandler.TASK_STATE_SUCCESS);
+		RestResponse taskStatesResponse = new RestResponse(RestResponse.SUCCESS, taskStates, SuccessHandler.TASK_STATE_SUCCESS);
 
 		return taskStatesResponse;
 	}
 
-	@RequestMapping(value = "/api/v1/statetasklist/{state}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/task/taskList/state/{state}", method = RequestMethod.GET)
 	public RestResponse getTaskListForState(@PathVariable String state) throws PurpleException {
 		TaskState taskState = TaskState.valueOf(state);
 		User user = userService.getLoggedInUser();
-		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				taskListService.findByUsers(user));
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListService.findByStateAndUsers(taskState, user));
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/projecttasklist/{projectId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/task/taskList/project/{projectId}", method = RequestMethod.GET)
 	public RestResponse getTaskListForProject(@PathVariable String projectId) throws PurpleException {
 		Project project = projectService.findOne(projectId);
 		User user = userService.getLoggedInUser();
-		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				taskListService.findByProjectAndUsers(project, user));
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListService.findByProjectAndUsers(project, user));
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/tasklist/{projectId}/{state}", method = RequestMethod.GET)
-	public RestResponse getTaskListForProjectAndState(@PathVariable String projectId, @PathVariable String state)
-			throws PurpleException {
+	@RequestMapping(value = "/api/v1/task/taskList/{projectId}/{state}", method = RequestMethod.GET)
+	public RestResponse getTaskListForProjectAndState(@PathVariable String projectId, @PathVariable String state) throws PurpleException {
 		Project project = projectService.findOne(projectId);
 		User user = userService.getLoggedInUser();
 		TaskState taskState = TaskState.valueOf(state);
-		// state filtering seems to be not working
-		// RestResponse response = new RestResponse(RestResponse.SUCCESS,
-		// taskListService.findByProjectAndStateAndUsers(project, taskState,
-		// user));
-		// returning based on project.. needs to be fixed
 		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				taskListService.findByProjectAndUsers(project, user));
-
+				taskListService.findByProjectAndStateAndUsers(project, taskState, user));
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/tasklist/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/v1/task/taskList", method = RequestMethod.POST)
 	public RestResponse saveTaskList(@RequestBody TaskListDTO taskListDTO) throws PurpleException {
 
 		TaskList taskList = null;
@@ -127,8 +117,7 @@ public class TaskController {
 		Project project = projectService.findOne(taskListDTO.getProjectId());
 
 		if (project == null)
-			throw new PurpleException("Project with id " + taskListDTO.getProjectId() + " not found",
-					ErrorHandler.PROJECT_NOT_FOUND);
+			throw new PurpleException("Project with id " + taskListDTO.getProjectId() + " not found", ErrorHandler.PROJECT_NOT_FOUND);
 
 		taskList.setProject(project);
 		taskList = taskListService.save(taskList);
@@ -139,42 +128,38 @@ public class TaskController {
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/tasklist/delete/{taskListId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/v1/task/taskList/{taskListId}", method = RequestMethod.DELETE)
 	public RestResponse deleteTaskList(@PathVariable String taskListId) throws PurpleException {
 
 		taskListService.delete(taskListId);
 
 		logger.debug("Task list with id '" + taskListId + "' deleted successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				"Task list with id '" + taskListId + "' deleted successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Task list with id '" + taskListId + "' deleted successfully");
 
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/taskItem/delete/{taskItemId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/v1/task/taskItem/{taskItemId}", method = RequestMethod.DELETE)
 	public RestResponse deleteTaskItem(@PathVariable String taskItemId) throws PurpleException {
 
 		taskItemService.delete(taskItemId);
 
 		logger.debug("Task Item with id '" + taskItemId + "' deleted successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				"Task Item with id '" + taskItemId + "' deleted successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Task Item with id '" + taskItemId + "' deleted successfully");
 
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/addtaskitem/{taskListId}", method = RequestMethod.POST)
-	public RestResponse addTaskItem(@PathVariable String taskListId, @RequestBody TaskItemDTO taskItemDTO)
-			throws PurpleException {
+	@RequestMapping(value = "/api/v1/task/taskItem/{taskListId}", method = RequestMethod.POST)
+	public RestResponse addTaskItem(@PathVariable String taskListId, @RequestBody TaskItemDTO taskItemDTO) throws PurpleException {
 
 		TaskItem taskItem = saveTaskItem(taskListId, taskItemDTO);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItem, SuccessHandler.ADD_TASK_ITEM_SUCCESS);
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/taskitems/{taskListId}", method = RequestMethod.POST)
-	public RestResponse addTaskItems(@PathVariable String taskListId, @RequestBody List<TaskItemDTO> taskListDTOs)
-			throws PurpleException {
+	@RequestMapping(value = "/api/v1/task/taskItems/{taskListId}", method = RequestMethod.POST)
+	public RestResponse addTaskItems(@PathVariable String taskListId, @RequestBody List<TaskItemDTO> taskListDTOs) throws PurpleException {
 
 		List<TaskItem> taskItems = new ArrayList<>();
 
@@ -190,11 +175,10 @@ public class TaskController {
 	private TaskItem saveTaskItem(String taskListId, TaskItemDTO taskItemDTO) throws PurpleException {
 		TaskList taskList = taskListService.findOne(taskListId);
 		if (taskList == null)
-			throw new PurpleException("Task List with id " + taskListId + " not found",
-					ErrorHandler.TASK_LIST_NOT_FOUND);
+			throw new PurpleException("Task List with id " + taskListId + " not found", ErrorHandler.TASK_LIST_NOT_FOUND);
 
-		TaskItem taskItem = new TaskItem(taskList, taskItemDTO.getName(), taskItemDTO.getDesc(),
-				taskItemDTO.getEstimatedHours(), taskItemDTO.getDueDate());
+		TaskItem taskItem = new TaskItem(taskList, taskItemDTO.getName(), taskItemDTO.getDesc(), taskItemDTO.getEstimatedHours(),
+				taskItemDTO.getDueDate());
 		taskItem.setProject(taskList.getProject());
 		User user = userService.getLoggedInUser();
 		taskItem.setOwner(user);
@@ -205,7 +189,7 @@ public class TaskController {
 		return taskItem;
 	}
 
-	@RequestMapping(value = "/api/v1/taskItems/get/{taskListId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/task/taskItems/{taskListId}", method = RequestMethod.GET)
 	public RestResponse getTaskItems(@PathVariable String taskListId) throws PurpleException {
 		TaskList taskList = taskListService.findOne(taskListId);
 		List<TaskItem> taskItems = taskItemService.findByTaskList(taskList);
