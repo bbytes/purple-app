@@ -288,4 +288,28 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		}
 		return null;
 	}
+
+	public void deleteSlackConnection() {
+		deleteConnection("slack");
+	}
+
+	public void deleteGithubConnection() {
+		deleteConnection("github");
+	}
+
+	public void deleteBitbucketConnection() {
+		deleteConnection("bitbucket");
+	}
+
+	public void deleteHipChatConnection() {
+		deleteConnection("hipchat");
+	}
+
+	private void deleteConnection(String connectionType) {
+		String userId = userService.getLoggedInUserEmail();
+		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, connectionType);
+		if (socialCnnections != null && !socialCnnections.isEmpty()) {
+			socialConnectionRepository.delete(socialCnnections);
+		}
+	}
 }

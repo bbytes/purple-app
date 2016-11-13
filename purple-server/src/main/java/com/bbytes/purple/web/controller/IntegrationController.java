@@ -13,7 +13,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,9 +50,6 @@ public class IntegrationController {
 
 	@Autowired
 	private IntegrationService integrationService;
-
-	@Autowired
-	private ConnectionRepository mongoConnectionRepository;
 
 	@RequestMapping(value = "/api/v1/integration/jira/addAuthentication", method = RequestMethod.POST)
 	public RestResponse connectToJIRA(@RequestBody IntegrationRequestDTO integrationRequestDTO) throws PurpleException {
@@ -214,6 +210,34 @@ public class IntegrationController {
 	public RestResponse setSlackChannels(String channelId) throws PurpleException {
 		integrationService.setSlackChannel(channelId);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack Channel updated successfully");
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/integration/slack", method = RequestMethod.DELETE)
+	public RestResponse deleteSlackIntegration() throws PurpleException {
+		integrationService.deleteSlackConnection();
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack connection deleted successfully");
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/integration/github", method = RequestMethod.DELETE)
+	public RestResponse deleteGithubIntegration() throws PurpleException {
+		integrationService.deleteGithubConnection();
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Github connection deleted successfully");
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/integration/bitbucket", method = RequestMethod.DELETE)
+	public RestResponse deleteBitBucketIntegration() throws PurpleException {
+		integrationService.deleteBitbucketConnection();
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Bitbucket connection deleted successfully");
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/integration/hipchat", method = RequestMethod.DELETE)
+	public RestResponse deleteHipchatIntegration() throws PurpleException {
+		integrationService.deleteHipChatConnection();
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Hipchat connection deleted successfully");
 		return response;
 	}
 
