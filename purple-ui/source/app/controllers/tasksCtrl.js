@@ -120,8 +120,8 @@ angular.module('rootApp').controller(
 			$scope.deleteTaskItem = function(taskItem) {
 				tasksService.deleteTaskItem(taskItem).then(function(response) {
 					if (response.success) {
-						var index = $scope.taskLists.indexOf(taskList);
-						$scope.taskLists.splice(index, 1);
+						var index = $scope.taskItemsLists.indexOf(taskItem);
+						$scope.taskItemsLists.splice(index, 1);
 					}
 				});
 			};

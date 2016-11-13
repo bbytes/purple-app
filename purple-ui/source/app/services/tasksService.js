@@ -12,7 +12,7 @@ angular.module('rootApp').service(
 
 				$http({
 					method : 'GET',
-					url : $rootScope.baseUrl + 'api/v1/tasks/taskStates',
+					url : $rootScope.baseUrl + 'api/v1/task/taskStates',
 					headers : {
 						'Content-Type' : 'application/json',
 					}
@@ -33,7 +33,7 @@ angular.module('rootApp').service(
 				$http(
 						{
 							method : 'GET',
-							url : $rootScope.baseUrl + 'api/v1/statetasklist/'
+							url : $rootScope.baseUrl + 'api/v1/task/taskList/state/'
 									+ taskState.id,
 							headers : {
 								'Content-Type' : 'application/json',
@@ -55,7 +55,7 @@ angular.module('rootApp').service(
 						{
 							method : 'GET',
 							url : $rootScope.baseUrl
-									+ 'api/v1/projecttasklist/'
+									+ 'api/v1/task/taskList/project/'
 									+ project.projectId,
 							headers : {
 								'Content-Type' : 'application/json',
@@ -77,7 +77,7 @@ angular.module('rootApp').service(
 				$http(
 						{
 							method : 'GET',
-							url : $rootScope.baseUrl + 'api/v1/tasklist/'
+							url : $rootScope.baseUrl + 'api/v1/task/taskList/'
 									+ project.projectId + '/' + taskState.id,
 							headers : {
 								'Content-Type' : 'application/json',
@@ -97,7 +97,7 @@ angular.module('rootApp').service(
 
 				$http({
 					method : 'POST',
-					url : $rootScope.baseUrl + 'api/v1/tasklist/create',
+					url : $rootScope.baseUrl + 'api/v1/task/taskList',
 					data : taskList,
 					headers : {
 						'Content-Type' : 'application/json'
@@ -118,7 +118,7 @@ angular.module('rootApp').service(
 				$http(
 						{
 							method : 'GET',
-							url : $rootScope.baseUrl + 'api/v1/taskItems/get/'
+							url : $rootScope.baseUrl + 'api/v1/task/taskItems/'
 									+ taskList.taskListId,
 							headers : {
 								'Content-Type' : 'application/json'
@@ -138,7 +138,7 @@ angular.module('rootApp').service(
 				$http(
 						{
 							method : 'POST',
-							url : $rootScope.baseUrl + 'api/v1/addtaskitem/'
+							url : $rootScope.baseUrl + 'api/v1/task/taskItem/'
 									+ taskList.taskListId,
 							data : taskItem,
 							headers : {
@@ -160,7 +160,7 @@ angular.module('rootApp').service(
 						{
 							method : 'DELETE',
 							url : $rootScope.baseUrl
-									+ 'api/v1/tasklist/delete/'
+									+ 'api/v1/task/taskList/'
 									+ taskList.taskListId,
 							headers : {
 								'Content-Type' : 'application/json'
@@ -181,7 +181,7 @@ angular.module('rootApp').service(
 						{
 							method : 'DELETE',
 							url : $rootScope.baseUrl
-									+ 'api/v1/taskItem/delete/'
+									+ 'api/v1/task/taskItem/'
 									+ taskItem.taskItemId,
 							headers : {
 								'Content-Type' : 'application/json'
