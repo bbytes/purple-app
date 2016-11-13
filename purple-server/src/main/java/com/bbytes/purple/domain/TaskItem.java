@@ -68,13 +68,12 @@ public class TaskItem implements Comparable<TaskItem> {
 	private Date lastModified;
 
 	public TaskItem(TaskList taskList, String name, String desc, double estimatedHours, Date dueDate) {
-		this.taskList = taskList;
-		taskList.addTaskItem(this);
-		
 		this.name = name;
 		this.desc = desc;
 		this.estimatedHours = estimatedHours;
 		this.dueDate = dueDate;
+		this.taskList = taskList;
+		taskList.addTaskItem(this);
 	}
 
 	public void addUsers(User user) {
