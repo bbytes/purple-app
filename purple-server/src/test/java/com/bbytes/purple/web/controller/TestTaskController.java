@@ -1,8 +1,9 @@
 package com.bbytes.purple.web.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,6 +24,7 @@ import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.rest.dto.models.TaskItemDTO;
 import com.bbytes.purple.rest.dto.models.TaskListDTO;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -59,8 +61,8 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		organizationRepository.save(org);
 		user = new User("aditya", "aditya@bbytes.co.in");
 		user.setOrganization(org);
-		userRepository.save(user);
-		projectService.save(project);
+		user = userRepository.save(user);
+		project =projectService.save(project);
 		status.setUser(user);
 
 		userService.updatePassword("test123", user);
@@ -79,6 +81,40 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		taskItemRepository.deleteAll();
 	}
 
+	@Test
+	public void testGetTaskStates() throws Exception {
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/tasks/taskStates").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void testGetTaskItemByStates() throws Exception {
+		TaskList taskList = new TaskList("test sample");
+		taskList.setOwner(user);
+		taskList.setProject(project);
+		taskList = taskListRepository.save(taskList);
+		
+		TaskItem taskItem1 = new TaskItem(taskList, "test", "test desc", 20, DateTime.now().plusDays(2).toDate());
+		TaskItem taskItem2 = new TaskItem(taskList, "test2", "test desc2", 10, DateTime.now().plusDays(2).toDate());
+		taskItem1.setOwner(user);
+		taskItem2.setOwner(user);
+		taskList.addTaskItem(taskItem1);
+		taskList.addTaskItem(taskItem2);
+		taskItemRepository.save(taskItem1);
+		taskItemRepository.save(taskItem2);
+		
+		taskList = taskListRepository.save(taskList);
+		
+		
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
+		mockMvc.perform(get("/api/v1/statetasklist/"+TaskState.YET_TO_START.toString()).header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+	}
+
+	
 	/**
 	 * TestCase for Save Comment
 	 */

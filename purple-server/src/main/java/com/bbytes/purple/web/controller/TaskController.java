@@ -78,7 +78,7 @@ public class TaskController {
 		TaskState taskState = TaskState.valueOf(state);
 		User user = userService.getLoggedInUser();
 		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				taskListService.findByStateAndUsers(taskState, user));
+				taskListService.findByUsers(user));
 		return response;
 	}
 

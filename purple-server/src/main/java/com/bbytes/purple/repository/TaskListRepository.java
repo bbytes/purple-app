@@ -23,6 +23,8 @@ public interface TaskListRepository extends MongoRepository<TaskList, String> {
 	List<TaskList> findByProjectIn(List<Project> projects);
 
 	List<TaskList> findByOwner(User user);
+	
+	List<TaskList> findByUsers(User user);
 
 	List<TaskList> findByUsersIn(List<User> users);
 

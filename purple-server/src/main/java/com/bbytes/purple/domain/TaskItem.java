@@ -15,6 +15,7 @@ import com.bbytes.purple.enums.TaskState;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Task Item Domain Object
@@ -22,6 +23,7 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(exclude={"taskList","owner","users"})
 @Document
 public class TaskItem implements Comparable<TaskItem> {
 
