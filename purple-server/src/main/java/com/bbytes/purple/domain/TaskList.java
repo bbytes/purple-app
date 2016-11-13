@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -15,6 +16,7 @@ import com.bbytes.purple.enums.TaskState;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Task List Domain Object
@@ -22,6 +24,7 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(exclude = { "taskItems", "owner", "users" })
 @Document
 public class TaskList implements Comparable<TaskList> {
 
@@ -69,11 +72,19 @@ public class TaskList implements Comparable<TaskList> {
 	public void addTaskItem(TaskItem taskItem) {
 		taskItems.add(taskItem);
 		taskItem.setTaskList(this);
+		calculateProperties();
 	}
 
 	public void removeTaskItem(TaskItem taskItem) {
 		taskItems.remove(taskItem);
+		calculateProperties();
 	}
+	
+	public void setTaskItem(Set<TaskItem> taskItems) {
+		this.taskItems = taskItems;
+		calculateProperties();
+	}
+
 
 	public void addUsers(User user) {
 		users.add(user);
@@ -91,6 +102,41 @@ public class TaskList implements Comparable<TaskList> {
 	@Override
 	public int compareTo(TaskList taskList) {
 		return getDueDate().compareTo(taskList.getDueDate());
+	}
+
+	private void calculateProperties() {
+		state = null;
+		estimatedHours = 0;
+		spentHours = 0;
+		dueDate = DateTime.now().toDate();
+		
+		for (TaskItem taskItem : taskItems) {
+			estimatedHours = estimatedHours + taskItem.getEstimatedHours();
+			spentHours = spentHours + taskItem.getSpentHours();
+			if (taskItem.getDueDate() !=null && dueDate.compareTo(taskItem.getDueDate()) < 0)
+				dueDate = taskItem.getDueDate();
+		}
+
+		for (TaskItem taskItem : taskItems) {
+			if (taskItem.getState().equals(TaskState.YET_TO_START)) {
+				state = TaskState.YET_TO_START;
+				break;
+			}
+			if (state == null) {
+				if (taskItem.getState().equals(TaskState.IN_PROGRESS)) {
+					state = TaskState.IN_PROGRESS;
+					break;
+				}
+			}
+			if (state == null) {
+				if (taskItem.getState().equals(TaskState.COMPLETED)) {
+					state = TaskState.COMPLETED;
+					break;
+				}
+			}
+
+		}
+
 	}
 
 }

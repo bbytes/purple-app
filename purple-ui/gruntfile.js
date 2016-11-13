@@ -69,7 +69,8 @@ module.exports = function (grunt) {
                             'source/assets/js/lib/server-url.js',
                             'source/assets/js/lib/theia-sticky-sidebar.js',
                             'source/assets/js/lib/test.js',
-                            'source/assets/js/lib/bootstrap.min.js'
+                            'source/assets/js/lib/bootstrap.min.js',
+                            'source/assets/js/lib/ui-bootstrap-tpls-2.2.0.js'
                         ],
                         dest: '<%= grunt.config.get("buildPath") %>/assets/js/_lib.js'
                     },

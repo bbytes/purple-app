@@ -78,4 +78,6 @@ public class SuccessHandler {
 
 	public static final String DROPDOWNLIST_SUCCESS = "dropdownlist_success";
 
+	public static final String TASK_STATE_SUCCESS = "task_state_success";
+
 }

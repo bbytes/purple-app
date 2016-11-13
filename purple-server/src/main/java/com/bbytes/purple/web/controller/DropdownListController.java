@@ -207,6 +207,48 @@ public class DropdownListController {
 	}
 
 	/**
+	 * getHoursDropdownList method is used to return hours for status.
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getEstimateHours", method = RequestMethod.GET)
+	public RestResponse getEstimateHoursDropdownList() {
+
+		List<String> hoursList = new LinkedList<String>();
+		hoursList.add("1");
+		hoursList.add("2");
+		hoursList.add("3");
+		hoursList.add("4");
+		hoursList.add("5");
+		hoursList.add("6");
+		hoursList.add("7");
+		hoursList.add("8");
+		hoursList.add("9");
+		hoursList.add("10");
+		hoursList.add("11");
+		hoursList.add("12");
+		hoursList.add("13");
+		hoursList.add("14");
+		hoursList.add("15");
+		hoursList.add("16");
+		hoursList.add("17");
+		hoursList.add("18");
+		hoursList.add("19");
+		hoursList.add("20");
+		hoursList.add("21");
+		hoursList.add("22");
+		hoursList.add("23");
+		hoursList.add("24");
+
+		List<BaseDTO> hours = dataModelToDTOConversionService.convertRolesToEntityDTOList(hoursList);
+
+		logger.debug("Getting hours successfully");
+		RestResponse hoursResponse = new RestResponse(RestResponse.SUCCESS, hours, SuccessHandler.DROPDOWNLIST_SUCCESS);
+
+		return hoursResponse;
+	}
+
+	/**
 	 * The method getTimePeriodDropdownList is used to populate all time-period
 	 * enum values
 	 * 

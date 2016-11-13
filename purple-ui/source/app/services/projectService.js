@@ -253,5 +253,22 @@ angular.module('rootApp').service('projectService', function ($rootScope, $http,
 
         return deferred.promise;
     };
+    this.getAllUsersOfProject=function(projectId){
+    	var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/project/' + projectId + '/user',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
 
 });

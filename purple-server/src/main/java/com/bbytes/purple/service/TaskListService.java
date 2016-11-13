@@ -27,6 +27,14 @@ public class TaskListService extends AbstractService<TaskList, String> {
 		return taskListRepository.findByStateAndUsers(state, user);
 	}
 
+	public List<TaskList> findByProjectAndStateAndUsers(Project project, TaskState state, User user) {
+		return taskListRepository.findByProjectAndStateAndUsers(project, state, user);
+	}
+
+	public List<TaskList> findByProjectAndState(Project project, TaskState state) {
+		return taskListRepository.findByProjectAndState(project, state);
+	}
+
 	public List<TaskList> findByProject(Project project) {
 		return taskListRepository.findByProject(project);
 	}
@@ -42,10 +50,20 @@ public class TaskListService extends AbstractService<TaskList, String> {
 	public List<TaskList> findByUsersIn(List<User> users) {
 		return taskListRepository.findByUsersIn(users);
 	}
+	
+	public List<TaskList> findByUsers(User user) {
+		return taskListRepository.findByUsers(user);
+	}
 
 	public List<TaskList> findByProjectAndUsers(Project project, User user) {
 		return taskListRepository.findByProjectAndUsers(project, user);
 	}
+	
+	// public List<TaskList> findByStateProjectAndUsers(Project
+	// project,TaskState state, User user) {
+	// //return taskListRepository.findByStateProjectAndUsers(project,state,
+	// user);
+	// }
 
 	public List<TaskList> findByProjectInAndUsersIn(List<Project> project, List<User> user) {
 		return taskListRepository.findByProjectInAndUsersIn(project, user);

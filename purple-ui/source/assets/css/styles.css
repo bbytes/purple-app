@@ -1340,6 +1340,15 @@ small img{
     background: #ddd !important;
     margin: 0;
 }
+.task-list-group {
+    padding-left: 0px;
+    margin: 0;
+    list-style-type: none;
+    border: 1px solid #dcd8d8;
+}
+.task-content {
+	padding-left:700px;
+}
 .alert {
     border-radius: 0px !important;
     border: 0px solid #ccc;
@@ -2133,7 +2142,20 @@ md-sidenav ul {
     position: relative;
     margin-top:0px;
 }
-
+.taskLeftSidebar {
+    width: 25%;
+    float: left;
+    padding: 0 0 0 0;
+    position: relative;
+    margin-top:0px;
+}
+.midColbar {
+    width: 29%;
+    float: left;
+    padding: 0 0 0 0;
+    position: relative;
+    margin-top:0px;
+}
 md-sidenav, md-backdrop {
     position: fixed;
 }

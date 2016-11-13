@@ -261,6 +261,30 @@ rootApp.config([
                 authorization: 'My Status',
                 redirectTo: 'login'
             }
+        }).state('tasks', {
+            url: '/tasks',
+            views: {
+                '': {
+                    templateUrl: 'app/partials/home.html'
+
+
+                },
+                'header@tasks': {
+                    templateUrl: 'app/partials/home-header.html'
+                },
+                'main@tasks': {
+                    templateUrl: 'app/partials/tasks.html',
+                    controller: 'tasksCtrl'
+
+                },
+                'footer@tasks': {
+                    templateUrl: 'app/partials/home-footer.html'
+                }
+            },
+            data: {
+                authorization: 'tasks',
+                redirectTo: 'login'
+            }
         }).state('projects', {
             url: '/projects',
             views: {

@@ -24,6 +24,27 @@ rootApp.service('dropdownListService', function ($rootScope, $http, $q, $window)
         return deferred.promise;
 
     };
+    this.getEstimateHours = function () {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/dropdownList/getEstimateHours',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+
+        }).success(function (response, status, headers, config) {
+
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+        return deferred.promise;
+
+    };
+    
 // Method is used to get user's role
     this.getRole = function () {
 
