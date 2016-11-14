@@ -76,8 +76,8 @@
 										Hrs of {{taskList.estimatedHours}} Hrs</label>
 									<div style="padding-left: 300px; width: 75px">
 										<a class="fa fa-close" style="float: left"
-											ng-click="deleteTaskList(taskList);"></a><span
-											ng-click="deleteTaskList(taskList);">Delete</span>
+											ng-click="deleteTaskList(taskList);"  confirm="Are you sure you want to delete the task list?"></a><span
+											ng-click="deleteTaskList(taskList);" confirm="Are you sure you want to delete the task list?">Delete</span>
 									</div>
 								</div></li>
 						</ul>
@@ -113,8 +113,8 @@
 								</div>
 								<div style="padding-left: 540px; width: 75px">
 									<a class="fa fa-close" style="float: left"
-										ng-click="deleteTaskItem(taskItem);"></a><span
-										ng-click="deleteTaskItem(taskItem);">Delete</span>
+										ng-click="deleteTaskItem(taskItem);" confirm="Are you sure you want to delete the task?"></a><span
+										ng-click="deleteTaskItem(taskItem);" confirm="Are you sure you want to delete the task?">Delete</span>
 								</div>
 							</div></li>
 					</ul>
