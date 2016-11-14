@@ -1,3 +1,6 @@
+/*
+ * Integration Service
+ */
 rootApp.service('integrationService', function ($rootScope, $http, $q) {
 
     this.connectToJira = function (data) {
@@ -9,7 +12,7 @@ rootApp.service('integrationService', function ($rootScope, $http, $q) {
             url: $rootScope.baseUrl + 'api/v1/integration/jira/addAuthentication',
             data: data,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
 
         }).success(function (response, status, headers, config) {
@@ -29,7 +32,7 @@ rootApp.service('integrationService', function ($rootScope, $http, $q) {
             method: 'GET',
             url: $rootScope.baseUrl + 'api/v1/integration/jira/getAuthentication',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
 
         }).success(function (response, status, headers, config) {
@@ -49,7 +52,49 @@ rootApp.service('integrationService', function ($rootScope, $http, $q) {
             method: 'GET',
             url: $rootScope.baseUrl + 'api/v1/integration/jira/getprojects',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
+            }
+
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+
+    // method is used to get the slack channerls
+    this.getSlackChannels = function () {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/integration/slack/channels',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+
+    // method is used to setting slack channel for user
+    this.setSlackChannel = function (channelId) {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'POST',
+            url: $rootScope.baseUrl + 'api/v1/integration/slack/channel/' + channelId,
+            headers: {
+                'Content-Type': 'application/json'
             }
 
         }).success(function (response, status, headers, config) {

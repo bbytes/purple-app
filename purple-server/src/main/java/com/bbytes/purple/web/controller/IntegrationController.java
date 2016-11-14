@@ -13,6 +13,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -207,7 +208,7 @@ public class IntegrationController {
 	}
 
 	@RequestMapping(value = "/api/v1/integration/slack/channel/{channelId}", method = RequestMethod.POST)
-	public RestResponse setSlackChannels(String channelId) throws PurpleException {
+	public RestResponse setSlackChannels(@PathVariable("channelId") String channelId) throws PurpleException {
 		integrationService.setSlackChannel(channelId);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack Channel updated successfully");
 		return response;

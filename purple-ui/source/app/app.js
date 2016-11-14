@@ -216,7 +216,7 @@ rootApp.config([
                 redirectTo: 'login'
             }
         }).state('integration', {
-            url: '/integration',
+            url: '/integration?app',
             views: {
                 '': {
                     templateUrl: 'app/partials/home.html'
@@ -380,7 +380,7 @@ rootApp.config([
                 },
                 'header@billing': {
                     templateUrl: 'app/partials/home-header.html'
-                },             
+                },
                 'main@billing': {
                     templateUrl: 'app/partials/billing-nav.html',
                     controller: 'navCtrl'

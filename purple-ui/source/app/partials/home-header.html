@@ -17,34 +17,34 @@
                         <ul class="{{ navClass}} nav-left" ng-controller="navCtrl">
                             <li><a href="user-manager" ng-class="{ active: isActive('/user-manager') }">users</a></li>
                             <li><a href="projects" ng-class="{ active: isActive('/projects') }">projects</a></li>
-                            <li><a href="integration" ng-class="{ active: isActive('/integration') }">integration</a></li>
+                            <li><a href="integration?app=jira" ng-class="{ active: isActive('/integration') }">integration</a></li>
                             <li ng-show="userRole == 'ADMIN'"><a href="admin-settings" ng-class="{ active: isActive('/admin-settings') }">admin settings</a></li>
                             <li ng-show="userRole == 'ADMIN'"><a href="billing" ng-class="{ active: isActive('/billing') }" ng-click="setAdminTab('billinginfo')" >Billing</a></li>
                             <!-- <li ng-show="userRole == 'ADMIN'"><a  href="#" ng-click="loadTabs()">Billing</a></li>-->
-                       <!--<li class="dropdown mega-dropdown">
-          <a href="#" ng-click="loadTabs()" class="dropdown-toggle" data-toggle="dropdown">Billing <span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
+                            <!--<li class="dropdown mega-dropdown">
+               <a href="#" ng-click="loadTabs()" class="dropdown-toggle" data-toggle="dropdown">Billing <span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
+     
+               <ul class="dropdown-menu mega-dropdown-menu row">
+                 <li class="col-sm-3">
+                   <ul>
+                  
+                  <li ng-if="showTabs === true" ng-repeat="tab in tabList" active="tab.active" ng-init="tab.active = $index === 0">
+             <a  href="{{tab.id}}">{{tab.name}}</a>
+         
+                    
+                                      </li>
+                                   
+                   </ul>
+                 </li>
+                 
+                 
+               </ul>
+     
+             </li>-->
 
-          <ul class="dropdown-menu mega-dropdown-menu row">
-            <li class="col-sm-3">
-              <ul>
-             
-             <li ng-if="showTabs === true" ng-repeat="tab in tabList" active="tab.active" ng-init="tab.active = $index === 0">
-        <a  href="{{tab.id}}">{{tab.name}}</a>
-    
-               
-                                 </li>
-                              
-              </ul>
-            </li>
-            
-            
-          </ul>
-
-        </li>-->
-                                  
                         </ul>
-                                 
-                                
+
+
                         <ul ng-show="userRole == 'ADMIN' || userRole == 'MANAGER'"  class="{{ navstatusClass}} nav-left" ng-controller="navCtrl">
                             <li><a href="status" ng-class="{ active: isActive('/status') }">status</a></li>
                             <li><a href="dashboard" ng-class="{ active: isActive('/dashboard') }">timeline</a></li>
@@ -78,7 +78,7 @@
                                     <li class="dropdown-header">Settings</li>
                                     <li><a href="user-manager"><i class="fa fa-user-plus" aria-hidden="true"></i>Users</a></li>
                                     <li><a href="projects"><i class="fa fa-server" aria-hidden="true"></i>Projects</a></li>
-                                    <li><a href="integration"><i class="fa fa-cogs" aria-hidden="true"></i>Integration</a></li>
+                                    <li><a href="integration?app=jira"><i class="fa fa-cogs" aria-hidden="true"></i>Integration</a></li>
                                     <li><a href="admin-settings"><i class="fa fa-cog" aria-hidden="true"></i> Admin</a></li>
                                     <li><a href="settings"><i class="fa fa-users" aria-hidden="true"></i>Profile</a></li>
                                     <!-- <li><a href fancy-modal template-url="app/partials/feedback.html"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a></li> -->
@@ -94,7 +94,7 @@
                                     <li class="dropdown-header">Settings</li>
                                     <li><a href="user-manager"><i class="fa fa-user-plus" aria-hidden="true"></i>Users</a></li>
                                     <li><a href="projects"><i class="fa fa-server" aria-hidden="true"></i>Projects</a></li>
-                                    <li><a href="integration"><i class="fa fa-cogs" aria-hidden="true"></i>Integration</a></li>
+                                    <li><a href="integration?app=jira"><i class="fa fa-cogs" aria-hidden="true"></i>Integration</a></li>
                                     <li><a href="settings"><i class="fa fa-users" aria-hidden="true"></i>Profile</a></li>
                                     <!-- <li><a href fancy-modal template-url="app/partials/feedback.html"><i class="fa fa-comment" aria-hidden="true"></i>Feedback</a></li> -->
                                     <li class="nav-divider"></li>
@@ -119,7 +119,7 @@
                         </ul>
 
                     </div><!--/.nav-collapse -->
-                
+
                 </div>
             </nav>
 
