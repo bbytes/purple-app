@@ -77,7 +77,8 @@ public class TaskController {
 	public RestResponse getTaskListForState(@PathVariable String state) throws PurpleException {
 		TaskState taskState = TaskState.valueOf(state);
 		User user = userService.getLoggedInUser();
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListService.findByStateAndUsers(taskState, user));
+		RestResponse response = new RestResponse(RestResponse.SUCCESS,
+				taskListService.findByStateAndUsers(taskState, user));
 		return response;
 	}
 
@@ -85,8 +86,8 @@ public class TaskController {
 	public RestResponse getTaskListForProject(@PathVariable String projectId) throws PurpleException {
 		Project project = projectService.findOne(projectId);
 		User user = userService.getLoggedInUser();
-		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				taskListService.findByProjectAndUsers(project, user));
+		List<TaskList> taskList = taskListService.findByProjectAndUsers(project, user);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskList);
 		return response;
 	}
 
@@ -193,6 +194,7 @@ public class TaskController {
 		taskItem.setOwner(user);
 
 		taskItem = taskItemService.save(taskItem);
+		taskListService.save(taskList);
 
 		logger.debug("Task item with name '" + taskItem.getName() + "' added successfully");
 		return taskItem;
