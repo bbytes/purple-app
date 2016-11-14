@@ -32,7 +32,7 @@ public class TaskList implements Comparable<TaskList> {
 	private String taskListId;
 
 	@Field("state")
-	private TaskState state;
+	private TaskState state = TaskState.YET_TO_START;
 
 	@Field("name")
 	private String name;
@@ -79,12 +79,11 @@ public class TaskList implements Comparable<TaskList> {
 		taskItems.remove(taskItem);
 		calculateProperties();
 	}
-	
+
 	public void setTaskItem(Set<TaskItem> taskItems) {
 		this.taskItems = taskItems;
 		calculateProperties();
 	}
-
 
 	public void addUsers(User user) {
 		users.add(user);
@@ -109,11 +108,11 @@ public class TaskList implements Comparable<TaskList> {
 		estimatedHours = 0;
 		spentHours = 0;
 		dueDate = DateTime.now().toDate();
-		
+
 		for (TaskItem taskItem : taskItems) {
 			estimatedHours = estimatedHours + taskItem.getEstimatedHours();
 			spentHours = spentHours + taskItem.getSpentHours();
-			if (taskItem.getDueDate() !=null && dueDate.compareTo(taskItem.getDueDate()) < 0)
+			if (taskItem.getDueDate() != null && dueDate.compareTo(taskItem.getDueDate()) < 0)
 				dueDate = taskItem.getDueDate();
 		}
 

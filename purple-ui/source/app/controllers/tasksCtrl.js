@@ -1,6 +1,6 @@
 angular.module('rootApp').controller(
 		'tasksCtrl',
-		function($scope, $location, tasksService, projectService, $uibModal) {
+		function($scope, $location, tasksService, projectService,appNotifyService, $uibModal) {
 
 			$scope.taskList;
 
@@ -13,69 +13,66 @@ angular.module('rootApp').controller(
 			$(document).ready(function() {
 				$('.dropdown-toggle').dropdown();
 			});
+
+			$scope.initTasks = function() {
+				$scope.loadStates();
+				$scope.loadUserProjects();
+				$scope.loadTasks();
+			};
 			/*
 			 * Load all states
 			 */
-			$scope.loadStates = function(taskState) {
+			$scope.loadStates = function() {
 				tasksService.getAllTasksStates().then(function(response) {
 					if (response.success) {
 						$scope.taskStates = response.data;
 						$scope.selectedState = $scope.taskStates[0];
-						$scope.loadTasks($scope.selectedState);
+						$scope.selectedSateIndex=0;
 					}
 				});
 
 			};
 			/*
-			 * Load tasks for state
+			 * Initial loading of tasks and task items
 			 */
-			$scope.loadTasks = function(selectedState) {
-				$scope.selectedState = selectedState;
-				tasksService.getAllTasksForState($scope.selectedState).then(
-						function(response) {
-							if (response.success) {
-								$scope.taskLists = response.data;
-								$scope.taskList = $scope.taskLists[0];
-								if ($scope.taskList != null)
-									$scope.loadTaskItems($scope.taskList);
-								else
-									$scope.loadTaskItems.length = 0;
-							}
-						});
+			$scope.loadTasks = function() {
+				getAllTasksForStateAndProject();
 
 			};
 
-			/* Load tasks for project */
+			/* Load tasks and task items on click of project */
 
-			$scope.loadProjectStateTasks = function(selectedProject) {
+			$scope.loadProjectStateTasks = function(selectedProject,index) {
+				$scope.selectedPjtIndex=index;
 				$scope.selectedProject = selectedProject;
-				tasksService.getAllTasksForProjectAndState(
-						$scope.selectedProject, $scope.selectedState).then(
-						function(response) {
-							if (response.success) {
-								$scope.taskLists = response.data;
-								$scope.taskList = $scope.taskLists[0];
-								if ($scope.taskList != null)
-									$scope.loadTaskItems($scope.taskList);
-								else
-									$scope.loadTaskItems.length = 0;
-							}
-						});
+				getAllTasksForStateAndProject();
 			};
-			/* Load tasks for project */
+			/* Load tasks and task items on click of state*/
 
-			$scope.loadStateProjectTasks = function(selectedState) {
+			$scope.loadStateProjectTasks = function(selectedState,index) {
+				$scope.selectedSateIndex=index;
 				$scope.selectedState = selectedState;
+				getAllTasksForStateAndProject();
+			};
+
+			function getAllTasksForStateAndProject() {
 				tasksService.getAllTasksForProjectAndState(
 						$scope.selectedProject, $scope.selectedState).then(
 						function(response) {
 							if (response.success) {
 								$scope.taskLists = response.data;
-								$scope.taskList = $scope.taskLists[0];
-								$scope.loadTaskItems($scope.taskList);
+								if ($scope.taskLists != null
+										&& $scope.taskLists.length > 0) {
+									$scope.taskList = $scope.taskLists[0];
+									$scope.selectedTLIndx=0;
+									$scope.loadTaskItems($scope.taskList);
+								} else {
+									$scope.taskItemsLists.length = 0;
+									appNotifyService.success("No tasks to show for selected project and state");
+								}
 							}
 						});
-			};
+			}
 
 			/*
 			 * Load all projects of logged in user
@@ -85,6 +82,7 @@ angular.module('rootApp').controller(
 					if (response.success) {
 						$scope.userprojects = response.data.gridData;
 						$scope.selectedProject = $scope.userprojects[0];
+						$scope.selectedPjtIndex=0;
 					}
 				});
 			};
@@ -103,7 +101,8 @@ angular.module('rootApp').controller(
 						params : function() {
 							return {
 								"projects" : $scope.userprojects,
-								"taskLists" : $scope.taskLists
+								"taskLists" : $scope.taskLists,
+								"project" : $scope.selectedProject
 							};
 						}
 					}
@@ -125,25 +124,25 @@ angular.module('rootApp').controller(
 					}
 				});
 			};
-			$scope.setClickedState = function(index) { // function that sets
-				// the value of
-				// selectedState to
-				// current index
+			$scope.setClickedState = function(index) { 
 				$scope.selectedState = $scope.taskStates[index];
 			};
-			$scope.setSelectedProject = function(index) { // function that
-				// sets
-				// the value of
-				// selectedProject to
-				// current index
+			$scope.setSelectedProject = function(index) {
 				$scope.selectedProject = $scope.userprojects[index];
 			};
 
 			/* Load taskItems for selected tasklist */
-			$scope.loadTaskItems = function(taskList) {
+			$scope.loadTaskItems = function(taskList,index) {
 				$scope.taskList = taskList;
 				tasksService.getTaskItems(taskList).then(function(response) {
-					$scope.taskItemsLists = response.data;
+					$scope.selectedTLIndx=index;
+					if(response.data!=null && response.data.length>0){
+						$scope.taskItemsLists = response.data;
+					}
+					else{
+						$scope.taskItemsLists.length=0;
+						appNotifyService.success("No task items to show for selected task list");
+					}
 				});
 			}
 

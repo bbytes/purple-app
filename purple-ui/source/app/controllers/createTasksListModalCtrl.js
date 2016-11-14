@@ -7,6 +7,7 @@ angular.module('rootApp').controller('createTasksListModalCtrl',
 			$scope.selection = [];
 			$scope.projects = params.projects;
 			$scope.taskLists =params.taskLists;
+			$scope.selectedProject=params.project;
 			$scope.toggleSelection = function toggleSelection(id) {
 				var idx = $scope.selection.indexOf(id);
 
@@ -21,7 +22,8 @@ angular.module('rootApp').controller('createTasksListModalCtrl',
 			};
 			$scope.createTaskList = function(taskList) {
 				tasksService.createTaskList(taskList).then(function(response) {
-					$scope.taskLists.push(response.data);
+					if(response.data.project.projectId==$scope.selectedProject.projectId)
+						$scope.taskLists.push(response.data);
 				});
 				$uibModalInstance.close($scope.selection);
 			};

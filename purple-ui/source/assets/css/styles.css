@@ -1930,6 +1930,10 @@ md-icon {
 .selected {
     background-color: #cc95b5;
 }
+
+.selectedtl{
+	color:#cc95b5;
+}
 .selected a{
     color: #fff;
     font-weight:bold;
