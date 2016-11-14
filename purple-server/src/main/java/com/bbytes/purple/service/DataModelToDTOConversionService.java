@@ -484,8 +484,8 @@ public class DataModelToDTOConversionService {
 			itemDTO.setDueDate(item.getDueDate());
 			itemDTO.setEstimatedHours(item.getEstimatedHours());
 			itemDTO.setName(item.getName());
-			itemDTO.setUserIds(new ArrayList<>(item.getUsers()));
-			itemDTO.setSpendHours(item.getSpentHours());
+			itemDTO.setUsers(new ArrayList<>(item.getUsers()));
+			itemDTO.setSpendHours(item.getSpendHours());
 			taskItemDTOList.add(itemDTO);
 		}
 		return taskItemDTOList;

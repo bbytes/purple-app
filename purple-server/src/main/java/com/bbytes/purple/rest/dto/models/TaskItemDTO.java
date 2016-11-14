@@ -30,7 +30,9 @@ public class TaskItemDTO implements Serializable {
 	private double spendHours;
 
 	private Date dueDate;
+	
+	private List<String> userIds = new ArrayList<String>();
 
-	private List<User> userIds = new ArrayList<>();
+	private List<User> users = new ArrayList<User>();
 
 }

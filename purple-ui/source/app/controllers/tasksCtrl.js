@@ -13,11 +13,10 @@ angular.module('rootApp').controller(
 			$(document).ready(function() {
 				$('.dropdown-toggle').dropdown();
 			});
-
+			
 			$scope.initTasks = function() {
 				$scope.loadStates();
 				$scope.loadUserProjects();
-				$scope.loadTasks();
 			};
 			/*
 			 * Load all states
@@ -36,6 +35,7 @@ angular.module('rootApp').controller(
 			 * Initial loading of tasks and task items
 			 */
 			$scope.loadTasks = function() {
+				console.log("loadTasks");
 				getAllTasksForStateAndProject();
 
 			};
@@ -45,6 +45,7 @@ angular.module('rootApp').controller(
 			$scope.loadProjectStateTasks = function(selectedProject,index) {
 				$scope.selectedPjtIndex=index;
 				$scope.selectedProject = selectedProject;
+				console.log("loadProjectStateTasks selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
 				getAllTasksForStateAndProject();
 			};
 			/* Load tasks and task items on click of state*/
@@ -56,6 +57,7 @@ angular.module('rootApp').controller(
 			};
 
 			function getAllTasksForStateAndProject() {
+				console.log("getAllTasksForStateAndProject selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
 				tasksService.getAllTasksForProjectAndState(
 						$scope.selectedProject, $scope.selectedState).then(
 						function(response) {
@@ -64,8 +66,7 @@ angular.module('rootApp').controller(
 								if ($scope.taskLists != null
 										&& $scope.taskLists.length > 0) {
 									$scope.taskList = $scope.taskLists[0];
-									$scope.selectedTLIndx=0;
-									$scope.loadTaskItems($scope.taskList);
+									$scope.loadTaskItems($scope.taskList,0);
 								} else {
 									$scope.taskItemsLists.length = 0;
 									appNotifyService.success("No tasks to show for selected project and state");
@@ -82,6 +83,7 @@ angular.module('rootApp').controller(
 					if (response.success) {
 						$scope.userprojects = response.data.gridData;
 						$scope.selectedProject = $scope.userprojects[0];
+						console.log("loadUserProjects selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
 						$scope.selectedPjtIndex=0;
 					}
 				});

@@ -23,7 +23,7 @@ import lombok.EqualsAndHashCode;
  */
 
 @Data
-@EqualsAndHashCode(exclude={"taskList","owner","users"})
+@EqualsAndHashCode(exclude = { "taskList", "owner", "users" })
 @Document
 public class TaskItem implements Comparable<TaskItem> {
 
@@ -43,7 +43,7 @@ public class TaskItem implements Comparable<TaskItem> {
 	private double estimatedHours;
 
 	@Field("spent_hours")
-	private double spentHours;
+	private double spendHours;
 
 	@Field("due_date")
 	private Date dueDate;
@@ -59,7 +59,7 @@ public class TaskItem implements Comparable<TaskItem> {
 	private User owner;
 
 	@DBRef
-	private Set<User> users = new HashSet<>();
+	private Set<User> users;
 
 	@CreatedDate
 	private Date creationDate;
@@ -77,6 +77,9 @@ public class TaskItem implements Comparable<TaskItem> {
 	}
 
 	public void addUsers(User user) {
+		if (users == null) {
+			users = new HashSet<User>();
+		}
 		users.add(user);
 		taskList.addUsers(user);
 	}

@@ -64,14 +64,15 @@
 							ng-click="showTaskListModal()"></a>
 					</h4>
 				</div>
-				<div id="tasksList">
+				<div id="tasksList" ng-init="loadTasks();">
 					<div class="panel-body">
 						<ul class="task-list-group project-nav">
-							<li ng-class="{'selectedtl':$index == selectedTLIndx}" role="menu"
-								aria-labelledby="dropdownMenu" ng-repeat="taskList in taskLists"><div
+							<li ng-class="{'selectedtl':$index == selectedTLIndx}"
+								role="menu" aria-labelledby="dropdownMenu"
+								ng-repeat="taskList in taskLists"><div
 									style="padding: 10px 20px; border-bottom: 1px solid #dcd8d8;"
 									ng-click="loadTaskItems(taskList,$index)">
-									<label>{{taskList.name}}</label> <label>{{taskList.spentHours}}
+									<label>{{taskList.name}}</label> <label>{{taskList.spendHours}}
 										Hrs of {{taskList.estimatedHours}} Hrs</label>
 									<div style="padding-left: 300px; width: 75px">
 										<a class="fa fa-close" style="float: left"
@@ -107,7 +108,7 @@
 									Hrs of {{taskItem.estimatedHours}} Hrs</label> <label>{{taskItem.dueDate|
 									date:'dd/MMM' }}</label> <label>{{taskItem.desc}}</label>
 								<div>
-									<span ng-repeat="user in taskItem.userIds">@{{user.name}}
+									<span ng-repeat="user in taskItem.users">@{{user.name}}
 										&nbsp;</span>
 								</div>
 								<div style="padding-left: 540px; width: 75px">

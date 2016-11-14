@@ -1,9 +1,11 @@
 package com.bbytes.purple.web.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -192,12 +194,22 @@ public class TaskController {
 		taskItem.setProject(taskList.getProject());
 		User user = userService.getLoggedInUser();
 		taskItem.setOwner(user);
-
+		taskItem.setUsers(getUsers(taskItemDTO.getUserIds()));
 		taskItem = taskItemService.save(taskItem);
 		taskListService.save(taskList);
 
 		logger.debug("Task item with name '" + taskItem.getName() + "' added successfully");
 		return taskItem;
+	}
+
+	private Set<User> getUsers(List<String> uiUserIds) {
+		Set<User> users = new HashSet<User>();
+		for (String userItem : uiUserIds) {
+			User user = userService.getUserById(userItem);
+			if (user != null)
+				users.add(user);
+		}
+		return users;
 	}
 
 	@RequestMapping(value = "/api/v1/task/taskItems/{taskListId}", method = RequestMethod.GET)
