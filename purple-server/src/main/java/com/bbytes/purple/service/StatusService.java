@@ -32,6 +32,7 @@ import com.bbytes.purple.domain.ConfigSetting;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.Status;
+import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.StatusRepository;
@@ -51,6 +52,9 @@ public class StatusService extends AbstractService<Status, String> {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private TaskItemService taskItemService;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -391,25 +395,28 @@ public class StatusService extends AbstractService<Status, String> {
 		final String template = GlobalConstants.MENTION_EMAIL_TEMPLATE;
 		final String subject = loggedInUser.getName() + " " + tagSubject;
 
-		Matcher workedOnMatcher = null;
-		Matcher workingOnMatcher = null;
-		Matcher blockerOnMatcher = null;
+		Matcher mentionWorkedOnMatcher, taskListWorkedOnMatcher = null;
+		Matcher mentionWorkingOnMatcher, taskListWorkingOnMatcher = null;
+		Matcher mentionBlockerOnMatcher, taskListBlockerOnMatcher = null;
 
-		String pattern = GlobalConstants.MENTION_REGEX_PATTERN;
+		String mentionRegexPattern = GlobalConstants.MENTION_REGEX_PATTERN;
+		String taskListRegexPattern = GlobalConstants.TASKLIST_REGEX_PATTERN;
 
 		// Create a Pattern object
-		Pattern patternObj = Pattern.compile(pattern);
+		Pattern mentionPatternObj = Pattern.compile(mentionRegexPattern);
+		Pattern taskListPatternObj = Pattern.compile(taskListRegexPattern);
 
 		Set<String> emailTagList = new LinkedHashSet<String>();
 
 		if (statusDTO.getWorkedOn() != null && !statusDTO.getWorkedOn().isEmpty()) {
 			// Now create matcher object for worked on.
-			workedOnMatcher = patternObj.matcher(statusDTO.getWorkedOn());
+			mentionWorkedOnMatcher = mentionPatternObj.matcher(statusDTO.getWorkedOn());
+			taskListWorkedOnMatcher = taskListPatternObj.matcher(statusDTO.getWorkedOn());
 			// looping all @mention users, adding into emailList and storing
 			// into db
-			while (workedOnMatcher.find()) {
-				emailTagList.add(workedOnMatcher.group(1));
-				User mentionUser = userService.getUserByEmail(workedOnMatcher.group(1));
+			while (mentionWorkedOnMatcher.find()) {
+				emailTagList.add(mentionWorkedOnMatcher.group(1));
+				User mentionUser = userService.getUserByEmail(mentionWorkedOnMatcher.group(1));
 				statusDTO.addMentionUser(mentionUser);
 				// replacing @mention pattern with @username
 				String str = statusDTO.getWorkedOn()
@@ -417,15 +424,25 @@ public class StatusService extends AbstractService<Status, String> {
 						.trim();
 				statusDTO.setWorkedOn(str);
 			}
+			// looping all #taskItems
+			while (taskListWorkedOnMatcher.find()) {
+				TaskItem taskItem = taskItemService.findOne(taskListWorkedOnMatcher.group(1));
+				// replacing #taskItem pattern with #taskItemName
+				String str = statusDTO.getWorkedOn()
+						.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
+						.trim();
+				statusDTO.setWorkedOn(str);
+			}
 		}
 		if (statusDTO.getWorkingOn() != null && !statusDTO.getWorkingOn().isEmpty()) {
 			// Now create matcher object working on.
-			workingOnMatcher = patternObj.matcher(statusDTO.getWorkingOn());
+			mentionWorkingOnMatcher = mentionPatternObj.matcher(statusDTO.getWorkingOn());
+			taskListWorkingOnMatcher = taskListPatternObj.matcher(statusDTO.getWorkingOn());
 			// looping all @mention users, adding into emailList and storing
 			// into db
-			while (workingOnMatcher.find()) {
-				emailTagList.add(workingOnMatcher.group(1));
-				User mentionUser = userService.getUserByEmail(workingOnMatcher.group(1));
+			while (mentionWorkingOnMatcher.find()) {
+				emailTagList.add(mentionWorkingOnMatcher.group(1));
+				User mentionUser = userService.getUserByEmail(mentionWorkingOnMatcher.group(1));
 				statusDTO.addMentionUser(mentionUser);
 				// replacing @mention pattern with @username
 				String str = statusDTO.getWorkingOn()
@@ -433,19 +450,39 @@ public class StatusService extends AbstractService<Status, String> {
 						.trim();
 				statusDTO.setWorkingOn(str);
 			}
+			// looping all #taskItems
+			while (taskListWorkingOnMatcher.find()) {
+				TaskItem taskItem = taskItemService.findOne(taskListWorkingOnMatcher.group(1));
+				// replacing #taskItem pattern with #taskItemName
+				String str = statusDTO.getWorkingOn()
+						.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
+						.trim();
+				statusDTO.setWorkingOn(str);
+			}
+
 		}
 		if (statusDTO.getBlockers() != null && !statusDTO.getBlockers().isEmpty()) {
 			// Now create matcher object blockers.
-			blockerOnMatcher = patternObj.matcher(statusDTO.getBlockers());
+			mentionBlockerOnMatcher = mentionPatternObj.matcher(statusDTO.getBlockers());
+			taskListBlockerOnMatcher = taskListPatternObj.matcher(statusDTO.getBlockers());
 			// looping all @mention users, adding into emailList and storing
 			// into db
-			while (blockerOnMatcher.find()) {
-				emailTagList.add(blockerOnMatcher.group(1));
-				User mentionUser = userService.getUserByEmail(blockerOnMatcher.group(1));
+			while (mentionBlockerOnMatcher.find()) {
+				emailTagList.add(mentionBlockerOnMatcher.group(1));
+				User mentionUser = userService.getUserByEmail(mentionBlockerOnMatcher.group(1));
 				statusDTO.addMentionUser(mentionUser);
 				// replacing @mention pattern with @username
 				String str = statusDTO.getBlockers()
 						.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>")
+						.trim();
+				statusDTO.setBlockers(str);
+			}
+			// looping all #taskItems
+			while (taskListBlockerOnMatcher.find()) {
+				TaskItem taskItem = taskItemService.findOne(taskListBlockerOnMatcher.group(1));
+				// replacing #taskItem pattern with #taskItemName
+				String str = statusDTO.getBlockers()
+						.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
 						.trim();
 				statusDTO.setBlockers(str);
 			}

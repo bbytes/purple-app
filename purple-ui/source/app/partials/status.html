@@ -86,6 +86,9 @@
                                 <option ng-repeat="date in dateArray" value="{{date}}" >{{date| date:'MMM dd, yyyy'}}</option>
                             </select>
                         </div>
+                        <div class="col-md-3" style="padding-right: 4px; padding-left: 15px;" ng-show="project">
+                            <a href="" style="color:rgb(124, 105, 145);" ng-click="openTaskModal(project)"><i class="fa fa-tasks fa-2x" aria-hidden="true" tooltips tooltip-template="Task View" tooltip-side="bottom"></i></a>
+                        </div>
                     </div>
 
 

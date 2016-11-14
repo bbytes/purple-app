@@ -1,7 +1,7 @@
 /*
  * Status Controller
  */
-angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope, dropdownListService, statusService, projectService, appNotifyService, settingsService, $filter, cfpLoadingBar) {
+angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope, dropdownListService, statusService, projectService, appNotifyService, settingsService, $filter, cfpLoadingBar, $uibModal, tasksService) {
 
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.navClass = 'nav-control';
@@ -301,5 +301,48 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     // avoid spacing while copy paste in text angular
     $scope.stripFormat = function ($html) {
         return $filter('htmlToPlaintext')($html);
-    };	
+    };
+
+    // this is to open task view modal
+    $scope.openTaskModal = function (projectId) {
+
+        tasksService.getAllTasksForProject(projectId).then(function (response) {
+            if (response.success) {
+                $scope.taskList = response.data;
+                showModal();
+            }
+        });
+
+        function showModal() {
+            var uibModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/partials/taskView-modal.html',
+                controller: 'taskViewModalCtrl',
+                backdrop: 'static',
+                size: 'md',
+                windowClass: 'large-Modal',
+                resolve: {
+                    modalData: function () {
+                        return {
+                            "title": 'Task View',
+                            "taskData": $scope.taskList
+                        };
+                    }
+                }
+            });
+
+            uibModalInstance.result.then(function (taskObject) {
+                if (!$scope.workedOn)
+                    $scope.workedOn = '';
+                if (!$scope.workingOn)
+                    $scope.workingOn = '';
+                if (!$scope.blockers)
+                    $scope.blockers = '';
+                $scope.workedOn = $scope.workedOn + " " + taskObject.addToWorkedOn;
+                $scope.workingOn = $scope.workingOn + " " + taskObject.addToWorkingOn;
+                $scope.blockers = $scope.blockers + " " + taskObject.addToBlockers;
+
+            });
+        }
+    };
 });

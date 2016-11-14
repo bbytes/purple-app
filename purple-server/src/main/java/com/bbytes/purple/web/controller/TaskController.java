@@ -26,6 +26,7 @@ import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.TaskItemDTO;
 import com.bbytes.purple.rest.dto.models.TaskListDTO;
+import com.bbytes.purple.rest.dto.models.TaskListResponseDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.TaskItemService;
@@ -89,7 +90,8 @@ public class TaskController {
 		Project project = projectService.findOne(projectId);
 		User user = userService.getLoggedInUser();
 		List<TaskList> taskList = taskListService.findByProjectAndUsers(project, user);
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskList);
+		List<TaskListResponseDTO> taskListResponseDTO = dataModelToDTOConversionService.convertTaskListItem(taskList);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListResponseDTO);
 		return response;
 	}
 

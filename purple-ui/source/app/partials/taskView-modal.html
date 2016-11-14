@@ -1,0 +1,50 @@
+<div class="modal-header clearfix">
+    <h4 class="modal-title pull-left">{{ title}}</h4>
+    <a class="pull-right glyphicon glyphicon-remove icon-clear"
+       ng-click="cancel()"></a>
+</div>
+<form name="taskViewForm" role="form">
+    <div class="modal-body data-row-body">
+
+        <div class="right-inner-addon ">
+            <i class="fa fa-search"></i> <input ng-model="searchText"
+                                                class="form-control" placeholder="Search...">
+        </div>
+        <div class="scrollbox">
+            <div class="scrollbox-content">
+                <div class="user-show-next">
+
+                    <table width="100%">
+                        <thead >
+                            <tr>
+                                <th>Task List Name</th>
+                                <th>Task Item Name</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tr ng-repeat="task in taskList| filter:searchText">
+                            <td>{{task.taskListName}}</td>
+                            <td class="add-user">{{task.taskItemName}}</td>
+                            <td class="add-user">{{task.desc}}</td>
+                            <td class="add-user">
+                                <select class="form-control" ng-model="selectedAction" ng-change="selectAction(selectedAction, $index, task.taskItemId)">	
+                                    <option value="">--- Select Action ---</option>
+                                    <option value="workedOn">Add to Worked On</option>
+                                    <option value="workingOn">Add to Working On</option>
+                                    <option value="blockers">Add to Blockers</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer add-user">
+        <button class="btn save-close" ng-click="saveTaskView()">SAVE
+            & CLOSE</button>
+    </div>
+</form>

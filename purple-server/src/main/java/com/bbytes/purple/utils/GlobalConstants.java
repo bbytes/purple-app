@@ -101,5 +101,7 @@ public class GlobalConstants {
 	public static final String SALES_EMAIL_ADDRESS = "sales@beyondbytes.co.in";
 	
 	public static final String MENTION_REGEX_PATTERN = "@\\[(.*?)\\]";
+	
+	public static final String TASKLIST_REGEX_PATTERN = "#\\{(.*?)\\}";
 
 }
