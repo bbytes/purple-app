@@ -2,7 +2,7 @@ package com.bbytes.purple.enums;
 
 public enum TaskState {
 
-	IN_PROGRESS("In Progress"), YET_TO_START("Yet to start"), COMPLETED("Completed");
+	YET_TO_START("Yet to start"), IN_PROGRESS("In Progress"), COMPLETED("Completed");
 
 	String displayName;
 

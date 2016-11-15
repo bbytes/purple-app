@@ -22,7 +22,7 @@ angular.module('rootApp').controller('createTasksListModalCtrl',
 			};
 			$scope.createTaskList = function(taskList) {
 				tasksService.createTaskList(taskList).then(function(response) {
-					if(response.data.project.projectId==$scope.selectedProject.projectId)
+					if($scope.selectedProject=="All"||response.data.project.projectId==$scope.selectedProject.projectId)
 						$scope.taskLists.push(response.data);
 				});
 				$uibModalInstance.close($scope.selection);

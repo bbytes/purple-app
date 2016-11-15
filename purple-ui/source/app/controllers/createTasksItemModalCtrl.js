@@ -27,7 +27,7 @@ angular.module('rootApp').controller(
 				});
 			};
 			$scope.getAllUsersOfProject = function() {
-				projectService.getAllUsersOfProject($scope.project.projectId)
+				projectService.getAllUsersOfProject($scope.taskList.project.projectId)
 						.then(function(response) {
 							$scope.projectUsers = response.data;
 						});

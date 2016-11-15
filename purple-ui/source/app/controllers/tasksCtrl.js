@@ -15,6 +15,7 @@ angular.module('rootApp').controller(
 			});
 			
 			$scope.initTasks = function() {
+				console.log("0-initTasks");
 				$scope.loadStates();
 				$scope.loadUserProjects();
 			};
@@ -27,6 +28,8 @@ angular.module('rootApp').controller(
 						$scope.taskStates = response.data;
 						$scope.selectedState = $scope.taskStates[0];
 						$scope.selectedSateIndex=0;
+						console.log("1-loadStates selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
+						$scope.loadAllTasksForState();
 					}
 				});
 
@@ -34,10 +37,11 @@ angular.module('rootApp').controller(
 			/*
 			 * Initial loading of tasks and task items
 			 */
-			$scope.loadTasks = function() {
-				console.log("loadTasks");
-				getAllTasksForStateAndProject();
-
+			$scope.loadAllTasksForState = function() {
+				$scope.selectedProject = "All";
+				$scope.selectedPjtIndex=-1;
+				console.log("3-loadAllTasksForState selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
+				getAllTasksForState();
 			};
 
 			/* Load tasks and task items on click of project */
@@ -46,16 +50,40 @@ angular.module('rootApp').controller(
 				$scope.selectedPjtIndex=index;
 				$scope.selectedProject = selectedProject;
 				console.log("loadProjectStateTasks selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
-				getAllTasksForStateAndProject();
+				if($scope.selectedProject=="All"){
+					getAllTasksForState();
+				}else{
+					getAllTasksForStateAndProject();
+				}
 			};
-			/* Load tasks and task items on click of state*/
+			/* Load tasks and task items on click of state */
 
 			$scope.loadStateProjectTasks = function(selectedState,index) {
 				$scope.selectedSateIndex=index;
 				$scope.selectedState = selectedState;
-				getAllTasksForStateAndProject();
+				console.log("loadStateProjectTasks selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
+				if($scope.selectedProject=="All"){
+					getAllTasksForState();
+				}else{
+					getAllTasksForStateAndProject();
+				}
 			};
-
+			function getAllTasksForState(){
+				tasksService.getAllTasksForState($scope.selectedState).then(
+						function(response) {
+							if (response.success) {
+								$scope.taskLists = response.data;
+								if ($scope.taskLists != null
+										&& $scope.taskLists.length > 0) {
+									$scope.taskList = $scope.taskLists[0];
+									$scope.loadTaskItems($scope.taskList,0);
+								} else {
+									$scope.taskItemsLists.length = 0;
+									appNotifyService.success("No tasks to show for selected state");
+								}
+							}
+						});
+			}
 			function getAllTasksForStateAndProject() {
 				console.log("getAllTasksForStateAndProject selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
 				tasksService.getAllTasksForProjectAndState(
@@ -82,9 +110,7 @@ angular.module('rootApp').controller(
 				projectService.getUserproject().then(function(response) {
 					if (response.success) {
 						$scope.userprojects = response.data.gridData;
-						$scope.selectedProject = $scope.userprojects[0];
-						console.log("loadUserProjects selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
-						$scope.selectedPjtIndex=0;
+						console.log("2-loadUserProjects selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
 					}
 				});
 			};
