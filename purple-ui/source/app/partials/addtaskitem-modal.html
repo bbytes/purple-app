@@ -27,7 +27,7 @@
 								uib-datepicker-popup="{{format}}" ng-model="taskItem.dueDate"
 								is-open="popup1.opened" datepicker-options="dateOptions"
 								ng-required="true" close-text="Close"
-								alt-input-formats="altInputFormats" style="width: 95%;" /> <span
+								alt-input-formats="altInputFormats" style="width: 95%;" min-date ="mindate"/> <span
 								class="input-group-btn">
 								<button type="button" class="btn btn-default"
 									ng-click="openDp()">
@@ -40,7 +40,7 @@
 						<label for="comment" class="settings">USERS</label> <select
 							chosen="projectUsers" ng-model="taskItem.userIds"
 							id="usersDropdown" multiple="multiple">
-							<option value=""></option>
+							<option value="Select users"></option>
 							<option ng-repeat="user in projectUsers" value="{{user.userId}}">{{user.name}}</option>
 						</select>
 					</div>

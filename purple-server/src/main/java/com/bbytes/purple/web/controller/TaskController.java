@@ -223,4 +223,14 @@ public class TaskController {
 		return response;
 	}
 
+	@RequestMapping(value = "/api/v1/task/taskItems/{taskItemId}/complete", method = RequestMethod.POST)
+	public RestResponse markAsComplete(@PathVariable String taskItemId) {
+		TaskItem taskItem = taskItemService.findOne(taskItemId);
+		taskItem.setState(TaskState.COMPLETED);
+		taskItem = taskItemService.save(taskItem);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItem);
+		return response;
+
+	}
+
 }

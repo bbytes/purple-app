@@ -32,10 +32,9 @@
 				<div id="collapseTwo" class="panel-collapse collapse in">
 					<div class="panel-body">
 						<ul class="list-group project-nav">
-							<li ng-class="{'selected':selectedPjtIndex==-1}"
-								role="menu" aria-labelledby="dropdownMenu">
-								<a ng-click="loadAllTasksForState();">All</a>
-							</li>
+							<li ng-class="{'selected':selectedPjtIndex==-1}" role="menu"
+								aria-labelledby="dropdownMenu"><a
+								ng-click="loadAllTasksForState();">All</a></li>
 							<li ng-class="{'selected':$index == selectedPjtIndex}"
 								role="menu" aria-labelledby="dropdownMenu"
 								ng-repeat="project in userprojects| orderBy:'projectName' | filter:searchProjects">
@@ -117,12 +116,19 @@
 									<span ng-repeat="user in taskItem.users">@{{user.name}}
 										&nbsp;</span>
 								</div>
-								<div style="padding-left: 540px; width: 75px">
-									<a class="fa fa-close" style="float: left"
-										ng-click="deleteTaskItem(taskItem);"
-										confirm="Are you sure you want to delete the task?"></a><span
-										ng-click="deleteTaskItem(taskItem);"
-										confirm="Are you sure you want to delete the task?">Delete</span>
+								<div>
+									<div style="padding-left: 540px; width: 75px">
+										<a class="fa fa-close" style="float: left"
+											ng-click="deleteTaskItem(taskItem);"
+											confirm="Are you sure you want to delete the task?"></a><span
+											ng-click="deleteTaskItem(taskItem);"
+											confirm="Are you sure you want to delete the task?">Delete</span>
+									</div>
+									<div style="padding-left: 10px; width: 175px">
+										<a class="fa fa-check-circle-o" style="float: left"
+											ng-click="markCompleted(taskItem);"></a><span
+											ng-click="markCompleted(taskItem);">Mark as completed</span>
+									</div>
 								</div>
 							</div></li>
 					</ul>
