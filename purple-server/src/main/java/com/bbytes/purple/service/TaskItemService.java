@@ -59,6 +59,10 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 	public List<TaskItem> findByDueDateBetween(Date startDate, Date endDate) {
 		return taskItemRepository.findByDueDateBetween(startDate, endDate);
 	}
+	
+	public List<TaskItem> findByStateAndUsers(TaskState state, User user){
+		return taskItemRepository.findByStateAndUsers(state, user);
+	}
 
 	public List<TaskItem> findByDueDateBetweenAndUsers(Date startDate, Date endDate, User user) {
 		return taskItemRepository.findByDueDateBetweenAndUsers(startDate, endDate, user);
