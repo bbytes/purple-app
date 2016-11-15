@@ -9,6 +9,10 @@ angular.module('rootApp').controller(
 			$scope.taskItemsLists = params.taskItems;
 			$scope.project = params.project;
 			$scope.mindate=new Date();
+			
+			$scope.dateOptions = {
+				minDate: new Date()
+			};
 
 			$scope.toggleSelection = function toggleSelection(id) {
 				var idx = $scope.selection.indexOf(id);
@@ -44,10 +48,10 @@ angular.module('rootApp').controller(
 			$scope.cancel = function() {
 				$uibModalInstance.dismiss('cancel');
 			};
-			$scope.popup1 = {
+			$scope.popup = {
 				opened : false
 			};
 			$scope.openDp = function() {
-				$scope.popup1.opened = true;
+				$scope.popup.opened = true;
 			};
 		});
