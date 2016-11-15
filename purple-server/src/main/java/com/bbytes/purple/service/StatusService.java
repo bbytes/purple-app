@@ -28,6 +28,7 @@ import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.ConfigSetting;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.ProjectUserCountStats;
@@ -54,6 +55,9 @@ public class StatusService extends AbstractService<Status, String> {
 	private UserService userService;
 
 	@Autowired
+	protected TokenAuthenticationProvider tokenAuthenticationProvider;
+
+	@Autowired
 	private TaskItemService taskItemService;
 
 	@Autowired
@@ -70,6 +74,9 @@ public class StatusService extends AbstractService<Status, String> {
 
 	@Value("${email.tag.subject}")
 	private String tagSubject;
+
+	@Value("${base.url}")
+	private String baseUrl;
 
 	@Autowired
 	public StatusService(StatusRepository statusRepository) {
@@ -514,12 +521,19 @@ public class StatusService extends AbstractService<Status, String> {
 		for (User user : statusDTO.getMentionUser()) {
 			notificationService.sendSlackMessage(user, template, emailBody);
 		}
-		
-		if (emailList != null && !emailList.isEmpty()){
+
+		if (emailList != null && !emailList.isEmpty()) {
 			notificationService.sendTemplateEmail(emailList, subject, template, emailBody);
 		}
-		
+
 		return statusDTO;
+	}
+
+	public String statusSnippetUrl(String statusId) {
+		final String xauthToken = tokenAuthenticationProvider
+				.getAuthTokenForUser(userService.getLoggedInUser().getEmail(), 24);
+		String snippetUrl = baseUrl + GlobalConstants.SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID + statusId;
+		return snippetUrl;
 	}
 
 }

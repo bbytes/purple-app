@@ -5,7 +5,7 @@ public class GlobalConstants {
 	public static final String HEADER_TENANT_ID = "tenantId";
 
 	public static final String USER_ROLE = "role";
-	
+
 	public static final String URL_PARAM_EMAIL_ID = "emailId";
 
 	public static final String HEADER_AUTH_TOKEN = "X-AUTH-TOKEN";
@@ -23,7 +23,7 @@ public class GlobalConstants {
 	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
 
 	public static final String COMMENT_EMAIL_TEMPLATE = "email-text-comment.html";
-	
+
 	public static final String MENTION_EMAIL_TEMPLATE = "email-text-mention.html";
 
 	public static final String UPDATE_COMMENT_EMAIL_TEMPLATE = "email-text-update-comment.html";
@@ -66,6 +66,10 @@ public class GlobalConstants {
 
 	public static final String SETTING_URL = "/updateSetting?token=";
 
+	public static final String SNIPPET_URL = "/status-snippet?token=";
+
+	public static final String STATUS_ID = "&sid=";
+
 	public static final String STATUS_DATE = "&sd=";
 
 	public static final String FORGOT_PASSWORD_URL = "/forgotPassword?token=";
@@ -99,9 +103,9 @@ public class GlobalConstants {
 	public static final String STATUSNAP_EMAIL_ADDRESS = "statusnap@beyondbytes.co.in";
 
 	public static final String SALES_EMAIL_ADDRESS = "sales@beyondbytes.co.in";
-	
+
 	public static final String MENTION_REGEX_PATTERN = "@\\[(.*?)\\]";
-	
+
 	public static final String TASKLIST_REGEX_PATTERN = "#\\{(.*?)\\}";
 
 }

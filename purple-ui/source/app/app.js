@@ -409,6 +409,10 @@ rootApp.config([
         }).state('updatesetting', {
             url: '/updateSetting?token',
             controller: 'updateSettingCtrl'
+        }).state('status-snippet', {
+            url: '/status-snippet?token$sid',
+            templateUrl: 'app/partials/status-snippet.html',
+            controller: 'statusSnippetCtrl'
         }).state('accountactivate', {
             controller: 'activateAccountCtrl'
         });
