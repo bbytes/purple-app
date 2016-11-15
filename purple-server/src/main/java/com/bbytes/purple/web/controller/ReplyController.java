@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.ReplyDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.ReplyService;
@@ -53,6 +55,9 @@ public class ReplyController {
 	private NotificationService notificationService;
 
 	@Autowired
+	private CommentService commentService;
+
+	@Autowired
 	private StatusService statusService;
 
 	@Autowired
@@ -69,6 +74,7 @@ public class ReplyController {
 	 * @return
 	 * @throws PurpleException
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/v1/comment/{commentid}/reply", method = RequestMethod.POST)
 	public RestResponse addReply(@PathVariable("commentid") String commentId, @RequestBody ReplyDTO replyDTO)
 			throws PurpleException {
@@ -78,17 +84,19 @@ public class ReplyController {
 
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();
-
+		Map<String, Object> replyMap = commentService.checkMentionUser(replyDTO.getReplyDesc());
+		replyDTO.setReplyDesc((String) replyMap.get("desc"));
 		Comment comment = replyService.postReply(commentId, replyDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
+		Set<String> mentionEmailList = (Set<String>) replyMap.get("mentionEmailList");
 
 		int replySize = comment.getReplies().size();
 		String postDate = dateFormat.format(comment.getCreationDate());
-		
 
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
 		emailList.add(comment.getUser().getEmail());
+		emailList.addAll(mentionEmailList);
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
@@ -103,14 +111,16 @@ public class ReplyController {
 				Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
 
 		notificationService.sendTemplateEmail(emailList, replySubject, template, emailBody);
-		
+
 		notificationService.sendSlackMessage(status.getUser(), template, emailBody);
 		notificationService.sendSlackMessage(comment.getUser(), template, emailBody);
 
-		Map<String, Object> replyMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndReply(comment);
+		Map<String, Object> replyResponseMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndReply(comment);
 
 		logger.debug("Reply for comment Id  '" + commentId + "' is added successfully");
-		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyMap, SuccessHandler.ADD_REPLY_SUCCESS);
+		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyResponseMap,
+				SuccessHandler.ADD_REPLY_SUCCESS);
 
 		return replyReponse;
 	}

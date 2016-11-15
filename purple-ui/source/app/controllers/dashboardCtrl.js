@@ -17,6 +17,9 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
     // variable to store the information about timeline data
     $scope.timelineData;
 
+    // variable to store the information about user data
+    $scope.projectUsers;
+
     /*
      * Get all status timeline
      */
@@ -144,6 +147,24 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
                 }
             });
         });
+    };
+
+    // search user using '@' mention
+    $scope.searchPeople = function (term) {
+
+        $scope.people = [];
+
+        angular.forEach($scope.projectUsers, function (value, key) {
+            if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
+                $scope.people.push(value);
+            }
+        });
+
+    };
+
+    // get user selected from @ mention userList
+    $scope.getPeopleText = function (item) {
+        return '@[' + item.email + ']';
     };
 
     /*

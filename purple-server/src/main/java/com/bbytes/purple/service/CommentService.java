@@ -1,7 +1,13 @@
 package com.bbytes.purple.service;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +19,7 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.CommentRepository;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.utils.GlobalConstants;
 
 /**
  * @author aditya
@@ -28,6 +35,9 @@ public class CommentService extends AbstractService<Comment, String> {
 	private StatusService statusService;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	public CommentService(CommentRepository commentRepository) {
 		super(commentRepository);
 		this.commentRepository = commentRepository;
@@ -40,7 +50,7 @@ public class CommentService extends AbstractService<Comment, String> {
 	public List<Comment> getCommentByStatus(Status status) {
 		return commentRepository.findByStatus(status);
 	}
-	
+
 	public List<Comment> getCommentByStatus(List<Status> statuses) {
 		return commentRepository.findByStatusIn(statuses);
 	}
@@ -111,5 +121,38 @@ public class CommentService extends AbstractService<Comment, String> {
 		}
 
 		return comments;
+	}
+
+	public Map<String, Object> checkMentionUser(String stringText) {
+
+		Matcher matcher = null;
+		Map<String, Object> responseMap = new LinkedHashMap<>();
+
+		String mentionRegexPattern = GlobalConstants.MENTION_REGEX_PATTERN;
+
+		// Create a Pattern object
+		Pattern mentionPatternObj = Pattern.compile(mentionRegexPattern);
+
+		Set<String> emailTagList = new LinkedHashSet<String>();
+
+		if (stringText != null && !stringText.isEmpty()) {
+			// Now create matcher object.
+			matcher = mentionPatternObj.matcher(stringText);
+			// looping all @mention users, adding into emailList
+			while (matcher.find()) {
+				emailTagList.add(matcher.group(1));
+				User mentionUser = userService.getUserByEmail(matcher.group(1));
+				if (mentionUser != null) {
+					// replacing @mention pattern with @username
+					String str = stringText
+							.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "@" + mentionUser.getName()).trim();
+					stringText = str;
+				}
+			}
+			responseMap.put("desc", stringText);
+			responseMap.put("mentionEmailList", emailTagList);
+		}
+
+		return responseMap;
 	}
 }

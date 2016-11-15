@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -65,6 +66,7 @@ public class CommentController {
 	@Value("${email.updateComment.subject}")
 	private String updateCommentSubject;
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/v1/comment/add", method = RequestMethod.POST)
 	public RestResponse saveComment(@RequestBody CommentDTO commentDTO) throws PurpleException {
 
@@ -72,12 +74,16 @@ public class CommentController {
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 		User user = userService.getLoggedInUser();
+		Map<String, Object> commentMap = commentService.checkMentionUser(commentDTO.getCommentDesc());
+		commentDTO.setCommentDesc((String) commentMap.get("desc"));
 		Comment comment = commentService.addComment(commentDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
+		Set<String> mentionEmailList = (Set<String>) commentMap.get("mentionEmailList");
 
 		String postDate = dateFormat.format(status.getDateTime());
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
+		emailList.addAll(mentionEmailList);
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());

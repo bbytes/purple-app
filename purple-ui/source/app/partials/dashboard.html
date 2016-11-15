@@ -158,13 +158,29 @@
 
                         <label for="comment">Comment:</label>
 
-                        <textarea class="form-control" id="text" name="formData[commentDesc]" rows="5" id="comment" ng-model="formData.commentDesc" placeholder="Your comment..." maxlength="200" required></textarea>
+                        <textarea class="form-control" id="text" name="formData[commentDesc]" rows="5" id="comment" ng-model="formData.commentDesc" placeholder="Your comment..." maxlength="200" 
+                                  mentio 
+                                  mentio-id="'commentTextArea'"
+                                  mentio-typed-term="typedTerm"
+                                  mentio-require-leading-space="true"
+                                  ng-trim="false"
+                                  required></textarea>
+
+                        <mentio-menu 
+                            mentio-for="'commentTextArea'"
+                            mentio-trigger-char="'@'"
+                            mentio-items="people"
+                            mentio-template-url="/people-iterator.tpl"
+                            mentio-search="searchPeople(term)"
+                            mentio-select="getPeopleText(item)">
+                        </mentio-menu>
 
                         <h6 class="pull-right">
                             {{200 - formData.commentDesc.length}} / 200
                         </h6>
 
                     </div>
+
                     <button type="button" class="btn btn-default submit" style="width:30% !important;" ng-click= "addComment(selectedStatusId)" ng-disabled="myForm.$invalid">POST</button>
                 </form>
 
@@ -203,9 +219,9 @@
                 <div class="user-label">
 
                     <div class="comment-link">
-                        <a href="#" ng-click="showreplyDetails = ! showreplyDetails; loadReply(comment.commentId)">{{comment.replyCount}} Replies</a>
+                        <a href="" ng-click="showreplyDetails = ! showreplyDetails; loadReply(comment.commentId)">{{comment.replyCount}} Replies</a>
 
-                        <h4 class="reaply"><a href="#" ng-click="showDetails = ! showDetails"><img src="../../assets/img/reply.png" style="width: 20px;" title="Reply"></a></h4>
+                        <h4 class="reaply"><a href="" ng-click="showDetails = ! showDetails"><img src="../../assets/img/reply.png" style="width: 20px;" title="Reply"></a></h4>
                     </div>
 
                     <div class="procedure-details" ng-show="showreplyDetails">
@@ -231,7 +247,21 @@
                             <div class="form-group">
                                 <input type="hidden" ng-model= "commentId"/>
                                 <label for="comment">Reply Comment: <span><a href="#" ng-click="showDetails = ! showDetails" style="float:right;">close</a></span></label>
-                                <textarea class="form-control" id="text" name="replyObj[replyDesc]" rows="5" id="replyDesc" ng-model="replyObj.replyDesc" requiredclear-input placeholder="Reply comment..." maxlength="200"></textarea>
+                                <textarea class="form-control" id="text" name="replyObj[replyDesc]" rows="5" id="replyDesc" ng-model="replyObj.replyDesc" requiredclear-input placeholder="Reply comment..." maxlength="200"
+                                          mentio 
+                                          mentio-id="'replyTextArea'"
+                                          mentio-typed-term="typedTerm"
+                                          mentio-require-leading-space="true"
+                                          ng-trim="false"
+                                          required></textarea>
+                                <mentio-menu 
+                                    mentio-for="'replyTextArea'"
+                                    mentio-trigger-char="'@'"
+                                    mentio-items="people"
+                                    mentio-template-url="/people-iterator.tpl"
+                                    mentio-search="searchPeople(term)"
+                                    mentio-select="getPeopleText(item)">
+                                </mentio-menu>
                                 <h6 class="pull-right">
                                     {{200 - replyObj.replyDesc.length}} / 200
                                 </h6>
@@ -311,7 +341,7 @@
                             </h4>
                             <p>{{status.hours}}hrs, {{data.date}}, <a href="#" ng-click="openCommentSideBar(status.statusId); openSideNavPanel(mytime)">{{status.commentCount}} Comments</a></p> 
                         </div>
-						
+
 
                         <div class="timeline-body worked-on">
                             <h3>worked on</h3>
@@ -323,12 +353,12 @@
 
                             <p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
                         </div>
-                        
+
                         <div class="timeline-body blocker-on">
                             <h3>blockers</h3>
                             <p ng-bind-html="status.blockers">{{status.blockers}}</p>
                         </div>
-                        
+
                     </div>
                 </li>
 
@@ -347,5 +377,13 @@
                 additionalMarginTop: 53
                 });
         });
+    </script>
+    <script type="text/ng-template" id="/people-iterator.tpl">
+        <ul class="list-group user-search demo-scrollable-menu">
+        <li mentio-menu-item="item" ng-repeat="item in items" class="list-group-item">
+        <span class="text-primary" ng-bind-html="item.userName"></span> -
+        <span class="text-primary" ng-bind-html="item.email"></span>
+        </li>
+        </ul>
     </script>
 </div>
