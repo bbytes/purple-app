@@ -194,5 +194,8 @@ angular.module('rootApp').controller(
 						}
 					}
 				});
-			}
+			};
+			$scope.markCompleted=function(taskItem){
+				tasksService.markCompleted(taskItem);
+			};
 		});

@@ -194,4 +194,16 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
 
         return deferred.promise;
     };
+    this.markCompleted=function(taskItem){
+    	 $http(
+                 {
+                     method: 'POST',
+                     url: $rootScope.baseUrl
+                             + 'api/v1/task/taskItems/'+taskItem.taskItemId+'/complete',
+                     headers: {
+                         'Content-Type': 'application/json'
+                     }
+
+                 });
+    };
 });

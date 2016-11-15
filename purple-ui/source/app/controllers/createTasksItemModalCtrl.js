@@ -8,6 +8,7 @@ angular.module('rootApp').controller(
 			$scope.taskList = params.taskList;
 			$scope.taskItemsLists = params.taskItems;
 			$scope.project = params.project;
+			$scope.mindate=new Date();
 
 			$scope.toggleSelection = function toggleSelection(id) {
 				var idx = $scope.selection.indexOf(id);
