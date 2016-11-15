@@ -410,7 +410,7 @@ rootApp.config([
             url: '/updateSetting?token',
             controller: 'updateSettingCtrl'
         }).state('status-snippet', {
-            url: '/status-snippet?token$sid',
+            url: '/status-snippet?pk$sid',
             templateUrl: 'app/partials/status-snippet.html',
             controller: 'statusSnippetCtrl'
         }).state('accountactivate', {

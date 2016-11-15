@@ -4,7 +4,7 @@
 angular.module('rootApp').controller('statusSnippetCtrl', function ($rootScope, $scope, $state, $q, $http, appNotifyService) {
 
     $rootScope.feedbackClass = 'feedback-log';
-    $rootScope.authToken = $state.params.token;
+    $rootScope.authToken = $state.params.pk;
     $rootScope.statusId = $state.params.sid;
 
     var deferred = $q.defer();

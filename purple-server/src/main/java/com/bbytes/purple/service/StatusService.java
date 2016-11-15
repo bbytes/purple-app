@@ -529,6 +529,12 @@ public class StatusService extends AbstractService<Status, String> {
 		return statusDTO;
 	}
 
+	/**
+	 * Return the snippet url with xAuthToken and statusId along with baseUrl
+	 * 
+	 * @param statusId
+	 * @return
+	 */
 	public String statusSnippetUrl(String statusId) {
 		final String xauthToken = tokenAuthenticationProvider
 				.getAuthTokenForUser(userService.getLoggedInUser().getEmail(), 24);
