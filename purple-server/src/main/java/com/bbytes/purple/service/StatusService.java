@@ -417,21 +417,24 @@ public class StatusService extends AbstractService<Status, String> {
 			while (mentionWorkedOnMatcher.find()) {
 				emailTagList.add(mentionWorkedOnMatcher.group(1));
 				User mentionUser = userService.getUserByEmail(mentionWorkedOnMatcher.group(1));
-				statusDTO.addMentionUser(mentionUser);
-				// replacing @mention pattern with @username
-				String str = statusDTO.getWorkedOn()
-						.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>")
-						.trim();
-				statusDTO.setWorkedOn(str);
+				if (mentionUser != null) {
+					statusDTO.addMentionUser(mentionUser);
+					// replacing @mention pattern with @username
+					String str = statusDTO.getWorkedOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
+							"<a>@" + mentionUser.getName() + "</a>").trim();
+					statusDTO.setWorkedOn(str);
+				}
 			}
 			// looping all #taskItems
 			while (taskListWorkedOnMatcher.find()) {
 				TaskItem taskItem = taskItemService.findOne(taskListWorkedOnMatcher.group(1));
 				// replacing #taskItem pattern with #taskItemName
-				String str = statusDTO.getWorkedOn()
-						.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
-						.trim();
-				statusDTO.setWorkedOn(str);
+				if (taskItem != null) {
+					String str = statusDTO.getWorkedOn()
+							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
+							.trim();
+					statusDTO.setWorkedOn(str);
+				}
 			}
 		}
 		if (statusDTO.getWorkingOn() != null && !statusDTO.getWorkingOn().isEmpty()) {
@@ -443,21 +446,24 @@ public class StatusService extends AbstractService<Status, String> {
 			while (mentionWorkingOnMatcher.find()) {
 				emailTagList.add(mentionWorkingOnMatcher.group(1));
 				User mentionUser = userService.getUserByEmail(mentionWorkingOnMatcher.group(1));
-				statusDTO.addMentionUser(mentionUser);
-				// replacing @mention pattern with @username
-				String str = statusDTO.getWorkingOn()
-						.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>")
-						.trim();
-				statusDTO.setWorkingOn(str);
+				if (mentionUser != null) {
+					statusDTO.addMentionUser(mentionUser);
+					// replacing @mention pattern with @username
+					String str = statusDTO.getWorkingOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
+							"<a>@" + mentionUser.getName() + "</a>").trim();
+					statusDTO.setWorkingOn(str);
+				}
 			}
 			// looping all #taskItems
 			while (taskListWorkingOnMatcher.find()) {
 				TaskItem taskItem = taskItemService.findOne(taskListWorkingOnMatcher.group(1));
 				// replacing #taskItem pattern with #taskItemName
-				String str = statusDTO.getWorkingOn()
-						.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
-						.trim();
-				statusDTO.setWorkingOn(str);
+				if (taskItem != null) {
+					String str = statusDTO.getWorkingOn()
+							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
+							.trim();
+					statusDTO.setWorkingOn(str);
+				}
 			}
 
 		}
@@ -470,21 +476,24 @@ public class StatusService extends AbstractService<Status, String> {
 			while (mentionBlockerOnMatcher.find()) {
 				emailTagList.add(mentionBlockerOnMatcher.group(1));
 				User mentionUser = userService.getUserByEmail(mentionBlockerOnMatcher.group(1));
-				statusDTO.addMentionUser(mentionUser);
-				// replacing @mention pattern with @username
-				String str = statusDTO.getBlockers()
-						.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>")
-						.trim();
-				statusDTO.setBlockers(str);
+				if (mentionUser != null) {
+					statusDTO.addMentionUser(mentionUser);
+					// replacing @mention pattern with @username
+					String str = statusDTO.getBlockers().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
+							"<a>@" + mentionUser.getName() + "</a>").trim();
+					statusDTO.setBlockers(str);
+				}
 			}
 			// looping all #taskItems
 			while (taskListBlockerOnMatcher.find()) {
 				TaskItem taskItem = taskItemService.findOne(taskListBlockerOnMatcher.group(1));
 				// replacing #taskItem pattern with #taskItemName
-				String str = statusDTO.getBlockers()
-						.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
-						.trim();
-				statusDTO.setBlockers(str);
+				if (taskItem != null) {
+					String str = statusDTO.getBlockers()
+							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
+							.trim();
+					statusDTO.setBlockers(str);
+				}
 			}
 		}
 
