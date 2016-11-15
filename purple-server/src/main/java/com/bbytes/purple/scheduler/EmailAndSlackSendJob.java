@@ -3,24 +3,28 @@ package com.bbytes.purple.scheduler;
 import java.util.List;
 import java.util.Map;
 
+import com.bbytes.purple.domain.User;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.utils.GlobalConstants;
 
 import lombok.Data;
 
 @Data
-public class EmailSendJob implements Runnable {
+public class EmailAndSlackSendJob implements Runnable {
 
 	private List<String> emailList;
 
 	private Map<String, Object> emailBody;
 
 	private NotificationService notificationService;
-	
+
 	private String subject;
 
-	public EmailSendJob(Map<String, Object> emailBody, List<String> emailList,
-			NotificationService notificationService, String subject) {
+	private User user;
+
+	public EmailAndSlackSendJob(User user, Map<String, Object> emailBody, List<String> emailList, NotificationService notificationService,
+			String subject) {
+		this.user = user;
 		this.emailList = emailList;
 		this.notificationService = notificationService;
 		this.emailBody = emailBody;
@@ -32,7 +36,7 @@ public class EmailSendJob implements Runnable {
 	 */
 	@Override
 	public void run() {
-
+		notificationService.sendSlackMessage(user,GlobalConstants.SCHEDULER_EMAIL_TEMPLATE, emailBody);
 		notificationService.sendTemplateEmail(emailList, subject,
 				GlobalConstants.SCHEDULER_EMAIL_TEMPLATE, emailBody);
 	}

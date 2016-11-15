@@ -27,7 +27,7 @@ import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -54,7 +54,7 @@ public class CommentController {
 	private StatusService statusService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
@@ -83,21 +83,18 @@ public class CommentController {
 		emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
-		emailBody.put(GlobalConstants.WORKED_ON,
-				Jsoup.parse(status.getWorkedOn() != null ? status.getWorkedOn() : "").text());
-		emailBody.put(GlobalConstants.WORKING_ON,
-				Jsoup.parse(status.getWorkingOn() != null ? status.getWorkingOn() : "").text());
-		emailBody.put(GlobalConstants.BLOCKERS,
-				Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
+		emailBody.put(GlobalConstants.WORKED_ON, Jsoup.parse(status.getWorkedOn() != null ? status.getWorkedOn() : "").text());
+		emailBody.put(GlobalConstants.WORKING_ON, Jsoup.parse(status.getWorkingOn() != null ? status.getWorkingOn() : "").text());
+		emailBody.put(GlobalConstants.BLOCKERS, Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
 		emailBody.put("userName", user.getName());
 
-		emailService.sendEmail(emailList, emailBody, commentSubject, template);
+		notificationService.sendTemplateEmail(emailList, commentSubject, template, emailBody);
+		notificationService.sendSlackMessage(user, template, emailBody);
 
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 
 		logger.debug(comment.getCommentDesc() + "' is added successfully");
-		RestResponse commentReponse = new RestResponse(RestResponse.SUCCESS, commentResponse,
-				SuccessHandler.ADD_COMMENT_SUCCESS);
+		RestResponse commentReponse = new RestResponse(RestResponse.SUCCESS, commentResponse, SuccessHandler.ADD_COMMENT_SUCCESS);
 
 		return commentReponse;
 	}
@@ -149,8 +146,7 @@ public class CommentController {
 
 		logger.debug("Comment is updated successfully");
 
-		RestResponse commentReponse = new RestResponse(RestResponse.SUCCESS, commentResponse,
-				SuccessHandler.UPDATE_COMMENT_SUCCESS);
+		RestResponse commentReponse = new RestResponse(RestResponse.SUCCESS, commentResponse, SuccessHandler.UPDATE_COMMENT_SUCCESS);
 
 		return commentReponse;
 	}
@@ -159,13 +155,11 @@ public class CommentController {
 	public RestResponse getAllComments(@RequestParam String statusId) throws PurpleException {
 
 		List<Comment> commentList = commentService.getAllComment(statusId);
-		Map<String, Object> commentMap = dataModelToDTOConversionService
-				.getResponseMapWithGridDataAndComment(commentList);
+		Map<String, Object> commentMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndComment(commentList);
 
 		logger.debug("Comments are fetched successfully");
 
-		RestResponse commentReponse = new RestResponse(RestResponse.SUCCESS, commentMap,
-				SuccessHandler.GET_COMMENT_SUCCESS);
+		RestResponse commentReponse = new RestResponse(RestResponse.SUCCESS, commentMap, SuccessHandler.GET_COMMENT_SUCCESS);
 
 		return commentReponse;
 

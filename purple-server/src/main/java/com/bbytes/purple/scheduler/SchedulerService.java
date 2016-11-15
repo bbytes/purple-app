@@ -333,7 +333,7 @@ public class SchedulerService {
 							emailList.add(user.getEmail());
 							// this is to schedule task for particular time
 							taskScheduler.schedule(
-									new EmailSendJob(emailBody, emailList, notificationService, schedulerSubject),
+									new EmailAndSlackSendJob(user,emailBody, emailList, notificationService, schedulerSubject),
 									dateTime.toDate());
 
 						}

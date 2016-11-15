@@ -18,6 +18,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import com.bbytes.purple.domain.User;
+
 @Service
 public class NotificationService {
 
@@ -28,13 +30,12 @@ public class NotificationService {
 
 	@Autowired
 	private VelocityEngine templateEngine;
-	
+
 	@Autowired
 	private IntegrationService integrationService;
 
 	@Value("${spring.mail.from}")
 	private String fromEmail;
-
 
 	/**
 	 * Send simple mail api. TODO: Need to implement html email template logic
@@ -74,8 +75,8 @@ public class NotificationService {
 
 	public boolean sendTemplateEmail(List<String> toEmailList, String subject, String emailTemplateName,
 			Map<String, Object> templateVariableMap) {
-		String emailHTMLContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine, emailTemplateName,
-				"UTF-8", templateVariableMap);
+		String emailHTMLContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine, emailTemplateName, "UTF-8",
+				templateVariableMap);
 		return sendEmail(toEmailList, subject, emailHTMLContent, true);
 	}
 
@@ -90,6 +91,19 @@ public class NotificationService {
 	public boolean sendSlackMessage(String message) {
 		try {
 			integrationService.postMessageToSlack(message);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+		return true;
+	}
+
+	public boolean sendSlackMessage(User user, String template, Map<String, Object> templateVariableMap) {
+		try {
+			String slackMessageContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine, template, "UTF-8",
+					templateVariableMap);
+			
+			integrationService.postMessageToSlack(user, slackMessageContent);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return false;

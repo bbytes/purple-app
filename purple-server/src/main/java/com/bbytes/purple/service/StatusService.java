@@ -66,7 +66,7 @@ public class StatusService extends AbstractService<Status, String> {
 	private ConfigSettingService configSettingService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Value("${email.tag.subject}")
 	private String tagSubject;
@@ -279,7 +279,7 @@ public class StatusService extends AbstractService<Status, String> {
 		updateStatus.setBlockers(statusDTO.getBlockers());
 		updateStatus.setHours(statusDTO.getHours());
 		updateStatus.setProject(project);
-		updateStatus.addMentionUser(statusDTO.getMentionUser());
+		updateStatus.setMentionUser(statusDTO.getMentionUser());
 		try {
 			newStatus = statusRepository.save(updateStatus);
 		} catch (Throwable e) {
@@ -511,8 +511,14 @@ public class StatusService extends AbstractService<Status, String> {
 		emailBody.put(GlobalConstants.BLOCKERS,
 				Jsoup.parse(statusDTO.getBlockers() != null ? statusDTO.getBlockers() : "").text());
 
-		if (emailList != null && !emailList.isEmpty())
-			emailService.sendEmail(emailList, emailBody, subject, template);
+		for (User user : statusDTO.getMentionUser()) {
+			notificationService.sendSlackMessage(user, template, emailBody);
+		}
+		
+		if (emailList != null && !emailList.isEmpty()){
+			notificationService.sendTemplateEmail(emailList, subject, template, emailBody);
+		}
+		
 		return statusDTO;
 	}
 

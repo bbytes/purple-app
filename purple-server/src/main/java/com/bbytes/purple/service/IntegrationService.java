@@ -11,6 +11,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.social.bitbucket.api.BitBucket;
 import org.springframework.social.bitbucket.api.BitBucketChangeset;
 import org.springframework.social.bitbucket.api.BitBucketChangesets;
@@ -47,7 +48,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	private IntegrationRepository integrationRepository;
 
 	@Autowired
-	private SocialConnectionRepository socialConnectionRepository;
+	private ApplicationContext appContext;
 
 	@Autowired
 	private MongoConnectionTransformers mongoConnectionTransformers;
@@ -215,6 +216,18 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		}
 	}
 
+	public void postMessageToSlack(User user, String message) {
+		Slack slack = getSlackApi(user);
+		Integration integration = integrationRepository.findByUser(user);
+		if (integration != null && slack != null) {
+			String slackChannelId = integration.getSlackChannelId();
+			SlackChannel slackChannel = slack.channelOperations().findChannelById(slackChannelId);
+			if (slackChannel != null) {
+				slack.chatOperations().postMessage(message, slackChannel.getId());
+			}
+		}
+	}
+
 	public List<String> getGithubLatestCommits() {
 		List<String> result = new ArrayList<>();
 		GitHub github = getGithubApi();
@@ -257,10 +270,16 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	}
 
 	private Slack getSlackApi() {
-		String userId = userService.getLoggedInUserEmail();
-		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, "slack");
-		if (socialCnnections != null && !socialCnnections.isEmpty()) {
-			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialCnnections.get(0));
+		return getSlackApi(userService.getLoggedInUser());
+	}
+
+	private Slack getSlackApi(User user) {
+		if (user == null)
+			return null;
+		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
+		List<SocialConnection> socialConnections = socialConnectionRepository.findByUserIdAndProviderId(user.getEmail(), "slack");
+		if (socialConnections != null && !socialConnections.isEmpty()) {
+			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialConnections.get(0));
 			Slack slack = (Slack) connection.getApi();
 			return slack;
 		}
@@ -269,6 +288,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private BitBucket getBitBucketApi() {
 		String userId = userService.getLoggedInUserEmail();
+		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
 		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, "bitbucket");
 		if (socialCnnections != null && !socialCnnections.isEmpty()) {
 			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialCnnections.get(0));
@@ -280,6 +300,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private GitHub getGithubApi() {
 		String userId = userService.getLoggedInUserEmail();
+		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
 		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, "github");
 		if (socialCnnections != null && !socialCnnections.isEmpty()) {
 			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialCnnections.get(0));
@@ -307,6 +328,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private void deleteConnection(String connectionType) {
 		String userId = userService.getLoggedInUserEmail();
+		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
 		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, connectionType);
 		if (socialCnnections != null && !socialCnnections.isEmpty()) {
 			socialConnectionRepository.delete(socialCnnections);

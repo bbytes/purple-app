@@ -25,7 +25,7 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.ReplyDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.ReplyService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
@@ -50,7 +50,7 @@ public class ReplyController {
 	private UserService userService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Autowired
 	private StatusService statusService;
@@ -84,7 +84,7 @@ public class ReplyController {
 
 		int replySize = comment.getReplies().size();
 		String postDate = dateFormat.format(comment.getCreationDate());
-		;
+		
 
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
@@ -102,7 +102,10 @@ public class ReplyController {
 		emailBody.put(GlobalConstants.BLOCKERS,
 				Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
 
-		emailService.sendEmail(emailList, emailBody, replySubject, template);
+		notificationService.sendTemplateEmail(emailList, replySubject, template, emailBody);
+		
+		notificationService.sendSlackMessage(status.getUser(), template, emailBody);
+		notificationService.sendSlackMessage(comment.getUser(), template, emailBody);
 
 		Map<String, Object> replyMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndReply(comment);
 

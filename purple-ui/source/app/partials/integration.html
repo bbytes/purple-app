@@ -62,7 +62,7 @@
                 <div class="row">
                     <form action="{{slackUrl}}" method="post" ng-hide="isSlackConnect">
                         <div class="col-md-4"> 
-                            <input type="hidden" name="scope" value="users.profile:read,users:read,channels:read,channels:write,im:read ,im:write,chat:write:bot" />
+                            <input type="hidden" name="scope" value="users.profile:read,users:read,channels:read,channels:write,im:read,im:write,chat:write:user,chat:write:bot" />
                             <button class="btn btn-default status-submit"><img src="../../assets/img/slack-icon.png" class="jira" /> Add to Slack</button>
                         </div>
                     </form>
