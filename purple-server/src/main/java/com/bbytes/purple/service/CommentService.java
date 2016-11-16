@@ -10,8 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
@@ -36,6 +38,12 @@ public class CommentService extends AbstractService<Comment, String> {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	protected TokenAuthenticationProvider tokenAuthenticationProvider;
+
+	@Value("${base.url}")
+	private String baseUrl;
 
 	@Autowired
 	public CommentService(CommentRepository commentRepository) {
@@ -154,5 +162,19 @@ public class CommentService extends AbstractService<Comment, String> {
 		}
 
 		return responseMap;
+	}
+
+	/**
+	 * Return the snippet url with xAuthToken and commentId along with baseUrl
+	 * 
+	 * @param user
+	 * @param comment
+	 * @return
+	 */
+	public String commentSnippetUrl(User user, Comment comment) {
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 24);
+		String snippetUrl = baseUrl + GlobalConstants.COMMENT_SNIPPET_URL + xauthToken
+				+ GlobalConstants.COMMENT_ID_PARAM + comment.getCommentId();
+		return snippetUrl;
 	}
 }
