@@ -36,7 +36,8 @@ public class EmailAndSlackSendJob implements Runnable {
 	 */
 	@Override
 	public void run() {
-		notificationService.sendSlackMessage(user,GlobalConstants.SCHEDULER_EMAIL_TEMPLATE, emailBody);
+		
+		notificationService.sendSlackMessage(user,"Statusnap reminder", emailBody.get("activationLink").toString());
 		notificationService.sendTemplateEmail(emailList, subject,
 				GlobalConstants.SCHEDULER_EMAIL_TEMPLATE, emailBody);
 	}

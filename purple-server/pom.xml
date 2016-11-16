@@ -173,7 +173,6 @@
 			<version>1.9.1</version>
 		</dependency>
 
-		<!-- http://mvnrepository.com/artifact/com.tapstream/rollbar-logback -->
 		<dependency>
 			<groupId>com.tapstream</groupId>
 			<artifactId>rollbar-logback</artifactId>
@@ -186,12 +185,16 @@
 			<artifactId>jira-rest-java-client</artifactId>
 			<version>2.0.0-m2</version>
 		</dependency>
-
+	
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpasyncclient</artifactId>
-			<version>4.0-beta3-atlassian-1</version>
 		</dependency>
+		
 
 		<dependency>
 			<groupId>net.rcarz</groupId>
@@ -200,15 +203,15 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore-nio</artifactId>
-			<version>4.3</version>
+			<groupId>com.bbytes</groupId>
+			<artifactId>plutus-client</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.bbytes</groupId>
-			<artifactId>plutus-client</artifactId>
-			<version>1.0.0</version>
+			<artifactId>mailgun-java-client</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>

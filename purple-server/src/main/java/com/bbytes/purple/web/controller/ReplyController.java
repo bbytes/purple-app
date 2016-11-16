@@ -111,8 +111,8 @@ public class ReplyController {
 			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
 		}
 
-		notificationService.sendSlackMessage(status.getUser(), template, emailBody);
-		notificationService.sendSlackMessage(comment.getUser(), template, emailBody);
+		notificationService.sendSlackMessage(status.getUser(), "Statusnap comment Reply", "");
+		notificationService.sendSlackMessage(comment.getUser(),  "Statusnap comment Reply", "");
 
 		Map<String, Object> replyResponseMap = dataModelToDTOConversionService
 				.getResponseMapWithGridDataAndReply(comment);

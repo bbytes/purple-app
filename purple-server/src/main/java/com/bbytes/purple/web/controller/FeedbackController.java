@@ -21,7 +21,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.FeedbackDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
@@ -38,7 +38,7 @@ public class FeedbackController {
 	private static final Logger logger = LoggerFactory.getLogger(FeedbackController.class);
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Autowired
 	private UserService userService;
@@ -78,10 +78,9 @@ public class FeedbackController {
 		Map<String, Object> feedbackResponseEmailBody = new HashMap<>();
 		feedbackResponseEmailBody.put(GlobalConstants.USER_NAME, user.getName());
 
-		emailService.sendEmail(feedBackSendEmailList, feedBackSendEmailBody, feedBackSendSubject, feedbackSendTemplate);
-		emailService.sendEmail(feedbackResponseEmailList, feedbackResponseEmailBody, feedbackResponseSubject,
-				feedbackResponseTemplate);
-
+		notificationService.sendTemplateEmail(feedBackSendEmailList, feedBackSendSubject, feedbackSendTemplate, feedBackSendEmailBody);
+		notificationService.sendTemplateEmail(feedbackResponseEmailList, feedbackResponseSubject, feedbackResponseTemplate, feedbackResponseEmailBody);
+		
 		logger.debug("User with email '" + user.getEmail() + "' is sent feedback successfully");
 		RestResponse feedbackResponse = new RestResponse(RestResponse.SUCCESS, FEEDBACK_SUCCESS_MSG, SuccessHandler.FEEDBACK_SUCCESS);
 

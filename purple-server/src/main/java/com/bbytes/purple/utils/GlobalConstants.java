@@ -21,6 +21,8 @@ public class GlobalConstants {
 	public static final String EMAIL_INVITE_PROJECT_TEMPLATE = "email-text-invite-project.html";
 
 	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
+	
+	public static final String SCHEDULER_SLACK_TEMPLATE = "slack-scheduler.html";
 
 	public static final String COMMENT_EMAIL_TEMPLATE = "email-text-comment.html";
 

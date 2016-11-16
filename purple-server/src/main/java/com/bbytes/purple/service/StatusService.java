@@ -10,16 +10,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
-import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -68,12 +65,6 @@ public class StatusService extends AbstractService<Status, String> {
 
 	@Autowired
 	private ConfigSettingService configSettingService;
-
-	@Autowired
-	private NotificationService notificationService;
-
-	@Value("${email.tag.subject}")
-	private String tagSubject;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -140,26 +131,21 @@ public class StatusService extends AbstractService<Status, String> {
 				throw new PurpleException("Error while adding status", ErrorHandler.PROJECT_NOT_FOUND);
 
 			if (statusDTO.getDateTime() == null || statusDTO.getDateTime().isEmpty()) {
-				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
-						new Date());
+				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(), new Date());
 			} else {
 				Date statusDate = formatter.parse(statusDTO.getDateTime());
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(statusDate);
 				Date newTime = new DateTime(new Date())
-						.withDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH))
-						.toDate();
+						.withDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)).toDate();
 
-				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate))
-						.withTime(0, 0, 0, 0).toDate();
+				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate)).withTime(0, 0, 0, 0).toDate();
 				if (statusDate.before(backDate))
 					throw new PurpleException("Cannot add status past " + statusEnableDate + " days",
 							ErrorHandler.PASS_DUEDATE_STATUS_EDIT);
 				if (statusDate.after(new Date()))
-					throw new PurpleException("Cannot add status for future date",
-							ErrorHandler.FUTURE_DATE_STATUS_EDIT);
-				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
-						newTime);
+					throw new PurpleException("Cannot add status for future date", ErrorHandler.FUTURE_DATE_STATUS_EDIT);
+				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(), newTime);
 			}
 
 			Project project = projectService.findByProjectId(statusDTO.getProjectId());
@@ -296,8 +282,8 @@ public class StatusService extends AbstractService<Status, String> {
 		return newStatus;
 	}
 
-	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser,
-			Integer timePeriodValue) throws PurpleException {
+	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser, Integer timePeriodValue)
+			throws PurpleException {
 		List<Status> result = new ArrayList<Status>();
 		List<Project> currentUserProjectList = userService.getProjects(currentUser);
 		List<String> projectIdStringQueryList = userAndProject.getProjectList();
@@ -328,24 +314,20 @@ public class StatusService extends AbstractService<Status, String> {
 		}
 
 		// both empty
-		if ((userQueryList == null || userQueryList.isEmpty())
-				&& (projectQueryList == null || projectQueryList.isEmpty())) {
+		if ((userQueryList == null || userQueryList.isEmpty()) && (projectQueryList == null || projectQueryList.isEmpty())) {
 			return result;
 		}
 		// project list empty
-		else if (userQueryList != null && !userQueryList.isEmpty()
-				&& (projectQueryList == null || projectQueryList.isEmpty())) {
+		else if (userQueryList != null && !userQueryList.isEmpty() && (projectQueryList == null || projectQueryList.isEmpty())) {
 			result = statusRepository.findByDateTimeBetweenAndUserIn(startDate, startDate, userQueryList);
 		}
 		// user list empty
-		else if (projectQueryList != null && !projectQueryList.isEmpty()
-				&& (userQueryList == null || userQueryList.isEmpty())) {
+		else if (projectQueryList != null && !projectQueryList.isEmpty() && (userQueryList == null || userQueryList.isEmpty())) {
 			result = statusRepository.findByDateTimeBetweenAndProjectIn(startDate, endDate, projectQueryList);
 		}
 		// both the list not empty
 		else {
-			result = statusRepository.findByDateTimeBetweenAndProjectInAndUserIn(startDate, endDate, projectQueryList,
-					userQueryList);
+			result = statusRepository.findByDateTimeBetweenAndProjectInAndUserIn(startDate, endDate, projectQueryList, userQueryList);
 		}
 
 		try {
@@ -392,15 +374,12 @@ public class StatusService extends AbstractService<Status, String> {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate)), project().and("user").as("user"));
 
-		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
-				ProjectUserCountStats.class);
+		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class, ProjectUserCountStats.class);
 		return result;
 	}
 
-	public StatusDTO checkMentionUser(StatusDTO statusDTO, User loggedInUser) {
+	public StatusDTO checkMentionUser(StatusDTO statusDTO) {
 
-		final String template = GlobalConstants.MENTION_EMAIL_TEMPLATE;
-		final String subject = loggedInUser.getName() + " " + tagSubject;
 
 		Matcher mentionWorkedOnMatcher, taskListWorkedOnMatcher = null;
 		Matcher mentionWorkingOnMatcher, taskListWorkingOnMatcher = null;
@@ -427,8 +406,8 @@ public class StatusService extends AbstractService<Status, String> {
 				if (mentionUser != null) {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
-					String str = statusDTO.getWorkedOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<a>@" + mentionUser.getName() + "</a>").trim();
+					String str = statusDTO.getWorkedOn()
+							.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>").trim();
 					statusDTO.setWorkedOn(str);
 				}
 			}
@@ -438,8 +417,7 @@ public class StatusService extends AbstractService<Status, String> {
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
 					String str = statusDTO.getWorkedOn()
-							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
-							.trim();
+							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>").trim();
 					statusDTO.setWorkedOn(str);
 				}
 			}
@@ -456,8 +434,8 @@ public class StatusService extends AbstractService<Status, String> {
 				if (mentionUser != null) {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
-					String str = statusDTO.getWorkingOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<a>@" + mentionUser.getName() + "</a>").trim();
+					String str = statusDTO.getWorkingOn()
+							.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>").trim();
 					statusDTO.setWorkingOn(str);
 				}
 			}
@@ -467,8 +445,7 @@ public class StatusService extends AbstractService<Status, String> {
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
 					String str = statusDTO.getWorkingOn()
-							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
-							.trim();
+							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>").trim();
 					statusDTO.setWorkingOn(str);
 				}
 			}
@@ -486,8 +463,8 @@ public class StatusService extends AbstractService<Status, String> {
 				if (mentionUser != null) {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
-					String str = statusDTO.getBlockers().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<a>@" + mentionUser.getName() + "</a>").trim();
+					String str = statusDTO.getBlockers()
+							.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN, "<a>@" + mentionUser.getName() + "</a>").trim();
 					statusDTO.setBlockers(str);
 				}
 			}
@@ -497,34 +474,12 @@ public class StatusService extends AbstractService<Status, String> {
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
 					String str = statusDTO.getBlockers()
-							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>")
-							.trim();
+							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN, "<a>#" + taskItem.getName() + "</a>").trim();
 					statusDTO.setBlockers(str);
 				}
 			}
 		}
 
-		// sending email to all tagged users with status details
-		List<String> emailList = new ArrayList<String>();
-		emailList.addAll(emailTagList);
-
-		Map<String, Object> emailBody = new HashMap<>();
-		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, statusDTO.getDateTime());
-		emailBody.put(GlobalConstants.WORKED_ON,
-				Jsoup.parse(statusDTO.getWorkedOn() != null ? statusDTO.getWorkedOn() : "").text());
-		emailBody.put(GlobalConstants.WORKING_ON,
-				Jsoup.parse(statusDTO.getWorkingOn() != null ? statusDTO.getWorkingOn() : "").text());
-		emailBody.put(GlobalConstants.BLOCKERS,
-				Jsoup.parse(statusDTO.getBlockers() != null ? statusDTO.getBlockers() : "").text());
-
-		for (User user : statusDTO.getMentionUser()) {
-			notificationService.sendSlackMessage(user, template, emailBody);
-		}
-
-		if (emailList != null && !emailList.isEmpty()) {
-			notificationService.sendTemplateEmail(emailList, subject, template, emailBody);
-		}
 
 		return statusDTO;
 	}
@@ -535,10 +490,9 @@ public class StatusService extends AbstractService<Status, String> {
 	 * @param statusId
 	 * @return
 	 */
-	public String statusSnippetUrl(String statusId) {
-		final String xauthToken = tokenAuthenticationProvider
-				.getAuthTokenForUser(userService.getLoggedInUser().getEmail(), 24);
-		String snippetUrl = baseUrl + GlobalConstants.SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID + statusId;
+	public String statusSnippetUrl(Status status, User user) {
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 24);
+		String snippetUrl = baseUrl + GlobalConstants.SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID + status.getStatusId();
 		return snippetUrl;
 	}
 

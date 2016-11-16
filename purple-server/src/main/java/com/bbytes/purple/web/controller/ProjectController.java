@@ -29,7 +29,7 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.ProjectDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
@@ -60,7 +60,7 @@ public class ProjectController {
 	private UserService userService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -109,8 +109,8 @@ public class ProjectController {
 				emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 				emailBody.put(GlobalConstants.ACTIVATION_LINK,
 						baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
+				notificationService.sendTemplateEmail(emailList, projectInviteSubject, template, emailBody);
 
-				emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
 			}
 		}
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);
@@ -174,7 +174,7 @@ public class ProjectController {
 				emailBody.put(GlobalConstants.ACTIVATION_LINK,
 						baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
 
-				emailService.sendEmail(emailList, emailBody, projectInviteSubject, template);
+				notificationService.sendTemplateEmail(emailList, projectInviteSubject, template, emailBody);
 			}
 		}
 		ProjectDTO projectMap = dataModelToDTOConversionService.convertProject(project);

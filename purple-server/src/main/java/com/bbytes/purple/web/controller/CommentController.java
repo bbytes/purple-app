@@ -100,7 +100,7 @@ public class CommentController {
 			Map<String, Object> mentionEmailBody = commentEmailBody(user, comment, status, mentionEmailText, "");
 			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
 		}
-		notificationService.sendSlackMessage(user, template, commentEmailBody);
+		notificationService.sendSlackMessage(user, "Statusnap comment", "");
 
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 

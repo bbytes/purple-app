@@ -48,7 +48,6 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.TenantResolverRepository;
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.ConfigSettingService;
-import com.bbytes.purple.service.EmailService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
@@ -88,9 +87,6 @@ public class SchedulerService {
 
 	@Autowired
 	private CommentService commentService;
-
-	@Autowired
-	private EmailService emailService;
 
 	@Autowired
 	private NotificationService notificationService;
@@ -469,8 +465,9 @@ public class SchedulerService {
 				emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
 				emailBody.put(GlobalConstants.USER_NAME, nameListMap);
 
-				if (!nameListMap.isEmpty() && !emailList.isEmpty())
-					emailService.sendEmail(emailList, emailBody, associateChecklistSubject, template);
+				if (!nameListMap.isEmpty() && !emailList.isEmpty()){
+					notificationService.sendTemplateEmail(emailList, associateChecklistSubject, template, emailBody);
+				}
 
 			}
 		}

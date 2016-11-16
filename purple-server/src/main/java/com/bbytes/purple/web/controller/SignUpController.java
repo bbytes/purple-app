@@ -27,7 +27,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.RegistrationService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
@@ -55,7 +55,7 @@ public class SignUpController {
 	private UserService userService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
@@ -121,8 +121,8 @@ public class SignUpController {
 		emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
 		emailBody.put(GlobalConstants.EMAIL_ADDRESS, user.getEmail());
 
-		emailService.sendEmail(clientEmailList, clientEmailBody, signupSubject, clientTemplate);
-		emailService.sendEmail(emailList, emailBody, registerTenantSubject, template);
+		notificationService.sendTemplateEmail(clientEmailList, signupSubject, clientTemplate, clientEmailBody);
+		notificationService.sendTemplateEmail(emailList, registerTenantSubject, template, emailBody);
 
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 
@@ -182,7 +182,7 @@ public class SignUpController {
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.FORGOT_PASSWORD_URL + xauthToken);
 
-		emailService.sendEmail(emailList, emailBody, signupSubject, template);
+		notificationService.sendTemplateEmail(emailList, signupSubject, template, emailBody);
 
 		logger.debug("Resend activation link is done successfully");
 		userReponse = new RestResponse(RestResponse.SUCCESS, RESEND_ACTIVATION_SUCCESS_MSG,

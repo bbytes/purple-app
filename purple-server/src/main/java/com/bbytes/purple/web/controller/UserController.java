@@ -37,7 +37,7 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.PasswordHashService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
@@ -66,7 +66,7 @@ public class UserController {
 	private PasswordHashService passwordHashService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Autowired
 	private ResourceLoader resourceloader;
@@ -117,7 +117,7 @@ public class UserController {
 		emailBody.put(GlobalConstants.PASSWORD, generatePassword);
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
-		emailService.sendEmail(emailList, emailBody, inviteSubject, template);
+		notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
 
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(user);
 		logger.debug("User with email  '" + userDTO.getEmail() + "' are added successfully");
@@ -157,7 +157,7 @@ public class UserController {
 			emailBody.put(GlobalConstants.PASSWORD, entry.getKey());
 			emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
-			emailService.sendEmail(emailList, emailBody, inviteSubject, template);
+			notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
 		}
 
 		List<UserDTO> responseDTO = dataModelToDTOConversionService.convertUsers(allUser);
@@ -378,7 +378,7 @@ public class UserController {
 		emailBody.put(GlobalConstants.PASSWORD, generatePassword);
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
-		emailService.sendEmail(emailList, emailBody, inviteSubject, template);
+		notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
 
 		logger.debug("Reinvite is done successfully to user with email - " + email);
 		RestResponse inviteReponse = new RestResponse(RestResponse.SUCCESS, REINVITE_SUCCESS_MSG,
