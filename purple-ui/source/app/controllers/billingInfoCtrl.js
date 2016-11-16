@@ -1,5 +1,5 @@
 /*
- * Project controller
+ * Billing Info controller
  */
 angular.module('rootApp').controller('billingInfoCtrl', function ($scope, $rootScope, $location, $state, toaster, billingInfoService, appNotifyService, $uibModal) {
 
@@ -15,6 +15,8 @@ angular.module('rootApp').controller('billingInfoCtrl', function ($scope, $rootS
     $scope.allprojects;
     //when page is loading, showing sort by username
     $scope.sortKey = 'projectName';
+    
+//  Method to save billing information
     $scope.addBillingInfo = function (isValid, customer) {
         // Validating login form
         if (!isValid) {
