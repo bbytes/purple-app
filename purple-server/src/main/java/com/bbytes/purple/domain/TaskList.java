@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Task List Domain Object
@@ -24,7 +25,8 @@ import lombok.EqualsAndHashCode;
  */
 
 @Data
-@EqualsAndHashCode(exclude = { "taskItems", "owner", "users" })
+@EqualsAndHashCode(exclude = { "taskItems", "owner", "users", "project" })
+@ToString(exclude = { "taskItems", "owner", "users", "project" })
 @Document
 public class TaskList implements Comparable<TaskList> {
 
@@ -83,6 +85,11 @@ public class TaskList implements Comparable<TaskList> {
 	public void setTaskItem(Set<TaskItem> taskItems) {
 		this.taskItems = taskItems;
 		calculateProperties();
+	}
+
+	public Set<TaskItem> getTaskItems() {
+		return this.taskItems;
+		
 	}
 
 	public void addUsers(User user) {

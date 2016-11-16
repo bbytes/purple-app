@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Task Item Domain Object
@@ -23,7 +24,8 @@ import lombok.EqualsAndHashCode;
  */
 
 @Data
-@EqualsAndHashCode(exclude = { "taskList", "owner", "users" })
+@EqualsAndHashCode(exclude = { "taskList", "owner", "users","project" })
+@ToString(exclude = { "taskList", "owner", "users","project" })
 @Document
 public class TaskItem implements Comparable<TaskItem> {
 
@@ -67,14 +69,11 @@ public class TaskItem implements Comparable<TaskItem> {
 	@LastModifiedDate
 	private Date lastModified;
 
-	public TaskItem(TaskList taskList, String name, String desc, double estimatedHours, Date dueDate) {
+	public TaskItem(String name, String desc, double estimatedHours, Date dueDate) {
 		this.name = name;
 		this.desc = desc;
 		this.estimatedHours = estimatedHours;
 		this.dueDate = dueDate;
-		this.taskList = taskList;
-		if (this.taskList != null)
-			this.taskList.addTaskItem(this);
 	}
 
 	public void addUsers(User user) {
