@@ -445,7 +445,7 @@ angular.module('rootApp').directive('workingonTextAngularMentio', ['$rootScope',
                     };
 
                     $scope.getPeopleText = function (item) {
-                        return '@[' + item.email + ']';
+                        return '@<!--' + item.email + '-->' + item.userName;
                     };
                 }]
         };
@@ -482,7 +482,7 @@ angular.module('rootApp').directive('workedonTextAngularMentio', ['$rootScope', 
                     };
 
                     $scope.getPeopleText = function (item) {
-                        return '@[' + item.email + ']';
+                        return '@<!--' + item.email + '-->' + item.userName;
                     };
                 }]
         };
@@ -518,7 +518,7 @@ angular.module('rootApp').directive('blockersTextAngularMentio', ['$rootScope', 
                     };
 
                     $scope.getPeopleText = function (item) {
-                        return '@[' + item.email + ']';
+                        return '@<!--' + item.email + '-->' + item.userName;
                     };
                 }]
         };

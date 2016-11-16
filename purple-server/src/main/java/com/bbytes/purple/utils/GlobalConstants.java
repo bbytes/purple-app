@@ -97,13 +97,13 @@ public class GlobalConstants {
 	public static final String FEEDBACK = "feedback";
 
 	public static final String VALID_HOURS = "hours";
-	
+
 	public static final String EMAIL_STRING_TEXT = "emailStringText";
-	
+
 	public static final String MENTIONED_EMAIL_TEXT = "mentioned you on Statusnap";
-	
+
 	public static final String COMMENT_EMAIL_TEXT = "commented on your Statusnap status";
-	
+
 	public static final String REPLY_EMAIL_TEXT = "replied on your Statusnap comment";
 
 	public static final String JIRA_GETPROJECTS_API_URL = "/rest/api/2/project";
@@ -112,8 +112,8 @@ public class GlobalConstants {
 
 	public static final String SALES_EMAIL_ADDRESS = "sales@beyondbytes.co.in";
 
-	public static final String MENTION_REGEX_PATTERN = "@\\[(.*?)\\]";
+	public static final String MENTION_REGEX_PATTERN = "@\\<!--(.*?)\\-->";
 
-	public static final String TASKLIST_REGEX_PATTERN = "#\\{(.*?)\\}";
+	public static final String TASKLIST_REGEX_PATTERN = "#\\<!--(.*?)\\-->";
 
 }
