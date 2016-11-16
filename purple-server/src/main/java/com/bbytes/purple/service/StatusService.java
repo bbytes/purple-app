@@ -535,7 +535,7 @@ public class StatusService extends AbstractService<Status, String> {
 	public String statusSnippetUrl(String statusId) {
 		final String xauthToken = tokenAuthenticationProvider
 				.getAuthTokenForUser(userService.getLoggedInUser().getEmail(), 24);
-		String snippetUrl = baseUrl + GlobalConstants.SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID + statusId;
+		String snippetUrl = baseUrl + GlobalConstants.STATUS_SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID_PARAM + statusId;
 		return snippetUrl;
 	}
 

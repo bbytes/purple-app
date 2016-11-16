@@ -66,9 +66,17 @@ public class GlobalConstants {
 
 	public static final String SETTING_URL = "/updateSetting?token=";
 
-	public static final String SNIPPET_URL = "/status-snippet?pk=";
+	public static final String STATUS_SNIPPET_URL = "/status-snippet?pk=";
+	
+	public static final String COMMENT_SNIPPET_URL = "/comment-snippet?pk=";
+	
+	public static final String REPLY_SNIPPET_URL = "/comment-snippet?pk=";
 
-	public static final String STATUS_ID = "&sid=";
+	public static final String STATUS_ID_PARAM = "&sid=";
+	
+	public static final String COMMENT_ID_PARAM = "&cid=";
+	
+	public static final String REPLY_ID_PARAM = "&rid=";
 
 	public static final String STATUS_DATE = "&sd=";
 

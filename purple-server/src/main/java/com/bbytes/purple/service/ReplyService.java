@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Reply;
 import com.bbytes.purple.domain.User;
@@ -13,6 +15,7 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.ReplyRepository;
 import com.bbytes.purple.rest.dto.models.ReplyDTO;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class ReplyService extends AbstractService<Reply, String> {
@@ -21,6 +24,12 @@ public class ReplyService extends AbstractService<Reply, String> {
 
 	@Autowired
 	private CommentService commentService;
+
+	@Autowired
+	protected TokenAuthenticationProvider tokenAuthenticationProvider;
+
+	@Value("${base.url}")
+	private String baseUrl;
 
 	@Autowired
 	public ReplyService(ReplyRepository replyRepository) {
@@ -109,5 +118,21 @@ public class ReplyService extends AbstractService<Reply, String> {
 		}
 
 		return comment;
+	}
+
+	/**
+	 * Return the snippet url with xAuthToken and commentId and replyId along
+	 * with baseUrl
+	 * 
+	 * @param user
+	 * @param comment
+	 * @param reply
+	 * @return
+	 */
+	public String replySnippetUrl(User user, Comment comment, Reply reply) {
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 24);
+		String snippetUrl = baseUrl + GlobalConstants.REPLY_SNIPPET_URL + xauthToken + GlobalConstants.COMMENT_ID_PARAM
+				+ comment.getCommentId() + GlobalConstants.REPLY_ID_PARAM + reply.getReplyId();
+		return snippetUrl;
 	}
 }
