@@ -4276,3 +4276,12 @@ tabs-left, .tabs-right {
 .mega-dropdown-menu .form-group {
   margin-bottom: 3px;
 }
+.billing-wrapper{
+    padding-top: 30px;
+    width: 80%;
+    padding-left: 15%;
+}
+.billing-wrapper button{
+    width:60%;
+    margin-bottom:20px;
+}
