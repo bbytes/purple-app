@@ -73,7 +73,8 @@ public class TaskItem implements Comparable<TaskItem> {
 		this.estimatedHours = estimatedHours;
 		this.dueDate = dueDate;
 		this.taskList = taskList;
-		taskList.addTaskItem(this);
+		if (this.taskList != null)
+			this.taskList.addTaskItem(this);
 	}
 
 	public void addUsers(User user) {
@@ -88,7 +89,7 @@ public class TaskItem implements Comparable<TaskItem> {
 		users.remove(user);
 		taskList.addUsers(user);
 	}
-	
+
 	public void setOwner(User owner) {
 		this.owner = owner;
 		addUsers(owner);
