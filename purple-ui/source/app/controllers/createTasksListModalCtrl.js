@@ -2,12 +2,13 @@
  * All User Modal Controller
  */
 angular.module('rootApp').controller('createTasksListModalCtrl',
-		function($scope,params, $uibModalInstance, $uibModal,tasksService) {
+		function($scope,$rootScope,params, $uibModalInstance, $uibModal,tasksService) {
 
 			$scope.selection = [];
 			$scope.projects = params.projects;
 			$scope.taskLists =params.taskLists;
 			$scope.selectedProject=params.project;
+			
 			$scope.toggleSelection = function toggleSelection(id) {
 				var idx = $scope.selection.indexOf(id);
 
@@ -21,9 +22,13 @@ angular.module('rootApp').controller('createTasksListModalCtrl',
 				}
 			};
 			$scope.createTaskList = function(taskList) {
+				console.log("createTaskList");
 				tasksService.createTaskList(taskList).then(function(response) {
 					if($scope.selectedProject=="All"||response.data.project.projectId==$scope.selectedProject.projectId)
-						$scope.taskLists.push(response.data);
+						if($scope.taskLists==null)
+							$scope.taskLists=response.data;
+						else
+							$scope.taskLists.push(response.data);
 				});
 				$uibModalInstance.close($scope.selection);
 			};

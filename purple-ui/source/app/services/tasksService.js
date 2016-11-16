@@ -110,14 +110,14 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
 
         return deferred.promise;
     };
-    this.getTaskItems = function (taskList) {
+    this.getTaskItems = function (taskList,state) {
         var deferred = $q.defer();
 
         $http(
                 {
                     method: 'GET',
                     url: $rootScope.baseUrl + 'api/v1/task/taskItems/'
-                            + taskList.taskListId,
+                            + taskList.taskListId+'/'+state.id,
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -195,6 +195,7 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
         return deferred.promise;
     };
     this.markCompleted=function(taskItem){
+    	 var deferred = $q.defer();
     	 $http(
                  {
                      method: 'POST',
@@ -204,6 +205,13 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
                          'Content-Type': 'application/json'
                      }
 
-                 });
+                 }).success(function (response, status, headers, config) {
+
+             deferred.resolve(response);
+         }).error(function (response) {
+             deferred.reject(response);
+         });
+
+         return deferred.promise;
     };
 });

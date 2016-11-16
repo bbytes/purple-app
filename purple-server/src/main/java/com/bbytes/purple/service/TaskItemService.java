@@ -59,8 +59,8 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 	public List<TaskItem> findByDueDateBetween(Date startDate, Date endDate) {
 		return taskItemRepository.findByDueDateBetween(startDate, endDate);
 	}
-	
-	public List<TaskItem> findByStateAndUsers(TaskState state, User user){
+
+	public List<TaskItem> findByStateAndUsers(TaskState state, User user) {
 		return taskItemRepository.findByStateAndUsers(state, user);
 	}
 
@@ -79,6 +79,14 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 	public List<TaskItem> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate,
 			List<Project> projects, List<User> users) {
 		return taskItemRepository.findByDueDateBetweenAndProjectInAndUsersIn(startDate, endDate, projects, users);
+	}
+
+	public List<TaskItem> findByTaskListAndState(TaskList taskList, TaskState taskState) {
+		return taskItemRepository.findByTaskListAndState(taskList, taskState);
+	}
+
+	public List<TaskItem> findByProjectAndStateAndUsers(Project project, TaskState taskState, User user) {
+		return taskItemRepository.findByProjectAndStateAndUsers(project, taskState, user);
 	}
 
 }

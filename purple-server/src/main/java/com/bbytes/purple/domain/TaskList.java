@@ -89,6 +89,10 @@ public class TaskList implements Comparable<TaskList> {
 		users.add(user);
 	}
 
+	public void addUsers(Set<User> users) {
+		users.addAll(users);
+	}
+
 	public void removeUsers(User user) {
 		users.remove(user);
 	}

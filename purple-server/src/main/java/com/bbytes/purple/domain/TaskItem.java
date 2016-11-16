@@ -100,4 +100,13 @@ public class TaskItem implements Comparable<TaskItem> {
 		return getDueDate().compareTo(taskList.getDueDate());
 	}
 
+	public void addUsers(Set<User> users) {
+		if (users == null) {
+			users = new HashSet<User>();
+		}
+		users.addAll(users);
+		taskList.addUsers(users);
+
+	}
+
 }

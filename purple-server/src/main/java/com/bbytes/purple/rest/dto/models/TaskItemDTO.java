@@ -22,6 +22,8 @@ public class TaskItemDTO implements Serializable {
 	private String taskItemId;
 
 	private String name;
+	
+	private String state;
 
 	private String desc;
 

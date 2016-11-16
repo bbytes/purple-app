@@ -488,6 +488,7 @@ public class DataModelToDTOConversionService {
 			itemDTO.setName(item.getName());
 			itemDTO.setUsers(new ArrayList<>(item.getUsers()));
 			itemDTO.setSpendHours(item.getSpendHours());
+			itemDTO.setState(item.getState().getDisplayName());
 			taskItemDTOList.add(itemDTO);
 		}
 		return taskItemDTOList;
@@ -510,6 +511,19 @@ public class DataModelToDTOConversionService {
 			}
 		}
 		return taskListDTOList;
+	}
+
+	public TaskItemDTO convertTaskItem(TaskItem taskItem) {
+		TaskItemDTO itemDTO = new TaskItemDTO();
+		itemDTO.setTaskItemId(taskItem.getTaskItemId());
+		itemDTO.setDesc(taskItem.getDesc());
+		itemDTO.setDueDate(taskItem.getDueDate());
+		itemDTO.setEstimatedHours(taskItem.getEstimatedHours());
+		itemDTO.setName(taskItem.getName());
+		itemDTO.setUsers(new ArrayList<>(taskItem.getUsers()));
+		itemDTO.setSpendHours(taskItem.getSpendHours());
+		itemDTO.setState(taskItem.getState().getDisplayName());
+		return itemDTO;
 	}
 
 }

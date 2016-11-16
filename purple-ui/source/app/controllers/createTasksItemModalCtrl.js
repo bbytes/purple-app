@@ -40,7 +40,10 @@ angular.module('rootApp').controller(
 			$scope.createTaskItem = function(taskItem) {
 				tasksService.createTaskItem($scope.taskList, taskItem).then(
 						function(response) {
-							$scope.taskItemsLists.push(response.data);
+							if($scope.taskItemsLists==null)
+								$scope.taskItemsLists=response.data;
+							else
+								$scope.taskItemsLists.push(response.data);
 						});
 				$uibModalInstance.close($scope.selection);
 			};
