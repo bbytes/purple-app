@@ -492,7 +492,7 @@ public class StatusService extends AbstractService<Status, String> {
 	 */
 	public String statusSnippetUrl(Status status, User user) {
 		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 24);
-		String snippetUrl = baseUrl + GlobalConstants.SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID + status.getStatusId();
+		String snippetUrl = baseUrl + GlobalConstants.STATUS_SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID_PARAM + status.getStatusId();
 		return snippetUrl;
 	}
 
