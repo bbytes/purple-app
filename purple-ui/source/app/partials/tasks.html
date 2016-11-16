@@ -77,12 +77,14 @@
 									ng-click="loadTaskItems(taskList,$index)">
 									<label>{{taskList.name}}</label> <label>{{taskList.spendHours}}
 										Hrs of {{taskList.estimatedHours}} Hrs</label>
+										<label>{{taskList.taskItems.length}}
+										tasks {{selectedState.value}}</label>
 									<div style="padding-left: 300px; width: 75px">
 										<a class="fa fa-close" style="float: left"
 											ng-click="deleteTaskList(taskList);"
-											confirm="Are you sure you want to delete the task list?"></a><span
+											confirm="Are you sure you want to delete the task list?"></a><h5
 											ng-click="deleteTaskList(taskList);"
-											confirm="Are you sure you want to delete the task list?">Delete</span>
+											confirm="Are you sure you want to delete the task list?">Delete</h5>
 									</div>
 								</div></li>
 						</ul>
@@ -109,8 +111,12 @@
 						<li role="menu" aria-labelledby="dropdownMenu"
 							ng-repeat="taskItem in taskItemsLists"><div
 								style="padding: 10px 20px; border-bottom: 1px solid #dcd8d8;">
-								<label>{{taskItem.name}}</label> <label>{{taskItem.spendHours}}
-									Hrs of {{taskItem.estimatedHours}} Hrs</label> <label>{{taskItem.dueDate|
+								<div stye="with:100%">
+									<label class="ng-binding" style="float: left; width: 80%">{{taskItem.name}}</label><label
+										style="width: 20%">{{taskItem.state}}</label>
+								</div>
+								<label>{{taskItem.spendHours}} Hrs of
+									{{taskItem.estimatedHours}} Hrs</label> <label>{{taskItem.dueDate|
 									date:'dd/MMM' }}</label> <label>{{taskItem.desc}}</label>
 								<div>
 									<span ng-repeat="user in taskItem.users">@{{user.name}}
@@ -120,14 +126,14 @@
 									<div style="padding-left: 540px; width: 75px">
 										<a class="fa fa-close" style="float: left"
 											ng-click="deleteTaskItem(taskItem);"
-											confirm="Are you sure you want to delete the task?"></a><span
+											confirm="Are you sure you want to delete the task?"></a><h5
 											ng-click="deleteTaskItem(taskItem);"
-											confirm="Are you sure you want to delete the task?">Delete</span>
+											confirm="Are you sure you want to delete the task?">Delete</h5>
 									</div>
-									<div style="padding-left: 10px; width: 175px">
+									<div style="width: 175px" ng-show="taskItem.state!='Completed'">
 										<a class="fa fa-check-circle-o" style="float: left"
-											ng-click="markCompleted(taskItem);"></a><span
-											ng-click="markCompleted(taskItem);">Mark as completed</span>
+											ng-click="markCompleted(taskItem);"></a><h5
+											ng-click="markCompleted(taskItem);">Mark as completed</h5>
 									</div>
 								</div>
 							</div></li>

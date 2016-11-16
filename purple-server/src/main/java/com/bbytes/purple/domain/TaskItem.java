@@ -88,7 +88,7 @@ public class TaskItem implements Comparable<TaskItem> {
 		users.remove(user);
 		taskList.addUsers(user);
 	}
-	
+
 	public void setOwner(User owner) {
 		this.owner = owner;
 		addUsers(owner);
@@ -97,6 +97,15 @@ public class TaskItem implements Comparable<TaskItem> {
 	@Override
 	public int compareTo(TaskItem taskList) {
 		return getDueDate().compareTo(taskList.getDueDate());
+	}
+
+	public void addUsers(Set<User> users) {
+		if (users == null) {
+			users = new HashSet<User>();
+		}
+		users.addAll(users);
+		taskList.addUsers(users);
+
 	}
 
 }

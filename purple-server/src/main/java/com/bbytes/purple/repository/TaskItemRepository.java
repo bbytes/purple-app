@@ -41,4 +41,8 @@ public interface TaskItemRepository extends MongoRepository<TaskItem, String> {
 
 	List<TaskItem> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate, List<Project> project, List<User> user);
 
+	List<TaskItem> findByTaskListAndState(TaskList taskList, TaskState taskState);
+
+	List<TaskItem> findByProjectAndStateAndUsers(Project project, TaskState taskState, User user);
+
 }
