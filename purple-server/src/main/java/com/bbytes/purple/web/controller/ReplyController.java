@@ -66,6 +66,9 @@ public class ReplyController {
 	@Value("${email.reply.subject}")
 	private String replySubject;
 
+	@Value("${email.tag.subject}")
+	private String tagSubject;
+
 	/**
 	 * The addReply method is used to add reply to comment
 	 * 
@@ -80,37 +83,33 @@ public class ReplyController {
 			throws PurpleException {
 
 		final String template = GlobalConstants.REPLY_EMAIL_TEMPLATE;
-		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		final String replyEmailText = GlobalConstants.REPLY_EMAIL_TEXT;
 
-		// We will get current logged in user
 		User user = userService.getLoggedInUser();
+		final String subject = user.getName() + " " + tagSubject;
 		Map<String, Object> replyMap = commentService.checkMentionUser(replyDTO.getReplyDesc());
 		replyDTO.setReplyDesc((String) replyMap.get("desc"));
 		Comment comment = replyService.postReply(commentId, replyDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
-		Set<String> mentionEmailList = (Set<String>) replyMap.get("mentionEmailList");
+		Set<String> mentioneEmailSet = (Set<String>) replyMap.get("mentionEmailList");
+		List<String> mentioneEmailList = new ArrayList<String>();
+		mentioneEmailList.addAll(mentioneEmailSet);
 
 		int replySize = comment.getReplies().size();
-		String postDate = dateFormat.format(comment.getCreationDate());
 
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
 		emailList.add(comment.getUser().getEmail());
-		emailList.addAll(mentionEmailList);
 
-		Map<String, Object> emailBody = new HashMap<>();
-		emailBody.put(GlobalConstants.USER_NAME, user.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize - 1).getReplyDesc());
-		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
-		emailBody.put(GlobalConstants.WORKED_ON,
-				Jsoup.parse(status.getWorkedOn() != null ? status.getWorkedOn() : "").text());
-		emailBody.put(GlobalConstants.WORKING_ON,
-				Jsoup.parse(status.getWorkingOn() != null ? status.getWorkingOn() : "").text());
-		emailBody.put(GlobalConstants.BLOCKERS,
-				Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
+		Map<String, Object> emailBody = replyEmailBody(user, comment, status, replySize, replyEmailText);
 
 		notificationService.sendTemplateEmail(emailList, replySubject, template, emailBody);
+
+		if (emailList != null && !emailList.isEmpty()) {
+			final String mentionEmailText = GlobalConstants.MENTIONED_EMAIL_TEXT;
+			Map<String, Object> mentionEmailBody = replyEmailBody(user, comment, status, replySize, mentionEmailText);
+			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
+		}
 
 		notificationService.sendSlackMessage(status.getUser(), template, emailBody);
 		notificationService.sendSlackMessage(comment.getUser(), template, emailBody);
@@ -123,6 +122,35 @@ public class ReplyController {
 				SuccessHandler.ADD_REPLY_SUCCESS);
 
 		return replyReponse;
+	}
+
+	/**
+	 * Return email body for reply email template
+	 * 
+	 * @param user
+	 * @param comment
+	 * @param status
+	 * @param replySize
+	 * @return
+	 */
+	private Map<String, Object> replyEmailBody(User user, Comment comment, Status status, int replySize,
+			String emailText) {
+
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		String postDate = dateFormat.format(comment.getCreationDate());
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, user.getName());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize - 1).getReplyDesc());
+		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
+		emailBody.put(GlobalConstants.WORKED_ON,
+				Jsoup.parse(status.getWorkedOn() != null ? status.getWorkedOn() : "").text());
+		emailBody.put(GlobalConstants.WORKING_ON,
+				Jsoup.parse(status.getWorkingOn() != null ? status.getWorkingOn() : "").text());
+		emailBody.put(GlobalConstants.BLOCKERS,
+				Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
+		emailBody.put(GlobalConstants.EMAIL_STRING_TEXT, emailText);
+		return emailBody;
 	}
 
 	/**
