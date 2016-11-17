@@ -1,6 +1,7 @@
 <div class="modal-header clearfix">
-	<h4 class="modal-title pull-left">TASK FOR {{ taskList.name |
-		uppercase}}</h4>
+	<h4 class="modal-title">CREATE NEW TASK</h4>
+	<h5 class="modal-title">{{taskList.name }}</h5>
+
 	<a class="pull-right glyphicon glyphicon-remove icon-clear"
 		ng-click="cancel()"></a>
 </div>
@@ -14,32 +15,35 @@
 							type="text" name="taskItem" ng-model="taskItem.name"
 							class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required>
 					</div>
-					<div class="form-group" ng-init="getHours();">
-						<label for="comment" class="settings">HOURS</label><input
-							type="text" name="taskItem" ng-model="taskItem.estimatedHours"
-							class="form-control" ng-pattern="/^[0-9]{1,7}$/" required>
-					</div>
-
-					<div class="form-group">
-						<label for="comment" class="settings">EDC</label> <input
-							type="text" class="form-control"
-							uib-datepicker-popup="{{format}}" ng-model="taskItem.dueDate"
-							is-open="popup.opened" datepicker-options="dateOptions"
-							ng-required="true" close-text="Close"
-							alt-input-formats="altInputFormats" ng-click="openDp()" /> </span>
-					</div>
-					<div class="form-group" ng-init="getAllUsersOfProject();">
-						<label for="comment" class="settings">USERS</label> <select
-							chosen="projectUsers" ng-model="taskItem.userIds"
-							id="usersDropdown" multiple="multiple">
-							<option value="">Select users</option>
-							<option ng-repeat="user in projectUsers" value="{{user.userId}}">{{user.name}}</option>
-						</select>
-					</div>
 					<div class="form-group">
 						<label for="comment" class="settings">DESCRIPTION</label>
 						<textarea name="taskItem" ng-model="taskItem.desc"
 							class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required></textarea>
+					</div>
+					<div style="width: 100%">
+						<div class="form-group" style="width: 40%; float: left"
+							ng-init="getHours();">
+							<label for="comment" class="settings">HOURS</label><input
+								type="text" name="taskItem" ng-model="taskItem.estimatedHours"
+								class="form-control" ng-pattern="/^[0-9]{1,7}$/" required>
+						</div>
+
+						<div class="form-group" style="width: 40%; float: right">
+							<label for="comment" class="settings">EDC</label> <input
+								type="text" class="form-control"
+								uib-datepicker-popup="{{format}}" ng-model="taskItem.dueDate"
+								is-open="popup.opened" datepicker-options="dateOptions"
+								ng-required="true" close-text="Close"
+								alt-input-formats="altInputFormats" ng-click="openDp()" /> </span>
+						</div>
+					</div>
+					<div class="form-group" ng-init="getAllUsersOfProject();">
+						<label for="comment" class="settings">USERS</label> <select
+							chosen="projectUsers" ng-model="taskItem.userIds"
+							id="usersDropdown" multiple="multiple" style="height: 50px">
+							<option value="">Select users</option>
+							<option ng-repeat="user in projectUsers" value="{{user.userId}}">{{user.name}}</option>
+						</select>
 					</div>
 				</div>
 
@@ -50,6 +54,11 @@
 </div>
 
 <div class="modal-footer add-user">
-	<button class="btn save-close" ng-click="createTaskItem(taskItem)"
-		ng-click="cancel()">SAVE & CLOSE</button>
+	<div style="width: 50%; float: right">
+		<button class="btn save-close" ng-click="createTaskItem(taskItem)"
+			ng-click="cancel()">SAVE & CLOSE</button>
+	</div>
+	<div style="width: 50%; float: right">
+		<button class="btn save-close" ng-click="createMoreTaskItem(taskItem)">ADD MORE TASK</button>
+	</div>
 </div>

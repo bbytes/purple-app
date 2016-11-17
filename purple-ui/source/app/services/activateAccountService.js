@@ -1,7 +1,8 @@
-/**
- *  Activate Account Service
+/* 
+ * Activate Account Service
+ * @author - Akshay
  */
-rootApp.service('activateAccountService', function ($rootScope, $http, $q, $window) {
+angular.module('rootApp').service('activateAccountService', function ($rootScope, $http, $q, $window) {
 
     this.activate = function (tokenstored) {
 

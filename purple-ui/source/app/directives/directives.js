@@ -420,7 +420,7 @@ angular.module('rootApp').directive('chosen', function ($timeout) {
 angular.module('rootApp').directive('workingonTextAngularMentio', ['$rootScope', function ($rootScope) {
         var directiveDefinitionObject = {
             restrict: 'E',
-            templateUrl: "app/partials/workingonTextAngularWithMentio.html",
+            templateUrl: "app/partials/textAngular-mention-template/workingonTextAngularWithMentio.html",
             require: '^ngModel',
             scope: {
                 ngModel: '='
@@ -457,7 +457,7 @@ angular.module('rootApp').directive('workingonTextAngularMentio', ['$rootScope',
 angular.module('rootApp').directive('workedonTextAngularMentio', ['$rootScope', function ($rootScope) {
         var directiveDefinitionObject = {
             restrict: 'E',
-            templateUrl: "app/partials/workedonTextAngularWithMentio.html",
+            templateUrl: "app/partials/textAngular-mention-template/workedonTextAngularWithMentio.html",
             require: '^ngModel',
             scope: {
                 ngModel: '='
@@ -494,7 +494,43 @@ angular.module('rootApp').directive('workedonTextAngularMentio', ['$rootScope', 
 angular.module('rootApp').directive('blockersTextAngularMentio', ['$rootScope', function ($rootScope) {
         var directiveDefinitionObject = {
             restrict: 'E',
-            templateUrl: "app/partials/blockersTextAngularWithMentio.html",
+            templateUrl: "app/partials/textAngular-mention-template/blockersTextAngularWithMentio.html",
+            require: '^ngModel',
+            scope: {
+                ngModel: '='
+            },
+            controller: ['$scope', function ($scope) {
+                    $scope.setup = function (element) {
+                        element.attr('mentio', 'mentio');
+                        element.attr('mentio-typed-term', 'typedTerm');
+                        element.attr('mentio-require-leading-space', 'true');
+                        element.attr('mentio-id', "'content-editor+$id'");
+                    };
+
+                    $scope.searchPeople = function (term) {
+                        var peopleList = [];
+                        angular.forEach($rootScope.projectUsers, function (value, key) {
+                            if (value.userName.toUpperCase().indexOf(term.toUpperCase()) >= 0 || value.email.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
+                                peopleList.push(value);
+                            }
+                        });
+                        $scope.people = peopleList;
+                    };
+
+                    $scope.getPeopleText = function (item) {
+                        return '@<!--' + item.email + '-->' + item.userName;
+                    };
+                }]
+        };
+
+        return directiveDefinitionObject;
+    }]);
+
+// text angular with @ mention for comment
+angular.module('rootApp').directive('commentTextAngularMentio', ['$rootScope', function ($rootScope) {
+        var directiveDefinitionObject = {
+            restrict: 'E',
+            templateUrl: "app/partials/textAngular-mention-template/commentTextAngularWithMentio.html",
             require: '^ngModel',
             scope: {
                 ngModel: '='

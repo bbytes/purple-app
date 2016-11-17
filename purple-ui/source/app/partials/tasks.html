@@ -69,25 +69,29 @@
 				</div>
 				<div id="tasksList">
 					<div class="panel-body">
-						<ul class="task-list-group project-nav">
+						<ul class="task-list-group project-nav" ng-show="taskLists.length>0">
 							<li ng-class="{'selectedtl':$index == selectedTLIndx}"
 								role="menu" aria-labelledby="dropdownMenu"
 								ng-repeat="taskList in taskLists"><div
 									style="padding: 10px 20px; border-bottom: 1px solid #dcd8d8;"
 									ng-click="loadTaskItems(taskList,$index)">
 									<label>{{taskList.name}}</label> <label>{{taskList.spendHours}}
-										Hrs of {{taskList.estimatedHours}} Hrs</label>
-										<label>{{taskList.taskItems.length}}
+										Hrs of {{taskList.estimatedHours}} Hrs</label> <label>{{taskList.taskItems.length}}
 										tasks {{selectedState.value}}</label>
 									<div style="padding-left: 300px; width: 75px">
 										<a class="fa fa-close" style="float: left"
 											ng-click="deleteTaskList(taskList);"
-											confirm="Are you sure you want to delete the task list?"></a><h5
-											ng-click="deleteTaskList(taskList);"
+											confirm="Are you sure you want to delete the task list?"></a>
+										<h5 ng-click="deleteTaskList(taskList);"
 											confirm="Are you sure you want to delete the task list?">Delete</h5>
 									</div>
 								</div></li>
 						</ul>
+						<div
+							style="height: 250px; text-align: center; vertical-align: middle; line-height: 250px; color: grey"
+							ng-show="taskLists==null || taskLists.length==0"
+							aria-hidden="false" class="">No task list to show at this
+							time</div>
 					</div>
 				</div>
 			</div>
@@ -107,9 +111,11 @@
 			</div>
 			<div id="tasksItemsList">
 				<div class="panel-body">
-					<ul class="task-list-group project-nav">
+					<ul class="task-list-group project-nav"
+						ng-show="taskItemsLists.length>0">
 						<li role="menu" aria-labelledby="dropdownMenu"
-							ng-repeat="taskItem in taskItemsLists"><div
+							ng-repeat="taskItem in taskItemsLists">
+							<div
 								style="padding: 10px 20px; border-bottom: 1px solid #dcd8d8;">
 								<div stye="with:100%">
 									<label class="ng-binding" style="float: left; width: 80%">{{taskItem.name}}</label><label
@@ -120,24 +126,37 @@
 									date:'dd/MMM' }}</label> <label>{{taskItem.desc}}</label>
 								<div>
 									<span ng-repeat="user in taskItem.users">@{{user.name}}
-										&nbsp;</span>
+										&nbsp;</span> <a class="fa fa-plus-circle ng-isolate-scope"
+										style="color: green" ng-click="addUser(taskItem);">Add
+										User</a>
 								</div>
-								<div>
-									<div style="padding-left: 540px; width: 75px">
-										<a class="fa fa-close" style="float: left"
-											ng-click="deleteTaskItem(taskItem);"
-											confirm="Are you sure you want to delete the task?"></a><h5
-											ng-click="deleteTaskItem(taskItem);"
-											confirm="Are you sure you want to delete the task?">Delete</h5>
-									</div>
-									<div style="width: 175px" ng-show="taskItem.state!='Completed'">
-										<a class="fa fa-check-circle-o" style="float: left"
-											ng-click="markCompleted(taskItem);"></a><h5
-											ng-click="markCompleted(taskItem);">Mark as completed</h5>
+
+								<div style="width: 100%; height: 30px;">
+									<div style="width: 50%; float: right; margin: 10px;"
+										aria-hidden="false" class="">
+										<div style="width: 60%; float: left" align="centre"
+											ng-show="taskItem.state!='Completed'">
+											<a class="fa fa-check-circle-o"
+												ng-click="markCompleted(taskItem);">Mark as completed</a>
+										</div>
+										<div style="width: 20%; float: right" align="right">
+											<a class="fa fa-close" ng-click="deleteTaskItem(taskItem)">Delete</a>
+										</div>
+										<div style="width: 20%; float: right" align="centre">
+											<a class="fa fa-edit ng-isolate-scope"
+												ng-click="deleteTaskItem(taskItem);"
+												confirm="Are you sure you want to delete the task?">Edit</a>
+										</div>
 									</div>
 								</div>
-							</div></li>
+							</div>
+						</li>
 					</ul>
+					<div
+						style="height: 250px; text-align: center; vertical-align: middle; line-height: 250px; color: grey"
+						ng-show="taskItemsLists==null || taskItemsLists.length==0"
+						aria-hidden="false" class="">No task items to show at this
+						time</div>
 				</div>
 			</div>
 		</div>

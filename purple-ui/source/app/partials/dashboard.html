@@ -158,22 +158,14 @@
 
                         <label for="comment">Comment:</label>
 
-                        <textarea class="form-control" id="text" name="formData[commentDesc]" rows="5" id="comment" ng-model="formData.commentDesc" placeholder="Your comment..." maxlength="200" 
+<!--                        <textarea class="form-control" name="formData[commentDesc]" rows="5" id="comment" ng-model="formData.commentDesc" placeholder="Your comment..." maxlength="200" 
                                   mentio 
                                   mentio-id="'commentTextArea'"
                                   mentio-typed-term="typedTerm"
                                   mentio-require-leading-space="true"
                                   ng-trim="false"
-                                  required></textarea>
-
-                        <mentio-menu 
-                            mentio-for="'commentTextArea'"
-                            mentio-trigger-char="'@'"
-                            mentio-items="people"
-                            mentio-template-url="/people-iterator.tpl"
-                            mentio-search="searchPeople(term)"
-                            mentio-select="getPeopleText(item)">
-                        </mentio-menu>
+                                  required></textarea>-->
+                        <comment-text-angular-mentio ng-model="formData.commentDesc"></comment-text-angular-mentio>
 
                         <h6 class="pull-right">
                             {{200 - formData.commentDesc.length}} / 200
@@ -200,7 +192,7 @@
                 <div class="user-label">
                     <h4>{{comment.userName}}</h4>
                     <md-content class="example-3 md-accent">
-                        <span
+                        <span ng-bind-html="comment.commentDesc"
                             inline-edit="comment.commentDesc"
                             ng-click="updateComment(comment.commentDesc, comment.commentId)"
                             inline-edit-textarea
@@ -246,8 +238,8 @@
 
                             <div class="form-group">
                                 <input type="hidden" ng-model= "commentId"/>
-                                <label for="comment">Reply Comment: <span><a href="#" ng-click="showDetails = ! showDetails" style="float:right;">close</a></span></label>
-                                <textarea class="form-control" id="text" name="replyObj[replyDesc]" rows="5" id="replyDesc" ng-model="replyObj.replyDesc" requiredclear-input placeholder="Reply comment..." maxlength="200"
+                                <label for="comment">Reply Comment: <span><a href="" ng-click="showDetails = ! showDetails" style="float:right;">close</a></span></label>
+                                <textarea class="form-control" name="replyObj[replyDesc]" rows="5" id="replyDesc" ng-model="replyObj.replyDesc" requiredclear-input placeholder="Reply comment..." maxlength="200"
                                           mentio 
                                           mentio-id="'replyTextArea'"
                                           mentio-typed-term="typedTerm"

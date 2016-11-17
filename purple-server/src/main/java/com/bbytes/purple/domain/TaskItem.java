@@ -103,7 +103,7 @@ public class TaskItem implements Comparable<TaskItem> {
 		if (users == null) {
 			users = new HashSet<User>();
 		}
-		users.addAll(users);
+		this.users.addAll(users);
 		taskList.addUsers(users);
 
 	}

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +93,7 @@ public class CommentController {
 
 		notificationService.sendTemplateEmail(emailList, commentSubject, template, commentEmailBody);
 
-		if (emailList != null && !emailList.isEmpty()) {
+		if (mentioneEmailList != null && !mentioneEmailList.isEmpty()) {
 			Map<String, Object> mentionEmailBody = commentEmailBody(user, comment, status,
 					GlobalConstants.MENTIONED_EMAIL_TEXT, "");
 			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
@@ -128,12 +127,9 @@ public class CommentController {
 		emailBody.put(GlobalConstants.USER_NAME, userName);
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
-		emailBody.put(GlobalConstants.WORKED_ON,
-				Jsoup.parse(status.getWorkedOn() != null ? status.getWorkedOn() : "").text());
-		emailBody.put(GlobalConstants.WORKING_ON,
-				Jsoup.parse(status.getWorkingOn() != null ? status.getWorkingOn() : "").text());
-		emailBody.put(GlobalConstants.BLOCKERS,
-				Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
+		emailBody.put(GlobalConstants.WORKED_ON, status.getWorkedOn());
+		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn());
+		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers());
 		emailBody.put(GlobalConstants.EMAIL_STRING_TEXT, emailText);
 		emailBody.put("userName", user.getName());
 		return emailBody;

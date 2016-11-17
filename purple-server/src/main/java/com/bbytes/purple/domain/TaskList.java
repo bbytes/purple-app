@@ -89,7 +89,7 @@ public class TaskList implements Comparable<TaskList> {
 
 	public Set<TaskItem> getTaskItems() {
 		return this.taskItems;
-		
+
 	}
 
 	public void addUsers(User user) {
@@ -121,10 +121,12 @@ public class TaskList implements Comparable<TaskList> {
 		dueDate = DateTime.now().toDate();
 
 		for (TaskItem taskItem : taskItems) {
-			estimatedHours = estimatedHours + taskItem.getEstimatedHours();
-			spendHours = spendHours + taskItem.getSpendHours();
-			if (taskItem.getDueDate() != null && dueDate.compareTo(taskItem.getDueDate()) < 0)
-				dueDate = taskItem.getDueDate();
+			if (taskItem != null) {
+				estimatedHours = estimatedHours + taskItem.getEstimatedHours();
+				spendHours = spendHours + taskItem.getSpendHours();
+				if (taskItem.getDueDate() != null && dueDate.compareTo(taskItem.getDueDate()) < 0)
+					dueDate = taskItem.getDueDate();
+			}
 		}
 
 		for (TaskItem taskItem : taskItems) {

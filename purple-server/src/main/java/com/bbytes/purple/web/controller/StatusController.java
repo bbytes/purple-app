@@ -14,7 +14,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
-import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,10 +106,12 @@ public class StatusController {
 
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList, loggedInUser);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				loggedInUser);
 
 		logger.debug("Status for project  '" + status.getProject().getProjectName() + "' is added successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap, SuccessHandler.ADD_STATUS_SUCCESS);
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+				SuccessHandler.ADD_STATUS_SUCCESS);
 
 		return statusReponse;
 	}
@@ -129,12 +130,13 @@ public class StatusController {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, status.getDateTime());
-		emailBody.put(GlobalConstants.WORKED_ON, Jsoup.parse(status.getWorkedOn() != null ? status.getWorkedOn() : "").text());
-		emailBody.put(GlobalConstants.WORKING_ON, Jsoup.parse(status.getWorkingOn() != null ? status.getWorkingOn() : "").text());
-		emailBody.put(GlobalConstants.BLOCKERS, Jsoup.parse(status.getBlockers() != null ? status.getBlockers() : "").text());
+		emailBody.put(GlobalConstants.WORKED_ON, status.getWorkedOn());
+		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn());
+		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers());
 
 		for (User mentionUser : status.getMentionUser()) {
-			notificationService.sendSlackMessage(mentionUser, "Statusnap @mention url ",statusService.statusSnippetUrl(status, mentionUser));
+			notificationService.sendSlackMessage(mentionUser, "Statusnap @mention url ",
+					statusService.statusSnippetUrl(status, mentionUser));
 		}
 
 		if (emailList != null && !emailList.isEmpty()) {
@@ -159,10 +161,12 @@ public class StatusController {
 		Status status = statusService.getStatus(statusId);
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList, user);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				user);
 
 		logger.debug("Status for project  '" + status.getProject().getProjectName() + "' is getting successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap, SuccessHandler.GET_STATUS_SUCCESS);
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+				SuccessHandler.GET_STATUS_SUCCESS);
 
 		return statusReponse;
 	}
@@ -175,15 +179,18 @@ public class StatusController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/api/v1/status", method = RequestMethod.GET)
-	public RestResponse getAllStatus(@RequestParam("timePeriod") String timePeriod) throws PurpleException, ParseException {
+	public RestResponse getAllStatus(@RequestParam("timePeriod") String timePeriod)
+			throws PurpleException, ParseException {
 
 		// We will get current logged in user
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
 		User user = userService.getLoggedInUser();
 		List<Status> statusList = statusService.getAllStatus(user, timePeriodValue);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList, user);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				user);
 		logger.debug("All status are fetched successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap, SuccessHandler.GET_STATUS_SUCCESS);
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+				SuccessHandler.GET_STATUS_SUCCESS);
 
 		return statusReponse;
 	}
@@ -201,9 +208,11 @@ public class StatusController {
 		// We will get current logged in user
 		User user = userService.getLoggedInUser();
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
-		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user, timePeriodValue);
+		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user,
+				timePeriodValue);
 		response.setContentType("text/csv");
-		String csvFileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss") + ".csv";
+		String csvFileName = "status" + "_" + timePeriodValue + "_" + DateTime.now().toString("yyyy-MM-dd HH-mm-ss")
+				+ ".csv";
 		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", csvFileName));
 		response.setHeader("purple-file-name", csvFileName);
 
@@ -218,8 +227,10 @@ public class StatusController {
 	 * @throws PurpleException
 	 */
 	@RequestMapping(value = "/api/v1/status/csv", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public FileSystemResource getCSVForAllStatus(@RequestParam(value = "timePeriod", required = false) String timePeriod,
-			@RequestParam(value = "userId", required = false) String userId, HttpServletResponse response) throws PurpleException {
+	public FileSystemResource getCSVForAllStatus(
+			@RequestParam(value = "timePeriod", required = false) String timePeriod,
+			@RequestParam(value = "userId", required = false) String userId, HttpServletResponse response)
+			throws PurpleException {
 
 		Integer timePeriodValue = null;
 		List<Status> statusList = null;
@@ -285,10 +296,12 @@ public class StatusController {
 
 		List<Status> statusList = new ArrayList<Status>();
 		statusList.add(status);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList, loggedInUser);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				loggedInUser);
 
 		logger.debug("Projects are fetched successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap, SuccessHandler.UPDATE_STATUS_SUCCESS);
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+				SuccessHandler.UPDATE_STATUS_SUCCESS);
 
 		return statusReponse;
 	}
@@ -306,10 +319,13 @@ public class StatusController {
 
 		User user = userService.getLoggedInUser();
 		Integer timePeriodValue = TimePeriod.valueOf(timePeriod).getDays();
-		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user, timePeriodValue);
-		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList, user);
+		List<Status> statusList = statusService.getAllStatusByProjectAndUser(usersAndProjectsDTO, user,
+				timePeriodValue);
+		Map<String, Object> statusMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndStatus(statusList,
+				user);
 		logger.debug("All status are fetched successfully");
-		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap, SuccessHandler.GET_STATUS_SUCCESS);
+		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, statusMap,
+				SuccessHandler.GET_STATUS_SUCCESS);
 
 		return statusReponse;
 	}
@@ -342,9 +358,11 @@ public class StatusController {
 
 		if (usersAndProjectsDTO.getProjectList().isEmpty() && usersAndProjectsDTO.getProjectUser().equals(PROJECT)) {
 			if (aggrType.equals("day")) {
-				result = statusAnalyticsService.getProjectPerDayCountHours(new HashSet<Project>(projectOfUser), startDate, endDate);
+				result = statusAnalyticsService.getProjectPerDayCountHours(new HashSet<Project>(projectOfUser),
+						startDate, endDate);
 			} else {
-				result = statusAnalyticsService.getProjectPerMonthCountHours(new HashSet<Project>(projectOfUser), startDate, endDate);
+				result = statusAnalyticsService.getProjectPerMonthCountHours(new HashSet<Project>(projectOfUser),
+						startDate, endDate);
 			}
 			List<ProjectUserCountStats> statusAnalyticsList = new ArrayList<ProjectUserCountStats>();
 			if (result != null) {
@@ -353,8 +371,8 @@ public class StatusController {
 					statusAnalyticsList.add(projectUserCountStats);
 				}
 			}
-			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyProject(statusAnalyticsList,
-					usersAndProjectsDTO.getCountHours(), aggrType);
+			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyProject(
+					statusAnalyticsList, usersAndProjectsDTO.getCountHours(), aggrType);
 		} else if (usersAndProjectsDTO.getUserList().isEmpty() && usersAndProjectsDTO.getProjectUser().equals(USER)) {
 
 			if (aggrType.equals("day")) {
@@ -370,8 +388,8 @@ public class StatusController {
 					statusAnalyticsList.add(projectUserCountStats);
 				}
 			}
-			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyUser(statusAnalyticsList,
-					usersAndProjectsDTO.getCountHours(), aggrType);
+			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyUser(
+					statusAnalyticsList, usersAndProjectsDTO.getCountHours(), aggrType);
 		} else if (usersAndProjectsDTO.getProjectList().get(0) != null) {
 
 			Project project = projectService.findByProjectId(usersAndProjectsDTO.getProjectList().get(0));
@@ -391,8 +409,8 @@ public class StatusController {
 					statusAnalyticsList.add(projectUserCountStats);
 				}
 			}
-			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyProject(statusAnalyticsList,
-					usersAndProjectsDTO.getCountHours(), aggrType);
+			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyProject(
+					statusAnalyticsList, usersAndProjectsDTO.getCountHours(), aggrType);
 		} else {
 
 			User getUser = userService.getUserByEmail(usersAndProjectsDTO.getUserList().get(0));
@@ -411,8 +429,8 @@ public class StatusController {
 					statusAnalyticsList.add(projectUserCountStats);
 				}
 			}
-			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyUser(statusAnalyticsList,
-					usersAndProjectsDTO.getCountHours(), aggrType);
+			projectUserCountStatsDTO = dataModelToDTOConversionService.getResponseMapWithStatusAnalyticsbyUser(
+					statusAnalyticsList, usersAndProjectsDTO.getCountHours(), aggrType);
 		}
 		logger.debug("All Status Analytics are fetched successfully");
 		RestResponse statusReponse = new RestResponse(RestResponse.SUCCESS, projectUserCountStatsDTO,

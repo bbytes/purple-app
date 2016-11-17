@@ -1,7 +1,8 @@
-/*
+/* 
  * Integration Service
+ * @author - Akshay
  */
-rootApp.service('integrationService', function ($rootScope, $http, $q) {
+angular.module('rootApp').service('integrationService', function ($rootScope, $http, $q) {
 
     this.connectToJira = function (data) {
 

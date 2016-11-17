@@ -92,8 +92,8 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		taskList.setProject(project);
 		taskList = taskListRepository.save(taskList);
 		
-		TaskItem taskItem1 = new TaskItem(taskList, "test", "test desc", 20, DateTime.now().plusDays(2).toDate());
-		TaskItem taskItem2 = new TaskItem(taskList, "test2", "test desc2", 10, DateTime.now().plusDays(2).toDate());
+		TaskItem taskItem1 = new TaskItem("test", "test desc", 20, DateTime.now().plusDays(2).toDate());
+		TaskItem taskItem2 = new TaskItem("test2", "test desc2", 10, DateTime.now().plusDays(2).toDate());
 		taskItem1.setOwner(user);
 		taskItem2.setOwner(user);
 		taskList.addTaskItem(taskItem1);

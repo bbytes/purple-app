@@ -1,6 +1,7 @@
 package com.bbytes.purple.rest.dto.models;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.Data;
 
@@ -14,6 +15,12 @@ public class TaskListDTO implements Serializable {
 	private String name;
 
 	private String projectId;
+
+	private double spendHours;
+
+	private double estimatedHours;
+
+	private List<TaskItemDTO> taskItems;
 	
-	private String timeData;
+	private int taskItemsForGivenState;
 }

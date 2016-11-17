@@ -8,10 +8,10 @@ angular.module('rootApp').controller(
 			$scope.taskList = params.taskList;
 			$scope.taskItemsLists = params.taskItems;
 			$scope.project = params.project;
-			$scope.mindate=new Date();
-			
+			$scope.mindate = new Date();
+
 			$scope.dateOptions = {
-				minDate: new Date()
+				minDate : new Date()
 			};
 
 			$scope.toggleSelection = function toggleSelection(id) {
@@ -32,7 +32,7 @@ angular.module('rootApp').controller(
 				});
 			};
 			$scope.getAllUsersOfProject = function() {
-				projectService.getAllUsersOfProject($scope.taskList.project.projectId)
+				projectService.getAllUsersOfProject($scope.taskList.projectId)
 						.then(function(response) {
 							$scope.projectUsers = response.data;
 						});
@@ -40,14 +40,23 @@ angular.module('rootApp').controller(
 			$scope.createTaskItem = function(taskItem) {
 				tasksService.createTaskItem($scope.taskList, taskItem).then(
 						function(response) {
-							if($scope.taskItemsLists==null)
-								$scope.taskItemsLists=response.data;
+							if ($scope.taskItemsLists == null)
+								$scope.taskItemsLists = response.data;
 							else
 								$scope.taskItemsLists.push(response.data);
 						});
 				$uibModalInstance.close($scope.selection);
 			};
-
+			$scope.createMoreTaskItem = function(taskItem) {
+				tasksService.createTaskItem($scope.taskList, taskItem).then(
+						function(response) {
+							if ($scope.taskItemsLists == null)
+								$scope.taskItemsLists = response.data;
+							else
+								$scope.taskItemsLists.push(response.data);
+						});
+				$scope.taskItem = new Object();
+			};
 			$scope.cancel = function() {
 				$uibModalInstance.dismiss('cancel');
 			};

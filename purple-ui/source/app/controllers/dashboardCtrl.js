@@ -18,7 +18,7 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
     $scope.timelineData;
 
     // variable to store the information about user data
-    $scope.projectUsers;
+    $rootScope.projectUsers;
 
     /*
      * Get all status timeline
@@ -143,7 +143,7 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
             }
             projectService.getprojectsUsers(projectIds).then(function (response) {
                 if (response.success) {
-                    $scope.projectUsers = response.data.gridData;
+                    $rootScope.projectUsers = response.data.gridData;
                 }
             });
         });
