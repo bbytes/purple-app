@@ -120,14 +120,16 @@
 									date:'dd/MMM' }}</label> <label>{{taskItem.desc}}</label>
 								<div>
 									<span ng-repeat="user in taskItem.users">@{{user.name}}
-										&nbsp;</span>
+										&nbsp;</span> <a class="fa fa-plus-circle ng-isolate-scope"
+										style="color: green" ng-click="addUser(taskItem);">Add
+										User</a>
 								</div>
 
 								<div style="width: 100%; height: 30px;">
-									<div style="width: 50%; float: right; margin: 10px;" aria-hidden="false"
-										class="">
-										<div style="width: 60%; float: left" align="centre" 
-										ng-show="taskItem.state!='Completed'">
+									<div style="width: 50%; float: right; margin: 10px;"
+										aria-hidden="false" class="">
+										<div style="width: 60%; float: left" align="centre"
+											ng-show="taskItem.state!='Completed'">
 											<a class="fa fa-check-circle-o"
 												ng-click="markCompleted(taskItem);">Mark as completed</a>
 										</div>
