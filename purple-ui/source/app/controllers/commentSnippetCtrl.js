@@ -1,26 +1,26 @@
 /*
- *  Status snippet Controller
+ *  Comment snippet Controller
  *  @author - Akshay
  */
-angular.module('rootApp').controller('statusSnippetCtrl', function ($rootScope, $scope, $state, $q, $http, appNotifyService) {
+angular.module('rootApp').controller('commentSnippetCtrl', function ($rootScope, $scope, $state, $q, $http, appNotifyService) {
 
     $rootScope.feedbackClass = 'feedback-log';
     $rootScope.authToken = $state.params.pk;
-    $rootScope.statusId = $state.params.sid;
+    $rootScope.commentId = $state.params.cid;
 
     var deferred = $q.defer();
 
     $http({
         method: 'GET',
-        url: $rootScope.baseUrl + 'api/v1/status/' + $rootScope.statusId,
+        url: $rootScope.baseUrl + 'api/v1/comment/' + $rootScope.commentId,
         headers: {
             'Content-Type': 'application/json'
         }
     }).success(function (response, status, headers, config) {
 
         if (response.success) {
-            $scope.statusDate = response.data.gridData[0].date;
-            $scope.status = response.data.gridData[0].statusList[0];
+            $scope.comment = response.data;
+            $scope.status = response.data.status;
         } else {
             $state.go("login");
         }

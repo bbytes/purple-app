@@ -410,9 +410,17 @@ rootApp.config([
             url: '/updateSetting?token',
             controller: 'updateSettingCtrl'
         }).state('status-snippet', {
-            url: '/status-snippet?pk$sid',
+            url: '/status-snippet?pk&sid',
             templateUrl: 'app/partials/status-snippet.html',
             controller: 'statusSnippetCtrl'
+        }).state('comment-snippet', {
+            url: '/comment-snippet?pk&cid',
+            templateUrl: 'app/partials/comment-snippet.html',
+            controller: 'commentSnippetCtrl'
+        }).state('reply-snippet', {
+            url: '/reply-snippet?pk&cid&rid',
+            templateUrl: 'app/partials/reply-snippet.html',
+            controller: 'replySnippetCtrl'
         }).state('accountactivate', {
             controller: 'activateAccountCtrl'
         });

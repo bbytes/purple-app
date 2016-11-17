@@ -1,5 +1,6 @@
 /* 
- * Interceptor declaration Service 
+ * Interceptor declaration Service
+ * @author - Akshay
  */
 angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $injector, $location, appNotifyService) {
     return {
@@ -73,6 +74,12 @@ angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $
                         appNotifyService.error('Error while updating project.');
                         break;
                     case "status_not_found":
+                        appNotifyService.error(response.data.data);
+                        break;
+                    case "comment_not_found":
+                        appNotifyService.error(response.data.data);
+                        break;
+                    case "reply_not_found":
                         appNotifyService.error(response.data.data);
                         break;
                     case "sign_up_failed":

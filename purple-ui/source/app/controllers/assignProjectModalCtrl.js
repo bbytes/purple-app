@@ -1,7 +1,8 @@
 /*
  * Assign Project to User Modal Controller
+ * @author - Akshay
  */
-angular.module('rootApp').controller('assignProjectModalCtrl', function ($scope, modalData, appNotifyService, projectService, $uibModalInstance, $uibModal) {
+angular.module('rootApp').controller('assignProjectModalCtrl', function ($scope, modalData, projectService, $uibModalInstance, $uibModal) {
 
     $scope.title = modalData.title;
     $scope.projectId = modalData.projectId;

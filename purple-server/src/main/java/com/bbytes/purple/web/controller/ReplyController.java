@@ -37,7 +37,7 @@ import com.bbytes.purple.utils.SuccessHandler;
 /**
  * Reply Controller
  * 
- * @author akshay
+ * @author Akshay
  *
  */
 @RestController
@@ -83,7 +83,6 @@ public class ReplyController {
 			throws PurpleException {
 
 		final String template = GlobalConstants.REPLY_EMAIL_TEMPLATE;
-		final String replyEmailText = GlobalConstants.REPLY_EMAIL_TEXT;
 
 		User user = userService.getLoggedInUser();
 		final String subject = user.getName() + " " + tagSubject;
@@ -101,13 +100,14 @@ public class ReplyController {
 		emailList.add(status.getUser().getEmail());
 		emailList.add(comment.getUser().getEmail());
 
-		Map<String, Object> emailBody = replyEmailBody(user, comment, status, replySize, replyEmailText);
+		Map<String, Object> emailBody = replyEmailBody(user, comment, status, replySize,
+				GlobalConstants.REPLY_EMAIL_TEXT);
 
 		notificationService.sendTemplateEmail(emailList, replySubject, template, emailBody);
 
 		if (emailList != null && !emailList.isEmpty()) {
-			final String mentionEmailText = GlobalConstants.MENTIONED_EMAIL_TEXT;
-			Map<String, Object> mentionEmailBody = replyEmailBody(user, comment, status, replySize, mentionEmailText);
+			Map<String, Object> mentionEmailBody = replyEmailBody(user, comment, status, replySize,
+					GlobalConstants.MENTIONED_EMAIL_TEXT);
 			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
 		}
 
@@ -214,6 +214,26 @@ public class ReplyController {
 		Map<String, Object> replyMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndReply(comment);
 
 		logger.debug("All Replies for comment Id  '" + commentId + "' is fetched successfully");
+		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyMap, SuccessHandler.GET_REPLY_SUCCESS);
+
+		return replyReponse;
+	}
+
+	/**
+	 * The getReply method is used to get particular reply of comment
+	 * 
+	 * @param commentId
+	 * @param replyId
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/comment/{commentId}/reply/{replyId}", method = RequestMethod.GET)
+	public RestResponse getReply(@PathVariable("commentId") String commentId, @PathVariable("replyId") String replyId)
+			throws PurpleException {
+
+		Map<String, Object> replyMap = replyService.getReply(commentId, replyId);
+
+		logger.debug("Reply for comment Id  '" + commentId + "' is fetched successfully");
 		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyMap, SuccessHandler.GET_REPLY_SUCCESS);
 
 		return replyReponse;

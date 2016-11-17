@@ -24,6 +24,8 @@ import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
 
 /**
+ * Comment Service
+ * 
  * @author aditya
  *
  */
@@ -99,6 +101,25 @@ public class CommentService extends AbstractService<Comment, String> {
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.DELETE_COMMENT_FAILED);
 		}
+	}
+
+	/**
+	 * Return comment object
+	 * 
+	 * @param commentId
+	 * @return
+	 * @throws PurpleException
+	 */
+	public Comment getComment(String commentId) throws PurpleException {
+		Comment comment = null;
+		if (!commentIdExist(commentId))
+			throw new PurpleException("Error while getting comment", ErrorHandler.COMMENT_NOT_FOUND);
+		try {
+			comment = commentRepository.findOne(commentId);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_COMMENT_FAILED);
+		}
+		return comment;
 	}
 
 	public Comment updateComment(String commentId, CommentDTO comment) throws PurpleException {

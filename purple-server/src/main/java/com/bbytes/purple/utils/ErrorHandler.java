@@ -97,6 +97,8 @@ public class ErrorHandler {
 	public static final String UPDATE_REPLY_FAILED = "update_reply_failed";
 
 	public static final String DELETE_REPLY_FAILED = "delete_reply_failed";
+	
+	public static final String GET_REPLY_FAILED = "get_reply_failed";
 
 	public static final String UPDATE_COMMENT_FAILED = "update_comment_failed";
 

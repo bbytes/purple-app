@@ -1,5 +1,8 @@
-
-rootApp.controller('metricsCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService, appNotifyService, $window, $location, metricsService, commentService, editableOptions, $mdSidenav) {
+/*
+ * Metrics Controller
+ * @author - Akshay
+ */
+angular.module('rootApp').controller('metricsCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService, appNotifyService, $window, $location, metricsService, commentService, editableOptions, $mdSidenav) {
 
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.navClass = 'nav-control';

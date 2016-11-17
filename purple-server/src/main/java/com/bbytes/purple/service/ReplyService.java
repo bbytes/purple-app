@@ -1,7 +1,9 @@
 package com.bbytes.purple.service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +18,13 @@ import com.bbytes.purple.repository.ReplyRepository;
 import com.bbytes.purple.rest.dto.models.ReplyDTO;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
+
+/**
+ * Reply Service
+ * 
+ * @author Akshay
+ *
+ */
 
 @Service
 public class ReplyService extends AbstractService<Reply, String> {
@@ -118,6 +127,42 @@ public class ReplyService extends AbstractService<Reply, String> {
 		}
 
 		return comment;
+	}
+
+	/**
+	 * Return reply object of comment
+	 * 
+	 * @param commentId
+	 * @param replyId
+	 * @throws PurpleException
+	 */
+	public Map<String,Object> getReply(String commentId, String replyId) throws PurpleException {
+		Reply reply = null;
+		Comment comment = null;
+		Map<String,Object> replyMap = new LinkedHashMap<>();
+		if (!commentService.commentIdExist(commentId))
+			throw new PurpleException("Error while getting reply", ErrorHandler.COMMENT_NOT_FOUND);
+		try {
+			comment = commentService.findByCommentId(commentId);
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.GET_REPLY_FAILED);
+		}
+		List<Reply> replyList = comment.getReplies();
+		boolean flag = false;
+		for (Reply replyFromDb : replyList) {
+			if (replyFromDb.getReplyId().toString().equals(replyId)) {
+				flag = true;
+				reply = replyFromDb;
+				replyMap.put("comment", comment);
+				replyMap.put("reply", reply);
+				break;
+			}
+		}
+		if (flag)
+			return replyMap;
+		else
+			throw new PurpleException("Error while getting reply", ErrorHandler.REPLY_NOT_FOUND);
+
 	}
 
 	/**

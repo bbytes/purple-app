@@ -1,7 +1,8 @@
-/**
+/*
  * Integration Controller
+ * @author - Akshay
  */
-rootApp.controller('integrationCtrl', function ($scope, $rootScope, appNotifyService, $state, $location, integrationService) {
+angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootScope, appNotifyService, $state, $location, integrationService) {
 
     $rootScope.navClass = 'nav navbar-nav';
     $rootScope.navstatusClass = 'right-nav-ct';

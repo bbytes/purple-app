@@ -1,26 +1,28 @@
 /*
- *  Status snippet Controller
+ *  Reply snippet Controller
  *  @author - Akshay
  */
-angular.module('rootApp').controller('statusSnippetCtrl', function ($rootScope, $scope, $state, $q, $http, appNotifyService) {
+angular.module('rootApp').controller('replySnippetCtrl', function ($rootScope, $scope, $state, $q, $http, appNotifyService) {
 
     $rootScope.feedbackClass = 'feedback-log';
     $rootScope.authToken = $state.params.pk;
-    $rootScope.statusId = $state.params.sid;
+    $rootScope.commentId = $state.params.cid;
+    $rootScope.replyId = $state.params.rid;
 
     var deferred = $q.defer();
 
     $http({
         method: 'GET',
-        url: $rootScope.baseUrl + 'api/v1/status/' + $rootScope.statusId,
+        url: $rootScope.baseUrl + 'api/v1/comment/' + $rootScope.commentId + '/reply/' + $rootScope.replyId,
         headers: {
             'Content-Type': 'application/json'
         }
     }).success(function (response, status, headers, config) {
 
         if (response.success) {
-            $scope.statusDate = response.data.gridData[0].date;
-            $scope.status = response.data.gridData[0].statusList[0];
+          $scope.comment = response.data.comment;
+           $scope.reply = response.data.reply;
+            $scope.status = response.data.comment.status;
         } else {
             $state.go("login");
         }

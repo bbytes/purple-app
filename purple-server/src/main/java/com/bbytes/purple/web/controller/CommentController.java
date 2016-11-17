@@ -74,7 +74,6 @@ public class CommentController {
 	public RestResponse saveComment(@RequestBody CommentDTO commentDTO) throws PurpleException {
 
 		final String template = GlobalConstants.COMMENT_EMAIL_TEMPLATE;
-		final String commentEmailText = GlobalConstants.COMMENT_EMAIL_TEXT;
 
 		User user = userService.getLoggedInUser();
 		final String subject = user.getName() + " " + tagSubject;
@@ -90,14 +89,14 @@ public class CommentController {
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
 
-		Map<String, Object> commentEmailBody = commentEmailBody(user, comment, status, commentEmailText,
-				status.getUser().getName());
+		Map<String, Object> commentEmailBody = commentEmailBody(user, comment, status,
+				GlobalConstants.COMMENT_EMAIL_TEXT, status.getUser().getName());
 
 		notificationService.sendTemplateEmail(emailList, commentSubject, template, commentEmailBody);
 
 		if (emailList != null && !emailList.isEmpty()) {
-			final String mentionEmailText = GlobalConstants.MENTIONED_EMAIL_TEXT;
-			Map<String, Object> mentionEmailBody = commentEmailBody(user, comment, status, mentionEmailText, "");
+			Map<String, Object> mentionEmailBody = commentEmailBody(user, comment, status,
+					GlobalConstants.MENTIONED_EMAIL_TEXT, "");
 			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
 		}
 		notificationService.sendSlackMessage(user, "Statusnap comment", "");
@@ -206,5 +205,24 @@ public class CommentController {
 
 		return commentReponse;
 
+	}
+
+	/**
+	 * This method is used to get the comment by commentId
+	 * 
+	 * @param commentId
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/comment/{commentId}", method = RequestMethod.GET)
+	public RestResponse getComment(@PathVariable("commentId") String commentId) throws PurpleException {
+
+		Comment comment = commentService.getComment(commentId);
+
+		logger.debug("Comment with comment Id - " + commentId + " is fetched successfully");
+		RestResponse commentReponse = new RestResponse(RestResponse.SUCCESS, comment,
+				SuccessHandler.GET_COMMENT_SUCCESS);
+
+		return commentReponse;
 	}
 }
