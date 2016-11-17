@@ -30,14 +30,14 @@
                             <td class="add-user">{{task.desc}}</td>
                             <td class="add-user">
                                 <div class="form-group" >
-                                    <select chosen="selectables" ng-model="hours" id="hoursDropdown" >
+                                    <select chosen="selectables" ng-model="hours" id="hoursDropdown">
                                         <option value="">Hrs</option>
                                         <option ng-repeat="hr in hoursList" value="{{hr.id}}" >{{hr.id}}</option>
                                     </select>
                                 </div>
                             </td>
                             <td class="add-user">
-                                <select class="form-control" ng-model="selectedAction" ng-change="selectAction(selectedAction, $index, task)">	
+                                <select class="form-control" ng-model="selectedAction" ng-change="selectAction(selectedAction, $index, task, hours)" ng-disabled="!hours">	
                                     <option value="">--- Select Action ---</option>
                                     <option value="workedOn">Add to Worked On</option>
                                     <option value="workingOn">Add to Working On</option>

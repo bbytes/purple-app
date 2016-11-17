@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -131,21 +132,26 @@ public class StatusService extends AbstractService<Status, String> {
 				throw new PurpleException("Error while adding status", ErrorHandler.PROJECT_NOT_FOUND);
 
 			if (statusDTO.getDateTime() == null || statusDTO.getDateTime().isEmpty()) {
-				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(), new Date());
+				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
+						new Date());
 			} else {
 				Date statusDate = formatter.parse(statusDTO.getDateTime());
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(statusDate);
 				Date newTime = new DateTime(new Date())
-						.withDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)).toDate();
+						.withDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH))
+						.toDate();
 
-				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate)).withTime(0, 0, 0, 0).toDate();
+				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate))
+						.withTime(0, 0, 0, 0).toDate();
 				if (statusDate.before(backDate))
 					throw new PurpleException("Cannot add status past " + statusEnableDate + " days",
 							ErrorHandler.PASS_DUEDATE_STATUS_EDIT);
 				if (statusDate.after(new Date()))
-					throw new PurpleException("Cannot add status for future date", ErrorHandler.FUTURE_DATE_STATUS_EDIT);
-				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(), newTime);
+					throw new PurpleException("Cannot add status for future date",
+							ErrorHandler.FUTURE_DATE_STATUS_EDIT);
+				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
+						newTime);
 			}
 
 			Project project = projectService.findByProjectId(statusDTO.getProjectId());
@@ -282,8 +288,8 @@ public class StatusService extends AbstractService<Status, String> {
 		return newStatus;
 	}
 
-	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser, Integer timePeriodValue)
-			throws PurpleException {
+	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser,
+			Integer timePeriodValue) throws PurpleException {
 		List<Status> result = new ArrayList<Status>();
 		List<Project> currentUserProjectList = userService.getProjects(currentUser);
 		List<String> projectIdStringQueryList = userAndProject.getProjectList();
@@ -314,20 +320,24 @@ public class StatusService extends AbstractService<Status, String> {
 		}
 
 		// both empty
-		if ((userQueryList == null || userQueryList.isEmpty()) && (projectQueryList == null || projectQueryList.isEmpty())) {
+		if ((userQueryList == null || userQueryList.isEmpty())
+				&& (projectQueryList == null || projectQueryList.isEmpty())) {
 			return result;
 		}
 		// project list empty
-		else if (userQueryList != null && !userQueryList.isEmpty() && (projectQueryList == null || projectQueryList.isEmpty())) {
+		else if (userQueryList != null && !userQueryList.isEmpty()
+				&& (projectQueryList == null || projectQueryList.isEmpty())) {
 			result = statusRepository.findByDateTimeBetweenAndUserIn(startDate, startDate, userQueryList);
 		}
 		// user list empty
-		else if (projectQueryList != null && !projectQueryList.isEmpty() && (userQueryList == null || userQueryList.isEmpty())) {
+		else if (projectQueryList != null && !projectQueryList.isEmpty()
+				&& (userQueryList == null || userQueryList.isEmpty())) {
 			result = statusRepository.findByDateTimeBetweenAndProjectIn(startDate, endDate, projectQueryList);
 		}
 		// both the list not empty
 		else {
-			result = statusRepository.findByDateTimeBetweenAndProjectInAndUserIn(startDate, endDate, projectQueryList, userQueryList);
+			result = statusRepository.findByDateTimeBetweenAndProjectInAndUserIn(startDate, endDate, projectQueryList,
+					userQueryList);
 		}
 
 		try {
@@ -374,12 +384,12 @@ public class StatusService extends AbstractService<Status, String> {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate)), project().and("user").as("user"));
 
-		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class, ProjectUserCountStats.class);
+		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
+				ProjectUserCountStats.class);
 		return result;
 	}
 
 	public StatusDTO checkMentionUser(StatusDTO statusDTO) {
-
 
 		Matcher mentionWorkedOnMatcher, taskListWorkedOnMatcher = null;
 		Matcher mentionWorkingOnMatcher, taskListWorkingOnMatcher = null;
@@ -413,11 +423,19 @@ public class StatusService extends AbstractService<Status, String> {
 			}
 			// looping all #taskItems
 			while (taskListWorkedOnMatcher.find()) {
-				TaskItem taskItem = taskItemService.findOne(taskListWorkedOnMatcher.group(1));
+				TaskItem taskItem = taskItemService
+						.findOne(StringUtils.substringAfter(taskListWorkedOnMatcher.group(1), ":"));
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
-					String str = statusDTO.getWorkedOn().replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
-							"<a>#<!--" + taskItem.getTaskItemId() + "--></a>").trim();
+					taskItem.setSpendHours(
+							Double.parseDouble(StringUtils.substringAfter(taskListWorkedOnMatcher.group(2), ":")));
+					taskItem = taskItemService.save(taskItem);
+					String str = statusDTO.getWorkedOn()
+							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
+									"<a>#{<!-- id:" + taskItem.getTaskItemId() + "-->"
+											+ taskItem.getTaskList().getName() + "-" + taskItem.getName() + " - Hrs:"
+											+ taskItem.getSpendHours() + "}</a>")
+							.trim();
 					statusDTO.setWorkedOn(str);
 				}
 			}
@@ -441,11 +459,19 @@ public class StatusService extends AbstractService<Status, String> {
 			}
 			// looping all #taskItems
 			while (taskListWorkingOnMatcher.find()) {
-				TaskItem taskItem = taskItemService.findOne(taskListWorkingOnMatcher.group(1));
+				TaskItem taskItem = taskItemService
+						.findOne(StringUtils.substringAfter(taskListWorkingOnMatcher.group(1), ":"));
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
-					String str = statusDTO.getWorkingOn().replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
-							"<a>#<!--" + taskItem.getTaskItemId() + "--></a>").trim();
+					taskItem.setSpendHours(
+							Double.parseDouble(StringUtils.substringAfter(taskListWorkingOnMatcher.group(2), ":")));
+					taskItem = taskItemService.save(taskItem);
+					String str = statusDTO.getWorkingOn()
+							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
+									"<a>#{<!-- id:" + taskItem.getTaskItemId() + "-->"
+											+ taskItem.getTaskList().getName() + "-" + taskItem.getName() + " - Hrs:"
+											+ taskItem.getSpendHours() + "}</a>")
+							.trim();
 					statusDTO.setWorkingOn(str);
 				}
 			}
@@ -470,16 +496,23 @@ public class StatusService extends AbstractService<Status, String> {
 			}
 			// looping all #taskItems
 			while (taskListBlockerOnMatcher.find()) {
-				TaskItem taskItem = taskItemService.findOne(taskListBlockerOnMatcher.group(1));
+				TaskItem taskItem = taskItemService
+						.findOne(StringUtils.substringAfter(taskListBlockerOnMatcher.group(1), ":"));
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
-					String str = statusDTO.getBlockers().replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
-							"<a>#<!--" + taskItem.getTaskItemId() + "--></a>").trim();
+					taskItem.setSpendHours(
+							Double.parseDouble(StringUtils.substringAfter(taskListBlockerOnMatcher.group(2), ":")));
+					taskItem = taskItemService.save(taskItem);
+					String str = statusDTO.getBlockers()
+							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
+									"<a>#{<!-- id:" + taskItem.getTaskItemId() + "-->"
+											+ taskItem.getTaskList().getName() + "-" + taskItem.getName() + " - Hrs:"
+											+ taskItem.getSpendHours() + "}</a>")
+							.trim();
 					statusDTO.setBlockers(str);
 				}
 			}
 		}
-
 
 		return statusDTO;
 	}
@@ -492,7 +525,8 @@ public class StatusService extends AbstractService<Status, String> {
 	 */
 	public String statusSnippetUrl(Status status, User user) {
 		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 24);
-		String snippetUrl = baseUrl + GlobalConstants.STATUS_SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID_PARAM + status.getStatusId();
+		String snippetUrl = baseUrl + GlobalConstants.STATUS_SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID_PARAM
+				+ status.getStatusId();
 		return snippetUrl;
 	}
 
