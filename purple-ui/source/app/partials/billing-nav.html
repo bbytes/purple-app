@@ -4,183 +4,207 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<div class="row" ng-controller="navCtrl">
-
-    <div class="collapse navbar-collapse" id="adminNavbar">
-        <ul class="nav navbar-nav">
-            <li ng-class="{active:activeAdminTab('billinginfo')}"><a  href="javascript://" ng-click="setAdminTab('billinginfo')" >Billing Info</a></li>
-            <li ng-class="{active:activeAdminTab('invoicedetails')}"><a href="javascript://" ng-click="setAdminTab('invoicedetails')">Invoice Details</a></li>
-            <li ng-class="{active:activeAdminTab('productplans')}"><a  href="javascript://" ng-click="setAdminTab('productplans')">Product plans                   
-                </a></li> 
-
-        </ul>
-    </div>
-    <div class="tab-content">
-        <nav class="navbar navbar-admin" ng-if="activeAdminTab('billinginfo')">
-            <div class="col-md-offset-2 col-md-8">
-                <div></div>
-                <br><br><br>
-                <div class="create-project">
-                    <form name="myForm">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <!--label for="comment" class="settings" >Customer Name</label-->
-                                        <input type="text" ng-model="customer" name="customer"
-                                               placeholder='Customer Name' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
-                                        <span style="color: red"
-                                              ng-show="!isSubmitted && myForm.customer.$dirty && myForm.customer.$error.required">The
-                                            name is required.</span> <span style="color: red" ng-show="myForm.customer.$dirty && myForm.customer.$error.pattern">name
-                                            is invalid</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <!--label for="comment" class="settings" >Customer Name</label-->
-                                        <input
-                                            type="email" placeholder='Email ID' name="email" ng-model="email"
-                                            class="form-control" required> <span style="color: red"
-                                            ng-show="myForm.email.$dirty && myForm.email.$invalid"> <span
-                                                ng-show=" !isSubmitted && myForm.email.$error.required">Email is required.</span>
-                                            <span ng-show="myForm.email.$error.email">Invalid email
-                                                address.</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <!--label for="comment" class="settings" >Customer Name</label-->
-                                        <input type="text" ng-model="mobile" name="mobile"
-                                               placeholder='Mobile No' class="form-control" ng-required="true" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required>
-                                        <span style="color: red"
-                                              ng-show="!isSubmitted && myForm.mobile.$dirty && myForm.mobile.$error.required">The
-                                            mobile number is required.</span> <span style="color: red"
-                                                                                ng-show="myForm.mobile.$dirty && myForm.mobile.$error.pattern">
-                                            invalid mobile number</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <!--label for="comment" class="settings" >Customer Name</label-->
-                                        <input type="text" ng-model="adress1" name="adress1"
-                                               placeholder='Full Billing Adress' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
-                                        <span style="color: red"
-                                              ng-show="!isSubmitted && myForm.adress1.$dirty && myForm.adress1.$error.required">The
-                                            name is required.</span> <span style="color: red"
-                                                                       ng-show="myForm.adress1.$dirty && myForm.adress1.$error.pattern">name
-                                            is invalid</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <!--label for="comment" class="settings" >Customer Name</label-->
-                                        <input type="text" ng-model="adress2" name="adress2"
-                                               placeholder='Billing Related adress' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
-                                        <span style="color: red"
-                                              ng-show="!isSubmitted && myForm.adress2.$dirty && myForm.adress2.$error.required">The
-                                            name is required.</span> <span style="color: red"
-                                                                       ng-show="myForm.adress2.$dirty && myForm.adress2.$error.pattern">name
-                                            is invalid</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+<div class="" id="adminNavbar" ng-controller="billingInfoCtrl">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#billing" data-toggle="tab"> Billing Info</a></li>
+        <li><a href="#invoice" data-toggle="tab">Invoice Details</a></li>
+        <li><a href="#product" data-toggle="tab">Product plans</a></li>
+    </ul>
+</div>
+<div class="tab-content">
+    <div class="tab-pane active" id="billing">
+        <div class="billing-wrapper">
+            <form name="myForm">
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <!--label for="comment" class="settings" >Customer Name</label-->
-                                <input type="text" ng-model="website" name="website"
-                                       placeholder='Website' class="form-control" ng-pattern="/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/" required>
+                                <input type="text" ng-model="userName" name="customer"
+                                       placeholder='Customer Name' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
                                 <span style="color: red"
-                                      ng-show="!isSubmitted && myForm.website.$dirty && myForm.website.$error.required">The
-                                    name is required.</span> <span style="color: red"
-                                                               ng-show="myForm.website.$dirty && myForm.website.$error.pattern">
-                                    invalid website</span>
+                                      ng-show="!isSubmitted && myForm.customer.$dirty && myForm.customer.$error.required">The
+                                    name is required.</span> <span style="color: red" ng-show="myForm.customer.$dirty && myForm.customer.$error.pattern">name
+                                    is invalid</span>
                             </div>
                         </div>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-default create" ng-disabled="myForm.$invalid"
-                        ng-click="saveChanges(myForm.$valid)">Save Changes</button>
 
-                </form>
-            </div>
-        </nav>
-        <nav class="navbar navbar-admin" ng-if="activeAdminTab('invoicedetails')">
-            <div class="col-md-offset-2 col-md-8">
-                <div class="main-title">
-                    <h4>Current Invoice</h4>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <!--label for="comment" class="settings" >Customer Name</label-->
+                                <input
+                                    type="email" placeholder='Email ID' name="email" ng-model="email"
+                                    class="form-control" required disabled> <span style="color: red"
+                                    ng-show="myForm.email.$dirty && myForm.email.$invalid"> <span
+                                        ng-show=" !isSubmitted && myForm.email.$error.required">Email is required.</span>
+                                    <span ng-show="myForm.email.$error.email">Invalid email
+                                        address.</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <!--label for="comment" class="settings" >Customer Name</label-->
+                                <input type="text" ng-model="customer.contactNo" name="mobile"
+                                       placeholder='Mobile No' class="form-control" ng-required="true" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required>
+                                <span style="color: red"
+                                      ng-show="!isSubmitted && myForm.mobile.$dirty && myForm.mobile.$error.required">The
+                                    mobile number is required.</span> <span style="color: red"
+                                                                        ng-show="myForm.mobile.$dirty && myForm.mobile.$error.pattern">
+                                    invalid mobile number</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <!--label for="comment" class="settings" >Customer Name</label-->
+                                <textarea ng-model="customer.billingAddress" name="adress1"
+                                          placeholder='Full Billing Adress' class="form-control"  required></textarea>
+                                <span style="color: red"
+                                      ng-show="!isSubmitted && myForm.adress1.$dirty && myForm.adress1.$error.required">The
+                                    name is required.</span> <span style="color: red"
+                                                               ng-show="myForm.adress1.$dirty && myForm.adress1.$error.pattern">name
+                                    is invalid</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
-
-                    <label for="comment" class="settings" >Current Invoice:</label>
-                    <label for="comment" class="settings" >Pay By date:</label>
-                    <label for="comment" class="settings" >Invoice Number:</label>
-                    <label for="comment" class="settings" >Details:</label>
-                    <button type="button"  ng-click="saveChanges(myForm.$valid)">Pay My Bill</button><a href="#"><img
-                            src="../../assets/img/download-arrow.png"></a><a href="#"><img src="../../assets/img/mail.png"></a>
-                </div>
-                <div class="col-md-6">
-
-                    <label for="comment" class="settings" >Current plan:</label>
-                    <label for="comment" class="settings" >Expiry Date:</label>
-                    <label for="comment" class="settings" >Status:</label>     
-                </div>
-                <div class="col-md-12">
-                    <div class="main-title">
-                        <h4>Current Invoice</h4>
+                    <div class="form-group">
+                        <!--label for="comment" class="settings" >Customer Name</label-->
+                        <input type="text" ng-model="customer.website" name="website"
+                               placeholder='Website' class="form-control" ng-pattern="/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/" required>
+                        <span style="color: red"
+                              ng-show="!isSubmitted && myForm.website.$dirty && myForm.website.$error.required">The
+                            name is required.</span> <span style="color: red"
+                                                       ng-show="myForm.website.$dirty && myForm.website.$error.pattern">
+                            invalid website</span>
                     </div>
                 </div>
+                
+                <button type="button" class="btn btn-default create"  style="margin: auto 1.5em; display: inline-block; width: 20%"ng-disabled="myForm.$invalid"
+                        ng-click="addBillingInfo(myForm.$valid, customer)">Save Changes</button>
+
+            </form>
+            <div class="col-md-6">
             </div>
-        </nav>
-        <nav class="navbar navbar-admin" ng-if="activeAdminTab('productplans')">
-            <div class="col-md-offset-2 col-md-8">
-                <div class="main-title">
-                    <h4>Current Plans</h4>
-                </div>
-                <div class="create-project">
-                    <div class="col-md-6">
-
-                        <label for="comment" class="settings" >Plan Name:</label>
-                        <label for="comment" class="settings" >Expiry Date:</label>
-                        <label for="comment" class="settings" >Details:</label>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="comment" class="settings" >Status:</label>           
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-default" ng-disabled="myForm.$invalid" ng-click="saveChanges(myForm.$valid)">Deactivate</button>
-                    </div>
-
-                    <div class="main-title">
-                        <h4>Product Plans</h4>
-                    </div>
-                </div>
-            </div>
-        </nav>
-        <div ui-view></div>
+        </div>
     </div>
-</div>
+
+    <div class="tab-pane" id="invoice">
+        <div class="billing-wrapper"   ng-init="getInvoiceDetails()">
+            <div class="main-title">
+                <h4>Current Invoice</h4>
+            </div>
+            <div class="col-md-6">
+
+                <label for="comment" class="settings" >Current Invoice:</label>
+                <label for="comment" class="settings" >Pay By date:</label>
+                <label for="comment" class="settings" >Invoice Number:</label>
+
+                <button type="button"  ng-click="saveChanges(myForm.$valid)">Pay My Bill</button><a href="#"><img
+                        src="../../assets/img/download-arrow.png"></a><a href="#"><img src="../../assets/img/mail.png"></a>
+            </div>
+            <div class="col-md-6">
+
+                <label for="comment" class="settings" >Current plan:{{currentPlan.name}}</label>
+                <label for="comment" class="settings" >Details:{{currentPlan.desc}}</label>
+            </div>
+            <div class="col-md-12">
+                <div class="main-title">
+                    <h4>Previous Invoices</h4>
+                </div>
+                <table style="width:80%;">
+                    <thead>
+                        <tr>
+                            <th style="width:20%;">Invoice No</th>                             
+                            <th style="width:20%;">Invoice Date</th>
+                            <th style="width:20%;">Amount($)</th>
+                            <th style="width:20%;">Pay by date</th>
+                            <th style="width:10%;">Status</th>
+                            <th style="width:10%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>                        
+                            <td style="width:20%;">{{pro.name}}</td>
+                            <td style="width:20%;">{{pro.desc}}</td>
+                            <td style="width:20%;">{{pro.desc}}</td>
+                            <td style="width:20%;"><sapan ng-repeat="pEmails in pro.productTeamEmails">{{pEmails}},</span></td>
+                        <td style="width:10%;"><sapan ng-repeat="pEmails in pro.productTeamEmails">{{pEmails}},</span></td>
+                            <td style="width:10%;">  <button type="button"  ng-click="saveChanges(myForm.$valid)">Pay My Bill</button>
+                                <a href="#"><img src="../../assets/img/download-arrow.png"></a><a href="#"><img src="../../assets/img/mail.png"></a>
+
+                                </tr>
+
+                                </tbody>
+                                </table>
+                                </div>
+                                </div>
+                                </div>
+
+                                <div class="tab-pane" id="product">
+                                    <div class="billing-wrapper"  ng-init="getPricingPlans()">
+                                        <div class="col-md-offset-2 col-md-8" >
+                                            <div class="main-title">
+                                                <h4>Current Plans</h4>
+                                            </div>
+                                            <div class="create-project">
+                                                <div class="col-md-6">
+                                                    <label for="comment" class="settings" >Plan Name:{{currentPlan.name}}</label>
+                                                    <label for="comment" class="settings" >Details:{{currentPlan.desc}}</label>
+                                                </div>
+                                                
+                                                <div>
+                                                    <button type="button" class="btn btn-default" ng-disabled="myForm.$invalid" ng-click="saveChanges(myForm.$valid)"</button>
+                                                </div>
+
+                                                <div class="project-table">
+                                                    <div class="main-title">
+                                                        <h4>Product Plans</h4>
+                                                    </div>
+                                                    <table style="width:100%;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width:20%;">Plan</th>                             
+                                                                <th style="width:30%;">Details</th>
+                                                                <th style="width:25%;">Billing Cycle</th>
+                                                                <th style="width:15%;">Currency</th>
+                                                                <th style="width:10%;">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="plans in pricingPlans">                        
+                                                                <td style="width:20%;">{{plans.name}}</td>
+                                                                <td style="width:30%;">{{plans.desc}}</td>
+                                                                <td style="width:20%;">{{plans.billingCycle}}</td>
+                                                                <td style="width:10%;">{{plans.currency}}</td>
+                                                                <td style="width:25%;"><button type="button"  style="width:110%;" class="btn btn-default create" ng-click="edit(pro.id)">Choose Plan</button></td>
+
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                </div>

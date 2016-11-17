@@ -373,7 +373,6 @@ rootApp.config([
             }
         }).state('billing', {
             url: '/billing',
-            //redirectTo: 'billinginfo',
             views: {
                 '': {
                     templateUrl: 'app/partials/home.html'
@@ -383,7 +382,7 @@ rootApp.config([
                 },
                 'main@billing': {
                     templateUrl: 'app/partials/billing-nav.html',
-                    controller: 'navCtrl'
+                    controller: 'billingInfoCtrl'
                 },
                 'footer@billing': {
                     templateUrl: 'app/partials/home-footer.html'

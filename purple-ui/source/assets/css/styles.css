@@ -4326,3 +4326,13 @@ tabs-left, .tabs-right {
   top:0; bottom: 0; left: 0; right: 0;
   margin: auto
 }
+
+.billing-wrapper{
+    padding-top: 30px;
+    width: 80%;
+    padding-left: 15%;
+}
+.billing-wrapper button{
+    width:60%;
+    margin-bottom:20px;
+}
