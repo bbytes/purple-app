@@ -24,7 +24,7 @@ angular.module('rootApp').controller('createTasksListModalCtrl',
 			$scope.createTaskList = function(taskList) {
 				console.log("createTaskList");
 				tasksService.createTaskList(taskList).then(function(response) {
-					if($scope.selectedProject=="All"||response.data.project.projectId==$scope.selectedProject.projectId)
+					if($scope.selectedProject=="All"||response.data.projectId==$scope.selectedProject.projectId)
 						if($scope.taskLists==null)
 							$scope.taskLists=response.data;
 						else

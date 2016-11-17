@@ -69,7 +69,7 @@
 				</div>
 				<div id="tasksList">
 					<div class="panel-body">
-						<ul class="task-list-group project-nav">
+						<ul class="task-list-group project-nav" ng-show="taskLists.length>0">
 							<li ng-class="{'selectedtl':$index == selectedTLIndx}"
 								role="menu" aria-labelledby="dropdownMenu"
 								ng-repeat="taskList in taskLists"><div
@@ -87,6 +87,11 @@
 									</div>
 								</div></li>
 						</ul>
+						<div
+							style="height: 250px; text-align: center; vertical-align: middle; line-height: 250px; color: grey"
+							ng-show="taskLists==null || taskLists.length==0"
+							aria-hidden="false" class="">No task list to show at this
+							time</div>
 					</div>
 				</div>
 			</div>
@@ -106,7 +111,8 @@
 			</div>
 			<div id="tasksItemsList">
 				<div class="panel-body">
-					<ul class="task-list-group project-nav">
+					<ul class="task-list-group project-nav"
+						ng-show="taskItemsLists.length>0">
 						<li role="menu" aria-labelledby="dropdownMenu"
 							ng-repeat="taskItem in taskItemsLists">
 							<div
@@ -146,6 +152,11 @@
 							</div>
 						</li>
 					</ul>
+					<div
+						style="height: 250px; text-align: center; vertical-align: middle; line-height: 250px; color: grey"
+						ng-show="taskItemsLists==null || taskItemsLists.length==0"
+						aria-hidden="false" class="">No task items to show at this
+						time</div>
 				</div>
 			</div>
 		</div>
