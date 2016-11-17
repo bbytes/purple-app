@@ -504,7 +504,7 @@ angular.module('rootApp').directive('blockersTextAngularMentio', ['$rootScope', 
                         element.attr('mentio', 'mentio');
                         element.attr('mentio-typed-term', 'typedTerm');
                         element.attr('mentio-require-leading-space', 'true');
-                        element.attr('mentio-id', "'content-editor-{{$id}}'");
+                        element.attr('mentio-id', "'content-editor+$id'");
                     };
 
                     $scope.searchPeople = function (term) {
