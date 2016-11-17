@@ -72,7 +72,7 @@ public class GlobalConstants {
 	
 	public static final String COMMENT_SNIPPET_URL = "/comment-snippet?pk=";
 	
-	public static final String REPLY_SNIPPET_URL = "/comment-snippet?pk=";
+	public static final String REPLY_SNIPPET_URL = "/reply-snippet?pk=";
 
 	public static final String STATUS_ID_PARAM = "&sid=";
 	
