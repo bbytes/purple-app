@@ -99,7 +99,8 @@ public class CommentController {
 					GlobalConstants.MENTIONED_EMAIL_TEXT, "");
 			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
 		}
-		notificationService.sendSlackMessage(user, "Statusnap comment", "");
+		
+		notificationService.sendSlackMessage(user, "Statusnap comment notification", commentService.commentSnippetUrl(status.getUser(), comment));
 
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 

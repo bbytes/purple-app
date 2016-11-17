@@ -195,35 +195,30 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		Slack slack = getSlackApi();
 		String textToBePosted = linkText + "<" + url + ">";
 		Integration integration = getIntegrationForCurrentUser();
-		if (integration != null && slack != null) {
-			String slackChannelId = integration.getSlackChannelId();
-			SlackChannel slackChannel = slack.channelOperations().findChannelById(slackChannelId);
-			if (slackChannel != null) {
-				slack.chatOperations().postMessage(textToBePosted, slackChannel.getId());
-			}
-		}
+		sendSlackMessage(textToBePosted, slack, integration);
 	}
 
 	public void postMessageToSlack(String message) {
 		Slack slack = getSlackApi();
 		Integration integration = getIntegrationForCurrentUser();
-		if (integration != null && slack != null) {
-			String slackChannelId = integration.getSlackChannelId();
-			SlackChannel slackChannel = slack.channelOperations().findChannelById(slackChannelId);
-			if (slackChannel != null) {
-				slack.chatOperations().postMessage(message, slackChannel.getId());
-			}
-		}
+		sendSlackMessage(message, slack, integration);
 	}
 
 	public void postMessageToSlack(User user, String message) {
 		Slack slack = getSlackApi(user);
 		Integration integration = integrationRepository.findByUser(user);
+		sendSlackMessage(message, slack, integration);
+	}
+
+	private void sendSlackMessage(String message, Slack slack, Integration integration) {
 		if (integration != null && slack != null) {
 			String slackChannelId = integration.getSlackChannelId();
 			SlackChannel slackChannel = slack.channelOperations().findChannelById(slackChannelId);
 			if (slackChannel != null) {
-				slack.chatOperations().postMessage(message, slackChannel.getId());
+				String userName = "@" + slack.userProfileOperations().getUserProfile().getName();
+				slack.chatOperations().postMessage(message, userName, "Statusnap");
+				// disabled sending message to channel 
+//				slack.chatOperations().postMessage(message, slackChannel.getId(), "Statusnap");
 			}
 		}
 	}

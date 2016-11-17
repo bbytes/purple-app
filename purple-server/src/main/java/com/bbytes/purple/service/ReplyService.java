@@ -2,6 +2,7 @@ package com.bbytes.purple.service;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class ReplyService extends AbstractService<Reply, String> {
 
 	public Comment postReply(String commentId, ReplyDTO replyDTO, User user) throws PurpleException {
 		Comment comment = null;
-		List<Reply> replyList = new ArrayList<Reply>();
+		List<Reply> replyList = new LinkedList<Reply>();
 		if (!commentService.commentIdExist(commentId))
 			throw new PurpleException("Error while posting reply", ErrorHandler.COMMENT_NOT_FOUND);
 		if (replyDTO.getReplyDesc() != null) {
