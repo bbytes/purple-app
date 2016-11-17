@@ -173,7 +173,7 @@ public class TaskController {
 		taskList = taskListService.save(taskList);
 
 		logger.debug("Task list with name '" + taskList.getName() + "' added successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskList, SuccessHandler.ADD_TASK_LIST_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, dataModelToDTOConversionService.convertTaskList(taskList), SuccessHandler.ADD_TASK_LIST_SUCCESS);
 
 		return response;
 	}

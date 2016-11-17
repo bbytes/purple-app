@@ -483,16 +483,18 @@ public class DataModelToDTOConversionService {
 	public List<TaskItemDTO> convertTaskItem(List<TaskItem> taskItems) {
 		List<TaskItemDTO> taskItemDTOList = new LinkedList<TaskItemDTO>();
 		for (TaskItem item : taskItems) {
-			TaskItemDTO itemDTO = new TaskItemDTO();
-			itemDTO.setTaskItemId(item.getTaskItemId());
-			itemDTO.setDesc(item.getDesc());
-			itemDTO.setDueDate(item.getDueDate());
-			itemDTO.setEstimatedHours(item.getEstimatedHours());
-			itemDTO.setName(item.getName());
-			itemDTO.setUsers(new ArrayList<>(item.getUsers()));
-			itemDTO.setSpendHours(item.getSpendHours());
-			itemDTO.setState(item.getState().getDisplayName());
-			taskItemDTOList.add(itemDTO);
+			if (item != null) {
+				TaskItemDTO itemDTO = new TaskItemDTO();
+				itemDTO.setTaskItemId(item.getTaskItemId());
+				itemDTO.setDesc(item.getDesc());
+				itemDTO.setDueDate(item.getDueDate());
+				itemDTO.setEstimatedHours(item.getEstimatedHours());
+				itemDTO.setName(item.getName());
+				itemDTO.setUsers(new ArrayList<>(item.getUsers()));
+				itemDTO.setSpendHours(item.getSpendHours());
+				itemDTO.setState(item.getState().getDisplayName());
+				taskItemDTOList.add(itemDTO);
+			}
 		}
 		return taskItemDTOList;
 	}
@@ -537,7 +539,7 @@ public class DataModelToDTOConversionService {
 		return taskListDtos;
 	}
 
-	private TaskListDTO convertTaskList(TaskList taskList) {
+	public TaskListDTO convertTaskList(TaskList taskList) {
 		TaskListDTO taskListDto = new TaskListDTO();
 		taskListDto.setName(taskList.getName());
 		taskListDto.setTaskListId(taskList.getTaskListId());
