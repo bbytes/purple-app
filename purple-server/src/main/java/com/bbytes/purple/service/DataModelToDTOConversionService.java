@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
@@ -35,6 +37,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.StatusResponseDTO;
 import com.bbytes.purple.rest.dto.models.TaskItemDTO;
+import com.bbytes.purple.rest.dto.models.TaskListDTO;
 import com.bbytes.purple.rest.dto.models.TaskListResponseDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -524,6 +527,25 @@ public class DataModelToDTOConversionService {
 		itemDTO.setSpendHours(taskItem.getSpendHours());
 		itemDTO.setState(taskItem.getState().getDisplayName());
 		return itemDTO;
+	}
+
+	public List<TaskListDTO> convertTaskLists(Set<TaskList> taskLists) {
+		List<TaskListDTO> taskListDtos = new ArrayList<TaskListDTO>();
+		for (TaskList taskList : taskLists) {
+			taskListDtos.add(convertTaskList(taskList));
+		}
+		return taskListDtos;
+	}
+
+	private TaskListDTO convertTaskList(TaskList taskList) {
+		TaskListDTO taskListDto = new TaskListDTO();
+		taskListDto.setName(taskList.getName());
+		taskListDto.setTaskListId(taskList.getTaskListId());
+		taskListDto.setSpendHours(taskList.getSpendHours());
+		taskListDto.setEstimatedHours(taskList.getEstimatedHours());
+		taskListDto.setProjectId(taskList.getProject().getProjectId());
+		taskListDto.setTaskItems(convertTaskItem(new ArrayList<>(taskList.getTaskItems())));
+		return taskListDto;
 	}
 
 }

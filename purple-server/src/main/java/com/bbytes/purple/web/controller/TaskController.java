@@ -93,17 +93,22 @@ public class TaskController {
 					result.add(taskList);
 			}
 		}
-		for (TaskList tList : result) {
-			for (Iterator<TaskItem> taskItemItr = tList.getTaskItems().iterator(); taskItemItr.hasNext();) {
-				TaskItem tItem = taskItemItr.next();
-				if (tItem.getState() != taskState) {
+		result.remove(null);
+		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(result);
+		filterItemsForGivenState(taskListDtos, taskState);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDtos);
+		return response;
+	}
+
+	private void filterItemsForGivenState(List<TaskListDTO> taskListDtos, TaskState taskState) {
+		for (TaskListDTO tList : taskListDtos) {
+			for (Iterator<TaskItemDTO> taskItemItr = tList.getTaskItems().iterator(); taskItemItr.hasNext();) {
+				TaskItemDTO tItem = taskItemItr.next();
+				if (tItem != null && tItem.getState() != taskState.getDisplayName()) {
 					taskItemItr.remove();
 				}
 			}
 		}
-		result.remove(null);
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, result);
-		return response;
 	}
 
 	@RequestMapping(value = "/api/v1/task/taskList/project/{projectId}", method = RequestMethod.GET)
@@ -134,7 +139,10 @@ public class TaskController {
 					result.add(taskList);
 			}
 		}
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, result);
+		result.remove(null);
+		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(result);
+		filterItemsForGivenState(taskListDtos, taskState);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDtos);
 		return response;
 	}
 

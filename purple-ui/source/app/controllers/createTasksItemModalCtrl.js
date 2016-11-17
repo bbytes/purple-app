@@ -32,7 +32,7 @@ angular.module('rootApp').controller(
 				});
 			};
 			$scope.getAllUsersOfProject = function() {
-				projectService.getAllUsersOfProject($scope.taskList.project.projectId)
+				projectService.getAllUsersOfProject($scope.taskList.projectId)
 						.then(function(response) {
 							$scope.projectUsers = response.data;
 						});
