@@ -19,7 +19,6 @@ import com.bbytes.plutus.response.SubscriptionStatusRestResponse;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
-import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
 
