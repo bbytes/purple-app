@@ -1,5 +1,6 @@
 /*
  * Forgot password controller 
+ * @author - Akshay
  */
 angular.module('rootApp').controller('forgotPasswordCtrl', function ($scope, $rootScope, $state, forgotPasswordService, appNotifyService) {
 

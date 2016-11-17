@@ -1,8 +1,8 @@
-/**
- * 
+/* 
+ * Comment Service
+ * @author - Akshay
  */
-
-rootApp.service('commentService', function ($rootScope, $http, $q, $window) {
+angular.module('rootApp').service('commentService', function ($rootScope, $http, $q, $window) {
 
     this.postComment = function (commentBody) {
 

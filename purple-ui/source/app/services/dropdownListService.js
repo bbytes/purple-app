@@ -1,7 +1,8 @@
-/**
- * Dropdown List Service
+/* 
+ * Dropdownlist Service
+ * @author - Akshay
  */
-rootApp.service('dropdownListService', function ($rootScope, $http, $q, $window) {
+angular.module('rootApp').service('dropdownListService', function ($rootScope, $http, $q, $window) {
 
 // Method is used to get hours list
     this.getHours = function () {
@@ -44,7 +45,7 @@ rootApp.service('dropdownListService', function ($rootScope, $http, $q, $window)
         return deferred.promise;
 
     };
-    
+
 // Method is used to get user's role
     this.getRole = function () {
 

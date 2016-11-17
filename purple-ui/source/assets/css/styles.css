@@ -704,10 +704,10 @@ select:first-child, select#f {
     margin-bottom: 0px;
 }
 .user-label p{
-    font-size: 11px;
-    margin-left: 60px;
+    font-size: 13px;
+    margin-left: 20px;
     margin-top: 0px;
-    color: #b2b2b2;
+    color: #333;
     padding: 0px;
 }
 .comment a{

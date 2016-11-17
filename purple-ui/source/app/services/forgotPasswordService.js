@@ -1,4 +1,8 @@
-rootApp.service('forgotPasswordService', function ($rootScope, $http, $q) {
+/* 
+ * Forgot Password Service
+ * @author - Akshay
+ */
+angular.module('rootApp').service('forgotPasswordService', function ($rootScope, $http, $q) {
     return {
         submitForgotPassword: function (user) {
 
