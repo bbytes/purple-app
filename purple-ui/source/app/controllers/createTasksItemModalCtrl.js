@@ -44,6 +44,9 @@ angular.module('rootApp').controller(
 								$scope.taskItemsLists = response.data;
 							else
 								$scope.taskItemsLists.push(response.data);
+
+							$scope.taskList.taskItems.push(response.data);
+							$scope.taskList.estimatedHours=$scope.taskList.estimatedHours+response.data.estimatedHours;
 						});
 				$uibModalInstance.close($scope.selection);
 			};
@@ -54,6 +57,8 @@ angular.module('rootApp').controller(
 								$scope.taskItemsLists = response.data;
 							else
 								$scope.taskItemsLists.push(response.data);
+							$scope.taskList.taskItems.push(response.data);
+							$scope.taskList.estimatedHours=$scope.taskList.estimatedHours+response.data.estimatedHours;
 						});
 				$scope.taskItem = new Object();
 			};

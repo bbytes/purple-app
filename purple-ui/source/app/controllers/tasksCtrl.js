@@ -156,6 +156,8 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             if (response.success) {
                 var index = $scope.taskItemsLists.indexOf(taskItem);
                 $scope.taskItemsLists.splice(index, 1);
+				$scope.taskList.taskItems.splice(index, 1);
+				$scope.taskList.estimatedHours=$scope.taskList.estimatedHours-taskItem.estimatedHours;
             }
         });
     };
