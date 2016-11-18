@@ -313,4 +313,32 @@ public class TaskController {
 
 	}
 
+	@RequestMapping(value = "/api/v1/task/taskItems/{taskItemId}/addusers", method = RequestMethod.POST)
+	public RestResponse addUsersToTask(@PathVariable String taskItemId, @RequestBody List<String> userIds) {
+		TaskItem taskItem = taskItemService.findOne(taskItemId);
+		Iterable<User> users = userService.findAll(userIds);
+		for (User user : users) {
+			if (!taskItem.getUsers().contains(user)) {
+				taskItem.addUsers(user);
+			}
+		}
+		taskItem = taskItemService.save(taskItem);
+		TaskItemDTO taskItemDto = dataModelToDTOConversionService.convertTaskItem(taskItem);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDto);
+		return response;
+
+	}
+
+	@RequestMapping(value = "/api/v1/task/taskItems/{taskItemId}/removeuser/{userid}", method = RequestMethod.POST)
+	public RestResponse addUsersToTask(@PathVariable String taskItemId, @PathVariable String userid) {
+		TaskItem taskItem = taskItemService.findOne(taskItemId);
+		User user = userService.findOne(userid);
+		taskItem.getUsers().remove(user);
+		taskItem = taskItemService.save(taskItem);
+		TaskItemDTO taskItemDto = dataModelToDTOConversionService.convertTaskItem(taskItem);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDto);
+		return response;
+
+	}
+
 }

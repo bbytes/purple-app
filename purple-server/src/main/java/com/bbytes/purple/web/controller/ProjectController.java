@@ -275,7 +275,8 @@ public class ProjectController {
 		Set<User> users = projectService.getAllUsersByProject(projectId);
 
 		logger.debug(users.size() + "' users are fetched successfully");
-		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, users, SuccessHandler.GET_USER_SUCCESS);
+		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS,
+				dataModelToDTOConversionService.convertUsers(new ArrayList<>(users)), SuccessHandler.GET_USER_SUCCESS);
 
 		return projectReponse;
 	}

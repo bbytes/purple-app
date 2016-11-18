@@ -32,8 +32,8 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
         $scope.loadStateProjectTasks('All',-1);
     };
     /*
-     * Load all states
-     */
+	 * Load all states
+	 */
     $scope.loadStates = function () {
         tasksService.getAllTasksStates().then(function (response) {
             if (response.success) {
@@ -43,8 +43,8 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
 
     };
     /*
-     * Initial loading of tasks and task items
-     */
+	 * Initial loading of tasks and task items
+	 */
     $scope.loadAllTasksForState = function () {
         $scope.selectedProject = "All";
         $scope.selectedPjtIndex = -1;
@@ -83,7 +83,8 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
                             if($scope.taskItemsLists!=null)
                             	$scope.taskItemsLists.length = 0;
                             
-                            //appNotifyService.success("No tasks to show for selected state");
+                            // appNotifyService.success("No tasks to show for
+							// selected state");
                         }
                     }
                 });
@@ -102,15 +103,16 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
                         } else {
                         	if($scope.taskItemsLists!=null)
                             	$scope.taskItemsLists.length = 0;
-                            //appNotifyService.success("No tasks to show for selected project and state");
+                            // appNotifyService.success("No tasks to show for
+							// selected project and state");
                         }
                     }
                 });
     }
 
     /*
-     * Load all projects of logged in user
-     */
+	 * Load all projects of logged in user
+	 */
     $scope.loadUserProjects = function () {
         projectService.getUserproject().then(function (response) {
             if (response.success) {
@@ -178,7 +180,6 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             } else {
                 if($scope.taskItemsLists!=null)
                 	$scope.taskItemsLists.length = 0;
-//                appNotifyService.success("No task items to show for selected task list");
             }
         });
     }
@@ -212,4 +213,75 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
         		 appNotifyService.success(taskItem.name+" marked completed");
         });
     };
+    
+         $scope.getAllUsersOfProject = function(taskItem) {
+        	$scope.selectedTaskItem=taskItem;
+			projectService.getAllUsersOfProject($scope.taskList.projectId)
+					.then(function(response) {
+						  if (response.success) {
+							  var projectUsersToAdd=response.data;
+							  var taskItemUsers=taskItem.users;	
+							  $scope.projectUsersToAdd=getArrayDiff(projectUsersToAdd, taskItemUsers);
+							  showUserModal();
+						  }
+					});
+			function getArrayDiff(a, b) {
+			    var ret = [];
+			    if (!(Array.isArray(a) && Array.isArray(b))) {
+			        return ret;
+			    }
+			    var i;
+			    var key;
+
+			    for (i = a.length - 1; i >= 0; i--) {
+			      key = a[i];
+			      if (-1 === b.indexOf(key)) {
+			        ret.push(key);
+			      }
+			    }
+
+			    return ret;
+			};
+        function showUserModal() {
+            var uibModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/partials/allusers-modal.html',
+                controller: 'allusersModalCtrl',
+                backdrop: 'static',
+                size: 'md',
+                resolve: {
+                    options: function () {
+                        return {
+                            "title": 'Add Users',
+                            "data": $scope.projectUsersToAdd
+                        };
+                    }
+                }
+            });
+
+            uibModalInstance.result.then(function (selection) {
+                var usersToBeAdded = [];
+                angular.forEach($scope.projectUsersToAdd, function (user) {
+                    if (selection.indexOf(user.id) > -1) {
+                        usersToBeAdded.push(user.id);
+                    }
+                });
+                tasksService.addUsersToItem($scope.selectedTaskItem,usersToBeAdded).then(function(response){
+                	if(response.success){
+                		$scope.selectedTaskItem.users=response.data.users;
+                	}
+                });
+            });
+        }
+    };
+    $scope.deleteUserFromProject=function(userid,taskItem){
+    	tasksService.removeUsersFromItem(userid,taskItem).then(function(response){
+        	if(response.success){
+        		taskItem.users=response.data.users;
+        		}
+    		});
+    	}
+    
 });
+    	
+    	

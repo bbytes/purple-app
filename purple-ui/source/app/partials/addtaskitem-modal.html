@@ -42,7 +42,7 @@
 							chosen="projectUsers" ng-model="taskItem.userIds"
 							id="usersDropdown" multiple="multiple" style="height: 50px">
 							<option value="">Select users</option>
-							<option ng-repeat="user in projectUsers" value="{{user.userId}}">{{user.name}}</option>
+							<option ng-repeat="user in projectUsers" value="{{user.id}}">{{user.userName}}</option>
 						</select>
 					</div>
 				</div>
