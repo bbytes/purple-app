@@ -516,8 +516,10 @@ public class SchedulerService {
 	}
 
 	/* runs every 4 hours */
-//	@Scheduled(cron = "0 0 0/6 * * ?")
-	@Scheduled(cron = "0 0/1 * * * ?")
+//	@Scheduled(cron = "0 0/1 * * * ?")
+	
+	/* runs every 4 hours */
+	@Scheduled(cron = "0 0 0/6 * * ?")
 	public void sendStatsToPlutusServer() throws PurpleException, PlutusClientException {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
