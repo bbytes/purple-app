@@ -26,5 +26,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 	long countByMarkDelete(boolean markDelete);
 	
 	long countByDisableState(boolean disableState);
+	
+	User findTopByOrderByCreationDateAsc();
 
 }

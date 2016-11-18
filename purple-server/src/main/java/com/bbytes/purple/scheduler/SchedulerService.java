@@ -51,6 +51,7 @@ import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
+import com.bbytes.purple.service.RegistrationService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -93,6 +94,9 @@ public class SchedulerService {
 
 	@Autowired
 	private ConfigSettingService configSettingService;
+	
+	@Autowired
+	private RegistrationService registrationService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -512,7 +516,8 @@ public class SchedulerService {
 	}
 
 	/* runs every 4 hours */
-	@Scheduled(cron = "0 0 0/6 * * ?")
+//	@Scheduled(cron = "0 0 0/6 * * ?")
+	@Scheduled(cron = "0 0/1 * * * ?")
 	public void sendStatsToPlutusServer() throws PurpleException, PlutusClientException {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
@@ -526,10 +531,12 @@ public class SchedulerService {
 		for (String orgId : orgList) {
 			TenancyContextHolder.setTenant(orgId);
 			Organization organization = organizationService.findByOrgId(orgId);
+			
 
 			if (organization != null && organization.getSubscriptionKey() == null) {
 				logger.warn("Subscription Key not available for organization with id " + orgId);
-				continue;
+				User user = userService.findTopByOrderByCreationDateAsc();
+				registrationService.createPlutusSubscription(organization, user);
 			}
 
 			PlutusClient plutusClient = PlutusClient.create(plutusBaseUrl, organization.getSubscriptionKey(),
@@ -538,6 +545,7 @@ public class SchedulerService {
 			ProductPlanStats productPlanStats = new ProductPlanStats();
 			productPlanStats.addStats(BillingConstant.STATUSNAP_USER_COUNT, userService.countByMarkDelete(false));
 			productPlanStats.addStats(BillingConstant.STATUSNAP_PROJECT_COUNT, projectService.count());
+			productPlanStats.setSubscriptionKey(organization.getSubscriptionKey());
 			ProductStatsRestResponse response = plutusClient.sendStats(productPlanStats);
 			if (!response.isSuccess()) {
 				logger.warn("Product stats updated failed for tenant " + orgId);

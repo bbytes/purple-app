@@ -111,6 +111,10 @@ public class UserService extends AbstractService<User, String> {
 		return userRepository.countByDisableState(disableState);
 	}
 
+	public User findTopByOrderByCreationDateAsc(){
+		return userRepository.findTopByOrderByCreationDateAsc();
+	}
+
 	public boolean doesAdminRoleExistInDB(String roleName) {
 		if (roleName.equals(UserRole.ADMIN_USER_ROLE.getRoleName())) {
 			boolean state = totalRoleCount(new UserRole(roleName)) == 1 ? true : false;
@@ -162,7 +166,7 @@ public class UserService extends AbstractService<User, String> {
 			return email;
 		}
 		return null;
-		
+
 	}
 
 	/**

@@ -17,10 +17,13 @@ import com.bbytes.plutus.model.BillingInfo;
 import com.bbytes.plutus.response.ProductStatsRestResponse;
 import com.bbytes.plutus.response.SubscriptionStatusRestResponse;
 import com.bbytes.purple.domain.Organization;
+import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.service.RegistrationService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.utils.TenancyContextHolder;
 
 @RestController
 public class BillingController {
@@ -32,10 +35,15 @@ public class BillingController {
 	@Autowired
 	private UserService userService;
 
-	private PlutusClient getPlutusClient(Organization organization) {
+	@Autowired
+	private RegistrationService registrationService;
+
+	private PlutusClient getPlutusClient(Organization organization) throws PlutusClientException {
 		if (organization != null && organization.getSubscriptionKey() == null) {
 			logger.warn("Subscription Key not available for organization with id " + organization.getOrgId());
-			return null;
+			TenancyContextHolder.setTenant(organization.getOrgId());
+			User user = userService.findTopByOrderByCreationDateAsc();
+			registrationService.createPlutusSubscription(organization, user);
 		}
 
 		PlutusClient plutusClient = PlutusClient.create(plutusBaseUrl, organization.getSubscriptionKey(),
@@ -51,11 +59,12 @@ public class BillingController {
 		if (plutusClient == null)
 			throw new PurpleException("Subscription information not available for organization" + organization.getOrgId(),
 					ErrorHandler.SERVER_ERROR);
-		
+
 		ProductStatsRestResponse plutusResponse = plutusClient.getPricingPlans(ProductName.Statusnap.toString());
-		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData()) ;
+		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData());
 		return response;
 	}
+
 	@RequestMapping(value = "/api/v1/billing/billingInfo", method = RequestMethod.POST)
 	public RestResponse createBillingInfo(@RequestBody BillingInfo billingInfo) throws PurpleException, PlutusClientException {
 
@@ -64,12 +73,12 @@ public class BillingController {
 		if (plutusClient == null)
 			throw new PurpleException("Subscription information not available for organization" + organization.getOrgId(),
 					ErrorHandler.SERVER_ERROR);
-		
+
 		ProductStatsRestResponse plutusResponse = plutusClient.saveBillingInfo(billingInfo);
-		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData()) ;
+		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData());
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/api/v1/billing/invoiceDetails", method = RequestMethod.GET)
 	public RestResponse getAllInvoiceDetails() throws PurpleException, PlutusClientException {
 
@@ -78,12 +87,12 @@ public class BillingController {
 		if (plutusClient == null)
 			throw new PurpleException("Subscription information not available for organization" + organization.getOrgId(),
 					ErrorHandler.SERVER_ERROR);
-		
+
 		ProductStatsRestResponse plutusResponse = plutusClient.getPaymentHistory();
-		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData()) ;
+		RestResponse response = new RestResponse(plutusResponse.isSuccess(), plutusResponse.getData());
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/api/v1/billing/currentPlan", method = RequestMethod.GET)
 	public RestResponse getCurrentPlan() throws PurpleException, PlutusClientException {
 
@@ -92,9 +101,10 @@ public class BillingController {
 		if (plutusClient == null)
 			throw new PurpleException("Subscription information not available for organization" + organization.getOrgId(),
 					ErrorHandler.SERVER_ERROR);
-		
+
 		SubscriptionStatusRestResponse plutusResponse = plutusClient.validateSubscription();
-		RestResponse response = new RestResponse(plutusResponse.isSuccess(), ((SubscriptionStatusRestResponse) plutusResponse).getCurrentPlan()) ;
+		RestResponse response = new RestResponse(plutusResponse.isSuccess(),
+				((SubscriptionStatusRestResponse) plutusResponse).getCurrentPlan());
 		return response;
 	}
 }
