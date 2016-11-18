@@ -131,7 +131,7 @@
 								<div>
 									<span ng-repeat="user in taskItem.users">@{{user.name}}
 										&nbsp;</span> <a class="fa fa-plus-circle ng-isolate-scope"
-										style="color: green" ng-click="addUser(taskItem);">Add
+										style="color: green" ng-click="addUser(taskItem);"   role="button">Add
 										User</a>
 								</div>
 
@@ -141,15 +141,15 @@
 										<div style="width: 60%; float: left" align="centre"
 											ng-show="taskItem.state!='Completed'">
 											<a class="fa fa-check-circle-o"
-												ng-click="markCompleted(taskItem);">Mark as completed</a>
+												ng-click="markCompleted(taskItem);"  role="button">Mark as completed</a>
 										</div>
 										<div style="width: 20%; float: right" align="right">
-											<a class="fa fa-close" ng-click="deleteTaskItem(taskItem)">Delete</a>
+											<a class="fa fa-close" ng-click="deleteTaskItem(taskItem)"   role="button">Delete</a>
 										</div>
 										<div style="width: 20%; float: right" align="centre">
 											<a class="fa fa-edit ng-isolate-scope"
 												ng-click="deleteTaskItem(taskItem);"
-												confirm="Are you sure you want to delete the task?">Edit</a>
+												confirm="Are you sure you want to delete the task?"   role="button">Edit</a>
 										</div>
 									</div>
 								</div>
