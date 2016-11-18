@@ -27,6 +27,9 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
         console.log("0-initTasks");
         $scope.loadStates();
         $scope.loadUserProjects();
+        $scope.selectedProject = "All";
+        $scope.selectedPjtIndex = -1;
+        $scope.loadStateProjectTasks('All',-1);
     };
     /*
      * Load all states
@@ -35,10 +38,6 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
         tasksService.getAllTasksStates().then(function (response) {
             if (response.success) {
                 $scope.taskStates = response.data;
-                $scope.selectedState = $scope.taskStates[0];
-                $scope.selectedSateIndex = 0;
-                console.log("1-loadStates selectedProject:" + $scope.selectedProject + " selectedState:" + $scope.selectedState);
-                $scope.loadAllTasksForState();
             }
         });
 
@@ -59,11 +58,8 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
 				$scope.selectedPjtIndex=index;
 				$scope.selectedProject = selectedProject;
 				console.log("loadProjectStateTasks selectedProject:"+$scope.selectedProject+" selectedState:"+$scope.selectedState);
-				if($scope.selectedProject=="All"){
-					getAllTasksForState();
-				}else{
-					getAllTasksForStateAndProject();
-				}
+				getAllTasksForStateAndProject();
+				
 			};
 			/* Load tasks and task items on click of state */
 
@@ -71,11 +67,8 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
         $scope.selectedSateIndex = index;
         $scope.selectedState = selectedState;
         console.log("loadStateProjectTasks selectedProject:" + $scope.selectedProject + " selectedState:" + $scope.selectedState);
-        if ($scope.selectedProject == "All") {
-            getAllTasksForState();
-        } else {
-            getAllTasksForStateAndProject();
-        }
+        getAllTasksForStateAndProject();
+        
     };
     function getAllTasksForState() {
         tasksService.getAllTasksForState($scope.selectedState).then(
