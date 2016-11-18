@@ -99,7 +99,7 @@ public class RegistrationService {
 		SubscriptionInfo subscriptionInfo = new SubscriptionInfo();
 		subscriptionInfo.setAppProfile(AppProfile.saas);
 		subscriptionInfo.setBillingAddress("N/A");
-		subscriptionInfo.setBillingCycle(BillingCycle.Monthy);
+		subscriptionInfo.setBillingCycle(BillingCycle.Monthly);
 		subscriptionInfo.setContactNo("N/A");
 		subscriptionInfo.setCurrency(Currency.USD);
 		subscriptionInfo.setCustomerName(orgName);

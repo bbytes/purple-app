@@ -1,5 +1,6 @@
 package com.bbytes.purple.domain;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -88,6 +89,7 @@ public class TaskList implements Comparable<TaskList> {
 	}
 
 	public Set<TaskItem> getTaskItems() {
+		this.taskItems.removeAll(Collections.singleton(null));
 		return this.taskItems;
 
 	}

@@ -1,6 +1,7 @@
 package com.bbytes.purple.web.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -157,7 +158,7 @@ public class TaskController {
 			}
 			taskLists = new ArrayList<>(result);
 		}
-		taskLists.remove(null);
+		taskLists.removeAll(Collections.singleton(null));
 		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(taskLists);
 		if (taskState != null)
 			filterItemsForGivenState(taskListDtos, taskState);
