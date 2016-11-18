@@ -6,6 +6,7 @@ and open the template in the editor.
 -->
 <div class="" id="adminNavbar" ng-controller="billingInfoCtrl">
     <ul class="nav nav-tabs">
+       
         <li class="active"><a href="#billing" data-toggle="tab"> Billing Info</a></li>
         <li><a href="#invoice" data-toggle="tab">Invoice Details</a></li>
         <li><a href="#product" data-toggle="tab">Product plans</a></li>
@@ -159,21 +160,18 @@ and open the template in the editor.
                                 </div>
                                 </div>
 
-                                <div class="tab-pane" id="product">
-                                    <div class="billing-wrapper"  ng-init="getPricingPlans()">
+                                <div class="tab-pane" id="product"   ng-init="getPricingPlans()">
+                                    <div class="billing-wrapper">
                                         <div class="col-md-offset-2 col-md-8" >
                                             <div class="main-title">
                                                 <h4>Current Plans</h4>
                                             </div>
                                             <div class="create-project">
-                                                <div class="col-md-6">
+                                                <div>
                                                     <label for="comment" class="settings" >Plan Name:{{currentPlan.name}}</label>
                                                     <label for="comment" class="settings" >Details:{{currentPlan.desc}}</label>
                                                 </div>
                                                 
-                                                <div>
-                                                    <button type="button" class="btn btn-default" ng-disabled="myForm.$invalid" ng-click="saveChanges(myForm.$valid)"</button>
-                                                </div>
 
                                                 <div class="project-table">
                                                     <div class="main-title">
