@@ -134,10 +134,11 @@
 										style="color: #cc95b5">@{{user.name}}</span> <a
 										class="fa fa-close" style="color: #cc95b5"
 										ng-click="deleteUserFromProject(user.userId,taskItem)"
-										role="button"></a>&nbsp</span> <a
-										class="fa fa-plus-circle ng-isolate-scope"
+										role="button"></a>&nbsp
+									</span> <a class="fa fa-plus-circle ng-isolate-scope"
 										style="color: #cc95b5;"
-										ng-click="getAllUsersOfProject(taskItem);" role="button" title="Add Users"></a>
+										ng-click="getAllUsersOfProject(taskItem);" role="button"
+										title="Add Users"></a>
 								</div>
 
 								<div style="width: 100%; height: 30px;">
@@ -151,13 +152,12 @@
 										</div>
 										<div style="width: 20%; float: right" align="right">
 											<a class="fa fa-close" ng-click="deleteTaskItem(taskItem)"
+												confirm="Are you sure you want to delete the task?"
 												role="button">Delete</a>
 										</div>
 										<div style="width: 20%; float: right" align="centre">
 											<a class="fa fa-edit ng-isolate-scope"
-												ng-click="deleteTaskItem(taskItem);"
-												confirm="Are you sure you want to delete the task?"
-												role="button">Edit</a>
+												ng-click="editTaskItem(taskItem);" role="button">Edit</a>
 										</div>
 									</div>
 								</div>
