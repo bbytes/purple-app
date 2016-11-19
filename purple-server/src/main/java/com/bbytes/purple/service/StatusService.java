@@ -417,7 +417,7 @@ public class StatusService extends AbstractService<Status, String> {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
 					String str = statusDTO.getWorkedOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<a>@<!--" + mentionUser.getEmail() + "--></a>").trim();
+							"<a>@" + mentionUser.getName() + "</a>").trim();
 					statusDTO.setWorkedOn(str);
 				}
 			}
@@ -453,7 +453,7 @@ public class StatusService extends AbstractService<Status, String> {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
 					String str = statusDTO.getWorkingOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<a>@<!--" + mentionUser.getEmail() + "--></a>").trim();
+							"<a>@" + mentionUser.getName() + "</a>").trim();
 					statusDTO.setWorkingOn(str);
 				}
 			}
@@ -490,7 +490,7 @@ public class StatusService extends AbstractService<Status, String> {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
 					String str = statusDTO.getBlockers().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<a>@<!--" + mentionUser.getEmail() + "--></a>").trim();
+							"<a>@" + mentionUser.getName() + "</a>").trim();
 					statusDTO.setBlockers(str);
 				}
 			}
