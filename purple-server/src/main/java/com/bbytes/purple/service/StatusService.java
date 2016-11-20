@@ -426,11 +426,14 @@ public class StatusService extends AbstractService<Status, String> {
 			// looping all #taskItems
 			while (taskListWorkedOnMatcher.find()) {
 				TaskItem taskItem = null;
+				// getting key from substring before character "-"
 				String taskItemKey = StringUtils.substringBefore(taskListWorkedOnMatcher.group(1), "-");
 				String taskItemValue = null;
 				if (statusDTO.getTaskDataMap() != null && !statusDTO.getTaskDataMap().isEmpty()) {
+					// getting value from map by key
 					taskItemValue = statusDTO.getTaskDataMap().get("workedOn").get(taskItemKey);
 				}
+				// getting key from substring after character "id:"
 				if (taskItemValue != null && !taskItemValue.isEmpty())
 					taskItem = taskItemService.findOne(StringUtils.substringAfter(taskItemValue, "id:"));
 				// replacing #taskItem pattern with #taskItemName
@@ -467,11 +470,13 @@ public class StatusService extends AbstractService<Status, String> {
 			// looping all #taskItems
 			while (taskListWorkingOnMatcher.find()) {
 				TaskItem taskItem = null;
+				// getting key from substring before character "-"
 				String taskItemKey = StringUtils.substringBefore(taskListWorkingOnMatcher.group(1), "-");
 				String taskItemValue = null;
 				if (statusDTO.getTaskDataMap() != null && !statusDTO.getTaskDataMap().isEmpty()) {
 					taskItemValue = statusDTO.getTaskDataMap().get("workingOn").get(taskItemKey);
 				}
+				// getting key from substring after character "id:"
 				if (taskItemValue != null && !taskItemValue.isEmpty())
 					taskItem = taskItemService.findOne(StringUtils.substringAfter(taskItemValue, "id:"));
 				// replacing #taskItem pattern with #taskItemName
@@ -509,11 +514,13 @@ public class StatusService extends AbstractService<Status, String> {
 			// looping all #taskItems
 			while (taskListBlockerOnMatcher.find()) {
 				TaskItem taskItem = null;
+				// getting key from substring before character "-"
 				String taskItemKey = StringUtils.substringBefore(taskListBlockerOnMatcher.group(1), "-");
 				String taskItemValue = null;
 				if (statusDTO.getTaskDataMap() != null && !statusDTO.getTaskDataMap().isEmpty()) {
 					taskItemValue = statusDTO.getTaskDataMap().get("blockers").get(taskItemKey);
 				}
+				// getting key from substring after character "id:"
 				if (taskItemValue != null && !taskItemValue.isEmpty())
 					taskItem = taskItemService.findOne(StringUtils.substringAfter(taskItemValue, "id:"));
 				// replacing #taskItem pattern with #taskItemName
