@@ -101,7 +101,8 @@ public class RegistrationService {
 
 			TenancyContextHolder.setTenant(org.getOrgId());
 			org = orgService.save(org);
-			userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
+			if (userService.getUserByEmail(user.getEmail()) == null)
+				userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
 
 		} else {
 			logger.error("Subscription failed as plutus server response failed for org '" + org.getOrgName() + "' with email "
