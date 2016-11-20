@@ -436,7 +436,7 @@ public class StatusService extends AbstractService<Status, String> {
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
 					taskItem.setSpendHours(
-							Double.parseDouble(StringUtils.substringAfter(taskListWorkedOnMatcher.group(1), ":")));
+							Double.parseDouble(StringUtils.substringAfter(taskListWorkedOnMatcher.group(1), "Hrs:")));
 					taskItem = taskItemService.save(taskItem);
 					String str = statusDTO.getWorkedOn()
 							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
@@ -477,7 +477,7 @@ public class StatusService extends AbstractService<Status, String> {
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
 					taskItem.setSpendHours(
-							Double.parseDouble(StringUtils.substringAfter(taskListWorkingOnMatcher.group(1), ":")));
+							Double.parseDouble(StringUtils.substringAfter(taskListWorkingOnMatcher.group(1), "Hrs:")));
 					taskItem = taskItemService.save(taskItem);
 					String str = statusDTO.getWorkingOn()
 							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
@@ -519,7 +519,7 @@ public class StatusService extends AbstractService<Status, String> {
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
 					taskItem.setSpendHours(
-							Double.parseDouble(StringUtils.substringAfter(taskListBlockerOnMatcher.group(1), ":")));
+							Double.parseDouble(StringUtils.substringAfter(taskListBlockerOnMatcher.group(1), "Hrs:")));
 					taskItem = taskItemService.save(taskItem);
 					String str = statusDTO.getBlockers()
 							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
