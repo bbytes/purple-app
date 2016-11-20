@@ -124,6 +124,6 @@ public class GlobalConstants {
 
 	public static final String MENTION_REGEX_PATTERN = "@\\[(.*?)\\]"; 
 
-	public static final String TASKLIST_REGEX_PATTERN = "#\\{<!--(.*?)\\-->(.*?)\\}";
+	public static final String TASKLIST_REGEX_PATTERN = "#\\{(.*?)\\}";
 
 }

@@ -3,6 +3,8 @@ package com.bbytes.purple.domain;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -59,6 +61,9 @@ public class Status implements Comparable<Status> {
 
 	@DBRef(lazy = true)
 	private Set<User> mentionUser = new HashSet<User>();
+
+	@Field("taskDataMap")
+	private Map<String, Map<String, String>> taskDataMap = new LinkedHashMap<String, Map<String, String>>();
 
 	public Status(String workingOn, String workedOn, double hours, Date dateTime) {
 

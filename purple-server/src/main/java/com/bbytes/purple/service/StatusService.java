@@ -165,6 +165,7 @@ public class StatusService extends AbstractService<Status, String> {
 			savedStatus.setUser(user);
 			savedStatus.addMentionUser(statusDTO.getMentionUser());
 			savedStatus.setBlockers(statusDTO.getBlockers());
+			savedStatus.setTaskDataMap(statusDTO.getTaskDataMap());
 			try {
 				savedStatus = statusRepository.save(savedStatus);
 			} catch (Throwable e) {
@@ -279,6 +280,7 @@ public class StatusService extends AbstractService<Status, String> {
 		updateStatus.setHours(statusDTO.getHours());
 		updateStatus.setProject(project);
 		updateStatus.setMentionUser(statusDTO.getMentionUser());
+		updateStatus.setTaskDataMap(statusDTO.getTaskDataMap());
 		try {
 			newStatus = statusRepository.save(updateStatus);
 		} catch (Throwable e) {
@@ -423,18 +425,23 @@ public class StatusService extends AbstractService<Status, String> {
 			}
 			// looping all #taskItems
 			while (taskListWorkedOnMatcher.find()) {
-				TaskItem taskItem = taskItemService
-						.findOne(StringUtils.substringAfter(taskListWorkedOnMatcher.group(1), ":"));
+				TaskItem taskItem = null;
+				String taskItemKey = StringUtils.substringBefore(taskListWorkedOnMatcher.group(1), "-");
+				String taskItemValue = null;
+				if (statusDTO.getTaskDataMap() != null && !statusDTO.getTaskDataMap().isEmpty()) {
+					taskItemValue = statusDTO.getTaskDataMap().get("workedOn").get(taskItemKey);
+				}
+				if (taskItemValue != null && !taskItemValue.isEmpty())
+					taskItem = taskItemService.findOne(StringUtils.substringAfter(taskItemValue, "id:"));
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
 					taskItem.setSpendHours(
-							Double.parseDouble(StringUtils.substringAfter(taskListWorkedOnMatcher.group(2), ":")));
+							Double.parseDouble(StringUtils.substringAfter(taskListWorkedOnMatcher.group(1), ":")));
 					taskItem = taskItemService.save(taskItem);
 					String str = statusDTO.getWorkedOn()
 							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
-									"<a>#{<!-- id:" + taskItem.getTaskItemId() + "-->"
-											+ taskItem.getTaskList().getName() + "-" + taskItem.getName() + " - Hrs:"
-											+ taskItem.getSpendHours() + "}</a>")
+									"<a>#{" + taskItemKey + "-" + taskItem.getTaskList().getName() + "-"
+											+ taskItem.getName() + " - Hrs:" + taskItem.getSpendHours() + "}</a>")
 							.trim();
 					statusDTO.setWorkedOn(str);
 				}
@@ -459,18 +466,23 @@ public class StatusService extends AbstractService<Status, String> {
 			}
 			// looping all #taskItems
 			while (taskListWorkingOnMatcher.find()) {
-				TaskItem taskItem = taskItemService
-						.findOne(StringUtils.substringAfter(taskListWorkingOnMatcher.group(1), ":"));
+				TaskItem taskItem = null;
+				String taskItemKey = StringUtils.substringBefore(taskListWorkingOnMatcher.group(1), "-");
+				String taskItemValue = null;
+				if (statusDTO.getTaskDataMap() != null && !statusDTO.getTaskDataMap().isEmpty()) {
+					taskItemValue = statusDTO.getTaskDataMap().get("workingOn").get(taskItemKey);
+				}
+				if (taskItemValue != null && !taskItemValue.isEmpty())
+					taskItem = taskItemService.findOne(StringUtils.substringAfter(taskItemValue, "id:"));
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
 					taskItem.setSpendHours(
-							Double.parseDouble(StringUtils.substringAfter(taskListWorkingOnMatcher.group(2), ":")));
+							Double.parseDouble(StringUtils.substringAfter(taskListWorkingOnMatcher.group(1), ":")));
 					taskItem = taskItemService.save(taskItem);
 					String str = statusDTO.getWorkingOn()
 							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
-									"<a>#{<!-- id:" + taskItem.getTaskItemId() + "-->"
-											+ taskItem.getTaskList().getName() + "-" + taskItem.getName() + " - Hrs:"
-											+ taskItem.getSpendHours() + "}</a>")
+									"<a>#{" + taskItemKey + "-" + taskItem.getTaskList().getName() + "-"
+											+ taskItem.getName() + " - Hrs:" + taskItem.getSpendHours() + "}</a>")
 							.trim();
 					statusDTO.setWorkingOn(str);
 				}
@@ -496,18 +508,23 @@ public class StatusService extends AbstractService<Status, String> {
 			}
 			// looping all #taskItems
 			while (taskListBlockerOnMatcher.find()) {
-				TaskItem taskItem = taskItemService
-						.findOne(StringUtils.substringAfter(taskListBlockerOnMatcher.group(1), ":"));
+				TaskItem taskItem = null;
+				String taskItemKey = StringUtils.substringBefore(taskListBlockerOnMatcher.group(1), "-");
+				String taskItemValue = null;
+				if (statusDTO.getTaskDataMap() != null && !statusDTO.getTaskDataMap().isEmpty()) {
+					taskItemValue = statusDTO.getTaskDataMap().get("blockers").get(taskItemKey);
+				}
+				if (taskItemValue != null && !taskItemValue.isEmpty())
+					taskItem = taskItemService.findOne(StringUtils.substringAfter(taskItemValue, "id:"));
 				// replacing #taskItem pattern with #taskItemName
 				if (taskItem != null) {
 					taskItem.setSpendHours(
-							Double.parseDouble(StringUtils.substringAfter(taskListBlockerOnMatcher.group(2), ":")));
+							Double.parseDouble(StringUtils.substringAfter(taskListBlockerOnMatcher.group(1), ":")));
 					taskItem = taskItemService.save(taskItem);
 					String str = statusDTO.getBlockers()
 							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
-									"<a>#{<!-- id:" + taskItem.getTaskItemId() + "-->"
-											+ taskItem.getTaskList().getName() + "-" + taskItem.getName() + " - Hrs:"
-											+ taskItem.getSpendHours() + "}</a>")
+									"<a>#{" + taskItemKey + "-" + taskItem.getTaskList().getName() + "-"
+											+ taskItem.getName() + " - Hrs:" + taskItem.getSpendHours() + "}</a>")
 							.trim();
 					statusDTO.setBlockers(str);
 				}

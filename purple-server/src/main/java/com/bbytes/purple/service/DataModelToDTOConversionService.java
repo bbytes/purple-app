@@ -153,6 +153,7 @@ public class DataModelToDTOConversionService {
 		statusDTO.setBlockers(status.getBlockers());
 		statusDTO.setTime(statusTime);
 		statusDTO.setCommentCount(status.getCommentCount());
+		statusDTO.setTaskDataMap(status.getTaskDataMap());
 		return statusDTO;
 	}
 

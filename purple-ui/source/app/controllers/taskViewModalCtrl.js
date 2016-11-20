@@ -9,6 +9,11 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
     $scope.addToWorkedOnList = [];
     $scope.addToWorkingOnList = [];
     $scope.addToBlockersList = [];
+    var taskItemMap = modalData.taskItemMap;
+    var workedOnTaskMap = taskItemMap.workedOn;
+    var workingOnTaskMap = taskItemMap.workingOn;
+    var blockersTaskMap = taskItemMap.blockers;
+    var itemKey = modalData.itemKey;
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
@@ -16,26 +21,62 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
         $scope.addToWorkedOn = "";
         $scope.addToWorkingOn = "";
         $scope.addToBlockers = "";
+
         angular.forEach($scope.addToWorkedOnList, function (item) {
-            if ($scope.addToWorkedOnList.length !== 0 && $scope.addToWorkedOnList.length !== undefined)
-                $scope.addToWorkedOn = $scope.addToWorkedOn + "<p> #{<!-- id:" + item.task.taskItemId + "-->" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
+            if ($scope.addToWorkedOnList.length !== 0 && $scope.addToWorkedOnList.length !== undefined) {
+                var genTaskKey;
+                genTaskKey = "T" + itemKey;
+                $scope.isKeyExist = workedOnTaskMap.hasOwnProperty(genTaskKey);
+                if ($scope.isKeyExist) {
+                    itemKey++;
+                    genTaskKey = "T" + itemKey;
+                }
+                workedOnTaskMap[genTaskKey] = "id:" + item.task.taskItemId;
+                $scope.addToWorkedOn = $scope.addToWorkedOn + "<p> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
+            }
+            itemKey++;
         });
         angular.forEach($scope.addToWorkingOnList, function (item) {
-            if ($scope.addToWorkingOnList.length !== 0 && $scope.addToWorkingOnList.length !== undefined)
-                $scope.addToWorkingOn = $scope.addToWorkingOn + "<p> #{<!-- id:" + item.task.taskItemId + "-->" + item.task.taskListName + "-" + item.taskItemName + " - Hrs:" + item.hours + "}</p>";
+            if ($scope.addToWorkingOnList.length !== 0 && $scope.addToWorkingOnList.length !== undefined) {
+                var genTaskKey = "T" + itemKey;
+                $scope.isKeyExist = workingOnTaskMap.hasOwnProperty(genTaskKey);
+                if ($scope.isKeyExist) {
+                    itemKey++;
+                    genTaskKey = "T" + itemKey;
+                }
+                workingOnTaskMap[genTaskKey] = "id:" + item.task.taskItemId;
+                $scope.addToWorkingOn = $scope.addToWorkingOn + "<p> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
+            }
+            itemKey++;
         });
         angular.forEach($scope.addToBlockersList, function (item) {
-            if ($scope.addToBlockersList.length !== 0 && $scope.addToBlockersList.length !== undefined)
-                $scope.addToBlockers = $scope.addToBlockers + "<p> #{<!-- id:" + item.task.taskItemId + "-->" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
+            if ($scope.addToBlockersList.length !== 0 && $scope.addToBlockersList.length !== undefined) {
+                var genTaskKey = "T" + itemKey;
+                $scope.isKeyExist = blockersTaskMap.hasOwnProperty(genTaskKey);
+                if ($scope.isKeyExist) {
+                    itemKey++;
+                    genTaskKey = "T" + itemKey;
+                }
+                blockersTaskMap[genTaskKey] = "id:" + item.task.taskItemId;
+                $scope.addToBlockers = $scope.addToBlockers + "<p> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
+            }
+            itemKey++;
         });
         $scope.taskObject = {
             "addToWorkedOn": $scope.addToWorkedOn,
             "addToWorkingOn": $scope.addToWorkingOn,
-            "addToBlockers": $scope.addToBlockers
+            "addToBlockers": $scope.addToBlockers,
+            "taskItemMap": taskItemMap,
+            "itemKey": itemKey
         };
         $uibModalInstance.close($scope.taskObject);
     };
     $scope.selectAction = function (selectedAction, index, taskItem, hours) {
+        if (selectedAction === "") {
+            $scope.addToWorkedOnList.splice(index, 1);
+            $scope.addToWorkingOnList.splice(index, 1);
+            $scope.addToBlockersList.splice(index, 1);
+        }
         switch (selectedAction) {
             case "workedOn":
                 if (!hours)
@@ -60,6 +101,7 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
                 break;
         }
     };
+
     // loading all hours dropdown
     $scope.loadHours = function () {
         dropdownListService.getHours().then(function (response) {
