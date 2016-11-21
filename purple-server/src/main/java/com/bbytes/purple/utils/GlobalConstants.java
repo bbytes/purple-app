@@ -21,7 +21,7 @@ public class GlobalConstants {
 	public static final String EMAIL_INVITE_PROJECT_TEMPLATE = "email-text-invite-project.html";
 
 	public static final String SCHEDULER_EMAIL_TEMPLATE = "email-text-scheduler.html";
-	
+
 	public static final String SCHEDULER_SLACK_TEMPLATE = "slack-scheduler.html";
 
 	public static final String COMMENT_EMAIL_TEMPLATE = "email-text-comment.html";
@@ -69,15 +69,15 @@ public class GlobalConstants {
 	public static final String SETTING_URL = "/updateSetting?token=";
 
 	public static final String STATUS_SNIPPET_URL = "/status-snippet?pk=";
-	
+
 	public static final String COMMENT_SNIPPET_URL = "/comment-snippet?pk=";
-	
+
 	public static final String REPLY_SNIPPET_URL = "/reply-snippet?pk=";
 
 	public static final String STATUS_ID_PARAM = "&sid=";
-	
+
 	public static final String COMMENT_ID_PARAM = "&cid=";
-	
+
 	public static final String REPLY_ID_PARAM = "&rid=";
 
 	public static final String STATUS_DATE = "&sd=";
@@ -122,8 +122,10 @@ public class GlobalConstants {
 
 	public static final String SALES_EMAIL_ADDRESS = "sales@beyondbytes.co.in";
 
-	public static final String MENTION_REGEX_PATTERN = "@\\[(.*?)\\]"; 
+	public static final String MENTION_REGEX_PATTERN = "@\\[(.*?)\\]";
 
 	public static final String TASKLIST_REGEX_PATTERN = "#\\{(.*?)\\}";
+
+	public static final String HOURS_PATTERN = "Hrs:";
 
 }

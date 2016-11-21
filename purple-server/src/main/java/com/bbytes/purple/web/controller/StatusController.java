@@ -99,8 +99,12 @@ public class StatusController {
 
 		// We will get current logged in user
 		User loggedInUser = userService.getLoggedInUser();
-		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO);
-		Status status = statusService.create(statusDTOwithMentionCheck, loggedInUser);
+		Map<String, List<Object>> statusTaskEventMap = statusService.checkMentionUserAndTask(statusDTO, null,
+				loggedInUser);
+		StatusDTO updatedStatusDTO = (StatusDTO) statusTaskEventMap.get("status").iterator().next();
+		List<Object> taskItemList = statusTaskEventMap.get("taskItem");
+
+		Status status = statusService.create(updatedStatusDTO, taskItemList, loggedInUser);
 
 		notifyMentionUsers(loggedInUser, status);
 
@@ -289,8 +293,10 @@ public class StatusController {
 
 		// We will get current logged in user
 		User loggedInUser = userService.getLoggedInUser();
-		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO);
-		Status status = statusService.updateStatus(statusId, statusDTOwithMentionCheck, loggedInUser);
+		Map<String, List<Object>> statusTaskEventMap = statusService.checkMentionUserAndTask(statusDTO, statusId,
+				loggedInUser);
+		StatusDTO updatedStatusDTO = (StatusDTO) statusTaskEventMap.get("status").iterator().next();
+		Status status = statusService.updateStatus(statusId, updatedStatusDTO, loggedInUser);
 
 		notifyMentionUsers(loggedInUser, status);
 
