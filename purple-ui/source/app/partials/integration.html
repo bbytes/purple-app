@@ -67,16 +67,23 @@
                         </div>
                     </form>
                 </div>
-                <div class="row" ng-show="isSlackConnect">
-                    <div class="col-md-4"> 
-                        <select class="form-control" ng-model="selectedChannel">	
-                            <option value="">--- Select Channel ---</option>
-                            <option ng-repeat="channel in channelList" value="{{channel.id}}" >{{channel.name}}</option>
-                        </select>
-                    </div>
-                    <div class="row"> 
-                        <input type="submit" value="Set Channel" class="btn btn-default" ng-click="setChannel()" data-toggle="collapse" data-target="#intergration-form">
-                    </div>
+                <div class="row">
+                    <div class="connected" ng-show="isSlackConnect"><p>Connected</p></div>
+                    <div class="offline" ng-hide="isSlackConnect"><p>Offline</p></div>
+                    <div class="row" ng-show="isSlackConnect"> 
+                         <input type="submit" value="Disconnect Slack" class="btn btn-default" data-toggle="collapse" data-target="#intergration-form">
+                     </div>
+                    <!--  commenting channel drop-down since its not required as of now  -->
+                    <!--  <div class="col-md-4"> 
+                         
+                                                <select class="form-control" ng-model="selectedChannel">	
+                                                     <option value="">--- Select Channel ---</option>
+                                                     <option ng-repeat="channel in channelList" value="{{channel.id}}" >{{channel.name}}</option>
+                                                 </select>
+                     </div>
+                     <div class="row"> 
+                         <input type="submit" value="Set Channel" class="btn btn-default" ng-click="setChannel()" data-toggle="collapse" data-target="#intergration-form">
+                     </div>-->
                 </div>
             </div>
         </div>
