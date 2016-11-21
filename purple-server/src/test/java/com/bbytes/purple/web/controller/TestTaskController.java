@@ -54,28 +54,28 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 
 		TenancyContextHolder.setTenant(org.getOrgId());
 
-//		//organizationRepository.save(org);
-//		user = new User("aditya", "aditya@bbytes.co.in");
-//		user.setOrganization(org);
-//		userRepository.save(user);
-//		projectService.save(project);
-//		status.setUser(user);
-//
-//		userService.updatePassword("test123", user);
-//		status = statusService.save(status);
+		organizationRepository.save(org);
+		user = new User("aditya", "aditya@bbytes.co.in");
+		user.setOrganization(org);
+		user = userRepository.save(user);
+		project =projectService.save(project);
+		status.setUser(user);
+
+		userService.updatePassword("test123", user);
+		status = statusService.save(status);
 
 	}
 
-//	@After
-//	public void cleanUp() {
-//		organizationRepository.deleteAll();
-//		commentRepository.deleteAll();
-//		projectRepository.deleteAll();
-//		statusRepository.deleteAll();
-//		userRepository.deleteAll();
-//		taskListRepository.deleteAll();
-//		taskItemRepository.deleteAll();
-//	}
+	@After
+	public void cleanUp() {
+		organizationRepository.deleteAll();
+		commentRepository.deleteAll();
+		projectRepository.deleteAll();
+		statusRepository.deleteAll();
+		userRepository.deleteAll();
+		taskListRepository.deleteAll();
+		taskItemRepository.deleteAll();
+	}
 
 	@Test
 	public void testGetTaskStates() throws Exception {
@@ -120,7 +120,7 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 
 		TaskListDTO taskListDTO = new TaskListDTO();
 		taskListDTO.setName("Test task list");
-		taskListDTO.setProjectId("5825a65cf8eec31b50bd4f1b");
+		taskListDTO.setProjectId(project.getProjectId());
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -128,9 +128,8 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(taskListDTO);
 		System.out.println(requestJson);
 
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser("aditya@bbytes.co.in", 1);
-		mockMvc.perform(post("/api/v1/tasklist/create").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
+		mockMvc.perform(post("/api/v1/task/taskList").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
@@ -141,16 +140,15 @@ public class TestTaskController extends PurpleWebBaseApplicationTests {
 
 		TaskListDTO taskListDTO = new TaskListDTO();
 		taskListDTO.setName("Test task list");
-		taskListDTO.setProjectId("5825a65cf8eec31b50bd4f1b");
+		taskListDTO.setProjectId(project.getProjectId());
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
 		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
 		String requestJson = ow.writeValueAsString(taskListDTO);
 		
-
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser("aditya@bbytes.co.in", 1);
-		mockMvc.perform(post("/api/v1/tasklist/create").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 1);
+		mockMvc.perform(post("/api/v1/task/taskList/").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 

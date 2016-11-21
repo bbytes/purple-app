@@ -1347,7 +1347,7 @@ small img{
     border: 1px solid #dcd8d8;
 }
 .task-content {
-    padding-left:700px;
+	padding-left:700px;
 }
 .alert {
     border-radius: 0px !important;
@@ -1932,7 +1932,7 @@ md-icon {
 }
 
 .selectedtl{
-    color:#cc95b5;
+	color:#cc95b5;
 }
 .selected a{
     color: #fff;
@@ -4230,77 +4230,77 @@ tabs-left, .tabs-right {
 
 
 .mega-dropdown {
-    position: static !important;
-    width: auto;
+  position: static !important;
+  width: auto;
 }
 
 .mega-dropdown-menu {
-    padding: 20px 0px;
-    width: 100%;
-    box-shadow: none;
-    -webkit-box-shadow: none;
+  padding: 20px 0px;
+  width: 100%;
+  box-shadow: none;
+  -webkit-box-shadow: none;
 }
 
 .mega-dropdown-menu:before {
-    content: "";
-    border-bottom: 15px solid #fff;
-    border-right: 17px solid transparent;
-    border-left: 17px solid transparent;
-    position: absolute;
-    top: -15px;
-    left: 285px;
-    z-index: 10;
+  content: "";
+  border-bottom: 15px solid #fff;
+  border-right: 17px solid transparent;
+  border-left: 17px solid transparent;
+  position: absolute;
+  top: -15px;
+  left: 285px;
+  z-index: 10;
 }
 
 .mega-dropdown-menu:after {
-    content: "";
-    border-bottom: 17px solid #ccc;
-    border-right: 19px solid transparent;
-    border-left: 19px solid transparent;
-    position: absolute;
-    top: -17px;
-    left: 283px;
-    z-index: 8;
+  content: "";
+  border-bottom: 17px solid #ccc;
+  border-right: 19px solid transparent;
+  border-left: 19px solid transparent;
+  position: absolute;
+  top: -17px;
+  left: 283px;
+  z-index: 8;
 }
 
 .mega-dropdown-menu > li > ul {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .mega-dropdown-menu > li > ul > li {
-    list-style: none;
+  list-style: none;
 }
 
 .mega-dropdown-menu > li > ul > li > a {
-    display: block;
-    padding: 3px 20px;
-    clear: both;
-    font-weight: normal;
-    line-height: 1.428571429;
-    color: #999;
-    white-space: normal;
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.428571429;
+  color: #999;
+  white-space: normal;
 }
 
 .mega-dropdown-menu > li ul > li > a:hover,
 .mega-dropdown-menu > li ul > li > a:focus {
-    text-decoration: none;
-    color: #444;
-    background-color: #f5f5f5;
+  text-decoration: none;
+  color: #444;
+  background-color: #f5f5f5;
 }
 
 .mega-dropdown-menu .dropdown-header {
-    color: #428bca;
-    font-size: 18px;
-    font-weight: bold;
+  color: #428bca;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .mega-dropdown-menu form {
-    margin: 3px 20px;
+  margin: 3px 20px;
 }
 
 .mega-dropdown-menu .form-group {
-    margin-bottom: 3px;
+  margin-bottom: 3px;
 }
 
 .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
@@ -4321,10 +4321,10 @@ tabs-left, .tabs-right {
 }
 
 .large-Modal .modal-dialog{
-    width:80%; height: 70%;
-    position: absolute;
-    top:0; bottom: 0; left: 0; right: 0;
-    margin: auto
+  width:80%; height: 70%;
+  position: absolute;
+  top:0; bottom: 0; left: 0; right: 0;
+  margin: auto
 }
 
 .billing-wrapper{
