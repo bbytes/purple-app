@@ -62,7 +62,8 @@ public class RegistrationService {
 				createPlutusSubscription(org, user);
 			} catch (PlutusClientException ex) {
 				logger.error(ex.getMessage(), ex);
-				throw new PurpleException("Subscription failed", ErrorHandler.SIGN_UP_FAILED);
+				// dont stop the signup from happening if plutus server is not reachable 
+//				throw new PurpleException("Subscription failed", ErrorHandler.SIGN_UP_FAILED);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.SIGN_UP_FAILED, e);
 			}
