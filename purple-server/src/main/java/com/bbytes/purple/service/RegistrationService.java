@@ -62,8 +62,10 @@ public class RegistrationService {
 				createPlutusSubscription(org, user);
 			} catch (PlutusClientException ex) {
 				logger.error(ex.getMessage(), ex);
-				// dont stop the signup from happening if plutus server is not reachable 
-//				throw new PurpleException("Subscription failed", ErrorHandler.SIGN_UP_FAILED);
+				// dont stop the signup from happening if plutus server is not
+				// reachable
+				// throw new PurpleException("Subscription failed",
+				// ErrorHandler.SIGN_UP_FAILED);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.SIGN_UP_FAILED, e);
 			}
@@ -94,26 +96,24 @@ public class RegistrationService {
 		subscriptionInfo.setProductName(ProductName.Statusnap.toString());
 		subscriptionInfo.setTenantId(org.getOrgId());
 
-		SubscriptionRegisterRestResponse response = plutusClient.register(subscriptionInfo);
-
-		if (response.isSuccess()) {
-			org.setSubscriptionKey(response.getSubscriptionKey());
-			org.setSubscriptionSecret(response.getSubscriptionSecret());
-
-			TenancyContextHolder.setTenant(org.getOrgId());
-			org = orgService.save(org);
-			if (userService.getUserByEmail(user.getEmail()) == null)
-				userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
-
-		} else {
+		try {
+			SubscriptionRegisterRestResponse response = plutusClient.register(subscriptionInfo);
+			if (response.isSuccess()) {
+				org.setSubscriptionKey(response.getSubscriptionKey());
+				org.setSubscriptionSecret(response.getSubscriptionSecret());
+			}
+		} catch (Exception e) {
 			logger.error("Subscription failed as plutus server response failed for org '" + org.getOrgName() + "' with email "
 					+ user.getEmail());
-			throw new PlutusClientException("Subscription creation failed");
 		}
+
+		TenancyContextHolder.setTenant(org.getOrgId());
+		org = orgService.save(org);
+		if (userService.getUserByEmail(user.getEmail()) == null)
+			userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
 	}
 
 	public User activateAccount(User activeUser) throws PurpleException {
-
 		if (activeUser != null) {
 			try {
 				activeUser.setAccountInitialise(true);
