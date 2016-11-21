@@ -461,6 +461,8 @@ public class StatusService extends AbstractService<Status, String> {
 					double spendHoursOnTaskFromStatus = Double.parseDouble(StringUtils
 							.substringAfter(taskListWorkedOnMatcher.group(1), GlobalConstants.HOURS_PATTERN));
 					if (statusId == null) {
+						// adding taskDTO in map which will use in create status
+						// method
 						if (statusTaskEventMap.containsKey("taskItem")) {
 							TaskItemDTO taskItemDTO = new TaskItemDTO();
 							taskItemDTO.setTaskItemId(taskItem.getTaskItemId());
