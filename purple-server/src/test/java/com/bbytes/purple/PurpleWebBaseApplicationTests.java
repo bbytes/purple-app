@@ -123,7 +123,7 @@ public class PurpleWebBaseApplicationTests extends PurpleApplicationTests {
 
 
 
-	@After
+	//@After
 	public void cleanUpData() {
 		tenantResolverService.deleteAll();
 	}
