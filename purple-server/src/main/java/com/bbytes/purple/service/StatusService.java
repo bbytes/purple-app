@@ -419,7 +419,7 @@ public class StatusService extends AbstractService<Status, String> {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
 					String str = statusDTO.getWorkedOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<a>@" + mentionUser.getName() + "</a>").trim();
+							"<p>@" + mentionUser.getName() + "</p>").trim();
 					statusDTO.setWorkedOn(str);
 				}
 			}
@@ -443,8 +443,8 @@ public class StatusService extends AbstractService<Status, String> {
 					taskItem = taskItemService.save(taskItem);
 					String str = statusDTO.getWorkedOn()
 							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
-									"<a>#{" + taskItemKey + "-" + taskItem.getTaskList().getName() + "-"
-											+ taskItem.getName() + " - Hrs:" + taskItem.getSpendHours() + "}</a>")
+									"<p>#{" + taskItemKey + "-" + taskItem.getTaskList().getName() + "-"
+											+ taskItem.getName() + " - Hrs:" + taskItem.getSpendHours() + "}</p>")
 							.trim();
 					statusDTO.setWorkedOn(str);
 				}
@@ -463,7 +463,7 @@ public class StatusService extends AbstractService<Status, String> {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
 					String str = statusDTO.getWorkingOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<a>@" + mentionUser.getName() + "</a>").trim();
+							"<p>@" + mentionUser.getName() + "</p>").trim();
 					statusDTO.setWorkingOn(str);
 				}
 			}
@@ -486,8 +486,8 @@ public class StatusService extends AbstractService<Status, String> {
 					taskItem = taskItemService.save(taskItem);
 					String str = statusDTO.getWorkingOn()
 							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
-									"<a>#{" + taskItemKey + "-" + taskItem.getTaskList().getName() + "-"
-											+ taskItem.getName() + " - Hrs:" + taskItem.getSpendHours() + "}</a>")
+									"<p>#{" + taskItemKey + "-" + taskItem.getTaskList().getName() + "-"
+											+ taskItem.getName() + " - Hrs:" + taskItem.getSpendHours() + "}</p>")
 							.trim();
 					statusDTO.setWorkingOn(str);
 				}
@@ -507,7 +507,7 @@ public class StatusService extends AbstractService<Status, String> {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
 					String str = statusDTO.getBlockers().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<a>@" + mentionUser.getName() + "</a>").trim();
+							"<p>@" + mentionUser.getName() + "</p>").trim();
 					statusDTO.setBlockers(str);
 				}
 			}
@@ -530,8 +530,8 @@ public class StatusService extends AbstractService<Status, String> {
 					taskItem = taskItemService.save(taskItem);
 					String str = statusDTO.getBlockers()
 							.replaceFirst(GlobalConstants.TASKLIST_REGEX_PATTERN,
-									"<a>#{" + taskItemKey + "-" + taskItem.getTaskList().getName() + "-"
-											+ taskItem.getName() + " - Hrs:" + taskItem.getSpendHours() + "}</a>")
+									"<p>#{" + taskItemKey + "-" + taskItem.getTaskList().getName() + "-"
+											+ taskItem.getName() + " - Hrs:" + taskItem.getSpendHours() + "}</p>")
 							.trim();
 					statusDTO.setBlockers(str);
 				}

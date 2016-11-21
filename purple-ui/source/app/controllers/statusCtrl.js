@@ -12,6 +12,8 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     $rootScope.settingClass = 'setting-nav';
     $rootScope.feedbackClass = 'feedback-log feedback-show';
     $scope.isSubmit = true;
+    $scope.selectables;
+
     // this map is create for storing key-value pair for taskitems and storing into db
     var taskItemMap;
     // used to generate task item key for map
@@ -349,7 +351,8 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                             "title": 'Task View',
                             "taskData": $scope.taskList,
                             "taskItemMap": taskItemMap,
-                            "itemKey": itemKey
+                            "itemKey": itemKey,
+                            "hoursList": $scope.selectables
                         };
                     }
                 }

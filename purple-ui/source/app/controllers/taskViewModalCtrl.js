@@ -6,6 +6,7 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
 
     $scope.title = modalData.title;
     $scope.taskList = modalData.taskData;
+    $scope.hoursList = modalData.hoursList;
     $scope.addToWorkedOnList = [];
     $scope.addToWorkingOnList = [];
     $scope.addToBlockersList = [];
