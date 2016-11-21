@@ -33,7 +33,7 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
                     genTaskKey = "T" + itemKey;
                 }
                 workedOnTaskMap[genTaskKey] = "id:" + item.task.taskItemId;
-                $scope.addToWorkedOn = $scope.addToWorkedOn + "<p> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
+                $scope.addToWorkedOn = $scope.addToWorkedOn + "<p style='color:#3b73af;font-weight: bold;'> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
             }
             itemKey++;
         });
@@ -46,7 +46,7 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
                     genTaskKey = "T" + itemKey;
                 }
                 workingOnTaskMap[genTaskKey] = "id:" + item.task.taskItemId;
-                $scope.addToWorkingOn = $scope.addToWorkingOn + "<p> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
+                $scope.addToWorkingOn = $scope.addToWorkingOn + "<p style='color:#3b73af;font-weight: bold;'> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + "}</p>";
             }
             itemKey++;
         });
@@ -59,7 +59,7 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
                     genTaskKey = "T" + itemKey;
                 }
                 blockersTaskMap[genTaskKey] = "id:" + item.task.taskItemId;
-                $scope.addToBlockers = $scope.addToBlockers + "<p> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
+                $scope.addToBlockers = $scope.addToBlockers + "<p style='color:#3b73af;font-weight: bold;'> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + "}</p>";
             }
             itemKey++;
         });
@@ -72,6 +72,34 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
         };
         $uibModalInstance.close($scope.taskObject);
     };
+    $scope.updateHours = function (selectedAction, index, taskItem, hours) {
+        if (hours === "") {
+            hours = 0;
+        }
+        switch (selectedAction) {
+            case "workedOn":
+                if (!hours)
+                    hours = 0;
+                $scope.addToWorkedOnList[index] = {};
+                $scope.addToWorkedOnList[index].task = taskItem;
+                $scope.addToWorkedOnList[index].hours = hours;
+                break;
+            case "workingOn":
+                if (!hours)
+                    hours = 0;
+                $scope.addToWorkingOnList[index] = {};
+                $scope.addToWorkingOnList[index].task = taskItem;
+                $scope.addToWorkingOnList[index].hours = hours;
+                break;
+            case "blockers":
+                if (!hours)
+                    hours = 0;
+                $scope.addToBlockersList[index] = {};
+                $scope.addToBlockersList[index].task = taskItem;
+                $scope.addToBlockersList[index].hours = hours;
+                break;
+        }
+    };
     $scope.selectAction = function (selectedAction, index, taskItem, hours) {
         if (selectedAction === "") {
             $scope.addToWorkedOnList.splice(index, 1);
@@ -81,24 +109,30 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
         switch (selectedAction) {
             case "workedOn":
                 if (!hours)
-                    hours = 1;
+                    hours = 0;
                 $scope.addToWorkedOnList[index] = {};
                 $scope.addToWorkedOnList[index].task = taskItem;
                 $scope.addToWorkedOnList[index].hours = hours;
+                $scope.addToWorkingOnList.splice(index, 1);
+                $scope.addToBlockersList.splice(index, 1);
                 break;
             case "workingOn":
                 if (!hours)
-                    hours = 1;
+                    hours = 0;
                 $scope.addToWorkingOnList[index] = {};
                 $scope.addToWorkingOnList[index].task = taskItem;
                 $scope.addToWorkingOnList[index].hours = hours;
+                $scope.addToWorkedOnList.splice(index, 1);
+                $scope.addToBlockersList.splice(index, 1);
                 break;
             case "blockers":
                 if (!hours)
-                    hours = 1;
+                    hours = 0;
                 $scope.addToBlockersList[index] = {};
                 $scope.addToBlockersList[index].task = taskItem;
                 $scope.addToBlockersList[index].hours = hours;
+                $scope.addToWorkedOnList.splice(index, 1);
+                $scope.addToWorkingOnList.splice(index, 1);
                 break;
         }
     };
