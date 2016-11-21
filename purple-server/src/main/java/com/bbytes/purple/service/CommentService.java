@@ -174,7 +174,7 @@ public class CommentService extends AbstractService<Comment, String> {
 				if (mentionUser != null) {
 					// replacing @mention pattern with @username
 					String str = stringText.replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<p style='color:#337ab7;font-weight: bold;'>@" + mentionUser.getName() + "</p>").trim();
+							"<p style='color:#72afd2;font-weight: bold;'>@" + mentionUser.getName() + "</p>").trim();
 					stringText = str;
 				}
 			}
