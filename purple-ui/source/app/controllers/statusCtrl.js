@@ -13,6 +13,8 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     $rootScope.feedbackClass = 'feedback-log feedback-show';
     $scope.isSubmit = true;
     $scope.selectables;
+    // varibale to store all task list and task item list
+    $scope.taskList;
 
     // this map is create for storing key-value pair for taskitems and storing into db
     var taskItemMap;
@@ -327,16 +329,23 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         return $filter('htmlToPlaintext')($html);
     };
 
-    // this is to open task view modal
-    $scope.openTaskModal = function (projectId) {
-
+    $scope.showTaskViewIcon = function (projectId) {
         tasksService.getAllTasksForProject(projectId).then(function (response) {
             if (response.success) {
                 $scope.taskList = response.data;
-                showModal();
+                if ($scope.taskList.length !== 0) {
+                    $scope.showTaskView = true;
+                } else {
+                    $scope.showTaskView = false;
+                }
             }
         });
+    };
 
+    // this is to open task view modal
+    $scope.openTaskModal = function () {
+        
+        showModal();
         function showModal() {
             var uibModalInstance = $uibModal.open({
                 animation: true,

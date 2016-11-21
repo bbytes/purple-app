@@ -86,8 +86,8 @@
                                 <option ng-repeat="date in dateArray" value="{{date}}" >{{date| date:'MMM dd, yyyy'}}</option>
                             </select>
                         </div>
-                        <div class="col-md-3" style="padding-right: 4px; padding-left: 15px;" ng-show="project">
-                            <a href="" style="color:rgb(124, 105, 145);" ng-click="openTaskModal(project)"><i class="fa fa-tasks fa-2x" aria-hidden="true" tooltips tooltip-template="Task View" tooltip-side="bottom"></i></a>
+                        <div class="col-md-3" style="padding-right: 4px; padding-left: 15px;" ng-show="showTaskView">
+                            <a href="" style="color:rgb(124, 105, 145);" ng-click="openTaskModal()"><i class="fa fa-tasks fa-2x" aria-hidden="true" tooltips tooltip-template="Task View" tooltip-side="bottom"></i></a>
                         </div>
                     </div>
 
@@ -96,7 +96,7 @@
                         <div class="form-sidebar">
 
                             <div class="form-group" >
-                                <select chosen="allprojects" ng-model="project" id="projectDropdown">
+                                <select chosen="allprojects" ng-model="project" id="projectDropdown" ng-change="showTaskViewIcon(project)">
                                     <option value="">--- Select Project ---</option>
                                     <option ng-repeat="project in allprojects" value="{{project.projectId}}" >{{project.projectName}}</option>
                                 </select>
