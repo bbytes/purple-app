@@ -51,10 +51,10 @@ public class RegistrationService {
 		if (org != null && user != null) {
 
 			if (tenantResolverService.emailExist(user.getEmail()))
-				throw new PurpleException("Error while sign up", ErrorHandler.EMAIL_NOT_UNIQUE);
+				throw new PurpleException("Error while sign up, email exist", ErrorHandler.EMAIL_NOT_UNIQUE);
 
 			if (tenantResolverService.organizationExist(org.getOrgId()))
-				throw new PurpleException("Error while sign up", ErrorHandler.ORG_NOT_UNIQUE);
+				throw new PurpleException("Error while sign up, org not unique", ErrorHandler.ORG_NOT_UNIQUE);
 
 			try {
 				// update Plutus server for billing information and other
