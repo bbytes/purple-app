@@ -36,23 +36,19 @@ import com.bbytes.plutus.model.ProductPlanStats;
 import com.bbytes.plutus.response.ProductStatsRestResponse;
 import com.bbytes.plutus.util.BillingConstant;
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
-import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.ConfigSetting;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
-import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TenantResolver;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.TenantResolverRepository;
-import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.RegistrationService;
-import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
@@ -81,20 +77,14 @@ public class SchedulerService {
 	private UserService userService;
 
 	@Autowired
-	private StatusService statusService;
-
-	@Autowired
 	private OrganizationService organizationService;
-
-	@Autowired
-	private CommentService commentService;
 
 	@Autowired
 	private NotificationService notificationService;
 
 	@Autowired
 	private ConfigSettingService configSettingService;
-	
+
 	@Autowired
 	private RegistrationService registrationService;
 
@@ -123,114 +113,6 @@ public class SchedulerService {
 	private void init() {
 		ScheduledExecutorService localExecutor = Executors.newScheduledThreadPool(25);
 		taskScheduler = new ConcurrentTaskScheduler(localExecutor);
-	}
-
-	@PostConstruct
-	private void cleanUpOrghanStatus() throws PurpleException {
-
-		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
-		// creating a hashset to store orgId's
-		Set<String> orgIdList = new LinkedHashSet<String>();
-		for (TenantResolver tr : tenantResolverList) {
-			orgIdList.add(tr.getOrgId());
-		}
-		for (String orgId : orgIdList) {
-			TenancyContextHolder.setTenant(orgId);
-			List<Status> statusList = statusService.findAll();
-			for (Status statusFromDb : statusList) {
-				if (statusFromDb.getUser() == null) {
-					List<Comment> commentFromDB = commentService.getCommentByStatus(statusFromDb);
-					commentService.delete(commentFromDB);
-					statusService.delete(statusFromDb);
-				}
-			}
-		}
-		TenancyContextHolder.clearContext();
-	}
-
-	/**
-	 * This method is used to initialize the project owners to existing db
-	 * 
-	 * @throws PurpleException
-	 */
-	@PostConstruct
-	private void initialiseProjectOwnerToDB() throws PurpleException {
-
-		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
-		// creating a hashset to store orgId's
-		Set<String> orgIdList = new LinkedHashSet<String>();
-		for (TenantResolver tr : tenantResolverList) {
-			orgIdList.add(tr.getOrgId());
-		}
-		for (String orgId : orgIdList) {
-			TenancyContextHolder.setTenant(orgId);
-			List<Project> projectList = projectService.findAll();
-
-			for (Project project : projectList) {
-
-				User managerUser = null;
-				// flag is just check whether manager exist or not, if not then
-				// assign ADMIN
-				boolean flag = true;
-				Set<User> usersFromProject = project.getUser();
-				// checking project owner exist or not, if not then assigning
-				// with below logic
-				if (project.getProjectOwner() == null) {
-					// below flag is to check if MANAGER or ADMIN present in
-					// project or not, if not then look for global manager or
-					// ADMIN
-					boolean isRoleExist = false;
-					for (User user : usersFromProject) {
-						if (user.getUserRole().equals(UserRole.MANAGER_USER_ROLE)) {
-							managerUser = user;
-							flag = false;
-							isRoleExist = true;
-							break;
-						}
-
-					}
-					if (flag) {
-						for (User user : usersFromProject) {
-
-							if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE)) {
-								managerUser = user;
-								isRoleExist = true;
-								break;
-							}
-
-						}
-					}
-					if (!isRoleExist) {
-						List<User> allUsers = userService.findAll();
-						boolean isRole = true;
-						for (User user : allUsers) {
-							if (user.getUserRole().equals(UserRole.MANAGER_USER_ROLE)) {
-								managerUser = user;
-								isRole = false;
-								break;
-							}
-
-						}
-						if (isRole) {
-							for (User user : allUsers) {
-
-								if (user.getUserRole().equals(UserRole.ADMIN_USER_ROLE)) {
-									managerUser = user;
-									break;
-								}
-
-							}
-						}
-						// adding first manager or ADMIN to project if not there
-						project.addUser(managerUser);
-					}
-					project.setProjectOwner(managerUser);
-					projectService.save(project);
-				}
-			}
-
-		}
-		TenancyContextHolder.clearContext();
 	}
 
 	/**
@@ -332,9 +214,8 @@ public class SchedulerService {
 
 							emailList.add(user.getEmail());
 							// this is to schedule task for particular time
-							taskScheduler.schedule(
-									new EmailAndSlackSendJob(user,emailBody, emailList, notificationService, schedulerSubject),
-									dateTime.toDate());
+							taskScheduler.schedule(new EmailAndSlackSendJob(user, emailBody, emailList,
+									notificationService, schedulerSubject), dateTime.toDate());
 
 						}
 					}
@@ -469,7 +350,7 @@ public class SchedulerService {
 				emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
 				emailBody.put(GlobalConstants.USER_NAME, nameListMap);
 
-				if (!nameListMap.isEmpty() && !emailList.isEmpty()){
+				if (!nameListMap.isEmpty() && !emailList.isEmpty()) {
 					notificationService.sendTemplateEmail(emailList, associateChecklistSubject, template, emailBody);
 				}
 
@@ -516,8 +397,8 @@ public class SchedulerService {
 	}
 
 	/* runs every 4 hours */
-//	@Scheduled(cron = "0 0/1 * * * ?")
-	
+	// @Scheduled(cron = "0 0/1 * * * ?")
+
 	/* runs every 4 hours */
 	@Scheduled(cron = "0 0 0/6 * * ?")
 	public void sendStatsToPlutusServer() throws PurpleException, PlutusClientException {
@@ -533,7 +414,6 @@ public class SchedulerService {
 		for (String orgId : orgList) {
 			TenancyContextHolder.setTenant(orgId);
 			Organization organization = organizationService.findByOrgId(orgId);
-			
 
 			if (organization != null && organization.getSubscriptionKey() == null) {
 				logger.warn("Subscription Key not available for organization with id " + orgId);
