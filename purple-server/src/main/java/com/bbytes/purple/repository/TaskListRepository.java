@@ -23,7 +23,7 @@ public interface TaskListRepository extends MongoRepository<TaskList, String> {
 	List<TaskList> findByProjectIn(List<Project> projects);
 
 	List<TaskList> findByOwner(User user);
-	
+
 	List<TaskList> findByUsers(User user);
 
 	List<TaskList> findByUsersIn(List<User> users);
@@ -40,9 +40,9 @@ public interface TaskListRepository extends MongoRepository<TaskList, String> {
 
 	List<TaskList> findByDueDateBetweenAndProjectIn(Date startDate, Date endDate, List<Project> projects);
 
-	List<TaskList> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate, List<Project> projects, List<User> users);
+	List<TaskList> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate, List<Project> projects,
+			List<User> users);
 
-	// List<TaskList> findByStateProjectAndUsers(Project project, TaskState
-	// state, User user);
+	List<TaskList> findByProjectAndOwnerAndStateIn(Project project, User user,List<TaskState> states);
 
 }

@@ -116,7 +116,10 @@ public class TaskController {
 	public RestResponse getTaskListForProject(@PathVariable String projectId) throws PurpleException {
 		Project project = projectService.findOne(projectId);
 		User user = userService.getLoggedInUser();
-		List<TaskList> taskList = taskListService.findByProjectAndUsers(project, user);
+		List<TaskState> states = new ArrayList<TaskState>();
+		states.add(TaskState.IN_PROGRESS);
+		states.add(TaskState.YET_TO_START);
+		List<TaskList> taskList = taskListService.findByProjectAndOwnerAndStateIn(project, user, states);
 		List<TaskListResponseDTO> taskListResponseDTO = dataModelToDTOConversionService.convertTaskListItem(taskList);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListResponseDTO);
 		return response;

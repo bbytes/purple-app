@@ -24,6 +24,7 @@ import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
@@ -502,19 +503,22 @@ public class DataModelToDTOConversionService {
 		List<TaskListResponseDTO> taskListDTOList = new LinkedList<TaskListResponseDTO>();
 		for (TaskList task : taskList) {
 			for (TaskItem item : task.getTaskItems()) {
-				TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
-				taskListResponseDTO.setTaskItemId(item.getTaskItemId());
-				taskListResponseDTO.setTaskListId(task.getTaskListId());
-				taskListResponseDTO.setTaskListName(task.getName());
-				taskListResponseDTO.setTaskItemName(item.getName());
-				taskListResponseDTO.setDesc(item.getDesc());
-				taskListResponseDTO.setDueDate(item.getDueDate());
-				taskListResponseDTO.setEstimatedHours(item.getEstimatedHours());
-				taskListResponseDTO.setSpendHours(item.getSpendHours());
-				taskListDTOList.add(taskListResponseDTO);
+				if (!TaskState.COMPLETED.equals(item.getState())) {
+					TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
+					taskListResponseDTO.setTaskItemId(item.getTaskItemId());
+					taskListResponseDTO.setTaskListId(task.getTaskListId());
+					taskListResponseDTO.setTaskListName(task.getName());
+					taskListResponseDTO.setTaskItemName(item.getName());
+					taskListResponseDTO.setDesc(item.getDesc());
+					taskListResponseDTO.setDueDate(item.getDueDate());
+					taskListResponseDTO.setEstimatedHours(item.getEstimatedHours());
+					taskListResponseDTO.setSpendHours(item.getSpendHours());
+					taskListDTOList.add(taskListResponseDTO);
+				}
 			}
 		}
 		return taskListDTOList;
+
 	}
 
 	public TaskItemDTO convertTaskItem(TaskItem taskItem) {
