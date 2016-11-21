@@ -174,15 +174,17 @@ public class StatusService extends AbstractService<Status, String> {
 				savedStatus = statusRepository.save(savedStatus);
 				// looping taskDTO to save statusTaskEvent for given spend hours
 				// and do the respective calculation
-				for (Object taskItemObject : taskItemList) {
-					TaskItemDTO taskItemDTO = (TaskItemDTO) taskItemObject;
-					TaskItem taskItem = taskItemService.findOne(taskItemDTO.getTaskItemId());
-					StatusTaskEvent statusTaskEvent = new StatusTaskEvent(taskItem, savedStatus, loggedInUser);
-					statusTaskEvent.setSpendHours(taskItemDTO.getSpendHours());
-					statusTaskEvent.setRemainingHours(taskItem.getEstimatedHours() - taskItemDTO.getSpendHours());
-					statusTaskEvent.setState(TaskState.IN_PROGRESS);
-					statusTaskEventService.save(statusTaskEvent);
+				if (taskItemList != null && !taskItemList.isEmpty()) {
+					for (Object taskItemObject : taskItemList) {
+						TaskItemDTO taskItemDTO = (TaskItemDTO) taskItemObject;
+						TaskItem taskItem = taskItemService.findOne(taskItemDTO.getTaskItemId());
+						StatusTaskEvent statusTaskEvent = new StatusTaskEvent(taskItem, savedStatus, loggedInUser);
+						statusTaskEvent.setSpendHours(taskItemDTO.getSpendHours());
+						statusTaskEvent.setRemainingHours(taskItem.getEstimatedHours() - taskItemDTO.getSpendHours());
+						statusTaskEvent.setState(TaskState.IN_PROGRESS);
+						statusTaskEventService.save(statusTaskEvent);
 
+					}
 				}
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_STATUS_FAILED, e);
