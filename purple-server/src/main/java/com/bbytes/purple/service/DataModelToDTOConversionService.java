@@ -24,6 +24,7 @@ import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
@@ -153,6 +154,7 @@ public class DataModelToDTOConversionService {
 		statusDTO.setBlockers(status.getBlockers());
 		statusDTO.setTime(statusTime);
 		statusDTO.setCommentCount(status.getCommentCount());
+		statusDTO.setTaskDataMap(status.getTaskDataMap());
 		return statusDTO;
 	}
 
@@ -488,7 +490,7 @@ public class DataModelToDTOConversionService {
 				itemDTO.setDueDate(item.getDueDate());
 				itemDTO.setEstimatedHours(item.getEstimatedHours());
 				itemDTO.setName(item.getName());
-				itemDTO.setUsers(new ArrayList<>(item.getUsers()));
+				itemDTO.setUsers(convertUsers(new ArrayList<>(item.getUsers())));
 				itemDTO.setSpendHours(item.getSpendHours());
 				itemDTO.setState(item.getState().getDisplayName());
 				taskItemDTOList.add(itemDTO);
@@ -501,19 +503,22 @@ public class DataModelToDTOConversionService {
 		List<TaskListResponseDTO> taskListDTOList = new LinkedList<TaskListResponseDTO>();
 		for (TaskList task : taskList) {
 			for (TaskItem item : task.getTaskItems()) {
-				TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
-				taskListResponseDTO.setTaskItemId(item.getTaskItemId());
-				taskListResponseDTO.setTaskListId(task.getTaskListId());
-				taskListResponseDTO.setTaskListName(task.getName());
-				taskListResponseDTO.setTaskItemName(item.getName());
-				taskListResponseDTO.setDesc(item.getDesc());
-				taskListResponseDTO.setDueDate(item.getDueDate());
-				taskListResponseDTO.setEstimatedHours(item.getEstimatedHours());
-				taskListResponseDTO.setSpendHours(item.getSpendHours());
-				taskListDTOList.add(taskListResponseDTO);
+				if (!TaskState.COMPLETED.equals(item.getState())) {
+					TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
+					taskListResponseDTO.setTaskItemId(item.getTaskItemId());
+					taskListResponseDTO.setTaskListId(task.getTaskListId());
+					taskListResponseDTO.setTaskListName(task.getName());
+					taskListResponseDTO.setTaskItemName(item.getName());
+					taskListResponseDTO.setDesc(item.getDesc());
+					taskListResponseDTO.setDueDate(item.getDueDate());
+					taskListResponseDTO.setEstimatedHours(item.getEstimatedHours());
+					taskListResponseDTO.setSpendHours(item.getSpendHours());
+					taskListDTOList.add(taskListResponseDTO);
+				}
 			}
 		}
 		return taskListDTOList;
+
 	}
 
 	public TaskItemDTO convertTaskItem(TaskItem taskItem) {
@@ -523,7 +528,7 @@ public class DataModelToDTOConversionService {
 		itemDTO.setDueDate(taskItem.getDueDate());
 		itemDTO.setEstimatedHours(taskItem.getEstimatedHours());
 		itemDTO.setName(taskItem.getName());
-		itemDTO.setUsers(new ArrayList<>(taskItem.getUsers()));
+		itemDTO.setUsers(convertUsers(new ArrayList<>(taskItem.getUsers())));
 		itemDTO.setSpendHours(taskItem.getSpendHours());
 		itemDTO.setState(taskItem.getState().getDisplayName());
 		return itemDTO;

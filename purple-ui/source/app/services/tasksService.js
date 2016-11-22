@@ -231,4 +231,65 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
 
          return deferred.promise;
     };
+    this.addUsersToItem=function(taskItem,usersToBeAdded){
+    	 var deferred = $q.defer();
+    	 $http(
+                 {
+                     method: 'POST',
+                     url: $rootScope.baseUrl
+                             + 'api/v1/task/taskItems/'+taskItem.taskItemId+'/addusers',
+                     data:usersToBeAdded,
+                     headers: {
+                         'Content-Type': 'application/json'
+                     }
+
+                 }).success(function (response, status, headers, config) {
+
+             deferred.resolve(response);
+         }).error(function (response) {
+             deferred.reject(response);
+         });
+
+         return deferred.promise;
+    };
+    this.removeUsersFromItem=function(userid,taskItem){
+    	 var deferred = $q.defer();
+    	 $http(
+                 {
+                     method: 'POST',
+                     url: $rootScope.baseUrl
+                             + 'api/v1/task/taskItems/'+taskItem.taskItemId+'/removeuser/'+userid,
+                     headers: {
+                         'Content-Type': 'application/json'
+                     }
+
+                 }).success(function (response, status, headers, config) {
+
+             deferred.resolve(response);
+         }).error(function (response) {
+             deferred.reject(response);
+         });
+
+         return deferred.promise;
+    }
+    this.getTaskListforId=function(taskListId){
+   	 var deferred = $q.defer();
+   	 $http(
+                {
+                    method: 'GET',
+                    url: $rootScope.baseUrl
+                            + 'api/v1/task/taskList/'+taskListId,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+
+                }).success(function (response, status, headers, config) {
+
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+   }
 });

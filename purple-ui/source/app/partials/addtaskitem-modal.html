@@ -1,5 +1,5 @@
 <div class="modal-header clearfix">
-	<h4 class="modal-title">CREATE NEW TASK</h4>
+	<h4 class="modal-title">{{title}}</h4>
 	<h5 class="modal-title">{{taskList.name }}</h5>
 
 	<a class="pull-right glyphicon glyphicon-remove icon-clear"
@@ -42,7 +42,7 @@
 							chosen="projectUsers" ng-model="taskItem.userIds"
 							id="usersDropdown" multiple="multiple" style="height: 50px">
 							<option value="">Select users</option>
-							<option ng-repeat="user in projectUsers" value="{{user.userId}}">{{user.name}}</option>
+							<option ng-repeat="user in projectUsers" value="{{user.id}}">{{user.userName}}</option>
 						</select>
 					</div>
 				</div>

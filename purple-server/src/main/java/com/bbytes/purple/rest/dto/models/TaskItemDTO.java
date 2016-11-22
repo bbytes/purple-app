@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.bbytes.purple.domain.User;
-
 import lombok.Data;
 
 /**
@@ -35,6 +33,6 @@ public class TaskItemDTO implements Serializable {
 	
 	private List<String> userIds = new ArrayList<String>();
 
-	private List<User> users = new ArrayList<User>();
+	private List<UserDTO> users = new ArrayList<UserDTO>();
 
 }

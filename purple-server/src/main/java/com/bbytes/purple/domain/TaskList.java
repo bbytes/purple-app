@@ -1,5 +1,6 @@
 package com.bbytes.purple.domain;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -88,6 +89,7 @@ public class TaskList implements Comparable<TaskList> {
 	}
 
 	public Set<TaskItem> getTaskItems() {
+		this.taskItems.removeAll(Collections.singleton(null));
 		return this.taskItems;
 
 	}
@@ -130,20 +132,22 @@ public class TaskList implements Comparable<TaskList> {
 		}
 
 		for (TaskItem taskItem : taskItems) {
-			if (taskItem.getState().equals(TaskState.YET_TO_START)) {
-				state = TaskState.YET_TO_START;
-				break;
-			}
-			if (state == null) {
-				if (taskItem.getState().equals(TaskState.IN_PROGRESS)) {
-					state = TaskState.IN_PROGRESS;
+			if (taskItem != null) {
+				if (taskItem.getState().equals(TaskState.YET_TO_START)) {
+					state = TaskState.YET_TO_START;
 					break;
 				}
-			}
-			if (state == null) {
-				if (taskItem.getState().equals(TaskState.COMPLETED)) {
-					state = TaskState.COMPLETED;
-					break;
+				if (state == null) {
+					if (taskItem.getState().equals(TaskState.IN_PROGRESS)) {
+						state = TaskState.IN_PROGRESS;
+						break;
+					}
+				}
+				if (state == null) {
+					if (taskItem.getState().equals(TaskState.COMPLETED)) {
+						state = TaskState.COMPLETED;
+						break;
+					}
 				}
 			}
 

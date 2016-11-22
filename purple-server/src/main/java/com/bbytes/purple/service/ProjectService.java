@@ -76,16 +76,6 @@ public class ProjectService extends AbstractService<Project, String> {
 						ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				project = projectRepository.save(project);
-				// this is to add reference of project in user object
-				// for (User user : users) {
-				// Set<Project> projectList = new HashSet<Project>();
-				// Set<Project> list = new HashSet<Project>();
-				// list = user.getProjects();
-				// projectList.add(project);
-				// projectList.addAll(list);
-				// user.setProjects(projectList);
-				// userService.save(user);
-				// }
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_PROJECT_FAILED);
 			}
@@ -102,53 +92,11 @@ public class ProjectService extends AbstractService<Project, String> {
 				throw new PurpleException("Error while updating project", ErrorHandler.PROJECT_NOT_FOUND);
 			try {
 				updateProject = findByProjectId(projectId);
-				/*
-				 * this is to first remove reference of project from all user
-				 * associate with it one by one and setting all project list
-				 * later (only need while updating)
-				 */
-
-				// List<User> usersToBeSaved = new ArrayList<>();
-				// for (User userTobeRemoved : updateProject.getUser()) {
-				// List<Project> projectListFromUser =
-				// userTobeRemoved.getProjects();
-				// // creating a hashset using the list
-				// Set<Project> projectSet = new
-				// HashSet<Project>(projectListFromUser);
-				// // remove all the elements from the list
-				// projectListFromUser.clear();
-				// // add all the elements of the set to create a
-				// // list with out duplicates
-				// projectListFromUser.addAll(projectSet);
-				// projectListFromUser.remove(updateProject);
-				// usersToBeSaved.add(userTobeRemoved);
-				// }
-				// userService.save(usersToBeSaved);
 
 				updateProject.setUser(projectToBeUpdated.getUser());
 				updateProject.setProjectName(projectToBeUpdated.getProjectName());
 				updateProject = projectRepository.save(updateProject);
 
-				// List<User> updateUserList = new ArrayList<User>();
-				// for (User user : updateProject.getUser()) {
-				//
-				// List<Project> projectListFromUser = user.getProjects();
-				// // creating a hashset using the list
-				// Set<Project> projectSet = new
-				// HashSet<Project>(projectListFromUser);
-				// // adding updated project into set which will assign to user
-				// projectSet.add(updateProject);
-				// // remove all the elements from the list
-				// projectListFromUser.clear();
-				// // add all the elements of the set to create a
-				// // list with out duplicates
-				// projectListFromUser.addAll(projectSet);
-				//
-				// user.setProjects(projectListFromUser);
-				// updateUserList.add(user);
-				//
-				// }
-				// userService.save(updateUserList);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_PROJECT_FAILED);
 			}

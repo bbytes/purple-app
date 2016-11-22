@@ -50,7 +50,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 	public List<TaskList> findByUsersIn(List<User> users) {
 		return taskListRepository.findByUsersIn(users);
 	}
-	
+
 	public List<TaskList> findByUsers(User user) {
 		return taskListRepository.findByUsers(user);
 	}
@@ -58,12 +58,10 @@ public class TaskListService extends AbstractService<TaskList, String> {
 	public List<TaskList> findByProjectAndUsers(Project project, User user) {
 		return taskListRepository.findByProjectAndUsers(project, user);
 	}
-	
-	// public List<TaskList> findByStateProjectAndUsers(Project
-	// project,TaskState state, User user) {
-	// //return taskListRepository.findByStateProjectAndUsers(project,state,
-	// user);
-	// }
+
+	public List<TaskList> findByProjectAndOwnerAndStateIn(Project project, User user, List<TaskState> states) {
+		return taskListRepository.findByProjectAndOwnerAndStateIn(project, user, states);
+	}
 
 	public List<TaskList> findByProjectInAndUsersIn(List<Project> project, List<User> user) {
 		return taskListRepository.findByProjectInAndUsersIn(project, user);
@@ -85,8 +83,8 @@ public class TaskListService extends AbstractService<TaskList, String> {
 		return taskListRepository.findByDueDateBetweenAndProjectIn(startDate, endDate, projects);
 	}
 
-	public List<TaskList> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate, List<Project> projects,
-			List<User> users) {
+	public List<TaskList> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate,
+			List<Project> projects, List<User> users) {
 		return taskListRepository.findByDueDateBetweenAndProjectInAndUsersIn(startDate, endDate, projects, users);
 	}
 

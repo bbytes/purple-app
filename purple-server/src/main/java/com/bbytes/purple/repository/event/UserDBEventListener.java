@@ -16,11 +16,13 @@ import org.springframework.stereotype.Component;
 import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
+import com.bbytes.purple.domain.StatusTaskEvent;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.repository.ProjectRepository;
 import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.StatusService;
+import com.bbytes.purple.service.StatusTaskEventService;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
 import com.mongodb.DBObject;
@@ -52,6 +54,9 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 
 	@Autowired
 	private CommentService commentService;
+
+	@Autowired
+	private StatusTaskEventService statusTaskEventService;
 
 	/**
 	 * Remove uses from tenant resolver after user delete command
@@ -92,8 +97,8 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 	}
 
 	/**
-	 * Remove the user from the project list and deleting user's statuses and
-	 * comments when the user is deleted - Cascade delete
+	 * Remove the user from the project list and deleting user's statuses,
+	 * comments and statusTaskEvents when the user is deleted - Cascade delete
 	 */
 	@Override
 	public void onBeforeDelete(BeforeDeleteEvent<User> event) {
@@ -114,9 +119,11 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 		}
 		List<Status> statusFromDB = statusService.getStatusByUser(user);
 		List<Comment> commentFromDB = commentService.getCommentByStatus(statusFromDB);
+		List<StatusTaskEvent> statusTaskEvents = statusTaskEventService.findByUser(user);
 		commentService.delete(commentFromDB);
 		statusService.delete(statusFromDB);
 		projectRepository.save(projectsToBeSaved);
+		statusTaskEventService.delete(statusTaskEvents);
 	}
 
 }

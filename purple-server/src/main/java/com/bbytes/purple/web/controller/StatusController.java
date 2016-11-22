@@ -99,8 +99,12 @@ public class StatusController {
 
 		// We will get current logged in user
 		User loggedInUser = userService.getLoggedInUser();
-		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO);
-		Status status = statusService.create(statusDTOwithMentionCheck, loggedInUser);
+		Map<String, List<Object>> statusTaskEventMap = statusService.checkMentionUserAndTask(statusDTO, null,
+				loggedInUser);
+		StatusDTO updatedStatusDTO = (StatusDTO) statusTaskEventMap.get("status").iterator().next();
+		List<Object> taskItemList = statusTaskEventMap.get("taskItem");
+
+		Status status = statusService.create(updatedStatusDTO, taskItemList, loggedInUser);
 
 		notifyMentionUsers(loggedInUser, status);
 
@@ -130,9 +134,9 @@ public class StatusController {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, status.getDateTime());
-		emailBody.put(GlobalConstants.WORKED_ON, status.getWorkedOn());
-		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn());
-		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers());
+		emailBody.put(GlobalConstants.WORKED_ON, status.getWorkedOn() == null ? "" : status.getWorkedOn());
+		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn() == null ? "" : status.getWorkingOn());
+		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers() == null ? "" : status.getBlockers());
 
 		for (User mentionUser : status.getMentionUser()) {
 			notificationService.sendSlackMessage(mentionUser, "Statusnap @mention url ",
@@ -289,8 +293,10 @@ public class StatusController {
 
 		// We will get current logged in user
 		User loggedInUser = userService.getLoggedInUser();
-		StatusDTO statusDTOwithMentionCheck = statusService.checkMentionUser(statusDTO);
-		Status status = statusService.updateStatus(statusId, statusDTOwithMentionCheck, loggedInUser);
+		Map<String, List<Object>> statusTaskEventMap = statusService.checkMentionUserAndTask(statusDTO, statusId,
+				loggedInUser);
+		StatusDTO updatedStatusDTO = (StatusDTO) statusTaskEventMap.get("status").iterator().next();
+		Status status = statusService.updateStatus(statusId, updatedStatusDTO, loggedInUser);
 
 		notifyMentionUsers(loggedInUser, status);
 

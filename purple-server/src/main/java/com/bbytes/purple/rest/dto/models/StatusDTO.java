@@ -3,6 +3,7 @@ package com.bbytes.purple.rest.dto.models;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.bbytes.purple.domain.User;
@@ -35,13 +36,15 @@ public class StatusDTO implements Serializable {
 	private String workingOn;
 
 	private String blockers;
-	
+
 	private String dateTime;
-	
+
 	private String time;
-	
+
 	private long commentCount;
-	
+
+	private Map<String, Map<String, String>> taskDataMap;
+
 	private Set<User> mentionUser = new HashSet<User>();
 
 	public void addMentionUser(User userToBeAdded) {
@@ -56,6 +59,5 @@ public class StatusDTO implements Serializable {
 			addMentionUser(user);
 		}
 	}
-
 
 }

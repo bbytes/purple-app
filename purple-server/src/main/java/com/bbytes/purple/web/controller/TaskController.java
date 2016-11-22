@@ -1,6 +1,7 @@
 package com.bbytes.purple.web.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -77,6 +78,16 @@ public class TaskController {
 		return taskStatesResponse;
 	}
 
+	@RequestMapping(value = "/api/v1/task/taskList/{taskListId}", method = RequestMethod.GET)
+	public RestResponse getTaskListforId(@PathVariable String taskListId) throws PurpleException {
+		TaskList taskList = taskListService.findOne(taskListId);
+		Set<TaskList> result = new HashSet<>();
+		result.remove(null);
+		TaskListDTO taskListDto = dataModelToDTOConversionService.convertTaskList(taskList);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDto);
+		return response;
+	}
+
 	@RequestMapping(value = "/api/v1/task/taskList/state/{state}", method = RequestMethod.GET)
 	public RestResponse getTaskListForState(@PathVariable String state) throws PurpleException {
 		TaskState taskState = TaskState.valueOf(state);
@@ -115,7 +126,10 @@ public class TaskController {
 	public RestResponse getTaskListForProject(@PathVariable String projectId) throws PurpleException {
 		Project project = projectService.findOne(projectId);
 		User user = userService.getLoggedInUser();
-		List<TaskList> taskList = taskListService.findByProjectAndUsers(project, user);
+		List<TaskState> states = new ArrayList<TaskState>();
+		states.add(TaskState.IN_PROGRESS);
+		states.add(TaskState.YET_TO_START);
+		List<TaskList> taskList = taskListService.findByProjectAndOwnerAndStateIn(project, user, states);
 		List<TaskListResponseDTO> taskListResponseDTO = dataModelToDTOConversionService.convertTaskListItem(taskList);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListResponseDTO);
 		return response;
@@ -157,7 +171,7 @@ public class TaskController {
 			}
 			taskLists = new ArrayList<>(result);
 		}
-		taskLists.remove(null);
+		taskLists.removeAll(Collections.singleton(null));
 		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(taskLists);
 		if (taskState != null)
 			filterItemsForGivenState(taskListDtos, taskState);
@@ -220,7 +234,11 @@ public class TaskController {
 	@RequestMapping(value = "/api/v1/task/taskItem/{taskItemId}", method = RequestMethod.DELETE)
 	public RestResponse deleteTaskItem(@PathVariable String taskItemId) throws PurpleException {
 
+		TaskItem taskItem = taskItemService.findOne(taskItemId);
+		TaskList taskList = taskListService.findOne(taskItem.getTaskList().getTaskListId());
 		taskItemService.delete(taskItemId);
+		taskList.removeTaskItem(taskItem);
+		taskListService.save(taskList);
 
 		logger.debug("Task Item with id '" + taskItemId + "' deleted successfully");
 		RestResponse response = new RestResponse(RestResponse.SUCCESS,
@@ -230,7 +248,7 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "/api/v1/task/taskItem/{taskListId}", method = RequestMethod.POST)
-	public RestResponse addTaskItem(@PathVariable String taskListId, @RequestBody TaskItemDTO taskItemDTO)
+	public RestResponse addOrEditTaskItem(@PathVariable String taskListId, @RequestBody TaskItemDTO taskItemDTO)
 			throws PurpleException {
 
 		TaskItem taskItem = saveTaskItem(taskListId, taskItemDTO);
@@ -260,14 +278,22 @@ public class TaskController {
 		if (taskList == null)
 			throw new PurpleException("Task List with id " + taskListId + " not found",
 					ErrorHandler.TASK_LIST_NOT_FOUND);
-
-		TaskItem taskItem = new TaskItem(taskItemDTO.getName(), taskItemDTO.getDesc(), taskItemDTO.getEstimatedHours(),
-				taskItemDTO.getDueDate());
+		TaskItem taskItem = null;
+		if (taskItemDTO.getTaskItemId() != null) {
+			taskItem = taskItemService.findOne(taskItemDTO.getTaskItemId());
+			taskItem.setName(taskItemDTO.getName());
+			taskItem.setDesc(taskItemDTO.getDesc());
+			taskItem.setEstimatedHours(taskItemDTO.getEstimatedHours());
+			taskItem.setDueDate(taskItemDTO.getDueDate());
+		}
+		if (taskItem == null)
+			taskItem = new TaskItem(taskItemDTO.getName(), taskItemDTO.getDesc(), taskItemDTO.getEstimatedHours(),
+					taskItemDTO.getDueDate());
 		taskItem.setTaskList(taskList);
 		taskItem.setProject(taskList.getProject());
 		User user = userService.getLoggedInUser();
+		taskItem.setUsers(getUsers(taskItemDTO.getUserIds()));
 		taskItem.setOwner(user);
-		taskItem.addUsers(getUsers(taskItemDTO.getUserIds()));
 		taskItem = taskItemService.save(taskItem);
 		taskList.addTaskItem(taskItem);
 		taskListService.save(taskList);
@@ -306,6 +332,34 @@ public class TaskController {
 	public RestResponse markAsComplete(@PathVariable String taskItemId) {
 		TaskItem taskItem = taskItemService.findOne(taskItemId);
 		taskItem.setState(TaskState.COMPLETED);
+		taskItem = taskItemService.save(taskItem);
+		TaskItemDTO taskItemDto = dataModelToDTOConversionService.convertTaskItem(taskItem);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDto);
+		return response;
+
+	}
+
+	@RequestMapping(value = "/api/v1/task/taskItems/{taskItemId}/addusers", method = RequestMethod.POST)
+	public RestResponse addUsersToTask(@PathVariable String taskItemId, @RequestBody List<String> userIds) {
+		TaskItem taskItem = taskItemService.findOne(taskItemId);
+		Iterable<User> users = userService.findAll(userIds);
+		for (User user : users) {
+			if (!taskItem.getUsers().contains(user)) {
+				taskItem.addUsers(user);
+			}
+		}
+		taskItem = taskItemService.save(taskItem);
+		TaskItemDTO taskItemDto = dataModelToDTOConversionService.convertTaskItem(taskItem);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDto);
+		return response;
+
+	}
+
+	@RequestMapping(value = "/api/v1/task/taskItems/{taskItemId}/removeuser/{userid}", method = RequestMethod.POST)
+	public RestResponse addUsersToTask(@PathVariable String taskItemId, @PathVariable String userid) {
+		TaskItem taskItem = taskItemService.findOne(taskItemId);
+		User user = userService.findOne(userid);
+		taskItem.getUsers().remove(user);
 		taskItem = taskItemService.save(taskItem);
 		TaskItemDTO taskItemDto = dataModelToDTOConversionService.convertTaskItem(taskItem);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDto);

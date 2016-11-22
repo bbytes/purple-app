@@ -98,8 +98,9 @@ public class CommentController {
 					GlobalConstants.MENTIONED_EMAIL_TEXT, "");
 			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
 		}
-		
-		notificationService.sendSlackMessage(user, "Statusnap comment notification", commentService.commentSnippetUrl(status.getUser(), comment));
+
+		notificationService.sendSlackMessage(user, "Statusnap comment notification",
+				commentService.commentSnippetUrl(status.getUser(), comment));
 
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 
@@ -127,9 +128,9 @@ public class CommentController {
 		emailBody.put(GlobalConstants.USER_NAME, userName);
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
-		emailBody.put(GlobalConstants.WORKED_ON, status.getWorkedOn());
-		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn());
-		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers());
+		emailBody.put(GlobalConstants.WORKED_ON, status.getWorkedOn() == null ? "" : status.getWorkedOn());
+		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn() == null ? "" : status.getWorkingOn());
+		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers() == null ? "" : status.getBlockers());
 		emailBody.put(GlobalConstants.EMAIL_STRING_TEXT, emailText);
 		emailBody.put("userName", user.getName());
 		return emailBody;

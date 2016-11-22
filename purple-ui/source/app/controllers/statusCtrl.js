@@ -12,7 +12,14 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     $rootScope.settingClass = 'setting-nav';
     $rootScope.feedbackClass = 'feedback-log feedback-show';
     $scope.isSubmit = true;
+    $scope.selectables;
+    // varibale to store all task list and task item list
+    $scope.taskList;
 
+    // this map is create for storing key-value pair for taskitems and storing into db
+    var taskItemMap;
+    // used to generate task item key for map
+    var itemKey = 1;
     // variable is used to intialise time period first time when page get load
     var time = "Weekly";
     // variable to store the information about status enable days
@@ -50,6 +57,20 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         $scope.loadConfigSetting();
         $scope.loadTimePeriods();
         $scope.loadUserProjects();
+        $scope.loadTasks();
+    };
+
+    $scope.loadTasks = function () {
+
+        taskItemMap = {};
+        // this is to create map for workedon, workingon and blockers to store the taskItemId
+        var workedOnTaskMap = {};
+        taskItemMap["workedOn"] = workedOnTaskMap;
+        var workingOnTaskMap = {};
+        taskItemMap["workingOn"] = workingOnTaskMap;
+        var blockersTaskMap = {};
+        taskItemMap["blockers"] = blockersTaskMap;
+
     };
 
     // getting all config setting (status enable days)
@@ -84,6 +105,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         status.workedOn = $scope.workedOn;
         status.blockers = $scope.blockers;
         status.dateTime = $scope.statusDate;
+        status.taskDataMap = taskItemMap;
         if (!status.projectId) {
             appNotifyService.error('Please select a valid project');
             return false;
@@ -158,7 +180,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
             }
         });
     };
-    
+
     /*
      * Load all projects of logged in user
      */
@@ -226,6 +248,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                 $rootScope.statusId = $scope.status[0].statusId;
                 $scope.blockers = $scope.status[0].blockers;
                 $scope.statusDate = $scope.statusdata.date;
+                taskItemMap = $scope.status[0].taskDataMap;
                 $scope.submitButtonText = "UPDATE";
                 $scope.isSubmit = false;
                 $scope.isDisable = true;
@@ -244,6 +267,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         newstatus.workedOn = $scope.workedOn;
         newstatus.blockers = $scope.blockers;
         newstatus.dateTime = $scope.statusDate;
+        newstatus.taskDataMap = taskItemMap;
 
         if (!newstatus.projectId) {
             appNotifyService.error('Please select a valid project');
@@ -285,6 +309,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         $scope.workingOn = '';
         $scope.workedOn = '';
         $scope.blockers = '';
+        $scope.loadTasks();
     };
 
     //Reset status page
@@ -296,6 +321,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         $scope.isSubmit = true;
         $scope.submitButtonText = "SUBMIT";
         $scope.isDisable = false;
+        $scope.loadTasks();
     };
 
     // avoid spacing while copy paste in text angular
@@ -303,16 +329,23 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         return $filter('htmlToPlaintext')($html);
     };
 
-    // this is to open task view modal
-    $scope.openTaskModal = function (projectId) {
-
+    $scope.showTaskViewIcon = function (projectId) {
         tasksService.getAllTasksForProject(projectId).then(function (response) {
             if (response.success) {
                 $scope.taskList = response.data;
-                showModal();
+                if ($scope.taskList.length !== 0) {
+                    $scope.showTaskView = true;
+                } else {
+                    $scope.showTaskView = false;
+                }
             }
         });
+    };
 
+    // this is to open task view modal
+    $scope.openTaskModal = function () {
+        
+        showModal();
         function showModal() {
             var uibModalInstance = $uibModal.open({
                 animation: true,
@@ -325,7 +358,10 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                     modalData: function () {
                         return {
                             "title": 'Task View',
-                            "taskData": $scope.taskList
+                            "taskData": $scope.taskList,
+                            "taskItemMap": taskItemMap,
+                            "itemKey": itemKey,
+                            "hoursList": $scope.selectables
                         };
                     }
                 }
@@ -341,7 +377,8 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                 $scope.workedOn = $scope.workedOn + " " + taskObject.addToWorkedOn;
                 $scope.workingOn = $scope.workingOn + " " + taskObject.addToWorkingOn;
                 $scope.blockers = $scope.blockers + " " + taskObject.addToBlockers;
-
+                taskItemMap = taskObject.taskItemMap;
+                itemKey = taskObject.itemKey;
             });
         }
     };

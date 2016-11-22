@@ -21,6 +21,11 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
 
     $(document).ready(function () {
         $('.dropdown-toggle').dropdown();
+        $scope.$on('TASK_ITEM_EDITED', function (event, data) {
+            console.log("TASK_ITEM_EDITED "+ data); 
+            getTaskListforId($scope.taskList.taskListId);
+            loadTaskItemsForList($scope.taskList); 
+          });
     });
 
     $scope.initTasks = function () {
@@ -32,8 +37,8 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
         $scope.loadStateProjectTasks('All',-1);
     };
     /*
-     * Load all states
-     */
+	 * Load all states
+	 */
     $scope.loadStates = function () {
         tasksService.getAllTasksStates().then(function (response) {
             if (response.success) {
@@ -43,8 +48,8 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
 
     };
     /*
-     * Initial loading of tasks and task items
-     */
+	 * Initial loading of tasks and task items
+	 */
     $scope.loadAllTasksForState = function () {
         $scope.selectedProject = "All";
         $scope.selectedPjtIndex = -1;
@@ -83,7 +88,8 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
                             if($scope.taskItemsLists!=null)
                             	$scope.taskItemsLists.length = 0;
                             
-                            //appNotifyService.success("No tasks to show for selected state");
+                            // appNotifyService.success("No tasks to show for
+							// selected state");
                         }
                     }
                 });
@@ -102,15 +108,16 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
                         } else {
                         	if($scope.taskItemsLists!=null)
                             	$scope.taskItemsLists.length = 0;
-                            //appNotifyService.success("No tasks to show for selected project and state");
+                            // appNotifyService.success("No tasks to show for
+							// selected project and state");
                         }
                     }
                 });
     }
 
     /*
-     * Load all projects of logged in user
-     */
+	 * Load all projects of logged in user
+	 */
     $scope.loadUserProjects = function () {
         projectService.getUserproject().then(function (response) {
             if (response.success) {
@@ -135,11 +142,31 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
                     return {
                         "projects": $scope.userprojects,
                         "taskLists": $scope.taskLists,
-                        "project": $scope.selectedProject
+                        "project": $scope.selectedProject,
+                        "title":"CREATE TASK LIST"
                     };
                 }
             }
         });
+    }
+    $scope.editTaskList=function(taskList){
+    	 var uibModalInstance = $uibModal.open({
+             animation: true,
+             templateUrl: 'app/partials/addtaskslist-modal.html',
+             controller: 'createTasksListModalCtrl',
+             backdrop: 'static',
+             size: 'md',
+             resolve: {
+                 params: function () {
+                     return {
+                         "projects": $scope.userprojects,
+                         "taskList": $scope.taskList,
+                         "project": $scope.selectedProject,
+                         "title":"EDIT TASK LIST"
+                     };
+                 }
+             }
+         });
     }
     $scope.deleteTaskList = function (taskList) {
         tasksService.deleteTaskList(taskList).then(function (response) {
@@ -161,6 +188,26 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             }
         });
     };
+    $scope.editTaskItem=function(taskItem){    		
+            var uibModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/partials/addtaskitem-modal.html',
+                controller: 'createTasksItemModalCtrl',
+                backdrop: 'static',
+                size: 'md',
+                resolve: {
+                    params: function () {
+                        return {
+                        	"title":"EDIT TASK",
+                            "taskList": $scope.taskList,
+                            "taskItems": $scope.taskItemsLists,
+                            "project": $scope.selectedProject,
+                            "taskItem":taskItem
+                        };
+                    }
+                }
+            });
+    };
     $scope.setClickedState = function (index) {
         $scope.selectedState = $scope.taskStates[index];
     };
@@ -172,21 +219,29 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
     $scope.loadTaskItems = function (taskList, index) {
         $scope.taskList = taskList;
         $scope.selectedTLIndx = index;
-        tasksService.getTaskItems(taskList,$scope.selectedState).then(function (response) {
+        loadTaskItemsForList(taskList);
+    }
+    function loadTaskItemsForList(taskList){
+    	tasksService.getTaskItems(taskList,$scope.selectedState).then(function (response) {
             if (response.data != null && response.data.length > 0) {
                 $scope.taskItemsLists = response.data;
             } else {
                 if($scope.taskItemsLists!=null)
                 	$scope.taskItemsLists.length = 0;
-//                appNotifyService.success("No task items to show for selected task list");
             }
         });
     }
-
+    function getTaskListforId(taskListId){
+    	tasksService.getTaskListforId(taskListId).then(function(response){
+    		if(response.success){
+    			$scope.taskList.estimatedHours=response.data.estimatedHours;
+    		}
+    	});
+    }
     $scope.showTaskItemModal = function () {
         showTaskItemModal();
     }
-    function showTaskItemModal() {    		
+    function showTaskItemModal() { 
         var uibModalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'app/partials/addtaskitem-modal.html',
@@ -196,15 +251,15 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             resolve: {
                 params: function () {
                     return {
-                        "taskList": $scope.taskList,
-                        "taskItems": $scope.taskItemsLists,
-                        "project": $scope.selectedProject
+                    		"title":"CREATE NEW TASK",
+                            "taskList": $scope.taskList,
+                            "taskItems": $scope.taskItemsLists,
+                            "project": $scope.selectedProject
                     };
                 }
             }
         });
-    }
-    ;
+    };
     $scope.markCompleted = function (taskItem) {
         tasksService.markCompleted(taskItem).then(function (response) {
         	 if (response.success) 
@@ -212,4 +267,75 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
         		 appNotifyService.success(taskItem.name+" marked completed");
         });
     };
+    
+         $scope.getAllUsersOfProject = function(taskItem) {
+        	$scope.selectedTaskItem=taskItem;
+			projectService.getAllUsersOfProject($scope.taskList.projectId)
+					.then(function(response) {
+						  if (response.success) {
+							  var projectUsersToAdd=response.data;
+							  var taskItemUsers=taskItem.users;	
+							  $scope.projectUsersToAdd=getArrayDiff(projectUsersToAdd, taskItemUsers);
+							  showUserModal();
+						  }
+					});
+			function getArrayDiff(a, b) {
+			    var ret = [];
+			    if (!(Array.isArray(a) && Array.isArray(b))) {
+			        return ret;
+			    }
+			    var i;
+			    var key;
+
+			    for (i = a.length - 1; i >= 0; i--) {
+			      key = a[i];
+			      if (-1 === b.indexOf(key)) {
+			        ret.push(key);
+			      }
+			    }
+
+			    return ret;
+			};
+        function showUserModal() {
+            var uibModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/partials/allusers-modal.html',
+                controller: 'allusersModalCtrl',
+                backdrop: 'static',
+                size: 'md',
+                resolve: {
+                    options: function () {
+                        return {
+                            "title": 'Add Users',
+                            "data": $scope.projectUsersToAdd
+                        };
+                    }
+                }
+            });
+
+            uibModalInstance.result.then(function (selection) {
+                var usersToBeAdded = [];
+                angular.forEach($scope.projectUsersToAdd, function (user) {
+                    if (selection.indexOf(user.id) > -1) {
+                        usersToBeAdded.push(user.id);
+                    }
+                });
+                tasksService.addUsersToItem($scope.selectedTaskItem,usersToBeAdded).then(function(response){
+                	if(response.success){
+                		$scope.selectedTaskItem.users=response.data.users;
+                	}
+                });
+            });
+        }
+    };
+    $scope.deleteUserFromProject=function(userid,taskItem){
+    	tasksService.removeUsersFromItem(userid,taskItem).then(function(response){
+        	if(response.success){
+        		taskItem.users=response.data.users;
+        		}
+    		});
+    	}
+    
 });
+    	
+    	

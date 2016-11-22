@@ -24,8 +24,8 @@ import lombok.ToString;
  */
 
 @Data
-@EqualsAndHashCode(exclude = { "taskList", "owner", "users","project" })
-@ToString(exclude = { "taskList", "owner", "users","project" })
+@EqualsAndHashCode(exclude = { "taskList", "owner", "users", "project" })
+@ToString(exclude = { "taskList", "owner", "users", "project" })
 @Document
 public class TaskItem implements Comparable<TaskItem> {
 
@@ -106,6 +106,11 @@ public class TaskItem implements Comparable<TaskItem> {
 		this.users.addAll(users);
 		taskList.addUsers(users);
 
+	}
+
+	public void addSpendHours(double spendHours) {
+
+		this.spendHours = this.spendHours + spendHours;
 	}
 
 }

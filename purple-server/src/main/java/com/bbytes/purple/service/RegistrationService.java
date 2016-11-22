@@ -51,32 +51,21 @@ public class RegistrationService {
 		if (org != null && user != null) {
 
 			if (tenantResolverService.emailExist(user.getEmail()))
-				throw new PurpleException("Error while sign up", ErrorHandler.EMAIL_NOT_UNIQUE);
+				throw new PurpleException("Error while sign up, email exist", ErrorHandler.EMAIL_NOT_UNIQUE);
 
 			if (tenantResolverService.organizationExist(org.getOrgId()))
-				throw new PurpleException("Error while sign up", ErrorHandler.ORG_NOT_UNIQUE);
+				throw new PurpleException("Error while sign up, org not unique", ErrorHandler.ORG_NOT_UNIQUE);
 
 			try {
 				// update Plutus server for billing information and other
 				// details for saas subscription
-				SubscriptionRegisterRestResponse response = createPlutusSubscription(org.getOrgId(), org.getOrgName(),
-						user.getEmail(), user.getName());
-				if (response.isSuccess()) {
-					org.setSubscriptionKey(response.getSubscriptionKey());
-					org.setSubscriptionSecret(response.getSubscriptionSecret());
-
-					TenancyContextHolder.setTenant(org.getOrgId());
-					org = orgService.save(org);
-					userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
-
-				} else {
-					logger.error("Subscription failed as plutus server response failed for org '" + org.getOrgName()
-							+ "' with email " + user.getEmail());
-					throw new PurpleException("Subscription creation failed", ErrorHandler.SIGN_UP_FAILED);
-				}
+				createPlutusSubscription(org, user);
 			} catch (PlutusClientException ex) {
 				logger.error(ex.getMessage(), ex);
-				throw new PurpleException("Subscription failed", ErrorHandler.SIGN_UP_FAILED);
+				// dont stop the signup from happening if plutus server is not
+				// reachable
+				// throw new PurpleException("Subscription failed",
+				// ErrorHandler.SIGN_UP_FAILED);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.SIGN_UP_FAILED, e);
 			}
@@ -94,25 +83,37 @@ public class RegistrationService {
 	 * @return
 	 * @throws PlutusClientException
 	 */
-	private SubscriptionRegisterRestResponse createPlutusSubscription(String tenantId, String orgName, String email,
-			String userName) throws PlutusClientException {
+	public void createPlutusSubscription(Organization org, User user) throws PlutusClientException {
 		SubscriptionInfo subscriptionInfo = new SubscriptionInfo();
 		subscriptionInfo.setAppProfile(AppProfile.saas);
 		subscriptionInfo.setBillingAddress("N/A");
 		subscriptionInfo.setBillingCycle(BillingCycle.Monthly);
 		subscriptionInfo.setContactNo("N/A");
 		subscriptionInfo.setCurrency(Currency.USD);
-		subscriptionInfo.setCustomerName(orgName);
-		subscriptionInfo.setEmail(email);
-		subscriptionInfo.setContactPerson(userName);
+		subscriptionInfo.setCustomerName(org.getOrgName());
+		subscriptionInfo.setEmail(user.getEmail());
+		subscriptionInfo.setContactPerson(user.getEmail());
 		subscriptionInfo.setProductName(ProductName.Statusnap.toString());
-		subscriptionInfo.setTenantId(tenantId);
+		subscriptionInfo.setTenantId(org.getOrgId());
 
-		return plutusClient.register(subscriptionInfo);
+		try {
+			SubscriptionRegisterRestResponse response = plutusClient.register(subscriptionInfo);
+			if (response.isSuccess()) {
+				org.setSubscriptionKey(response.getSubscriptionKey());
+				org.setSubscriptionSecret(response.getSubscriptionSecret());
+			}
+		} catch (Exception e) {
+			logger.error("Subscription failed as plutus server response failed for org '" + org.getOrgName() + "' with email "
+					+ user.getEmail());
+		}
+
+		TenancyContextHolder.setTenant(org.getOrgId());
+		org = orgService.save(org);
+		if (userService.getUserByEmail(user.getEmail()) == null)
+			userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
 	}
 
 	public User activateAccount(User activeUser) throws PurpleException {
-
 		if (activeUser != null) {
 			try {
 				activeUser.setAccountInitialise(true);
