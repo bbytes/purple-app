@@ -499,22 +499,20 @@ public class DataModelToDTOConversionService {
 		return taskItemDTOList;
 	}
 
-	public List<TaskListResponseDTO> convertTaskListItem(List<TaskList> taskList) {
+	public List<TaskListResponseDTO> convertTaskListItem(List<TaskItem> taskItemList) {
 		List<TaskListResponseDTO> taskListDTOList = new LinkedList<TaskListResponseDTO>();
-		for (TaskList task : taskList) {
-			for (TaskItem item : task.getTaskItems()) {
-				if (!TaskState.COMPLETED.equals(item.getState())) {
-					TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
-					taskListResponseDTO.setTaskItemId(item.getTaskItemId());
-					taskListResponseDTO.setTaskListId(task.getTaskListId());
-					taskListResponseDTO.setTaskListName(task.getName());
-					taskListResponseDTO.setTaskItemName(item.getName());
-					taskListResponseDTO.setDesc(item.getDesc());
-					taskListResponseDTO.setDueDate(item.getDueDate());
-					taskListResponseDTO.setEstimatedHours(item.getEstimatedHours());
-					taskListResponseDTO.setSpendHours(item.getSpendHours());
-					taskListDTOList.add(taskListResponseDTO);
-				}
+		for (TaskItem taskItem : taskItemList) {
+			if (!TaskState.COMPLETED.equals(taskItem.getTaskList().getState())) {
+				TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
+				taskListResponseDTO.setTaskItemId(taskItem.getTaskItemId());
+				taskListResponseDTO.setTaskListId(taskItem.getTaskList().getTaskListId());
+				taskListResponseDTO.setTaskListName(taskItem.getTaskList().getName());
+				taskListResponseDTO.setTaskItemName(taskItem.getName());
+				taskListResponseDTO.setDesc(taskItem.getDesc());
+				taskListResponseDTO.setDueDate(taskItem.getDueDate());
+				taskListResponseDTO.setEstimatedHours(taskItem.getEstimatedHours());
+				taskListResponseDTO.setSpendHours(taskItem.getSpendHours());
+				taskListDTOList.add(taskListResponseDTO);
 			}
 		}
 		return taskListDTOList;
