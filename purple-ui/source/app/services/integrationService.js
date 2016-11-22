@@ -51,7 +51,27 @@ angular.module('rootApp').service('integrationService', function ($rootScope, $h
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/integration/jira/getprojects',
+            url: $rootScope.baseUrl + 'api/v1/integration/jira/syncProjects',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+    
+    this.getJiraProjectAndUser = function () {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/integration/jira/syncUsers',
             headers: {
                 'Content-Type': 'application/json'
             }

@@ -1,7 +1,13 @@
 package com.bbytes.purple.web.controller;
 
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
@@ -12,23 +18,29 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Integration;
+import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
-import com.bbytes.purple.integration.JiraBasicCredentials;
 import com.bbytes.purple.rest.dto.models.IntegrationRequestDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.IntegrationService;
+import com.bbytes.purple.service.NotificationService;
+import com.bbytes.purple.service.PasswordHashService;
+import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.utils.GlobalConstants;
+import com.bbytes.purple.utils.StringUtils;
 import com.bbytes.purple.utils.SuccessHandler;
 
-import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.Project;
 
 /**
@@ -48,12 +60,30 @@ public class IntegrationController {
 	private UserService userService;
 
 	@Autowired
+	private ProjectService projectService;
+
+	@Autowired
 	private IntegrationService integrationService;
+
+	@Autowired
+	protected TokenAuthenticationProvider tokenAuthenticationProvider;
+
+	@Autowired
+	private PasswordHashService passwordHashService;
+
+	@Autowired
+	private NotificationService notificationService;
+
+	@Value("${base.url}")
+	private String baseUrl;
+
+	@Value("${email.invite.subject}")
+	private String inviteSubject;
 
 	@RequestMapping(value = "/api/v1/integration/jira/addAuthentication", method = RequestMethod.POST)
 	public RestResponse connectToJIRA(@RequestBody IntegrationRequestDTO integrationRequestDTO) throws PurpleException {
 
-		User user = userService.getLoggedInUser();
+		User loggedInUser = userService.getLoggedInUser();
 		final String JIRA_CONNECTION_MSG = "jira is connected successfully";
 		int statusCode;
 		String jiraBaseURL, authHeader, jiraUsername;
@@ -82,11 +112,12 @@ public class IntegrationController {
 			else if (statusCode == 401)
 				throw new PurpleException("Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
 		} else {
-			integrationService.connectToJIRA(user, jiraUsername, authHeader, jiraBaseURL);
+			integrationService.connectToJIRA(loggedInUser, jiraUsername, authHeader, jiraBaseURL);
 		}
 
 		logger.debug("User with email  '" + jiraUsername + "' is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
+				SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return response;
 	}
@@ -94,13 +125,13 @@ public class IntegrationController {
 	@RequestMapping(value = "/api/v1/integration/jira/getAuthentication", method = RequestMethod.GET)
 	public RestResponse getJIRAConnection() throws PurpleException {
 
-		User user = userService.getLoggedInUser();
+		User loggedInUser = userService.getLoggedInUser();
 		int statusCode;
 		final String JIRA_CONNECTION_MSG = "jira is connected successfully";
 		RestResponse jiraRestResponse;
 		try {
 
-			Integration integration = integrationService.getJIRAConnection(user);
+			Integration integration = integrationService.getJIRAConnection(loggedInUser);
 			if (integration == null) {
 				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
 						ErrorHandler.JIRA_CONNECTION_FAILED);
@@ -128,69 +159,122 @@ public class IntegrationController {
 
 		if (statusCode != 200) {
 			if (statusCode == 502) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.BAD_GATEWAY);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.BAD_GATEWAY);
 
 				return jiraRestResponse;
 			} else if (statusCode == 401) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.AUTH_FAILURE);
 
 				return jiraRestResponse;
 			}
 		}
 
 		logger.debug("User is connected to JIRA successfully");
-		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
+				SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return jiraRestResponse;
 	}
 
-	@RequestMapping(value = "/api/v1/integration/jira/getprojects", method = RequestMethod.GET)
-	public RestResponse getJIRAProjects() throws PurpleException {
+	@RequestMapping(value = "/api/v1/integration/jira/syncProjects", method = RequestMethod.GET)
+	public RestResponse syncJIRAProjects() throws PurpleException {
 
-		final String JIRA_ADD_PROJECT_MSG = "jira projects are added successfully";
-		User user = userService.getLoggedInUser();
+		final String JIRA_ADD_PROJECT_MSG = "Jira projects are added successfully";
+		User loggedInUser = userService.getLoggedInUser();
 		try {
-			Integration integration = integrationService.getJIRAConnection(user);
+			Integration integration = integrationService.getJIRAConnection(loggedInUser);
 
 			List<Project> jiraProjects = integrationService.syncJiraProjectWithUser(integration);
 
-			integrationService.addJiraProjects(jiraProjects, user);
+			integrationService.addJiraProjects(jiraProjects, loggedInUser);
 
 		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 		}
 
-		logger.debug("User is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG, SuccessHandler.JIRA_ADD_PROJECTS_SUCCESS);
+		logger.debug("Jira Projects are sync successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
+				SuccessHandler.JIRA_SYNC_PROJECTS_SUCCESS);
 
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/integration/jira/getUsers", method = RequestMethod.GET)
-	public RestResponse getJIRAUsers() throws PurpleException {
+	@RequestMapping(value = "/api/v1/integration/jira/syncUsers", method = RequestMethod.GET)
+	public RestResponse syncJIRAUsers() throws PurpleException {
 
-		final String JIRA_ADD_PROJECT_MSG = "jira users are added successfully";
-		User user = userService.getLoggedInUser();
+		final String JIRA_ADD_PROJECT_MSG = "Jira project to users are sync successfully";
+		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+
+		User loggedInUser = userService.getLoggedInUser();
 		try {
-			Integration integration = integrationService.getJIRAConnection(user);
+			// checking jira is connected or not
+			Integration integration = integrationService.getJIRAConnection(loggedInUser);
 
-			JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(), integration.getJiraBasicAuthHeader());
-			JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
-			List<Project> jiraProjects = jira.getProjects();
-			for (Project project : jiraProjects) {
-				Project projectDetail = jira.getProject(project.getKey());
-				for (String role : projectDetail.getRoles().keySet()) {
-					System.out.println(projectDetail.getRoles().get(role));
+			Map<String, List<User>> projectToUsersMap = integrationService.getJiraProjectWithUserList(integration);
+			// iterating project to users map
+			for (Map.Entry<String, List<User>> entry : projectToUsersMap.entrySet()) {
+				// checking project from JIRA is present in db
+				if (projectService.findByProjectName(entry.getKey()) != null) {
+					// looping all user of project
+					for (User jiraUser : entry.getValue()) {
+						User userFromDB = userService.getUserByEmail(jiraUser.getEmail());
+						if (userFromDB != null) {
+							// fetching user from db and adding to project
+							com.bbytes.purple.domain.Project projectFromDb = projectService
+									.findByProjectName(entry.getKey());
+							projectFromDb.addUser(userFromDB);
+							projectService.save(projectFromDb);
+						} else {
+
+							// creating random generated password string
+							String generatePassword = StringUtils.nextSessionId();
+
+							// saving jira user to statusnap user list
+							Organization org = loggedInUser.getOrganization();
+							jiraUser.setOrganization(org);
+							jiraUser.setPassword(passwordHashService.encodePassword(generatePassword));
+							jiraUser.setStatus(User.PENDING);
+							jiraUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
+							User savedUser = userService.addUsers(jiraUser);
+							// after saving user to db, this user is getting
+							// added to project
+							com.bbytes.purple.domain.Project projectFromDb = projectService
+									.findByProjectName(entry.getKey());
+							projectFromDb.addUser(savedUser);
+							projectService.save(projectFromDb);
+
+							// since user is getting created, sending invitation
+							// email to activate account
+							final String xauthToken = tokenAuthenticationProvider
+									.getAuthTokenForUser(savedUser.getEmail(), 720);
+							String postDate = dateFormat.format(new Date());
+							List<String> emailList = new ArrayList<String>();
+							emailList.add(savedUser.getEmail());
+
+							Map<String, Object> emailBody = new HashMap<>();
+							emailBody.put(GlobalConstants.USER_NAME, savedUser.getName());
+							emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+							emailBody.put(GlobalConstants.PASSWORD, generatePassword);
+							emailBody.put(GlobalConstants.ACTIVATION_LINK,
+									baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
+
+							notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
+						}
+
+					}
 				}
 			}
-			integrationService.addJiraProjects(jiraProjects, user);
 
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
-		logger.debug("User is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG, SuccessHandler.JIRA_ADD_PROJECTS_SUCCESS);
+		logger.debug("Jira Projects to users are sync successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
+				SuccessHandler.JIRA_SYNC_PROJECTS_AND_USERS_SUCCESS);
 
 		return response;
 	}

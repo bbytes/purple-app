@@ -22,9 +22,7 @@
 
                         <button class="btn btn-default status-submit after" ng-click="syncJiraProject()" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true" ></i> Sync Project</button>
 
-                        <button class="btn btn-default status-submit after" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true"></i> Sync Users</button>
-
-                        <button class="btn btn-default status-submit after" ng-show="isConnected"><i class="fa fa-link" aria-hidden="true"></i> Link Users & Projects</button>
+                        <button class="btn btn-default status-submit after" ng-click="syncJiraProjectAndUser()" ng-show="isConnected"><i class="fa fa-link" aria-hidden="true"></i> Link Users & Projects</button>
                     </div>
 
 

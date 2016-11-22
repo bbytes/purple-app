@@ -24,7 +24,6 @@ import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
-import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
@@ -502,18 +501,16 @@ public class DataModelToDTOConversionService {
 	public List<TaskListResponseDTO> convertTaskListItem(List<TaskItem> taskItemList) {
 		List<TaskListResponseDTO> taskListDTOList = new LinkedList<TaskListResponseDTO>();
 		for (TaskItem taskItem : taskItemList) {
-			if (!TaskState.COMPLETED.equals(taskItem.getTaskList().getState())) {
-				TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
-				taskListResponseDTO.setTaskItemId(taskItem.getTaskItemId());
-				taskListResponseDTO.setTaskListId(taskItem.getTaskList().getTaskListId());
-				taskListResponseDTO.setTaskListName(taskItem.getTaskList().getName());
-				taskListResponseDTO.setTaskItemName(taskItem.getName());
-				taskListResponseDTO.setDesc(taskItem.getDesc());
-				taskListResponseDTO.setDueDate(taskItem.getDueDate());
-				taskListResponseDTO.setEstimatedHours(taskItem.getEstimatedHours());
-				taskListResponseDTO.setSpendHours(taskItem.getSpendHours());
-				taskListDTOList.add(taskListResponseDTO);
-			}
+			TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
+			taskListResponseDTO.setTaskItemId(taskItem.getTaskItemId());
+			taskListResponseDTO.setTaskListId(taskItem.getTaskList().getTaskListId());
+			taskListResponseDTO.setTaskListName(taskItem.getTaskList().getName());
+			taskListResponseDTO.setTaskItemName(taskItem.getName());
+			taskListResponseDTO.setDesc(taskItem.getDesc());
+			taskListResponseDTO.setDueDate(taskItem.getDueDate());
+			taskListResponseDTO.setEstimatedHours(taskItem.getEstimatedHours());
+			taskListResponseDTO.setSpendHours(taskItem.getSpendHours());
+			taskListDTOList.add(taskListResponseDTO);
 		}
 		return taskListDTOList;
 

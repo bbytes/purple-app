@@ -23,9 +23,6 @@ public class ProjectDBEventListener extends AbstractMongoEventListener<Project> 
 	@Autowired
 	private ProjectRepository projectRepository;
 
-//	@Autowired
-//	private UserRepository userRepository;
-
 	@Autowired
 	private StatusService statusService;
 
@@ -41,18 +38,10 @@ public class ProjectDBEventListener extends AbstractMongoEventListener<Project> 
 		final DBObject projectDeleted = event.getSource();
 		Project project = projectRepository.findOne(projectDeleted.get("projectId").toString());
 
-//		List<User> usersToBeSaved = new ArrayList<>();
-//		if (project != null && project.getUser() != null) {
-//			for (User user : project.getUser()) {
-//				user.getProjects().remove(project);
-//				usersToBeSaved.add(user);
-//			}
-//		}
 		List<Status> statusFromDB = statusService.getStatusByProject(project);
 		List<Comment> commentFromDB = commentService.getCommentByStatus(statusFromDB);
 		commentService.delete(commentFromDB);
 		statusService.delete(statusFromDB);
-	//	userRepository.save(usersToBeSaved);
 	}
 
 }

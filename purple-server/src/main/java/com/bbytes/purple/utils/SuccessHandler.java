@@ -6,7 +6,9 @@ public class SuccessHandler {
 
 	public static final String FEEDBACK_SUCCESS = "feedback_success";
 
-	public static final String JIRA_ADD_PROJECTS_SUCCESS = "jira_add_projects_success";
+	public static final String JIRA_SYNC_PROJECTS_SUCCESS = "jira_sync_projects_success";
+	
+	public static final String JIRA_SYNC_PROJECTS_AND_USERS_SUCCESS = "jira_sync_projects_and_users_success";
 
 	public static final String SIGN_UP_SUCCESS = "sign_up_success";
 
