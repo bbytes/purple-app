@@ -11,10 +11,10 @@ angular.module('rootApp').controller('billingInfoCtrl', function ($scope, $rootS
     $scope.showpage = false;
    
     // every integration setting mode
-    $scope.mode = $state.params.app;
+    $scope.mode = $state.params.app || 'billinginfo';
 
     // used to initialise mode on page load
-    $scope.initIntegration = function () {
+    $scope.initBillingTabs = function () {
         $scope.activeTab($scope.mode);
     };
 
