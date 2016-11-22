@@ -29,6 +29,7 @@ import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.RegistrationService;
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -52,6 +53,9 @@ public class SignUpController {
 	protected TokenAuthenticationProvider tokenAuthenticationProvider;
 
 	@Autowired
+	private SpringProfileService springProfileService;
+
+	@Autowired
 	private UserService userService;
 
 	@Autowired
@@ -59,6 +63,9 @@ public class SignUpController {
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
+
+	@Value("${enterprise.default.orgname}")
+	private String enterpriseModeDefaultOrgName;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -87,6 +94,10 @@ public class SignUpController {
 		final String template = GlobalConstants.EMAIL_REGISTER_TENANT_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
+		if (springProfileService.isEnterpriseMode() && signUpRequestDTO.getOrgName() == null
+				|| signUpRequestDTO.getOrgName().isEmpty()) {
+			signUpRequestDTO.setOrgName(enterpriseModeDefaultOrgName);
+		}
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
 
 		Organization organization = new Organization(orgId, signUpRequestDTO.getOrgName().trim());
@@ -122,7 +133,8 @@ public class SignUpController {
 		emailBody.put(GlobalConstants.EMAIL_ADDRESS, user.getEmail());
 
 		notificationService.sendTemplateEmail(clientEmailList, signupSubject, clientTemplate, clientEmailBody);
-		notificationService.sendTemplateEmail(emailList, registerTenantSubject, template, emailBody);
+		if (springProfileService.isSaasMode())
+			notificationService.sendTemplateEmail(emailList, registerTenantSubject, template, emailBody);
 
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 
@@ -190,7 +202,12 @@ public class SignUpController {
 
 		return userReponse;
 	}
-	
-	
-	
+
+	@RequestMapping(value = "/auth/enterprise/mode", method = RequestMethod.GET)
+	public RestResponse isEnterpriseMode() throws PurpleException {
+
+		RestResponse activeResponse = new RestResponse(RestResponse.SUCCESS, springProfileService.isEnterpriseMode());
+		return activeResponse;
+	}
+
 }

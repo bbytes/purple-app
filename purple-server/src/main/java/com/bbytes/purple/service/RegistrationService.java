@@ -36,6 +36,9 @@ public class RegistrationService {
 	@Autowired
 	private TenantResolverService tenantResolverService;
 
+	@Autowired
+	private SpringProfileService springProfileService;
+
 	@Value("${plutus.base.url}")
 	private String plutusBaseUrl;
 
@@ -49,6 +52,11 @@ public class RegistrationService {
 	public void signUp(Organization org, User user) throws PurpleException {
 
 		if (org != null && user != null) {
+
+			if (springProfileService.isEnterpriseMode()) {
+				if (!userService.userExistById(user.getEmail()))
+					throw new PurpleException("Error while sign up, email exist", ErrorHandler.EMAIL_NOT_UNIQUE);
+			}
 
 			if (tenantResolverService.emailExist(user.getEmail()))
 				throw new PurpleException("Error while sign up, email exist", ErrorHandler.EMAIL_NOT_UNIQUE);
@@ -103,14 +111,21 @@ public class RegistrationService {
 				org.setSubscriptionSecret(response.getSubscriptionSecret());
 			}
 		} catch (Exception e) {
-			logger.error("Subscription failed as plutus server response failed for org '" + org.getOrgName() + "' with email "
-					+ user.getEmail());
+			logger.error("Subscription failed as plutus server response failed for org '" + org.getOrgName()
+					+ "' with email " + user.getEmail());
 		}
 
-		TenancyContextHolder.setTenant(org.getOrgId());
-		org = orgService.save(org);
 		if (userService.getUserByEmail(user.getEmail()) == null)
-			userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
+			if (springProfileService.isSaasMode()) {
+				TenancyContextHolder.setTenant(org.getOrgId());
+				org = orgService.save(org);
+				userService.create(user.getEmail(), user.getName(), user.getPassword(), user.getOrganization());
+			} else if (springProfileService.isEnterpriseMode()) {
+				Organization orgFromDb = orgService.findByOrgId(org.getOrgId());
+				if (orgFromDb == null)
+					org = orgService.save(org);
+				userService.create(user.getEmail(), user.getName(), user.getPassword(), orgFromDb);
+			}
 	}
 
 	public User activateAccount(User activeUser) throws PurpleException {

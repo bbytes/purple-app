@@ -11,17 +11,18 @@
 
 <div id="main">
 
-    <div class="login-content signup">
+    <div class="login-content signup" ng-init="enterpriseModeCheck()">
         <div id="container">
             <form name="signupForm" ng-submit="submitSignUp(signupForm.$valid)"
                   novalidate>
                 <!-- #first_step -->
                 <div id="first_step">
                     <div class="form">
+                        <div ng-hide="isEnterPriseMode">
                         <h5>Company Name</h5>
                         <input type="text" name="compnayname" id="orgName"
-                               ng-model="user.orgName" capitalize required />
-
+                               ng-model="user.orgName" capitalize ng-required="!isEnterPriseMode"/>
+                        </div>
                         <h5>Email</h5>
                         <input type="text" name="email" ng-model="user.email"
                                ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required /> <span

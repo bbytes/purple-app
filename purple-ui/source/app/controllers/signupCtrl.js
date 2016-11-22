@@ -5,6 +5,14 @@ angular.module('rootApp').controller('signupCtrl', function ($scope, $rootScope,
 
     $rootScope.bodyClass = 'body-standalone';
     $rootScope.feedbackClass = 'feedback-log';
+
+    $scope.enterpriseModeCheck = function () {
+
+        signupService.enterpriseModeCheck().then(function (response) {
+            $scope.isEnterPriseMode = response.data;
+        });
+    };
+
     $scope.submitSignUp = function (isValid) {
         if (!isValid) {
             appNotifyService.error('Please enter valid inputs');

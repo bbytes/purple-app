@@ -51,6 +51,9 @@ public class UserService extends AbstractService<User, String> {
 	private UserRepository userRepository;
 
 	@Autowired
+	private SpringProfileService springProfileService;
+
+	@Autowired
 	private TenantResolverService tenantResolverService;
 
 	@Autowired
@@ -111,7 +114,7 @@ public class UserService extends AbstractService<User, String> {
 		return userRepository.countByDisableState(disableState);
 	}
 
-	public User findTopByOrderByCreationDateAsc(){
+	public User findTopByOrderByCreationDateAsc() {
 		return userRepository.findTopByOrderByCreationDateAsc();
 	}
 
@@ -130,12 +133,19 @@ public class UserService extends AbstractService<User, String> {
 	}
 
 	public User create(String email, String name, String password, Organization org) {
+
 		User user = new User(name, email);
 		user.setOrganization(org);
 		user.setPassword(passwordHashService.encodePassword(password));
-		user.setUserRole(UserRole.ADMIN_USER_ROLE);
+		if (springProfileService.isEnterpriseMode()) {
+			if (doesAdminRoleExistInDB(UserRole.ADMIN_USER_ROLE.getRoleName()))
+				user.setUserRole(UserRole.NORMAL_USER_ROLE);
+			else
+				user.setUserRole(UserRole.ADMIN_USER_ROLE);
+		} else {
+			user.setUserRole(UserRole.ADMIN_USER_ROLE);
+		}
 		user.setStatus(User.PENDING);
-		;
 		return userRepository.save(user);
 	}
 
@@ -321,7 +331,8 @@ public class UserService extends AbstractService<User, String> {
 				} catch (AddressException e) {
 					result = false;
 				}
-				if ((!userEmailExist(addUser.getEmail()) || !tenantResolverService.emailExist(addUser.getEmail())) && result) {
+				if ((!userEmailExist(addUser.getEmail()) || !tenantResolverService.emailExist(addUser.getEmail()))
+						&& result) {
 					try {
 						User user = userRepository.save(addUser);
 						bulkUsers.put(generatePassword, user);
@@ -433,7 +444,8 @@ public class UserService extends AbstractService<User, String> {
 
 		markDeleteUser = getUserById(userId);
 		if (projectService.projectOwnerExist(markDeleteUser))
-			throw new PurpleException("Deletion of project owner is not allowed", ErrorHandler.PROJECT_OWNER_DELETE_FAILED);
+			throw new PurpleException("Deletion of project owner is not allowed",
+					ErrorHandler.PROJECT_OWNER_DELETE_FAILED);
 		try {
 			boolean state = Boolean.parseBoolean(markDeleteState);
 			// markDeleteState=true means set user as mark for delete
@@ -527,7 +539,8 @@ public class UserService extends AbstractService<User, String> {
 	 * @return
 	 */
 	public boolean isActiveUser(User user) {
-		if (user.isAccountInitialise() && !user.isDisableState() && !user.isMarkDelete() && User.JOINED.equals(user.getStatus()))
+		if (user.isAccountInitialise() && !user.isDisableState() && !user.isMarkDelete()
+				&& User.JOINED.equals(user.getStatus()))
 			return true;
 		else
 			return false;
