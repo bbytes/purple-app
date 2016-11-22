@@ -160,7 +160,7 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
                  params: function () {
                      return {
                          "projects": $scope.userprojects,
-                         "taskList": $scope.taskList,
+                         "taskList": taskList,
                          "project": $scope.selectedProject,
                          "title":"EDIT TASK LIST"
                      };
