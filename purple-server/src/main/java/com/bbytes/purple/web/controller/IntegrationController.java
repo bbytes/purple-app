@@ -195,15 +195,15 @@ public class IntegrationController {
 		return response;
 	}
 
-//	@RequestMapping(value = "/api/v1/integration/slack/channels", method = RequestMethod.GET)
-//	public RestResponse getSlackChannels() throws PurpleException {
-//		List<Map<String, String>> channelInfo = integrationService.getSlackChannels();
-//		if (channelInfo == null)
-//			throw new PurpleException("Slack not connected", ErrorHandler.NOT_CONNECTED);
-//
-//		RestResponse response = new RestResponse(RestResponse.SUCCESS, channelInfo);
-//		return response;
-//	}
+	@RequestMapping(value = "/api/v1/integration/slack/name", method = RequestMethod.GET)
+	public RestResponse getSlackChannels() throws PurpleException {
+		String slackUserName = integrationService.getSlackUserName();
+		if (slackUserName == null)
+			throw new PurpleException("Slack not connected", ErrorHandler.NOT_CONNECTED);
+
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, slackUserName);
+		return response;
+	}
 
 //	@RequestMapping(value = "/api/v1/integration/slack/channel/{channelId}", method = RequestMethod.POST)
 //	public RestResponse setSlackChannels(@PathVariable("channelId") String channelId) throws PurpleException {

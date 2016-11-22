@@ -22,6 +22,7 @@ import org.springframework.social.github.api.GitHubCommit;
 import org.springframework.social.github.api.GitHubRepo;
 import org.springframework.social.slack.api.Slack;
 import org.springframework.social.slack.api.impl.model.SlackChannel;
+import org.springframework.social.slack.api.impl.model.SlackUser;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Integration;
@@ -164,29 +165,23 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		}
 	}
 
-	public List<Map<String, String>> getSlackChannels() {
+	public String getSlackUserName() {
 		Slack slack = getSlackApi();
 		if (slack == null)
 			return null;
 
-		List<SlackChannel> lists = slack.channelOperations().getAllChannels();
-		List<Map<String, String>> channelInfo = new ArrayList<>();
+		SlackUser user = slack.userProfileOperations().getUserProfile();
+		if (user == null)
+			return null;
 
-		for (SlackChannel slackChannel : lists) {
-			Map<String, String> channel = new HashMap<>();
-			channel.put("id", slackChannel.getId());
-			channel.put("name", "#" + slackChannel.getName());
-			channelInfo.add(channel);
-		}
-
-		return channelInfo;
+		return user.getRealName();
 	}
 
-//	public Integration setSlackChannel(String slackChannelId) {
-//		Integration integration = getIntegrationForCurrentUser();
-//		integration.setSlackChannelId(slackChannelId);
-//		return save(integration);
-//	}
+	// public Integration setSlackChannel(String slackChannelId) {
+	// Integration integration = getIntegrationForCurrentUser();
+	// integration.setSlackChannelId(slackChannelId);
+	// return save(integration);
+	// }
 
 	private Integration getIntegrationForCurrentUser() {
 		User loggedUser = userService.getLoggedInUser();
@@ -214,14 +209,16 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private void sendSlackMessage(String message, Slack slack, Integration integration) {
 		if (integration != null && slack != null) {
-//			String slackChannelId = integration.getSlackChannelId();
-//			SlackChannel slackChannel = slack.channelOperations().findChannelById(slackChannelId);
-//			if (slackChannel != null) {
-				String userName = "@" + slack.userProfileOperations().getUserProfile().getName();
-				slack.chatOperations().postMessage(message, userName, "Statusnap");
-				// disabled sending message to channel 
-			//	slack.chatOperations().postMessage(message, slackChannel.getId(), "Statusnap");
-//			}
+			// String slackChannelId = integration.getSlackChannelId();
+			// SlackChannel slackChannel =
+			// slack.channelOperations().findChannelById(slackChannelId);
+			// if (slackChannel != null) {
+			String userName = "@" + slack.userProfileOperations().getUserProfile().getName();
+			slack.chatOperations().postMessage(message, userName, "Statusnap");
+			// disabled sending message to channel
+			// slack.chatOperations().postMessage(message, slackChannel.getId(),
+			// "Statusnap");
+			// }
 		}
 	}
 
