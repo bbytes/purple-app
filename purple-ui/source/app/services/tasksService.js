@@ -71,12 +71,25 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
     };
     this.getAllTasksForProjectAndState = function (project, taskState) {
         var deferred = $q.defer();
+        var projectId;
+        var taskStateId
+        if(project=='All')
+        	projectId='All';
+        else
+        	projectId=project.projectId;
+        
+        if(taskState=='All')
+        	taskStateId='All';
+        else
+        	taskStateId=taskState.id;
+        
+        
 
         $http(
                 {
                     method: 'GET',
                     url: $rootScope.baseUrl + 'api/v1/task/taskList/'
-                            + project.projectId + '/' + taskState.id,
+                            + projectId + '/' + taskStateId,
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -112,12 +125,16 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
     };
     this.getTaskItems = function (taskList,state) {
         var deferred = $q.defer();
-
+        var taskStateId;        
+        if(state=='All')
+        	taskStateId='All';
+        else
+        	taskStateId=state.id;
         $http(
                 {
                     method: 'GET',
                     url: $rootScope.baseUrl + 'api/v1/task/taskItems/'
-                            + taskList.taskListId+'/'+state.id,
+                            + taskList.taskListId+'/'+taskStateId,
                     headers: {
                         'Content-Type': 'application/json'
                     }

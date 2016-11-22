@@ -53,7 +53,7 @@ rootApp.run([
     function ($rootScope, $state, appAuthenticationService, BASE_URL) {
 
         $rootScope.bodyClass = '';
-        $rootScope.baseUrl = BASE_URL;
+        $rootScope.baseUrl = 'http://localhost:9999/';
         $rootScope.apiUrl = 'api/v1';
         $rootScope.loggedStatus = false;
         $rootScope.authToken = '';

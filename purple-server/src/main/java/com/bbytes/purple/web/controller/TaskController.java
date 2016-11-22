@@ -94,7 +94,7 @@ public class TaskController {
 			}
 		}
 		result.remove(null);
-		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(result);
+		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(new ArrayList<>(result));
 		filterItemsForGivenState(taskListDtos, taskState);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDtos);
 		return response;
@@ -124,24 +124,43 @@ public class TaskController {
 	@RequestMapping(value = "/api/v1/task/taskList/{projectId}/{state}", method = RequestMethod.GET)
 	public RestResponse getTaskListForProjectAndState(@PathVariable String projectId, @PathVariable String state)
 			throws PurpleException {
-		Project project = projectService.findOne(projectId);
+
 		User user = userService.getLoggedInUser();
-		TaskState taskState = TaskState.valueOf(state);
-		List<TaskItem> taskItemList = taskItemService.findByProjectAndStateAndUsers(project, taskState, user);
-		Set<TaskList> result = new HashSet<>();
-		for (TaskItem taskItem : taskItemList) {
-			result.add(taskItem.getTaskList());
+		List<TaskList> taskLists = null;
+		TaskState taskState = null;
+		Project project = null;
+		List<TaskItem> taskItemList = null;
+		if (projectId.equals("All") && state.equals("All"))
+			taskLists = taskListService.findAll();
+		else if (projectId.equals("All") && !state.equals("All")) {
+			taskState = TaskState.valueOf(state);
+			taskItemList = taskItemService.findByStateAndUsers(taskState, user);
+		} else if (state.equals("All") && !projectId.equals("All")) {
+			project = projectService.findByProjectId(projectId);
+			taskLists = taskListService.findByProjectAndUsers(project, user);
+		} else if (!projectId.equals("All") && !state.equals("All")) {
+			taskState = TaskState.valueOf(state);
+			project = projectService.findByProjectId(projectId);
+			taskItemList = taskItemService.findByProjectAndStateAndUsers(project, taskState, user);
 		}
-		if (taskState.equals(TaskState.YET_TO_START)) {
-			List<TaskList> taskLists = taskListService.findByProjectAndStateAndUsers(project, taskState, user);
-			for (TaskList taskList : taskLists) {
-				if (taskList.getTaskItems() == null || taskList.getTaskItems().size() == 0)
-					result.add(taskList);
+		if (taskLists == null && taskItemList != null) {
+			Set<TaskList> result = new HashSet<>();
+			for (TaskItem taskItem : taskItemList) {
+				result.add(taskItem.getTaskList());
 			}
+			if (taskState.equals(TaskState.YET_TO_START)) {
+				List<TaskList> ytsTaskLists = taskListService.findByProjectAndStateAndUsers(project, taskState, user);
+				for (TaskList taskList : ytsTaskLists) {
+					if (taskList.getTaskItems() == null || taskList.getTaskItems().size() == 0)
+						result.add(taskList);
+				}
+			}
+			taskLists = new ArrayList<>(result);
 		}
-		result.remove(null);
-		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(result);
-		filterItemsForGivenState(taskListDtos, taskState);
+		taskLists.remove(null);
+		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(taskLists);
+		if (taskState != null)
+			filterItemsForGivenState(taskListDtos, taskState);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDtos);
 		return response;
 	}
@@ -173,7 +192,8 @@ public class TaskController {
 		taskList = taskListService.save(taskList);
 
 		logger.debug("Task list with name '" + taskList.getName() + "' added successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, dataModelToDTOConversionService.convertTaskList(taskList), SuccessHandler.ADD_TASK_LIST_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS,
+				dataModelToDTOConversionService.convertTaskList(taskList), SuccessHandler.ADD_TASK_LIST_SUCCESS);
 
 		return response;
 	}
@@ -269,9 +289,14 @@ public class TaskController {
 	@RequestMapping(value = "/api/v1/task/taskItems/{taskListId}/{state}", method = RequestMethod.GET)
 	public RestResponse getTaskItems(@PathVariable String taskListId, @PathVariable String state)
 			throws PurpleException {
+		List<TaskItem> taskItems;
 		TaskList taskList = taskListService.findOne(taskListId);
-		TaskState taskState = TaskState.valueOf(state);
-		List<TaskItem> taskItems = taskItemService.findByTaskListAndState(taskList, taskState);
+		if (state.equals("All"))
+			taskItems = taskItemService.findByTaskList(taskList);
+		else {
+			TaskState taskState = TaskState.valueOf(state);
+			taskItems = taskItemService.findByTaskListAndState(taskList, taskState);
+		}
 		List<TaskItemDTO> taskItemDtos = dataModelToDTOConversionService.convertTaskItem(taskItems);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDtos);
 		return response;

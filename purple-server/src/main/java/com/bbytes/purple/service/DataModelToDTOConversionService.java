@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +24,6 @@ import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
-import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.ConfigSettingResponseDTO;
@@ -531,7 +529,7 @@ public class DataModelToDTOConversionService {
 		return itemDTO;
 	}
 
-	public List<TaskListDTO> convertTaskLists(Set<TaskList> taskLists) {
+	public List<TaskListDTO> convertTaskLists(List<TaskList> taskLists) {
 		List<TaskListDTO> taskListDtos = new ArrayList<TaskListDTO>();
 		for (TaskList taskList : taskLists) {
 			taskListDtos.add(convertTaskList(taskList));
