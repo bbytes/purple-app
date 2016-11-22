@@ -149,7 +149,7 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             }
         });
     }
-    $scope.edittaskList=function(taskList){
+    $scope.editTaskList=function(taskList){
     	 var uibModalInstance = $uibModal.open({
              animation: true,
              templateUrl: 'app/partials/addtaskslist-modal.html',
@@ -160,7 +160,7 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
                  params: function () {
                      return {
                          "projects": $scope.userprojects,
-                         "taskLists": $scope.taskLists,
+                         "taskList": $scope.taskList,
                          "project": $scope.selectedProject,
                          "title":"EDIT TASK LIST"
                      };

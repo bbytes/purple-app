@@ -14,7 +14,7 @@ angular.module('rootApp').controller(
 
 			if($scope.taskItem!=null){
 	                angular.forEach($scope.taskItem.users, function (user) {
-	                    	$scope.taskItem.userIds.push(user.userId);
+	                    	$scope.taskItem.userIds.push(user.id);
 	                });
 	        }
 

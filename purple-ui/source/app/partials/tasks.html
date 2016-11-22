@@ -140,9 +140,9 @@
 								<div>
 									<span class="alert alert-dismissible"
 										ng-repeat="user in taskItem.users"> <span
-										style="color: #cc95b5">@{{user.name}}</span> <a
+										style="color: #cc95b5">@{{user.userName}}</span> <a
 										class="fa fa-close" style="color: #cc95b5"
-										ng-click="deleteUserFromProject(user.userId,taskItem)"
+										ng-click="deleteUserFromProject(user.id,taskItem)"
 										role="button"></a>&nbsp
 									</span> <a class="fa fa-plus-circle ng-isolate-scope"
 										style="color: #cc95b5;"

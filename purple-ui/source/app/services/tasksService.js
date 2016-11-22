@@ -149,16 +149,13 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
         return deferred.promise;
     };
     this.createTaskItem = function (taskList, taskItem) {
-    	var tItem= angular.copy(taskItem);
-    	if(tItem.users!=null)
-    		tItem.users.length=0;
         var deferred = $q.defer();
         $http(
                 {
                     method: 'POST',
                     url: $rootScope.baseUrl + 'api/v1/task/taskItem/'
                             + taskList.taskListId,
-                    data: tItem,
+                    data: taskItem,
                     headers: {
                         'Content-Type': 'application/json'
                     }
