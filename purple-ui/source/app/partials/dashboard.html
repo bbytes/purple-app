@@ -124,10 +124,10 @@
             <div class="left-panel" ng-repeat = "status in statusList">
                 <div class="header-title">
                     <small> 
-                        <ng-letter-avatar data="{{status.userName}}" shape="round"></ng-letter-avatar>
+                        <ng-letter-avatar data="{{status.userName}}" shape="round" width="40px" height="40px" fontSize="22px"></ng-letter-avatar>
                     </small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <h4># {{status.projectName}} @ {{status.userName}}</h4>
-                    <p style="margin-left:60px; font-weight: 600; color: #bcbcbc; font-size: 13px;">{{status.hours}} hrs </p>
+                    <h4 style="margin-left:45px;"># {{status.projectName}} @ {{status.userName}}</h4>
+                    <p style="margin-left:45px; font-weight: 600; color: #bcbcbc; font-size: 13px;">{{status.hours}} hrs </p>
                 </div>
                 <div class="timeline-body worked-on" >
                     <h3>worked on</h3>
@@ -186,7 +186,7 @@
 
             <div class="sidebar-nav comment-list-group" ng-repeat="comment in allcomments">
 
-                <small> <ng-letter-avatar data="{{comment.userName}}"
+                <small> <ng-letter-avatar data="{{comment.userName}}" width="40px" height="40px" fontSize="22px"
                                           shape="round"></ng-letter-avatar>
                 </small>
                 <div class="user-label">

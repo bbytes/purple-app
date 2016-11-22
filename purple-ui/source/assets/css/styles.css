@@ -4325,6 +4325,7 @@ tabs-left, .tabs-right {
     max-height: 200px;
     overflow-y: auto ;
     position: fixed;
+	right:52px;
 }
 
 .large-Modal .modal-dialog{
