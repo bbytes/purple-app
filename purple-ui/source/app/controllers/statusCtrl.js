@@ -333,7 +333,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     $scope.openTaskModal = function (projectId) {
 
         if (!projectId) {
-            appNotifyService.error('Select valid project to view task');
+            appNotifyService.error('Please select valid project to view task');
             return false;
         }
         tasksService.getAllTasksForProject(projectId).then(function (response) {
