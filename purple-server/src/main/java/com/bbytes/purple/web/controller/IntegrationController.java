@@ -280,21 +280,26 @@ public class IntegrationController {
 	}
 
 	@RequestMapping(value = "/api/v1/integration/slack/name", method = RequestMethod.GET)
-	public RestResponse getSlackChannels() throws PurpleException {
+	public RestResponse getSlackConnection() throws PurpleException {
 		String slackUserName = integrationService.getSlackUserName();
-		if (slackUserName == null)
-			throw new PurpleException("Slack not connected", ErrorHandler.NOT_CONNECTED);
-
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, slackUserName);
+		RestResponse response;
+		if (slackUserName == null) {
+			response = new RestResponse(RestResponse.FAILED, "Slack not connected", ErrorHandler.NOT_CONNECTED);
+			return response;
+		}
+		response = new RestResponse(RestResponse.SUCCESS, slackUserName);
 		return response;
 	}
 
-//	@RequestMapping(value = "/api/v1/integration/slack/channel/{channelId}", method = RequestMethod.POST)
-//	public RestResponse setSlackChannels(@PathVariable("channelId") String channelId) throws PurpleException {
-//		integrationService.setSlackChannel(channelId);
-//		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack Channel updated successfully");
-//		return response;
-//	}
+	// @RequestMapping(value = "/api/v1/integration/slack/channel/{channelId}",
+	// method = RequestMethod.POST)
+	// public RestResponse setSlackChannels(@PathVariable("channelId") String
+	// channelId) throws PurpleException {
+	// integrationService.setSlackChannel(channelId);
+	// RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack
+	// Channel updated successfully");
+	// return response;
+	// }
 
 	@RequestMapping(value = "/api/v1/integration/slack", method = RequestMethod.DELETE)
 	public RestResponse deleteSlackIntegration() throws PurpleException {
@@ -307,10 +312,10 @@ public class IntegrationController {
 	public RestResponse deleteJiraIntegration() throws PurpleException {
 		User user = userService.getLoggedInUser();
 		Integration integration = integrationService.getJIRAConnection(user);
-		if(integration!=null){
+		if (integration != null) {
 			integration.setJiraBaseURL(null);
 			integration.setJiraBasicAuthHeader(null);
-			integration.setJiraUserName(null);	
+			integration.setJiraUserName(null);
 			integrationService.save(integration);
 		}
 

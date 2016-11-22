@@ -113,24 +113,24 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
         integrationService.deleteSlackIntegration().then(function (response) {
             if (response.success) {
                 appNotifyService.success('You have been successfully disconnected to Slack');
+                $scope.isSlackConnect = false;
             }
         }, function (error) {
             appNotifyService.error('Error disconnecting Slack Connection');
         });
     };
 
-    //Connect to slack
-    $scope.getSlackChannels = function () {
+    //Connect to slack integration
+    $scope.getSlackConnection = function () {
 
-        integrationService.getSlackChannels().then(function (response) {
+        integrationService.getSlackConnection().then(function (response) {
             if (response.success) {
-                $scope.channelList = response.data;
                 $scope.isSlackConnect = true;
             } else {
                 $scope.isSlackConnect = false;
             }
         }, function (error) {
-            appNotifyService.error('Error Connecting Slack Channel');
+            appNotifyService.error('Error while Connecting Slack');
         });
     };
 

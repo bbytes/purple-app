@@ -123,14 +123,14 @@ angular.module('rootApp').service('integrationService', function ($rootScope, $h
         return deferred.promise;
     };
 
-    // method is used to get the slack channerls
-    this.getSlackChannels = function () {
+    // method is used to get the slack connection
+    this.getSlackConnection = function () {
 
         var deferred = $q.defer();
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/integration/slack/channels',
+            url: $rootScope.baseUrl + 'api/v1/integration/slack/name',
             headers: {
                 'Content-Type': 'application/json'
             }
