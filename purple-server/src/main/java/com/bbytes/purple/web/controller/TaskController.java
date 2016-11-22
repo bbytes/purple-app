@@ -77,6 +77,7 @@ public class TaskController {
 
 		return taskStatesResponse;
 	}
+
 	@RequestMapping(value = "/api/v1/task/taskList/{taskListId}", method = RequestMethod.GET)
 	public RestResponse getTaskListforId(@PathVariable String taskListId) throws PurpleException {
 		TaskList taskList = taskListService.findOne(taskListId);
@@ -233,7 +234,11 @@ public class TaskController {
 	@RequestMapping(value = "/api/v1/task/taskItem/{taskItemId}", method = RequestMethod.DELETE)
 	public RestResponse deleteTaskItem(@PathVariable String taskItemId) throws PurpleException {
 
+		TaskItem taskItem = taskItemService.findOne(taskItemId);
+		TaskList taskList = taskListService.findOne(taskItem.getTaskList().getTaskListId());
 		taskItemService.delete(taskItemId);
+		taskList.removeTaskItem(taskItem);
+		taskListService.save(taskList);
 
 		logger.debug("Task Item with id '" + taskItemId + "' deleted successfully");
 		RestResponse response = new RestResponse(RestResponse.SUCCESS,
