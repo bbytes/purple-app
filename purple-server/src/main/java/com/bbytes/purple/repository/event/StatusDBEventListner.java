@@ -35,7 +35,7 @@ public class StatusDBEventListner extends AbstractMongoEventListener<Status> {
 		final DBObject statusDeleted = event.getSource();
 		Status statusFromDb = statusService.findOne(statusDeleted.get("statusId").toString());
 		StatusTaskEvent statusTaskEvent = statusTaskEventService.findByStatus(statusFromDb);
-		statusTaskEventService.delete(statusTaskEvent);
+		if (statusTaskEvent != null)
+			statusTaskEventService.delete(statusTaskEvent);
 	}
-
 }
