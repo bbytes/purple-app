@@ -140,7 +140,7 @@ public class IntegrationController {
 			}
 
 			String basicAuthHeader = integration.getJiraBasicAuthHeader();
-			if (basicAuthHeader.isEmpty() || basicAuthHeader == null) {
+			if (basicAuthHeader.isEmpty()) {
 				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
 						ErrorHandler.JIRA_CONNECTION_FAILED);
 				return jiraRestResponse;
@@ -154,7 +154,7 @@ public class IntegrationController {
 
 			statusCode = response.getStatusLine().getStatusCode();
 		} catch (Throwable e) {
-			throw new PurpleException("Failed : HTTP Connection ", ErrorHandler.BAD_GATEWAY);
+			throw new PurpleException("Failed : HTTP Connection ", ErrorHandler.JIRA_CONNECTION_FAILED);
 		}
 
 		if (statusCode != 200) {
