@@ -1,5 +1,5 @@
 
-<div ng-init="initIntegration();getSlackChannels()">
+<div ng-init="initIntegration()">
     <div class="left-tabbar"> <!-- required for floating -->
         <!-- Nav tabs -->
         <ul class="nav nav-tabs tabs-left side-tab">
@@ -26,8 +26,9 @@
                     </div>
 
 
-                    <div class="col-md-8">
+                    <div class="col-md-2">
                         <div class="connected" ng-show="isConnected"><p>Connected</p></div>
+                        <button class="btn btn-default status-submit after" ng-click="disconnectJIRAConnection()" ng-show="isConnected"><i class="fa fa-plug" aria-hidden="true"></i> Disconnect</button>
                         <div class="offline" ng-show="isOffline"><p>Offline</p></div>
                     </div>
 

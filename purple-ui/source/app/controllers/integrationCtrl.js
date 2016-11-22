@@ -93,6 +93,32 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
         });
     };
 
+    // method is used to disconnect JIRA Connection
+    $scope.disconnectJIRAConnection = function () {
+
+        integrationService.deleteJiraIntegration().then(function (response) {
+            if (response.success) {
+                appNotifyService.success('You have been successfully disconnected to JIRA');
+                $scope.isConnected = false;
+                $scope.isOffline = true;
+            }
+        }, function (error) {
+            appNotifyService.error('Error disconnecting JIRA Connection');
+        });
+    };
+
+    // method is used to disconnect SLACK Connection
+    $scope.disconnectSlackConnection = function () {
+
+        integrationService.deleteSlackIntegration().then(function (response) {
+            if (response.success) {
+                appNotifyService.success('You have been successfully disconnected to Slack');
+            }
+        }, function (error) {
+            appNotifyService.error('Error disconnecting Slack Connection');
+        });
+    };
+
     //Connect to slack
     $scope.getSlackChannels = function () {
 
@@ -105,24 +131,6 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
             }
         }, function (error) {
             appNotifyService.error('Error Connecting Slack Channel');
-        });
-    };
-
-    //Setting slack channel
-    $scope.setChannel = function () {
-
-        if (!$scope.selectedChannel) {
-            appNotifyService.error('Please select valid slack channel');
-            return false;
-        }
-        integrationService.setSlackChannel($scope.selectedChannel).then(function (response) {
-            if (response.success) {
-                appNotifyService.success('You have been updated slack channel successfully');
-            } else {
-                appNotifyService.error('Error while saving Slack Channel');
-            }
-        }, function (error) {
-            appNotifyService.error('Error while saving Slack Channel');
         });
     };
 
