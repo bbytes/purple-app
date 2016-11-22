@@ -53,7 +53,7 @@ rootApp.run([
     function ($rootScope, $state, appAuthenticationService, BASE_URL) {
 
         $rootScope.bodyClass = '';
-        $rootScope.baseUrl = 'http://localhost:9999/';
+        $rootScope.baseUrl = BASE_URL;
         $rootScope.apiUrl = 'api/v1';
         $rootScope.loggedStatus = false;
         $rootScope.authToken = '';
@@ -372,7 +372,7 @@ rootApp.config([
                 redirectTo: 'login'
             }
         }).state('billing', {
-            url:'/billing?app',
+            url: '/billing?app',
             views: {
                 '': {
                     templateUrl: 'app/partials/home.html'
