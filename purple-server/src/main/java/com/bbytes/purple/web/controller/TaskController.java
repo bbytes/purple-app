@@ -129,8 +129,9 @@ public class TaskController {
 		List<TaskState> states = new ArrayList<TaskState>();
 		states.add(TaskState.IN_PROGRESS);
 		states.add(TaskState.YET_TO_START);
-		List<TaskList> taskList = taskListService.findByProjectAndOwnerAndStateIn(project, user, states);
-		List<TaskListResponseDTO> taskListResponseDTO = dataModelToDTOConversionService.convertTaskListItem(taskList);
+		List<TaskItem> taskItemList = taskItemService.findByProjectAndUsersAndStateIn(project, user, states);
+		List<TaskListResponseDTO> taskListResponseDTO = dataModelToDTOConversionService
+				.convertTaskListItem(taskItemList);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListResponseDTO);
 		return response;
 	}
