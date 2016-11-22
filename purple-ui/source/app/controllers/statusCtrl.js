@@ -329,23 +329,25 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         return $filter('htmlToPlaintext')($html);
     };
 
-    $scope.showTaskViewIcon = function (projectId) {
+    // this is to open task view modal
+    $scope.openTaskModal = function (projectId) {
+
+        if (!projectId) {
+            appNotifyService.error('Select valid project to view task');
+            return false;
+        }
         tasksService.getAllTasksForProject(projectId).then(function (response) {
             if (response.success) {
                 $scope.taskList = response.data;
                 if ($scope.taskList.length !== 0) {
-                    $scope.showTaskView = true;
+                    showModal();
                 } else {
-                    $scope.showTaskView = false;
+                    appNotifyService.error('No tasks for selected project');
+                    return false;
                 }
             }
         });
-    };
 
-    // this is to open task view modal
-    $scope.openTaskModal = function () {
-        
-        showModal();
         function showModal() {
             var uibModalInstance = $uibModal.open({
                 animation: true,
