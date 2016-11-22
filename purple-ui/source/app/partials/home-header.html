@@ -15,12 +15,13 @@
                     </div>
                     <div id="navbar" class="navbar-collapse collapse">
                         <ul class="{{ navClass}} nav-left" ng-controller="navCtrl">
+                            <li><a href="status" ng-class="{ active: isActive('/status') }">home</a></li>
                             <li><a href="user-manager" ng-class="{ active: isActive('/user-manager') }">users</a></li>
                             <li><a href="projects" ng-class="{ active: isActive('/projects') }">projects</a></li>
                             <li><a href="integration?app=jira" ng-class="{ active: isActive('/integration') }">integration</a></li>
                             <li ng-show="userRole == 'ADMIN'"><a href="admin-settings" ng-class="{ active: isActive('/admin-settings') }">admin settings</a></li>
-       					    <li ng-show="userRole == 'ADMIN'"><a href="billing" ng-class="{ active: isActive('/billing') }">Billing</a></li> 
-                    
+                            <li ng-show="userRole == 'ADMIN'"><a href="billing" ng-class="{ active: isActive('/billing') }">Billing</a></li> 
+
                             <!-- <li ng-show="userRole == 'ADMIN'"><a  href="#" ng-click="loadTabs()">Billing</a></li>-->
                             <!--<li class="dropdown mega-dropdown">
                <a href="#" ng-click="loadTabs()" class="dropdown-toggle" data-toggle="dropdown">Billing <span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
