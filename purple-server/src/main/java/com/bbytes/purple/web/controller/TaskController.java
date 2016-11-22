@@ -77,6 +77,15 @@ public class TaskController {
 
 		return taskStatesResponse;
 	}
+	@RequestMapping(value = "/api/v1/task/taskList/{taskListId}", method = RequestMethod.GET)
+	public RestResponse getTaskListforId(@PathVariable String taskListId) throws PurpleException {
+		TaskList taskList = taskListService.findOne(taskListId);
+		Set<TaskList> result = new HashSet<>();
+		result.remove(null);
+		TaskListDTO taskListDto = dataModelToDTOConversionService.convertTaskList(taskList);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDto);
+		return response;
+	}
 
 	@RequestMapping(value = "/api/v1/task/taskList/state/{state}", method = RequestMethod.GET)
 	public RestResponse getTaskListForState(@PathVariable String state) throws PurpleException {
@@ -234,7 +243,7 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "/api/v1/task/taskItem/{taskListId}", method = RequestMethod.POST)
-	public RestResponse addTaskItem(@PathVariable String taskListId, @RequestBody TaskItemDTO taskItemDTO)
+	public RestResponse addOrEditTaskItem(@PathVariable String taskListId, @RequestBody TaskItemDTO taskItemDTO)
 			throws PurpleException {
 
 		TaskItem taskItem = saveTaskItem(taskListId, taskItemDTO);
@@ -264,14 +273,22 @@ public class TaskController {
 		if (taskList == null)
 			throw new PurpleException("Task List with id " + taskListId + " not found",
 					ErrorHandler.TASK_LIST_NOT_FOUND);
-
-		TaskItem taskItem = new TaskItem(taskItemDTO.getName(), taskItemDTO.getDesc(), taskItemDTO.getEstimatedHours(),
-				taskItemDTO.getDueDate());
+		TaskItem taskItem = null;
+		if (taskItemDTO.getTaskItemId() != null) {
+			taskItem = taskItemService.findOne(taskItemDTO.getTaskItemId());
+			taskItem.setName(taskItemDTO.getName());
+			taskItem.setDesc(taskItemDTO.getDesc());
+			taskItem.setEstimatedHours(taskItemDTO.getEstimatedHours());
+			taskItem.setDueDate(taskItemDTO.getDueDate());
+		}
+		if (taskItem == null)
+			taskItem = new TaskItem(taskItemDTO.getName(), taskItemDTO.getDesc(), taskItemDTO.getEstimatedHours(),
+					taskItemDTO.getDueDate());
 		taskItem.setTaskList(taskList);
 		taskItem.setProject(taskList.getProject());
 		User user = userService.getLoggedInUser();
+		taskItem.setUsers(getUsers(taskItemDTO.getUserIds()));
 		taskItem.setOwner(user);
-		taskItem.addUsers(getUsers(taskItemDTO.getUserIds()));
 		taskItem = taskItemService.save(taskItem);
 		taskList.addTaskItem(taskItem);
 		taskListService.save(taskList);

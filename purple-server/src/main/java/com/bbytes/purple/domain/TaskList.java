@@ -132,20 +132,22 @@ public class TaskList implements Comparable<TaskList> {
 		}
 
 		for (TaskItem taskItem : taskItems) {
-			if (taskItem.getState().equals(TaskState.YET_TO_START)) {
-				state = TaskState.YET_TO_START;
-				break;
-			}
-			if (state == null) {
-				if (taskItem.getState().equals(TaskState.IN_PROGRESS)) {
-					state = TaskState.IN_PROGRESS;
+			if (taskItem != null) {
+				if (taskItem.getState().equals(TaskState.YET_TO_START)) {
+					state = TaskState.YET_TO_START;
 					break;
 				}
-			}
-			if (state == null) {
-				if (taskItem.getState().equals(TaskState.COMPLETED)) {
-					state = TaskState.COMPLETED;
-					break;
+				if (state == null) {
+					if (taskItem.getState().equals(TaskState.IN_PROGRESS)) {
+						state = TaskState.IN_PROGRESS;
+						break;
+					}
+				}
+				if (state == null) {
+					if (taskItem.getState().equals(TaskState.COMPLETED)) {
+						state = TaskState.COMPLETED;
+						break;
+					}
 				}
 			}
 

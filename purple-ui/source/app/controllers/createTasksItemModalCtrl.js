@@ -3,12 +3,20 @@
  */
 angular.module('rootApp').controller(
 		'createTasksItemModalCtrl',
-		function($scope, $uibModalInstance, $uibModal, params, tasksService,
-				dropdownListService, projectService) {
+		function($scope,$rootScope, $uibModalInstance, $uibModal, params, tasksService,
+				dropdownListService, projectService,appNotifyService) {
 			$scope.taskList = params.taskList;
 			$scope.taskItemsLists = params.taskItems;
 			$scope.project = params.project;
-			$scope.mindate = new Date();
+			$scope.taskItem=params.taskItem;
+			$scope.title=params.title;
+			$scope.mindate = new Date();			
+
+			if($scope.taskItem!=null){
+	                angular.forEach($scope.taskItem.users, function (user) {
+	                    	$scope.taskItem.userIds.push(user.userId);
+	                });
+	        }
 
 			$scope.dateOptions = {
 				minDate : new Date()
@@ -38,20 +46,27 @@ angular.module('rootApp').controller(
 						});
 			};
 			$scope.createTaskItem = function(taskItem) {
-				tasksService.createTaskItem($scope.taskList, taskItem).then(
+				if(validateTaskItem(taskItem)){
+					tasksService.createTaskItem($scope.taskList, taskItem).then(
 						function(response) {
 							if ($scope.taskItemsLists == null)
 								$scope.taskItemsLists = response.data;
-							else
-								$scope.taskItemsLists.push(response.data);
-
-							$scope.taskList.taskItems.push(response.data);
-							$scope.taskList.estimatedHours=$scope.taskList.estimatedHours+response.data.estimatedHours;
+							else{
+								if($scope.taskItem==null){
+									$scope.taskItemsLists.push(response.data);
+									$scope.taskList.taskItems.push(response.data);
+									$scope.taskList.estimatedHours=$scope.taskList.estimatedHours+response.data.estimatedHours;
+								}else{
+										$rootScope.$broadcast('TASK_ITEM_EDITED', response.data);
+								}
+							}
 						});
-				$uibModalInstance.close($scope.selection);
+					$uibModalInstance.close($scope.selection);
+				}
 			};
 			$scope.createMoreTaskItem = function(taskItem) {
-				tasksService.createTaskItem($scope.taskList, taskItem).then(
+				if(validateTaskItem(taskItem)){
+					tasksService.createTaskItem($scope.taskList, taskItem).then(
 						function(response) {
 							if ($scope.taskItemsLists == null)
 								$scope.taskItemsLists = response.data;
@@ -60,8 +75,39 @@ angular.module('rootApp').controller(
 							$scope.taskList.taskItems.push(response.data);
 							$scope.taskList.estimatedHours=$scope.taskList.estimatedHours+response.data.estimatedHours;
 						});
-				$scope.taskItem = new Object();
+					$scope.taskItem = new Object();
+				}
 			};
+			
+			function validateTaskItem(taskItem){
+				if(taskItem==null){
+					appNotifyService.error("Please enter valid values");
+					return false;
+				}
+				if(taskItem.name==null || taskItem.name==""){
+					appNotifyService.error("Please enter a name");
+					return false;
+				}
+				if(taskItem.desc==null || taskItem.desc==""){
+					appNotifyService.error("Please enter a description");
+					return false;
+				}
+				if(taskItem.estimatedHours==null || taskItem.estimatedHours==""){
+					appNotifyService.error("Please enter estimated hours");
+					return false;
+				}
+				if(taskItem.dueDate==null || taskItem.dueDate==""){
+					appNotifyService.error("Please enter dueDate");
+					return false;
+				}
+				if(taskItem.userIds==null || taskItem.userIds.length==0){
+					appNotifyService.error("Please select users");	
+					return false;
+				}	
+				return true;
+					
+			}
+	
 			$scope.cancel = function() {
 				$uibModalInstance.dismiss('cancel');
 			};

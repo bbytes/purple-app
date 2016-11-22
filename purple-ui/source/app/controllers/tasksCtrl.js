@@ -21,6 +21,11 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
 
     $(document).ready(function () {
         $('.dropdown-toggle').dropdown();
+        $scope.$on('TASK_ITEM_EDITED', function (event, data) {
+            console.log("TASK_ITEM_EDITED "+ data); 
+            getTaskListforId($scope.taskList.taskListId);
+            loadTaskItemsForList($scope.taskList); 
+          });
     });
 
     $scope.initTasks = function () {
@@ -137,11 +142,31 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
                     return {
                         "projects": $scope.userprojects,
                         "taskLists": $scope.taskLists,
-                        "project": $scope.selectedProject
+                        "project": $scope.selectedProject,
+                        "title":"CREATE TASK LIST"
                     };
                 }
             }
         });
+    }
+    $scope.edittaskList=function(taskList){
+    	 var uibModalInstance = $uibModal.open({
+             animation: true,
+             templateUrl: 'app/partials/addtaskslist-modal.html',
+             controller: 'createTasksListModalCtrl',
+             backdrop: 'static',
+             size: 'md',
+             resolve: {
+                 params: function () {
+                     return {
+                         "projects": $scope.userprojects,
+                         "taskLists": $scope.taskLists,
+                         "project": $scope.selectedProject,
+                         "title":"EDIT TASK LIST"
+                     };
+                 }
+             }
+         });
     }
     $scope.deleteTaskList = function (taskList) {
         tasksService.deleteTaskList(taskList).then(function (response) {
@@ -163,6 +188,26 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             }
         });
     };
+    $scope.editTaskItem=function(taskItem){    		
+            var uibModalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/partials/addtaskitem-modal.html',
+                controller: 'createTasksItemModalCtrl',
+                backdrop: 'static',
+                size: 'md',
+                resolve: {
+                    params: function () {
+                        return {
+                        	"title":"EDIT TASK",
+                            "taskList": $scope.taskList,
+                            "taskItems": $scope.taskItemsLists,
+                            "project": $scope.selectedProject,
+                            "taskItem":taskItem
+                        };
+                    }
+                }
+            });
+    };
     $scope.setClickedState = function (index) {
         $scope.selectedState = $scope.taskStates[index];
     };
@@ -174,7 +219,10 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
     $scope.loadTaskItems = function (taskList, index) {
         $scope.taskList = taskList;
         $scope.selectedTLIndx = index;
-        tasksService.getTaskItems(taskList,$scope.selectedState).then(function (response) {
+        loadTaskItemsForList(taskList);
+    }
+    function loadTaskItemsForList(taskList){
+    	tasksService.getTaskItems(taskList,$scope.selectedState).then(function (response) {
             if (response.data != null && response.data.length > 0) {
                 $scope.taskItemsLists = response.data;
             } else {
@@ -183,11 +231,17 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             }
         });
     }
-
+    function getTaskListforId(taskListId){
+    	tasksService.getTaskListforId(taskListId).then(function(response){
+    		if(response.success){
+    			$scope.taskList.estimatedHours=response.data.estimatedHours;
+    		}
+    	});
+    }
     $scope.showTaskItemModal = function () {
         showTaskItemModal();
     }
-    function showTaskItemModal() {    		
+    function showTaskItemModal() { 
         var uibModalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'app/partials/addtaskitem-modal.html',
@@ -197,15 +251,15 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             resolve: {
                 params: function () {
                     return {
-                        "taskList": $scope.taskList,
-                        "taskItems": $scope.taskItemsLists,
-                        "project": $scope.selectedProject
+                    		"title":"CREATE NEW TASK",
+                            "taskList": $scope.taskList,
+                            "taskItems": $scope.taskItemsLists,
+                            "project": $scope.selectedProject
                     };
                 }
             }
         });
-    }
-    ;
+    };
     $scope.markCompleted = function (taskItem) {
         tasksService.markCompleted(taskItem).then(function (response) {
         	 if (response.success) 

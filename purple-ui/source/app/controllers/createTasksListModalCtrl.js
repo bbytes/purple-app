@@ -8,6 +8,7 @@ angular.module('rootApp').controller('createTasksListModalCtrl',
 			$scope.projects = params.projects;
 			$scope.taskLists =params.taskLists;
 			$scope.selectedProject=params.project;
+			$scope.title=params.title;
 			
 			$scope.toggleSelection = function toggleSelection(id) {
 				var idx = $scope.selection.indexOf(id);

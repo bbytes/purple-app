@@ -82,12 +82,21 @@
 									<label>{{taskList.name}}</label> <label>{{taskList.spendHours}}
 										Hrs of {{taskList.estimatedHours}} Hrs</label> <label>{{taskList.taskItems.length}}
 										tasks {{selectedState.value}}</label>
-									<div style="padding-left: 300px; width: 75px">
-										<a class="fa fa-close" style="float: left"
-											ng-click="deleteTaskList(taskList);"
-											confirm="Are you sure you want to delete the task list?"></a>
-										<h5 ng-click="deleteTaskList(taskList);"
-											confirm="Are you sure you want to delete the task list?">Delete</h5>
+
+									<div style="width: 100%; height: 30px;">
+										<div style="width: 30%; float: right; margin: 10px;"
+											aria-hidden="false" class="">
+											<div style="width: 50%; float: right" align="right">
+												<a class="fa fa-close ng-isolate-scope"
+													ng-click="deleteTaskList(taskList);"
+													confirm="Are you sure you want to delete the task list?"
+													role="button">Delete</a>
+											</div>
+											<div style="width: 50%; float: right" align="centre">
+												<a class="fa fa-edit ng-isolate-scope"
+													ng-click="editTaskList(taskList);" role="button">Edit</a>
+											</div>
+										</div>
 									</div>
 								</div></li>
 						</ul>
