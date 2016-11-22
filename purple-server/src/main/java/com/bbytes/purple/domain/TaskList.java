@@ -82,6 +82,15 @@ public class TaskList implements Comparable<TaskList> {
 		taskItems.remove(taskItem);
 		calculateProperties();
 	}
+	
+	public void setProject(Project project) {
+		this.project = project;
+		for (TaskItem taskItem : taskItems) {
+			if (taskItem != null) {
+				taskItem.setProject(project);
+			}
+		}
+	}
 
 	public void setTaskItem(Set<TaskItem> taskItems) {
 		this.taskItems = taskItems;
