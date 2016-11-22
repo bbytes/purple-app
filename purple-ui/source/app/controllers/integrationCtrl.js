@@ -66,22 +66,31 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
         }, function (error) {
             $scope.isConnected = false;
             $scope.isOffline = true;
-
         });
     };
 
+    // method is used to sync the JIRA Projects
     $scope.syncJiraProject = function () {
 
         integrationService.getJiraProject().then(function (response) {
             if (response.success) {
                 appNotifyService.success('Projects are Sync');
-
             }
         }, function (error) {
-
             appNotifyService.error('Error getting JIRA Connection');
         });
+    };
 
+    // method is used to sync the JIRA projects to users
+    $scope.syncJiraProjectAndUser = function () {
+
+        integrationService.getJiraProjectAndUser().then(function (response) {
+            if (response.success) {
+                appNotifyService.success('Project to users are sync successfully');
+            }
+        }, function (error) {
+            appNotifyService.error('Error getting JIRA Connection');
+        });
     };
 
     //Connect to slack

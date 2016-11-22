@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
@@ -53,5 +56,21 @@ public final class StringUtils {
 		Date timezoneDate = formatter.parse(dateWithTimezoneString);
 
 		return timezoneDate;
+	}
+
+	/**
+	 * validate email address, if validate return value else return null
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public static String isValidEmailAddress(String email) {
+		try {
+			InternetAddress emailAddr = new InternetAddress(email);
+			emailAddr.validate();
+		} catch (AddressException ex) {
+			email = null;
+		}
+		return email;
 	}
 }

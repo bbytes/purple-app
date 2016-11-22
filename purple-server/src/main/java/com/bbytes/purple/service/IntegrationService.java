@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import com.bbytes.purple.repository.IntegrationRepository;
 import com.bbytes.purple.repository.SocialConnectionRepository;
 import com.bbytes.purple.social.MongoConnectionTransformers;
 import com.bbytes.purple.utils.ErrorHandler;
+import com.bbytes.purple.utils.StringUtils;
 
 import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.JiraException;
@@ -74,7 +76,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		return state;
 	}
 
-	public Integration connectToJIRA(User user, String jiraUserName, String basicAuth, String jiraBaseURL) throws PurpleException {
+	public Integration connectToJIRA(User user, String jiraUserName, String basicAuth, String jiraBaseURL)
+			throws PurpleException {
 		Integration integration = null;
 		try {
 			if (!integrationExist(user)) {
@@ -110,28 +113,53 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	}
 
 	public List<net.rcarz.jiraclient.Project> syncJiraProjectWithUser(Integration integration) throws JiraException {
-		JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(), integration.getJiraBasicAuthHeader());
+		JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(),
+				integration.getJiraBasicAuthHeader());
 		JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
 		List<net.rcarz.jiraclient.Project> jiraProjects = jira.getProjects();
+		return jiraProjects;
+	}
+
+	public Map<String, List<User>> getJiraProjectWithUserList(Integration integration) throws JiraException {
+		JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(),
+				integration.getJiraBasicAuthHeader());
+		JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
+		List<net.rcarz.jiraclient.Project> jiraProjects = jira.getProjects();
+		Map<String, List<User>> projectNameToUserList = new LinkedHashMap<String, List<User>>();
 		try {
 			for (net.rcarz.jiraclient.Project project : jiraProjects) {
+				List<User> projectUserList = new LinkedList<User>();
 				net.rcarz.jiraclient.Project projectDetail = jira.getProject(project.getKey());
 				for (String role : projectDetail.getRoles().keySet()) {
 					Role roleObj = jira.getProjectRole(projectDetail.getRoles().get(role));
 					for (RoleActor roleActor : roleObj.getRoleActors()) {
-						if (roleActor.isUser())
-							System.out.println(roleActor.getUser());
+						if (roleActor.isUser()) {
+							net.rcarz.jiraclient.User userFromJira = roleActor.getUser();
+							String email = null;
+							// checking email/name from jira user and validating
+							// email address
+							if (userFromJira.getEmail() != null)
+								email = StringUtils.isValidEmailAddress(userFromJira.getEmail());
+							else
+								email = StringUtils.isValidEmailAddress(userFromJira.getName());
+							if (email != null) {
+								User user = new User(userFromJira.getDisplayName(), email.toLowerCase());
+								projectUserList.add(user);
+							}
+						}
 					}
 				}
+				projectNameToUserList.put(project.getName(), projectUserList);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 
-		return jiraProjects;
+		return projectNameToUserList;
 	}
 
-	public void addJiraProjects(List<net.rcarz.jiraclient.Project> jiraProjects, User loggedInUser) throws PurpleException {
+	public void addJiraProjects(List<net.rcarz.jiraclient.Project> jiraProjects, User loggedInUser)
+			throws PurpleException {
 		List<String> jiraProjectList = new LinkedList<String>();
 		List<String> finalProjectListToBeSaved = new LinkedList<String>();
 
@@ -231,8 +259,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		Integration integration = getIntegrationForCurrentUser();
 		if (integration != null && github != null) {
 			String user = github.userOperations().getProfileId();
-			List<GitHubRepo> repos = asList(
-					github.restOperations().getForObject("https://api.github.com/users/" + user + "/repos", GitHubRepo.class));
+			List<GitHubRepo> repos = asList(github.restOperations()
+					.getForObject("https://api.github.com/users/" + user + "/repos", GitHubRepo.class));
 			for (GitHubRepo gitHubRepo : repos) {
 				List<GitHubCommit> commits = github.repoOperations().getCommits(user, gitHubRepo.getName());
 				for (GitHubCommit gitHubCommit : commits) {
@@ -254,7 +282,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 			for (BitBucketRepository bitBucketRepository : repositories) {
 				BitBucketChangesets bitBucketChangesets = bitBucket.repoOperations().getChangesets(
-						bitBucket.userOperations().getUserWithRepositories().getUser().getUsername(), bitBucketRepository.getSlug());
+						bitBucket.userOperations().getUserWithRepositories().getUser().getUsername(),
+						bitBucketRepository.getSlug());
 
 				for (BitBucketChangeset bitBucketChangeset : bitBucketChangesets.getChangesets()) {
 					result.add(bitBucketChangeset.getMessage());
@@ -274,7 +303,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		if (user == null)
 			return null;
 		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
-		List<SocialConnection> socialConnections = socialConnectionRepository.findByUserIdAndProviderId(user.getEmail(), "slack");
+		List<SocialConnection> socialConnections = socialConnectionRepository.findByUserIdAndProviderId(user.getEmail(),
+				"slack");
 		if (socialConnections != null && !socialConnections.isEmpty()) {
 			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialConnections.get(0));
 			Slack slack = (Slack) connection.getApi();
@@ -286,7 +316,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	private BitBucket getBitBucketApi() {
 		String userId = userService.getLoggedInUserEmail();
 		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
-		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, "bitbucket");
+		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId,
+				"bitbucket");
 		if (socialCnnections != null && !socialCnnections.isEmpty()) {
 			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialCnnections.get(0));
 			BitBucket bitBucket = (BitBucket) connection.getApi();
@@ -298,7 +329,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	private GitHub getGithubApi() {
 		String userId = userService.getLoggedInUserEmail();
 		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
-		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, "github");
+		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId,
+				"github");
 		if (socialCnnections != null && !socialCnnections.isEmpty()) {
 			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialCnnections.get(0));
 			GitHub github = (GitHub) connection.getApi();
@@ -326,7 +358,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	private void deleteConnection(String connectionType) {
 		String userId = userService.getLoggedInUserEmail();
 		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
-		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, connectionType);
+		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId,
+				connectionType);
 		if (socialCnnections != null && !socialCnnections.isEmpty()) {
 			socialConnectionRepository.delete(socialCnnections);
 		}
