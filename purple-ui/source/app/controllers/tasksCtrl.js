@@ -136,14 +136,14 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             templateUrl: 'app/partials/addtaskslist-modal.html',
             controller: 'createTasksListModalCtrl',
             backdrop: 'static',
-            size: 'md',
+            size: 'sm',
             resolve: {
                 params: function () {
                     return {
                         "projects": $scope.userprojects,
                         "taskLists": $scope.taskLists,
                         "project": $scope.selectedProject,
-                        "title":"CREATE TASK LIST"
+                        "title":"CREATE NEW TASK LIST"
                     };
                 }
             }

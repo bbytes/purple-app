@@ -18,14 +18,15 @@
                 </div>
 
                 <div class="col-md-3">
-                    <small>
+                    <a href="" ng-click="getAllUseresInModal()"><small>
                         <div class="add-user-icon">+</div>
-                    </small>
-                    <div class="user-label">
-                        <h4 style="margin-top: 22px;">
-                            <a href="" ng-click="getAllUseresInModal()">Add Users</a>
+                    
+                    <span class="user-label">
+                         <h4 style="margin-top: 30px;">
+                           Add Users
                         </h4>
-                    </div>
+                    </span>
+					</small></a>
                 </div>
 
             </div>
@@ -48,12 +49,12 @@
                         aria-label="Close" ng-click="deleteUserFromList(user.id, $index)">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <small> <ng-letter-avatar data="{{user.userName}}"
+                <small> <ng-letter-avatar data="{{user.userName}}" width="40px" height="40px" fontsize="22px"
                                           shape="round"></ng-letter-avatar>
                 </small>
                 <div class="user-label">
                     <h4>{{user.userName}}</h4>
-                    <p>{{user.email}}</p>
+                    <p style="font-size:10px; margin-left: 45px;">{{user.email}}</p>
                 </div>
                 <div style="margin-bottom: 30px;"></div>
             </div>
@@ -194,12 +195,12 @@
                         aria-label="Close" ng-click="deleteOrgUserFromList(user.id, $index)">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <small> <ng-letter-avatar data="{{user.userName}}"
+                <small> <ng-letter-avatar data="{{user.userName}}" width="40px" height="40px" fontsize="22px"
                                           shape="round"></ng-letter-avatar>
                 </small>
                 <div class="user-label">
                     <h4>{{user.userName}}</h4>
-                    <p>{{user.email}}</p>
+                    <p style="font-size:10px; margin-left: 45px;">{{user.email}}</p>
                 </div>
                 <div style="margin-bottom: 30px;"></div>
             </div>

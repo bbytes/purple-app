@@ -93,12 +93,12 @@
                     <tbody>
                         <tr dir-paginate="user in allusers|orderBy:sortKey:reverse| filter:searchText|itemsPerPage:10">
                             <td class="table-user"><small> <ng-letter-avatar
-                                        data="{{user.userName}}" shape="round"></ng-letter-avatar>
+                                        data="{{user.userName}}" shape="round" width="40px" height="40px" fontsize="22px"></ng-letter-avatar>
                                 </small>
 
                                 <div class="user-label">
                                     <h4>{{user.userName}}</h4>
-                                    <p>{{user.email}}</p>
+                                    <p style="font-size:10px; margin-left: 45px;">{{user.email}}</p>
                                 </div></td>
                             <td><img src="../../assets/img/pending.png" ng-if="user.status === 'Pending'">
                                 <img src="../../assets/img/join.png" ng-if="user.status === 'Joined'">

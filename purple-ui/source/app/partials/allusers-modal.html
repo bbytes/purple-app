@@ -15,12 +15,12 @@
 
                 <table width="100%">
                     <tr ng-repeat="user in allusers| orderBy:'userName' | filter:searchText">
-                        <td class="add-user-table"><small> <ng-letter-avatar
+                        <td class="add-user-table"><small> <ng-letter-avatar width="40px" height="40px" fontsize="22px"
                                     data="{{user.userName}}" shape="round"></ng-letter-avatar>
                             </small>
                             <div class="user-label">
                                 <h4>{{user.userName}}</h4>
-                                <p>{{user.email}}</p>
+                                <p style="font-size:10px; margin-left: 45px;">{{user.email}}</p>
                             </div></td>
                         <td class="add-user"><input id="switch-create-destroy"
                                                     type="checkbox" name="selectedUsers[]" value="{{user.id}}"
