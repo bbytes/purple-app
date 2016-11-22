@@ -86,9 +86,20 @@
                                 <option ng-repeat="date in dateArray" value="{{date}}" >{{date| date:'MMM dd, yyyy'}}</option>
                             </select>
                         </div>
-                        <div class="col-md-3" style="padding-right: 4px; padding-left: 15px;" ng-show="showTaskView">
-                            <a href="" style="color:rgb(124, 105, 145);" ng-click="openTaskModal()"><i class="fa fa-tasks fa-2x" aria-hidden="true" tooltips tooltip-template="Task View" tooltip-side="bottom"></i></a>
+						
+						 <div class="col-sm-3" style="padding-left: 4px;">
+                        <div class="form-sidebar">
+
+                            <div class="form-group" >
+                                <select chosen="selectables" ng-model="hours" id="hoursDropdown" >
+                                    <option value="">Hrs</option>
+                                    <option ng-repeat="hr in selectables" value="{{hr.id}}" >{{hr.id}}</option>
+                                </select>
+                            </div>
+
                         </div>
+                    </div>
+						
                     </div>
 
 
@@ -105,18 +116,11 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-3" style="padding-left: 4px;">
-                        <div class="form-sidebar">
-
-                            <div class="form-group" >
-                                <select chosen="selectables" ng-model="hours" id="hoursDropdown" >
-                                    <option value="">Hrs</option>
-                                    <option ng-repeat="hr in selectables" value="{{hr.id}}" >{{hr.id}}</option>
-                                </select>
-                            </div>
-
+                   
+                        <div class="col-md-3" style="padding-right: 4px; padding-left: 5px;" ng-show="showTaskView">
+                            <a href="" style="color:rgb(124, 105, 145);" ng-click="openTaskModal()"><i class="fa fa-tasks fa-2x" aria-hidden="true" tooltips tooltip-template="Task View" tooltip-side="bottom" style="margin-top: 5px;"></i></a>
                         </div>
-                    </div>
+						
 
 
                     <!--                    					<div class="col-sm-2" style="padding-right: 4px; padding-left: 4px;">

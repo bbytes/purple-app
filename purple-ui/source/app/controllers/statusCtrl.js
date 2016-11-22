@@ -352,8 +352,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                 templateUrl: 'app/partials/taskView-modal.html',
                 controller: 'taskViewModalCtrl',
                 backdrop: 'static',
-                size: 'md',
-                windowClass: 'large-Modal',
+                size: 'xl',
                 resolve: {
                     modalData: function () {
                         return {

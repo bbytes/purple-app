@@ -50,6 +50,7 @@
   "devDependencies": {},
   "resolutions": {
     "angular": "^1.5.0",
-    "fullcalendar": "^2.6.1"
+    "fullcalendar": "^2.6.1",
+    "moment": ">= 2.6.0"
   }
 }
