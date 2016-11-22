@@ -218,7 +218,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 				String userName = "@" + slack.userProfileOperations().getUserProfile().getName();
 				slack.chatOperations().postMessage(message, userName, "Statusnap");
 				// disabled sending message to channel 
-//				slack.chatOperations().postMessage(message, slackChannel.getId(), "Statusnap");
+				slack.chatOperations().postMessage(message, slackChannel.getId(), "Statusnap");
 			}
 		}
 	}
