@@ -74,7 +74,7 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
 
         integrationService.getJiraProject().then(function (response) {
             if (response.success) {
-                appNotifyService.success('Projects are Sync');
+                appNotifyService.success('Projects synced successfully');
             }
         }, function (error) {
             appNotifyService.error('Error getting JIRA Connection');
@@ -86,7 +86,7 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
 
         integrationService.getJiraProjectAndUser().then(function (response) {
             if (response.success) {
-                appNotifyService.success('Project to users are sync successfully');
+                appNotifyService.success('Users to projects synced successfully');
             }
         }, function (error) {
             appNotifyService.error('Error getting JIRA Connection');
@@ -98,7 +98,7 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
 
         integrationService.deleteJiraIntegration().then(function (response) {
             if (response.success) {
-                appNotifyService.success('You have been successfully disconnected to JIRA');
+                appNotifyService.success('Jira disconnected successfully');
                 $scope.isConnected = false;
                 $scope.isOffline = true;
             }
@@ -112,7 +112,7 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
 
         integrationService.deleteSlackIntegration().then(function (response) {
             if (response.success) {
-                appNotifyService.success('You have been successfully disconnected to Slack');
+                appNotifyService.success('Slack disconnected successfully');
                 $scope.isSlackConnect = false;
             }
         }, function (error) {
