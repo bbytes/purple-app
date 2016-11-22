@@ -87,6 +87,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 			} else {
 				integration = getIntegrationByUser(user);
 				integration.setJiraBasicAuthHeader(basicAuth);
+				integration.setJiraBaseURL(jiraBaseURL);
+				integration.setJiraUserName(jiraUserName);
 				integration = integrationRepository.save(integration);
 			}
 		} catch (Throwable e) {
@@ -180,11 +182,11 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		return channelInfo;
 	}
 
-	public Integration setSlackChannel(String slackChannelId) {
-		Integration integration = getIntegrationForCurrentUser();
-		integration.setSlackChannelId(slackChannelId);
-		return save(integration);
-	}
+//	public Integration setSlackChannel(String slackChannelId) {
+//		Integration integration = getIntegrationForCurrentUser();
+//		integration.setSlackChannelId(slackChannelId);
+//		return save(integration);
+//	}
 
 	private Integration getIntegrationForCurrentUser() {
 		User loggedUser = userService.getLoggedInUser();
@@ -212,14 +214,14 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private void sendSlackMessage(String message, Slack slack, Integration integration) {
 		if (integration != null && slack != null) {
-			String slackChannelId = integration.getSlackChannelId();
-			SlackChannel slackChannel = slack.channelOperations().findChannelById(slackChannelId);
-			if (slackChannel != null) {
+//			String slackChannelId = integration.getSlackChannelId();
+//			SlackChannel slackChannel = slack.channelOperations().findChannelById(slackChannelId);
+//			if (slackChannel != null) {
 				String userName = "@" + slack.userProfileOperations().getUserProfile().getName();
 				slack.chatOperations().postMessage(message, userName, "Statusnap");
 				// disabled sending message to channel 
-				slack.chatOperations().postMessage(message, slackChannel.getId(), "Statusnap");
-			}
+			//	slack.chatOperations().postMessage(message, slackChannel.getId(), "Statusnap");
+//			}
 		}
 	}
 

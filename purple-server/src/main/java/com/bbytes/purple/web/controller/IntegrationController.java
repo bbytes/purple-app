@@ -2,7 +2,6 @@ package com.bbytes.purple.web.controller;
 
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
@@ -13,7 +12,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -197,26 +195,41 @@ public class IntegrationController {
 		return response;
 	}
 
-	@RequestMapping(value = "/api/v1/integration/slack/channels", method = RequestMethod.GET)
-	public RestResponse getSlackChannels() throws PurpleException {
-		List<Map<String, String>> channelInfo = integrationService.getSlackChannels();
-		if (channelInfo == null)
-			throw new PurpleException("Slack not connected", ErrorHandler.NOT_CONNECTED);
+//	@RequestMapping(value = "/api/v1/integration/slack/channels", method = RequestMethod.GET)
+//	public RestResponse getSlackChannels() throws PurpleException {
+//		List<Map<String, String>> channelInfo = integrationService.getSlackChannels();
+//		if (channelInfo == null)
+//			throw new PurpleException("Slack not connected", ErrorHandler.NOT_CONNECTED);
+//
+//		RestResponse response = new RestResponse(RestResponse.SUCCESS, channelInfo);
+//		return response;
+//	}
 
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, channelInfo);
-		return response;
-	}
-
-	@RequestMapping(value = "/api/v1/integration/slack/channel/{channelId}", method = RequestMethod.POST)
-	public RestResponse setSlackChannels(@PathVariable("channelId") String channelId) throws PurpleException {
-		integrationService.setSlackChannel(channelId);
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack Channel updated successfully");
-		return response;
-	}
+//	@RequestMapping(value = "/api/v1/integration/slack/channel/{channelId}", method = RequestMethod.POST)
+//	public RestResponse setSlackChannels(@PathVariable("channelId") String channelId) throws PurpleException {
+//		integrationService.setSlackChannel(channelId);
+//		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack Channel updated successfully");
+//		return response;
+//	}
 
 	@RequestMapping(value = "/api/v1/integration/slack", method = RequestMethod.DELETE)
 	public RestResponse deleteSlackIntegration() throws PurpleException {
 		integrationService.deleteSlackConnection();
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack connection deleted successfully");
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/integration/jira", method = RequestMethod.DELETE)
+	public RestResponse deleteJiraIntegration() throws PurpleException {
+		User user = userService.getLoggedInUser();
+		Integration integration = integrationService.getJIRAConnection(user);
+		if(integration!=null){
+			integration.setJiraBaseURL(null);
+			integration.setJiraBasicAuthHeader(null);
+			integration.setJiraUserName(null);	
+			integrationService.save(integration);
+		}
+
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack connection deleted successfully");
 		return response;
 	}

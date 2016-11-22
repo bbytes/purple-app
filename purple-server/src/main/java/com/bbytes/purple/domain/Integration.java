@@ -33,9 +33,6 @@ public class Integration {
 
 	@Field("jira_base_url")
 	private String jiraBaseURL;
-	
-	@Field("slack_channel_id")
-	private String slackChannelId;
 
 	@DBRef
 	private User user;
