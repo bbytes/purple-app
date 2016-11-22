@@ -3,19 +3,35 @@
  */
 angular.module('rootApp').controller('billingInfoCtrl', function ($scope, $rootScope, $location, $state, toaster, billingInfoService, appNotifyService, $uibModal) {
 
-    $scope.isActive = function (route) {
-        return route === $location.path();
-    };
+   
     $scope.email = $scope.loggedInUser;
     $rootScope.navClass = 'nav navbar-nav';
     $rootScope.navstatusClass = 'right-nav-ct';
     $rootScope.bodyClass = 'body-standalone1';
     $scope.showpage = false;
-    // variable to store information of all project list
-    $scope.allprojects;
-    //when page is loading, showing sort by username
-    $scope.sortKey = 'projectName';
-    
+   
+    // every integration setting mode
+    $scope.mode = $state.params.app;
+
+    // used to initialise mode on page load
+    $scope.initIntegration = function () {
+        $scope.activeTab($scope.mode);
+    };
+
+    // checking active tab for given route param mode
+    $scope.isActive = function (viewLocation) {
+        var active = (viewLocation === $location.url());
+        return active;
+    };
+
+    // used to initialise mode on slection tab
+    $scope.activeTab = function (mode) {
+
+        $scope.mode = mode;
+        $scope.activeTabClass = 'tab-pane active';
+        $state.go('billing', {app: $scope.mode});
+    };
+
 //  Method to save billing information
     $scope.addBillingInfo = function (isValid, customer) {
         // Validating login form

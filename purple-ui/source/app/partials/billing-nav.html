@@ -4,16 +4,17 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+<div ng-init="initIntegration()">
 <div class="" id="adminNavbar" ng-controller="billingInfoCtrl">
     <ul class="nav nav-tabs">
-       
-        <li class="active"><a href="#billing" data-toggle="tab"> Billing Info</a></li>
-        <li><a href="#invoice" data-toggle="tab">Invoice Details</a></li>
-        <li><a href="#product" data-toggle="tab">Product plans</a></li>
+       <li ng-class="{ active: isActive('/billing?app=billinginfo') }" ng-click="activeTab('billinginfo')"><a href=""  data-toggle="tab"> Billing Info</a></li>
+            <li ng-class="{ active: isActive('/billing?app=invoice') }" ng-click="activeTab('invoice')"><a href="" data-toggle="tab"> Invoice Details</a></li>
+            <li ng-class="{ active: isActive('/billing?app=product') }" ng-click="activeTab('product')"><a href="" data-toggle="tab"> Product plans</a></li>
+     
     </ul>
 </div>
 <div class="tab-content">
-    <div class="tab-pane active" id="billing">
+    <div class="tab-pane active" ng-show="mode === 'billinginfo'">
         <div class="billing-wrapper">
             <form name="myForm">
                 <div class="row">
@@ -108,7 +109,7 @@ and open the template in the editor.
         </div>
     </div>
 
-    <div class="tab-pane" id="invoice">
+    <div class="{{activeTabClass}}" ng-show="mode === 'invoice'">
         <div class="billing-wrapper"   ng-init="getInvoiceDetails()">
             <div class="main-title">
                 <h4>Current Invoice</h4>
@@ -160,8 +161,8 @@ and open the template in the editor.
                                 </div>
                                 </div>
 
-                                <div class="tab-pane" id="product"   ng-init="getPricingPlans()">
-                                    <div class="billing-wrapper">
+                                <div class="{{activeTabClass}}" ng-show="mode === 'product'"   >
+                                    <div class="billing-wrapper" ng-init="getPricingPlans()">
                                         <div class="col-md-offset-2 col-md-8" >
                                             <div class="main-title">
                                                 <h4>Current Plans</h4>
@@ -206,3 +207,4 @@ and open the template in the editor.
                                 </div>
 
                                 </div>
+</div>
