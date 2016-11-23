@@ -16,9 +16,25 @@
             <div class="intergration-wrapper">
                 <h3>Connect to JIRA to Fetch Project and User Information</h3>
                 <hr />
+				<div class="col-md-12">
+				   <div class="row">
+				      <ul class="connection-status">
+					      <li>Connection Status : </li>
+						  <li ng-show="isOffline"><span style="color:red"><!--<img src="assets/img/offline.png" style="width:18px;"> --> Disconnected </span> </li>
+						  <li ng-show="isConnected"><span style="color:green"> <!--<img src="assets/img/connect.png" style="width:18px;"> --> Connected </span></li>
+						  <li>&nbsp;</li>
+						  <li>&nbsp;</li>
+						  <li><a href="" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected" tooltips tooltip-template="Connect" tooltip-side="top"><img src="assets/img/disconnect.gif" style="width:18px;"> </a></li>
+						  
+						  <li><a href="" ng-click="disconnectJIRAConnection()" ng-show="isConnected" tooltips tooltip-template="Disconnect" tooltip-side="top"><img src="assets/img/connect.gif" style="width:18px;"> </a></li>
+                       </ul>                       
+					   
+				   </div>
+				</div>
                 <div class="row">
-                    <div class="col-md-4"> 
-                        <button class="btn btn-default status-submit" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected"><img src="../../assets/img/icon-jira-logo.png" class="jira" /> CONNECT</button>
+                    <div class="col-md-4">
+                       
+                       <!-- <button class="btn btn-default status-submit" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected"><img src="../../assets/img/icon-jira-logo.png" class="jira" /> CONNECT</button> -->
 
                         <button class="btn btn-default status-submit after" ng-click="syncJiraProject()" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true" ></i> Sync Project</button>
 
@@ -26,11 +42,11 @@
                     </div>
 
 
-                    <div class="col-md-2">
+                    <!--<div class="col-md-2">
                         <div class="connected" ng-show="isConnected"><p>Connected</p></div>
                         <button class="btn btn-default status-submit after" ng-click="disconnectJIRAConnection()" ng-show="isConnected"><i class="fa fa-plug" aria-hidden="true"></i> Disconnect JIRA</button>
                         <div class="offline" ng-show="isOffline"><p>Offline</p></div>
-                    </div>
+                    </div> -->
 
 
                     <form name="form" style="margin-top:100px;">
