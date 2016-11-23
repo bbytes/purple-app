@@ -34,7 +34,6 @@ import com.bbytes.purple.repository.IntegrationRepository;
 import com.bbytes.purple.repository.SocialConnectionRepository;
 import com.bbytes.purple.social.MongoConnectionTransformers;
 import com.bbytes.purple.utils.ErrorHandler;
-import com.bbytes.purple.utils.StringUtils;
 
 import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.JiraException;
@@ -134,13 +133,6 @@ public class IntegrationService extends AbstractService<Integration, String> {
 					for (RoleActor roleActor : roleObj.getRoleActors()) {
 						if (roleActor.isUser()) {
 							net.rcarz.jiraclient.User userFromJira = roleActor.getUser();
-//							String email = null;
-//							// checking email/name from jira user and validating
-//							// email address
-//							if (userFromJira.getEmail() != null)
-//								email = StringUtils.isValidEmailAddress(userFromJira.getEmail());
-//							else
-//								email = StringUtils.isValidEmailAddress(userFromJira.getName());
 							net.rcarz.jiraclient.User fullUser = jira.getUser(userFromJira.getName());
 							if (fullUser != null) {
 								User user = new User(fullUser.getDisplayName(), fullUser.getEmail().toLowerCase());

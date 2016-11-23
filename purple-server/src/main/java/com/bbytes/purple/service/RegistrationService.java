@@ -54,7 +54,7 @@ public class RegistrationService {
 		if (org != null && user != null) {
 
 			if (springProfileService.isEnterpriseMode()) {
-				if (!userService.userExistById(user.getEmail()))
+				if (userService.userExistById(user.getEmail()))
 					throw new PurpleException("Error while sign up, email exist", ErrorHandler.EMAIL_NOT_UNIQUE);
 			}
 

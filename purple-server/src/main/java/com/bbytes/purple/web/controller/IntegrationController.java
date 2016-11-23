@@ -35,6 +35,7 @@ import com.bbytes.purple.service.IntegrationService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.PasswordHashService;
 import com.bbytes.purple.service.ProjectService;
+import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -73,6 +74,9 @@ public class IntegrationController {
 
 	@Autowired
 	private NotificationService notificationService;
+
+	@Autowired
+	private TenantResolverService tenantResolverService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -238,30 +242,33 @@ public class IntegrationController {
 							jiraUser.setPassword(passwordHashService.encodePassword(generatePassword));
 							jiraUser.setStatus(User.PENDING);
 							jiraUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
-							User savedUser = userService.addUsers(jiraUser);
-							// after saving user to db, this user is getting
-							// added to project
-							com.bbytes.purple.domain.Project projectFromDb = projectService
-									.findByProjectName(entry.getKey());
-							projectFromDb.addUser(savedUser);
-							projectService.save(projectFromDb);
+							if (!tenantResolverService.emailExist(jiraUser.getEmail())) {
+								User savedUser = userService.addUsers(jiraUser);
+								// after saving user to db, this user is getting
+								// added to project
+								com.bbytes.purple.domain.Project projectFromDb = projectService
+										.findByProjectName(entry.getKey());
+								projectFromDb.addUser(savedUser);
+								projectService.save(projectFromDb);
 
-							// since user is getting created, sending invitation
-							// email to activate account
-							final String xauthToken = tokenAuthenticationProvider
-									.getAuthTokenForUser(savedUser.getEmail(), 720);
-							String postDate = dateFormat.format(new Date());
-							List<String> emailList = new ArrayList<String>();
-							emailList.add(savedUser.getEmail());
+								// since user is getting created, sending
+								// invitation
+								// email to activate account
+								final String xauthToken = tokenAuthenticationProvider
+										.getAuthTokenForUser(savedUser.getEmail(), 720);
+								String postDate = dateFormat.format(new Date());
+								List<String> emailList = new ArrayList<String>();
+								emailList.add(savedUser.getEmail());
 
-							Map<String, Object> emailBody = new HashMap<>();
-							emailBody.put(GlobalConstants.USER_NAME, savedUser.getName());
-							emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-							emailBody.put(GlobalConstants.PASSWORD, generatePassword);
-							emailBody.put(GlobalConstants.ACTIVATION_LINK,
-									baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
+								Map<String, Object> emailBody = new HashMap<>();
+								emailBody.put(GlobalConstants.USER_NAME, savedUser.getName());
+								emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+								emailBody.put(GlobalConstants.PASSWORD, generatePassword);
+								emailBody.put(GlobalConstants.ACTIVATION_LINK,
+										baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
-							notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
+								notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
+							}
 						}
 
 					}
