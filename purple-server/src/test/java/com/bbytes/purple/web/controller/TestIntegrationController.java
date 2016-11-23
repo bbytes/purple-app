@@ -1,8 +1,8 @@
 package com.bbytes.purple.web.controller;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,6 +34,7 @@ public class TestIntegrationController extends PurpleWebBaseApplicationTests {
 
 	Organization org;
 	User normalUser;
+	String jiraAuth = "Basic dG1AYmV5b25kYnl0ZXMuY28uaW46bWFsYWJhcjEyMw==";
 
 	@Before
 	public void setUp() {
@@ -84,7 +85,7 @@ public class TestIntegrationController extends PurpleWebBaseApplicationTests {
 		Integration integration = new Integration();
 		integration.setJiraBaseURL("https://beyondbytes.atlassian.net/");
 		;
-		integration.setJiraBasicAuthHeader("Basic YWtzaGF5Lm5hZzpha3NoYXkxMjM=");
+		integration.setJiraBasicAuthHeader(jiraAuth);
 		integration.setUser(normalUser);
 		integrationService.save(integration);
 
@@ -109,7 +110,7 @@ public class TestIntegrationController extends PurpleWebBaseApplicationTests {
 		Integration integration = new Integration();
 		integration.setJiraBaseURL("https://beyondbytes.atlassian.net");
 		;
-		integration.setJiraBasicAuthHeader("Basic YWtzaGF5Lm5hZzpha3NoYXluYWcxOTA0");
+		integration.setJiraBasicAuthHeader(jiraAuth);
 		integration.setUser(normalUser);
 		integrationService.save(integration);
 
@@ -120,5 +121,22 @@ public class TestIntegrationController extends PurpleWebBaseApplicationTests {
 				.andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 	}
+	
+	@Test
+	public void testsyncUsertoJIRAProjects() throws Exception {
+		Integration integration = new Integration();
+		integration.setJiraBaseURL("https://beyondbytes.atlassian.net");
+		integration.setJiraBasicAuthHeader(jiraAuth);
+		integration.setUser(normalUser);
+		integrationService.save(integration);
 
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 1);
+
+		mockMvc.perform(
+				get("/api/v1/integration/jira/syncUsers").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+	}
+
+	
 }

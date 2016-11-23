@@ -3,7 +3,6 @@ package com.bbytes.purple.service;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +21,6 @@ import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubCommit;
 import org.springframework.social.github.api.GitHubRepo;
 import org.springframework.social.slack.api.Slack;
-import org.springframework.social.slack.api.impl.model.SlackChannel;
 import org.springframework.social.slack.api.impl.model.SlackUser;
 import org.springframework.stereotype.Service;
 
@@ -136,15 +134,16 @@ public class IntegrationService extends AbstractService<Integration, String> {
 					for (RoleActor roleActor : roleObj.getRoleActors()) {
 						if (roleActor.isUser()) {
 							net.rcarz.jiraclient.User userFromJira = roleActor.getUser();
-							String email = null;
-							// checking email/name from jira user and validating
-							// email address
-							if (userFromJira.getEmail() != null)
-								email = StringUtils.isValidEmailAddress(userFromJira.getEmail());
-							else
-								email = StringUtils.isValidEmailAddress(userFromJira.getName());
-							if (email != null) {
-								User user = new User(userFromJira.getDisplayName(), email.toLowerCase());
+//							String email = null;
+//							// checking email/name from jira user and validating
+//							// email address
+//							if (userFromJira.getEmail() != null)
+//								email = StringUtils.isValidEmailAddress(userFromJira.getEmail());
+//							else
+//								email = StringUtils.isValidEmailAddress(userFromJira.getName());
+							net.rcarz.jiraclient.User fullUser = jira.getUser(userFromJira.getName());
+							if (fullUser != null) {
+								User user = new User(fullUser.getDisplayName(), fullUser.getEmail().toLowerCase());
 								projectUserList.add(user);
 							}
 						}
