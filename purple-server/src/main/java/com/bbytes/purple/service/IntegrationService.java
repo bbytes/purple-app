@@ -227,13 +227,9 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	}
 
 	private void sendSlackMessage(String message, Slack slack) {
-		logger.info("Slack message send ...");
-		logger.info("Slack obj ..." + slack);
 		if (slack != null) {
-			logger.info("Came in ...");
 			String userName = "@" + slack.userProfileOperations().getUserProfile().getName();
 			slack.chatOperations().postMessage(message, userName, "Statusnap");
-			logger.info("Message posted to " + userName);
 		}
 	}
 
