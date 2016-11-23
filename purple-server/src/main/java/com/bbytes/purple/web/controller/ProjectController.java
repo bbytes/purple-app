@@ -269,7 +269,7 @@ public class ProjectController {
 	 * @return
 	 * @throws PurpleException
 	 */
-	@RequestMapping(value = "/api/v1/project/{projectId}/user", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/v1/admin/project/{projectId}/user", method = RequestMethod.GET)
 	public RestResponse getUsersOfProject(@PathVariable("projectId") String projectId) throws PurpleException {
 
 		Set<User> users = projectService.getAllUsersByProject(projectId);

@@ -105,7 +105,7 @@ public class ReplyController {
 
 		notificationService.sendTemplateEmail(emailList, replySubject, template, emailBody);
 
-		if (emailList != null && !emailList.isEmpty()) {
+		if (mentioneEmailList != null && !mentioneEmailList.isEmpty()) {
 			Map<String, Object> mentionEmailBody = replyEmailBody(user, comment, status, replySize,
 					GlobalConstants.MENTIONED_EMAIL_TEXT);
 			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);

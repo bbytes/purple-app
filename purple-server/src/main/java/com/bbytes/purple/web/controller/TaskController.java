@@ -29,6 +29,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.TaskItemDTO;
 import com.bbytes.purple.rest.dto.models.TaskListDTO;
 import com.bbytes.purple.rest.dto.models.TaskListResponseDTO;
+import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.TaskItemService;
@@ -366,6 +367,17 @@ public class TaskController {
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDto);
 		return response;
 
+	}
+
+	@RequestMapping(value = "api/v1/task/taskItems/{taskItemId}/toAddUsers", method = RequestMethod.GET)
+	public RestResponse getUsersToBeAddedToTask(@PathVariable String taskItemId) {
+		TaskItem taskItem = taskItemService.findOne(taskItemId);
+		Set<User> projectUsers = taskItem.getProject().getUser();
+		Set<User> taskItemUsers = taskItem.getUsers();
+		projectUsers.removeAll(taskItemUsers);
+		List<UserDTO> usersDto = dataModelToDTOConversionService.convertUsers(new ArrayList<>(projectUsers));
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, usersDto);
+		return response;
 	}
 
 }

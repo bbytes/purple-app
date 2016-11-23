@@ -44,6 +44,10 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 		return taskItemRepository.findByOwner(user);
 	}
 
+	public List<TaskItem> findByUsers(User user) {
+		return taskItemRepository.findByUsers(user);
+	}
+
 	public List<TaskItem> findByUsersIn(List<User> users) {
 		return taskItemRepository.findByUsersIn(users);
 	}
@@ -51,9 +55,9 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 	public List<TaskItem> findByProjectAndUsers(Project project, User user) {
 		return taskItemRepository.findByProjectAndUsers(project, user);
 	}
-	
-	public List<TaskItem> findByProjectAndUsersAndStateIn(Project project, User user,List<TaskState> states) {
-		return taskItemRepository.findByProjectAndUsersAndStateIn(project, user,states);
+
+	public List<TaskItem> findByProjectAndUsersAndStateIn(Project project, User user, List<TaskState> states) {
+		return taskItemRepository.findByProjectAndUsersAndStateIn(project, user, states);
 	}
 
 	public List<TaskItem> findByProjectInAndUsersIn(List<Project> project, List<User> user) {

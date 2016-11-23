@@ -23,13 +23,15 @@ public interface TaskItemRepository extends MongoRepository<TaskItem, String> {
 
 	List<TaskItem> findByOwner(User user);
 
+	List<TaskItem> findByUsers(User user);
+
 	List<TaskItem> findByUsersIn(List<User> user);
-	
+
 	List<TaskItem> findByStateAndUsers(TaskState state, User user);
 
 	List<TaskItem> findByProjectAndUsers(Project project, User user);
-	
-	List<TaskItem> findByProjectAndUsersAndStateIn(Project project, User user,List<TaskState> states);
+
+	List<TaskItem> findByProjectAndUsersAndStateIn(Project project, User user, List<TaskState> states);
 
 	List<TaskItem> findByProjectInAndUsersIn(List<Project> project, List<User> user);
 
@@ -41,7 +43,8 @@ public interface TaskItemRepository extends MongoRepository<TaskItem, String> {
 
 	List<TaskItem> findByDueDateBetweenAndProjectIn(Date startDate, Date endDate, List<Project> project);
 
-	List<TaskItem> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate, List<Project> project, List<User> user);
+	List<TaskItem> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate, List<Project> project,
+			List<User> user);
 
 	List<TaskItem> findByTaskListAndState(TaskList taskList, TaskState taskState);
 

@@ -220,7 +220,7 @@
                         <div class="user-label" ng-repeat="reply in allreplies">
                             <h4>{{reply.userName}}</h4>
                             <md-content class="example-3 md-accent">
-                                <span
+                                <span ng-bind-html="reply.replyDesc"
                                     inline-edit="reply.replyDesc"
                                     ng-click="updateReply(reply.replyDesc, comment.commentId, reply.replyId)"
                                     inline-edit-textarea

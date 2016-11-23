@@ -258,7 +258,7 @@ angular.module('rootApp').service('projectService', function ($rootScope, $http,
 
         $http({
             method: 'GET',
-            url: $rootScope.baseUrl + 'api/v1/project/' + projectId + '/user',
+            url: $rootScope.baseUrl + 'api/v1/admin/project/' + projectId + '/user',
             headers: {
                 'Content-Type': 'application/json'
             }

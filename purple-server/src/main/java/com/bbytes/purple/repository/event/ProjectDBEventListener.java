@@ -11,9 +11,13 @@ import org.springframework.stereotype.Component;
 import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
+import com.bbytes.purple.domain.TaskItem;
+import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.repository.ProjectRepository;
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.StatusService;
+import com.bbytes.purple.service.TaskItemService;
+import com.bbytes.purple.service.TaskListService;
 import com.mongodb.DBObject;
 
 @Component
@@ -29,9 +33,15 @@ public class ProjectDBEventListener extends AbstractMongoEventListener<Project> 
 	@Autowired
 	private CommentService commentService;
 
+	@Autowired
+	private TaskListService taskListService;
+
+	@Autowired
+	private TaskItemService taskItemService;
+
 	/**
-	 * Remove the project from the user list and and deleting user's statuses
-	 * and comments when the project is deleted - Cascade delete
+	 * Deleting user's statuses, comments, taskList and taskItems when the
+	 * project is deleted - Cascade delete
 	 */
 	@Override
 	public void onBeforeDelete(BeforeDeleteEvent<Project> event) {
@@ -40,8 +50,13 @@ public class ProjectDBEventListener extends AbstractMongoEventListener<Project> 
 
 		List<Status> statusFromDB = statusService.getStatusByProject(project);
 		List<Comment> commentFromDB = commentService.getCommentByStatus(statusFromDB);
+		List<TaskList> taskListFromDB = taskListService.findByProject(project);
+		List<TaskItem> taskItemFromDB = taskItemService.findByProject(project);
+
 		commentService.delete(commentFromDB);
 		statusService.delete(statusFromDB);
+		taskItemService.delete(taskItemFromDB);
+		taskListService.delete(taskListFromDB);
 	}
 
 }
