@@ -268,34 +268,16 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
         });
     };
     
-         $scope.getAllUsersOfProject = function(taskItem) {
+         $scope.getUsersToBeAddedToTask = function(taskItem) {
         	$scope.selectedTaskItem=taskItem;
-			projectService.getAllUsersOfProject($scope.taskList.projectId)
+			tasksService.getUsersToBeAddedToTask(taskItem.taskItemId)
 					.then(function(response) {
 						  if (response.success) {
-							  var projectUsersToAdd=response.data;
+							  $scope.projectUsersToAdd=response.data;
 							  var taskItemUsers=taskItem.users;	
-							  $scope.projectUsersToAdd=getArrayDiff(projectUsersToAdd, taskItemUsers);
 							  showUserModal();
 						  }
 					});
-			function getArrayDiff(a, b) {
-			    var ret = [];
-			    if (!(Array.isArray(a) && Array.isArray(b))) {
-			        return ret;
-			    }
-			    var i;
-			    var key;
-
-			    for (i = a.length - 1; i >= 0; i--) {
-			      key = a[i];
-			      if (-1 === b.indexOf(key)) {
-			        ret.push(key);
-			      }
-			    }
-
-			    return ret;
-			};
         function showUserModal() {
             var uibModalInstance = $uibModal.open({
                 animation: true,

@@ -129,7 +129,7 @@
 			 <div class="task-tag">
 			    <ul class="tags">
 				  <li class="tag-task" ng-repeat="user in taskItem.users">@{{user.userName}} <a href="#" ng-click="deleteUserFromProject(user.id,taskItem)"><img src="assets/img/cross-tag.png"></a></li>
-				  <li><a ng-click="getAllUsersOfProject(taskItem);" href="#"><img src="assets/img/add-tag.png" class="tag-img"></a></li>
+				  <li><a ng-click="getUsersToBeAddedToTask(taskItem);" href="#"><img src="assets/img/add-tag.png" class="tag-img"></a></li>
 				</ul>
 			 </div>
 			 

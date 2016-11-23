@@ -291,5 +291,31 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
         });
 
         return deferred.promise;
+   };
+   
+   
+   
+   
+   
+   this.getUsersToBeAddedToTask=function(taskItemId){
+	   	 var deferred = $q.defer();
+	   	 $http(
+	                {
+	                    method: 'GET',
+	                    url: $rootScope.baseUrl
+	                            + 'api/v1/task/taskItems/'+taskItemId+'/toAddUsers',
+	                    headers: {
+	                        'Content-Type': 'application/json'
+	                    }
+
+	                }).success(function (response, status, headers, config) {
+
+	            deferred.resolve(response);
+	        }).error(function (response) {
+	            deferred.reject(response);
+	        });
+
+	        return deferred.promise;
+	      
    }
 });
