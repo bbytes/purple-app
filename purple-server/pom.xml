@@ -99,7 +99,7 @@
 		<dependency>
 			<groupId>org.springframework.social</groupId>
 			<artifactId>spring-social-slack</artifactId>
-			<version>1.0.0-RELEASE</version>
+			<version>1.0.1-RELEASE</version>
 		</dependency>
 
 		<dependency>
