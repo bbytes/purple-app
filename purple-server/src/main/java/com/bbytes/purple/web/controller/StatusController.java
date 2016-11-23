@@ -139,7 +139,7 @@ public class StatusController {
 		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers() == null ? "" : status.getBlockers());
 
 		for (User mentionUser : status.getMentionUser()) {
-			notificationService.sendSlackMessage(mentionUser, "Statusnap @mention url ",
+			notificationService.sendSlackMessage(mentionUser, "Statusnap @mention ",
 					statusService.statusSnippetUrl(status, mentionUser));
 		}
 
