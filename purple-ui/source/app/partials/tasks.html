@@ -64,17 +64,21 @@
 	<div class="col span_1_of_2 task-head">
 	  <div class="task-p">TASK LIST</div>
 	  <div class="task-icon">
-	     <img src="assets/img/search.png">&nbsp;
+	     <div class="right-inner-addon style=" style="width: 80%;float: left;margin: 0px 5px;">
+        	<i class="fa fa-search"></i> <input ng-model="searchText" class="form-control" placeholder="Search...">
+   		</div>
 		 <a href="#" ng-click="showTaskListModal()"><img src="assets/img/add-task.png"></a>
 	  </div>
 	</div>
 	
 	<div class="col span_1_of_2 second_col task-head">
 	    <div class="task-p">TASK ITEMS</div>
-	   <div class="task-icon">
-	     <img src="assets/img/search.png">&nbsp;
-		 <a href="#" ng-click="showTaskItemModal()"><img src="assets/img/add-task.png"></a>
-	  </div>
+	     <div class="task-icon" style="width:50%">
+	    	<div class="right-inner-addon style=" style="width: 80%;float: left;margin: 0px 5px;">
+        		<i class="fa fa-search"></i> <input ng-model="searchItem" class="form-control" placeholder="Search...">
+   			</div>
+			 <a href="#" ng-click="showTaskItemModal()"><img src="assets/img/add-task.png"></a>
+		</div>
 	</div>
 	
 	
@@ -85,7 +89,7 @@
 				ng-show="taskLists.length>0">
 				<li ng-class="{'selectedtl':$index == selectedTLIndx}"
 					role="menu" aria-labelledby="dropdownMenu"
-					ng-repeat="taskList in taskLists" class="task-list">
+					ng-repeat="taskList in taskLists | filter:searchText" class="task-list">
 					<div ng-click="loadTaskItems(taskList,$index)" style="margin-bottom: 30px;">
 						
 						<p class="t-head">{{taskList.name}}</p> 
@@ -114,7 +118,7 @@
 	</div>
 	
 	<div class="col span_1_of_2 second_col_task" style="padding:0;">
-	    <div class="task-list-group-right project-nav"  ng-repeat="taskItem in taskItemsLists">
+	    <div class="task-list-group-right project-nav"  ng-repeat="taskItem in taskItemsLists|filter:searchItem">
 		  <div  ng-show="taskItemsLists.length>0">
 		     <p class="t-head">{{taskItem.name}}</p>
 			<!-- <p>{{taskItem.state}}</p> -->
