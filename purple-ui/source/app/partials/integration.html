@@ -16,25 +16,25 @@
             <div class="intergration-wrapper">
                 <h3>Connect to JIRA to Fetch Project and User Information</h3>
                 <hr />
-				<div class="col-md-12">
-				   <div class="row">
-				      <ul class="connection-status">
-					      <li>Connection Status : </li>
-						  <li ng-show="isOffline"><span style="color:red"><!--<img src="assets/img/offline.png" style="width:18px;"> --> Disconnected </span> </li>
-						  <li ng-show="isConnected"><span style="color:green"> <!--<img src="assets/img/connect.png" style="width:18px;"> --> Connected </span></li>
-						  <li>&nbsp;</li>
-						  <li>&nbsp;</li>
-						  <li><a href="" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected" tooltips tooltip-template="Connect" tooltip-side="top"><img src="assets/img/disconnect.gif" style="width:18px;"> </a></li>
-						  
-						  <li><a href="" ng-click="disconnectJIRAConnection()" ng-show="isConnected" tooltips tooltip-template="Disconnect" tooltip-side="top"><img src="assets/img/connect.gif" style="width:18px;"> </a></li>
-                       </ul>                       
-					   
-				   </div>
-				</div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <ul class="connection-status">
+                            <li>Connection Status : </li>
+                            <li ng-show="isOffline"><span style="color:red"><!--<img src="assets/img/offline.png" style="width:18px;"> --> Disconnected </span> </li>
+                            <li ng-show="isConnected"><span style="color:green"> <!--<img src="assets/img/connect.png" style="width:18px;"> --> Connected </span></li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
+                            <li><a href="" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected" tooltips tooltip-template="Connect" tooltip-side="top"><img src="assets/img/disconnect.gif" style="width:18px;"> </a></li>
+
+                            <li><a href="" ng-click="disconnectJIRAConnection()" ng-show="isConnected" tooltips tooltip-template="Disconnect" tooltip-side="top"><img src="assets/img/connect.gif" style="width:18px;"> </a></li>
+                        </ul>                       
+
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-4">
-                       
-                       <!-- <button class="btn btn-default status-submit" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected"><img src="../../assets/img/icon-jira-logo.png" class="jira" /> CONNECT</button> -->
+
+                        <!-- <button class="btn btn-default status-submit" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected"><img src="../../assets/img/icon-jira-logo.png" class="jira" /> CONNECT</button> -->
 
                         <button class="btn btn-default status-submit after" ng-click="syncJiraProject()" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true" ></i> Sync Project</button>
 
@@ -73,68 +73,88 @@
         </div>
 
         <div class="{{activeTabClass}}" ng-show="mode === 'slack'">
+
             <div class="intergration-wrapper">
-			 <h3>Connect to SLACK to Fetch Project and User Information</h3>
+                <h3>Connect to SLACK to receive notification</h3>
                 <hr />
-               
-                    <div class="col-md-4">
-					  <div class="row">
-                        <form action="{{slackUrl}}" method="post" ng-hide="isSlackConnect">
-                             
-                                <input type="hidden" name="scope" value="users.profile:read,users:read,channels:read,channels:write,im:read,im:write,chat:write:user,chat:write:bot" />
-                                <button class="btn btn-default status-submit" style="width:90%;"><img src="../../assets/img/slack-icon.png" class="jira" style="width:20px;" /> Add to Slack</button>
-                            
-                        </form>
-                     </div>
-					</div>
-                    <div class="col-md-8">
-                        <div class="connected" ng-show="isSlackConnect"><p>Connected</p></div>
-                        <div class="offline" ng-hide="isSlackConnect"><p>Offline</p></div>
-                        <div  ng-show="isSlackConnect"> 
-                            <button class="btn btn-default status-submit after" ng-click="disconnectSlackConnection()"><i class="fa fa-plug" aria-hidden="true"></i> Disconnect Slack</button>
-                        </div>
-                        <!--  commenting channel drop-down since its not required as of now  -->
-                        <!--  <div class="col-md-4"> 
-                             
-                                                    <select class="form-control" ng-model="selectedChannel">	
-                                                         <option value="">--- Select Channel ---</option>
-                                                         <option ng-repeat="channel in channelList" value="{{channel.id}}" >{{channel.name}}</option>
-                                                     </select>
-                         </div>
-                         <div class="row"> 
-                             <input type="submit" value="Set Channel" class="btn btn-default" ng-click="setChannel()" data-toggle="collapse" data-target="#intergration-form">
-                         </div>-->
+                <div class="col-md-12">
+                    <div class="row">
+
+                        <ul class="connection-status">
+                            <li>Connection Status : </li>
+                            <li ng-hide="isSlackConnect"><span style="color:red"><!--<img src="assets/img/offline.png" style="width:18px;"> --> Disconnected </span> </li>
+                            <li ng-show="isSlackConnect"><span style="color:green"> <!--<img src="assets/img/connect.png" style="width:18px;"> --> Connected </span></li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
+                            <li><form action="{{slackUrl}}" method="post" ng-hide="isSlackConnect">
+                                    <input type="hidden" name="scope" value="users.profile:read,users:read,channels:read,channels:write,im:read,im:write,chat:write:user,chat:write:bot" />
+                                    <button href="" tooltips tooltip-template="Connect" tooltip-side="top"><img src="assets/img/disconnect.gif" style="width:18px;"> </button>
+                                </form></li>
+                            <li><a href="" ng-click="disconnectSlackConnection()" ng-show="isSlackConnect" tooltips tooltip-template="Disconnect" tooltip-side="top"><img src="assets/img/connect.gif" style="width:18px;"> </a></li>
+                        </ul>                       
+
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="{{activeTabClass}}" ng-show="mode === 'hipchat'">
-            <div class="intergration-wrapper">
-                <img src="../../assets/img/coming-soon.png" />
-            </div>
-        </div>
+                <!-- <div class="col-md-4">
+                    <div class="row">
+                        <form action="{{slackUrl}}" method="post" ng-hide="isSlackConnect">
 
+                            <input type="hidden" name="scope" value="users.profile:read,users:read,channels:read,channels:write,im:read,im:write,chat:write:user,chat:write:bot" />
+                            <button class="btn btn-default status-submit" style="width:90%;"><img src="../../assets/img/slack-icon.png" class="jira" style="width:20px;" /> Add to Slack</button>
 
-        <div class="{{activeTabClass}}" ng-show="mode === 'github'">
-            <div class="intergration-wrapper">
-                <img src="../../assets/img/coming-soon.png" />
-                <!--		below code commented because from angular side integration is pending 	 
-                <form action="/social/github" method="post">
-                                                <button type="submit">Connect to Github</button>
-                                        </form>-->
-            </div>
-        </div>
-
-
-        <div class="{{activeTabClass}}" ng-show="mode === 'bit-bucket'">
-            <div class="intergration-wrapper">
-                <img src="../../assets/img/coming-soon.png" />
-                <!--            <img src="../../assets/img/coming-soon.png" />
-                <form action="/social/bitbucket" method="post">
-                                <button type="submit">Connect to Bitbucket</button>
-                            </form>-->
+                        </form>
+                    </div>
+                </div> 
+                <div class="offline" ng-hide="isSlackConnect"><p>Offline</p></div> -->
+                <!--                <div class="col-md-8">
+                                    <div class="connected" ng-show="isSlackConnect"><p>Connected</p></div>
+                
+                                    <div  ng-show="isSlackConnect"> 
+                                        <button class="btn btn-default status-submit after" ng-click="disconnectSlackConnection()"><i class="fa fa-plug" aria-hidden="true"></i> Disconnect Slack</button>
+                                    </div>
+                                      commenting channel drop-down since its not required as of now  
+                                     <div class="col-md-4"> 
+                                         
+                                                                <select class="form-control" ng-model="selectedChannel">	
+                                                                     <option value="">--- Select Channel ---</option>
+                                                                     <option ng-repeat="channel in channelList" value="{{channel.id}}" >{{channel.name}}</option>
+                                                                 </select>
+                                     </div>
+                                     <div class="row"> 
+                                         <input type="submit" value="Set Channel" class="btn btn-default" ng-click="setChannel()" data-toggle="collapse" data-target="#intergration-form">
+                                     </div>
+                                </div>-->
             </div>
         </div>
     </div>
+
+    <div class="{{activeTabClass}}" ng-show="mode === 'hipchat'">
+        <div class="intergration-wrapper">
+            <img src="../../assets/img/coming-soon.png" />
+        </div>
+    </div>
+
+
+    <div class="{{activeTabClass}}" ng-show="mode === 'github'">
+        <div class="intergration-wrapper">
+            <img src="../../assets/img/coming-soon.png" />
+            <!--		below code commented because from angular side integration is pending 	 
+            <form action="/social/github" method="post">
+                                            <button type="submit">Connect to Github</button>
+                                    </form>-->
+        </div>
+    </div>
+
+
+    <div class="{{activeTabClass}}" ng-show="mode === 'bit-bucket'">
+        <div class="intergration-wrapper">
+            <img src="../../assets/img/coming-soon.png" />
+            <!--            <img src="../../assets/img/coming-soon.png" />
+            <form action="/social/bitbucket" method="post">
+                            <button type="submit">Connect to Bitbucket</button>
+                        </form>-->
+        </div>
+    </div>
+</div>
 </div>

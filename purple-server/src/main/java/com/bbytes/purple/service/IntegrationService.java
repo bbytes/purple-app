@@ -134,7 +134,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 						if (roleActor.isUser()) {
 							net.rcarz.jiraclient.User userFromJira = roleActor.getUser();
 							net.rcarz.jiraclient.User fullUser = jira.getUser(userFromJira.getName());
-							if (fullUser != null) {
+							if (fullUser != null && fullUser.isActive()) {
 								User user = new User(fullUser.getDisplayName(), fullUser.getEmail().toLowerCase());
 								projectUserList.add(user);
 							}

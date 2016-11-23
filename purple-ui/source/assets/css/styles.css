@@ -4644,3 +4644,8 @@ tabs-left, .tabs-right {
     cursor:text;
 	-webkit-transition:width 0.5s ease-in-out;
 }
+
+.connection-status button{
+    background:transparent;
+    border:none;
+}
