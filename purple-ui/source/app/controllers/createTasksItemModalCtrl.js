@@ -117,4 +117,11 @@ angular.module('rootApp').controller(
 			$scope.openDp = function() {
 				$scope.popup.opened = true;
 			};
+			$scope.getProjectName = function(taskList){
+				tasksService.getProjectName(taskList).then(function(response){
+					if(response.success){
+						return response.data;
+					}
+				});
+			}
 		});

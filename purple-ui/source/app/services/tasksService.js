@@ -318,4 +318,25 @@ angular.module('rootApp').service('tasksService', function ($rootScope, $http, $
 	        return deferred.promise;
 	      
    }
+   this.getProjectName=function(taskList){
+	   var deferred = $q.defer();
+	   	 $http(
+	                {
+	                    method: 'GET',
+	                    url: $rootScope.baseUrl
+	                            + 'api/v1/task/taskList/'+taskList.taskListId+'/projectName',
+	                    headers: {
+	                        'Content-Type': 'application/json'
+	                    }
+
+	                }).success(function (response, status, headers, config) {
+
+	            deferred.resolve(response);
+	        }).error(function (response) {
+	            deferred.reject(response);
+	        });
+
+	        return deferred.promise;
+
+   }
 });

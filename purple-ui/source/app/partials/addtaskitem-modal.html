@@ -1,6 +1,7 @@
 <div class="modal-header header-back clearfix" style="padding:5px;">
-	<h4 class="modal-title" style="float:left; margin-left:10px;">{{title}}</h4><br />
-	<h5 class="modal-title"  style="float:left; margin-left:10px; color:#ccc;">{{taskList.name }}</h5>
+	<h4 class="modal-title" style="float:left; margin-left:10px;">{{title}}</h4><br />	
+	<h5 class="modal-title"  style="float:left; margin-left:10px; color:#ccc;">{{taskList.projectName}}/</h5>
+	<h5 class="modal-title"  style="float:left; color:#ccc;">{{taskList.name }}</h5>
 
 	<a class="pull-right glyphicon glyphicon-remove icon-clear"
 		ng-click="cancel()"></a>
@@ -49,11 +50,10 @@
 					<div class="col-md-12">
 			         <div class="row">
 					   <div class="form-group" ng-init="getAllUsersOfProject();">
-						<label for="comment" class="settings">ADD USERS</label> 
+						<label for="comment" class="settings">USERS</label> 
 						 <select
-							chosen="projectUsers" ng-model="taskItem.userIds"
+							chosen="projectUsers" ng-model="taskItem.userIds" data-placeholder="Add Users"
 							id="usersDropdown" multiple="multiple" style="height: 150px">
-							<option value="">Select users</option>
 							<option ng-repeat="user in projectUsers" value="{{user.id}}">{{user.userName}}</option>
 						</select>
 					  </div>

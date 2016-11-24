@@ -544,6 +544,7 @@ public class DataModelToDTOConversionService {
 		taskListDto.setSpendHours(taskList.getSpendHours());
 		taskListDto.setEstimatedHours(taskList.getEstimatedHours());
 		taskListDto.setProjectId(taskList.getProject().getProjectId());
+		taskListDto.setProjectName(taskList.getProject().getProjectName());
 		taskListDto.setTaskItems(convertTaskItem(new ArrayList<>(taskList.getTaskItems())));
 		return taskListDto;
 	}

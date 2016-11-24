@@ -15,6 +15,8 @@ public class TaskListDTO implements Serializable {
 	private String name;
 
 	private String projectId;
+	
+	private String projectName;
 
 	private double spendHours;
 

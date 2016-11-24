@@ -379,5 +379,11 @@ public class TaskController {
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, usersDto);
 		return response;
 	}
-
+	@RequestMapping(value = "api/v1/task/taskList/{taskListId}/projectName", method = RequestMethod.GET)
+	public RestResponse getProjectNameForTaskList(@PathVariable String taskListId) {
+		TaskList taskList = taskListService.findOne(taskListId);
+		String projectName = taskList.getProject().getProjectName();
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, projectName);
+		return response;
+	}
 }
