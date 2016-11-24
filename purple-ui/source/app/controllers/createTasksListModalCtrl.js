@@ -27,11 +27,14 @@ angular.module('rootApp').controller('createTasksListModalCtrl',
 				console.log("createTaskList");
 				if(validateTaskList(taskList)){
 					tasksService.createTaskList(taskList).then(function(response) {
-						if($scope.selectedProject=="All"||response.data.projectId==$scope.selectedProject.projectId)
+						if($scope.selectedProject=="All"||response.data.projectId==$scope.selectedProject.projectId){
 							if($scope.taskLists==null)
 								$scope.taskLists=response.data;
 							else
 								$scope.taskLists.push(response.data);
+							if($scope.taskLists.length==1)
+								$rootScope.$broadcast('FIRST_TL_ADDED', response.data);
+						}
 					});
 					$uibModalInstance.close($scope.selection);
 				}

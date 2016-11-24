@@ -26,6 +26,10 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
             getTaskListforId($scope.taskList.taskListId);
             loadTaskItemsForList($scope.taskList); 
           });
+        $scope.$on('FIRST_TL_ADDED', function (event, data) {
+            console.log("FIRST_TL_ADDED "+ data);
+            $scope.taskList=$scope.taskLists[0];
+          });        
     });
 
     $scope.initTasks = function () {
