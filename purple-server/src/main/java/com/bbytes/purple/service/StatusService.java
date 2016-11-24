@@ -68,6 +68,9 @@ public class StatusService extends AbstractService<Status, String> {
 	private TaskItemService taskItemService;
 
 	@Autowired
+	private TaskListService taskListService;
+
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -417,6 +420,7 @@ public class StatusService extends AbstractService<Status, String> {
 		Matcher mentionBlockerOnMatcher, taskListBlockerOnMatcher = null;
 
 		Map<String, List<Object>> statusTaskEventMap = new LinkedHashMap<String, List<Object>>();
+		List<Double> totalTaskItemsHours = new ArrayList<Double>();
 
 		String mentionRegexPattern = GlobalConstants.MENTION_REGEX_PATTERN;
 		String taskListRegexPattern = GlobalConstants.TASKLIST_REGEX_PATTERN;
@@ -479,11 +483,13 @@ public class StatusService extends AbstractService<Status, String> {
 							statusTaskEventMap.put("taskItem", taskItemList);
 						}
 						taskItem.addSpendHours(spendHoursOnTaskFromStatus);
+						taskItem.getTaskList().addSpendHours(spendHoursOnTaskFromStatus);
 					} else {
 						taskItem = updateStatusTaskEvent(statusId, spendHoursOnTaskFromStatus, taskItem, loggedInUser);
 					}
 					taskItem.setState(TaskState.IN_PROGRESS);
 					taskItem = taskItemService.save(taskItem);
+					taskListService.save(taskItem.getTaskList());
 				}
 			}
 		}
@@ -604,6 +610,9 @@ public class StatusService extends AbstractService<Status, String> {
 		totalSpendHours = totalSpendHours - statusTaskEventService.findByStatus(findOne(statusId)).getSpendHours();
 		totalSpendHours = totalSpendHours < 0 ? 0 : totalSpendHours;
 		taskItem.setSpendHours(spendHoursOnTaskFromStatus + totalSpendHours);
+		double totalSpendHoursForTask = spendHoursOnTaskFromStatus
+				- statusTaskEventService.findByStatus(findOne(statusId)).getSpendHours();
+		taskItem.getTaskList().addSpendHours(totalSpendHoursForTask);
 		StatusTaskEvent statusTaskEventByStatusAndTaskItem = statusTaskEventService
 				.findByStatusAndTaskItem(statusFromDb, taskItem);
 		// checking statusTaskEvent exist by given statusAndTaskItem, if there

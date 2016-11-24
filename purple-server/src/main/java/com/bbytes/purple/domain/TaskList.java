@@ -163,5 +163,9 @@ public class TaskList implements Comparable<TaskList> {
 		}
 
 	}
+	
+	public void addSpendHours(double spendHours) {
+		this.spendHours = this.spendHours + spendHours;
+	}
 
 }
