@@ -95,7 +95,7 @@
 				<li ng-class="{'selectedtl':$index == selectedTLIndx}"
 					role="menu" aria-labelledby="dropdownMenu"
 					ng-repeat="taskList in taskLists | filter:searchText" class="task-list">
-					<div ng-click="loadTaskItems(taskList,$index)" style="margin-bottom: 30px;">
+					<div ng-click="loadTaskItems(taskList,$index)">
 						
 						<p class="t-head">{{taskList.name}}</p> 
 						<p>{{taskList.spendHours}} Hrs of {{taskList.estimatedHours}} Hrs</p> 
@@ -105,12 +105,14 @@
 						  <img src="assets/img/bar-graph.png">
 						</div> -->
 						
-						<div class="task-list-icon">
-						   <a ng-click="editTaskList(taskList);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a>
-						   &nbsp;
-							<a ng-click="deleteTaskList(taskList);" confirm="Are you sure you want to delete the task list?"><img src="assets/img/delete-task.png" tooltips tooltip-template="Delete" tooltip-side="top"><span></span></a>
+						<ul class="task-list-icon nav">
+						  
+							<li class="navbar-right"><a ng-click="deleteTaskList(taskList);" confirm="Are you sure you want to delete the task list?"><img src="assets/img/delete-task.png" tooltips tooltip-template="Delete" tooltip-side="top"><span></span></a></li>
+							
+							<li class="navbar-right"> <a ng-click="editTaskList(taskList);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a></li>
+						  
 						   
-						</div>
+						</ul>
 						
 					</div>
 				</li>
@@ -156,10 +158,7 @@
 				title="Add Users"></a> -->
 				
 				<ul class="task-bottom-icon nav">
-				   
-					<li class="navbar-right">&nbsp;</li>
-				  
-				   <li class="navbar-right">&nbsp;</li>
+				
 				   <li class="navbar-right"><a href="#" ng-click="deleteTaskItem(taskItem)" confirm="Are you sure you want to delete the task?" tooltips tooltip-template="Delete" tooltip-side="top"><img src="assets/img/delete-task.png"><span></span></a></li>
 				   
 				  <li class="navbar-right"><a href="#" ng-click="editTaskItem(taskItem);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a></li>
