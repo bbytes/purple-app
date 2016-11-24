@@ -1,7 +1,9 @@
 package com.bbytes.purple.web.controller;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -130,10 +132,12 @@ public class StatusController {
 
 		final String template = GlobalConstants.MENTION_EMAIL_TEMPLATE;
 		final String subject = loggedInUser.getName() + " " + tagSubject;
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		String postDate = dateFormat.format(status.getDateTime());
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, status.getDateTime());
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.WORKED_ON, status.getWorkedOn() == null ? "" : status.getWorkedOn());
 		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn() == null ? "" : status.getWorkingOn());
 		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers() == null ? "" : status.getBlockers());
