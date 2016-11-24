@@ -100,16 +100,16 @@
 						<p class="t-head">{{taskList.name}}</p> 
 						<p>{{taskList.spendHours}} Hrs of {{taskList.estimatedHours}} Hrs</p> 
 						<p>{{taskList.taskItems.length}} tasks {{selectedState.value}}</p>
-						 
+					</div> 
 						<!-- <div class="graph-icon">
 						  <img src="assets/img/bar-graph.png">
 						</div> -->
-						
+					<div>
 						<ul class="task-list-icon nav">
 						  
-							<li class="navbar-right"><a ng-click="deleteTaskList(taskList);" confirm="Are you sure you want to delete the task list?"><img src="assets/img/delete-task.png" tooltips tooltip-template="Delete" tooltip-side="top"><span></span></a></li>
+							<li class="navbar-right" role="button"><a  ng-click="deleteTaskList(taskList);" confirm="Are you sure you want to delete the task list?"><img src="assets/img/delete-task.png" tooltips tooltip-template="Delete" tooltip-side="top"><span></span></a></li>
 							
-							<li class="navbar-right"> <a ng-click="editTaskList(taskList);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a></li>
+							<li class="navbar-right" role="button"> <a  ng-click="editTaskList(taskList);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a></li>
 						  
 						   
 						</ul>
