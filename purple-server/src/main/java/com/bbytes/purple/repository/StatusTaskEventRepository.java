@@ -18,7 +18,7 @@ public interface StatusTaskEventRepository extends MongoRepository<StatusTaskEve
 
 	List<StatusTaskEvent> findByTaskItem(TaskItem taskItem);
 
-	StatusTaskEvent findByStatus(Status status);
+	List<StatusTaskEvent> findByStatus(Status status);
 
 	StatusTaskEvent findByStatusAndTaskItem(Status status, TaskItem taskItem);
 

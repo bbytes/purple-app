@@ -41,7 +41,7 @@ public class StatusTaskEventService extends AbstractService<StatusTaskEvent, Str
 		return statusTaskEventRepository.findByTaskItem(taskItem);
 	}
 
-	public StatusTaskEvent findByStatus(Status status) {
+	public List<StatusTaskEvent> findByStatus(Status status) {
 		return statusTaskEventRepository.findByStatus(status);
 	}
 

@@ -607,12 +607,12 @@ public class StatusService extends AbstractService<Status, String> {
 		for (StatusTaskEvent statusTaskEvent : statusTaskEventList) {
 			totalSpendHours = totalSpendHours + statusTaskEvent.getSpendHours();
 		}
-		totalSpendHours = totalSpendHours - statusTaskEventService.findByStatus(findOne(statusId)).getSpendHours();
-		totalSpendHours = totalSpendHours < 0 ? 0 : totalSpendHours;
+		totalSpendHours = totalSpendHours
+				- statusTaskEventService.findByStatusAndTaskItem(findOne(statusId), taskItem).getSpendHours();
 		taskItem.setSpendHours(spendHoursOnTaskFromStatus + totalSpendHours);
-		double totalSpendHoursForTask = spendHoursOnTaskFromStatus
-				- statusTaskEventService.findByStatus(findOne(statusId)).getSpendHours();
-		taskItem.getTaskList().addSpendHours(totalSpendHoursForTask);
+		double totalSpendHoursToTaskList = spendHoursOnTaskFromStatus
+				- statusTaskEventService.findByStatusAndTaskItem(findOne(statusId), taskItem).getSpendHours();
+		taskItem.getTaskList().addSpendHours(totalSpendHoursToTaskList);
 		StatusTaskEvent statusTaskEventByStatusAndTaskItem = statusTaskEventService
 				.findByStatusAndTaskItem(statusFromDb, taskItem);
 		// checking statusTaskEvent exist by given statusAndTaskItem, if there

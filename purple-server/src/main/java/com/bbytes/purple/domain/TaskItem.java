@@ -112,5 +112,10 @@ public class TaskItem implements Comparable<TaskItem> {
 
 		this.spendHours = this.spendHours + spendHours;
 	}
+	
+	public void removeSpendHours(double spendHours) {
+
+		this.spendHours = this.spendHours - spendHours;
+	}
 
 }
