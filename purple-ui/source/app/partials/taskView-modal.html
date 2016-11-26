@@ -5,58 +5,58 @@
 </div>
 <form name="taskViewForm" role="form">
     <div class="modal-body data-row-body">
-	 <div class="right-inner-addon " style="width:30%; margin-bottom:20px;">
+        <div class="right-inner-addon " style="width:30%; margin-bottom:20px;">
             <i class="fa fa-search"></i> <input ng-model="searchText"
                                                 class="form-control" placeholder="Search...">
         </div>
-	<div class="table">
-    <div class="rowtab header">
-      <div class="cell">
-        Task List Name
-      </div>
-      <div class="cell">
-        Task Item Name
-      </div>
-      <div class="cell">
-        Description
-      </div>
-      <div class="cell">
-        Spend Hours
-      </div>
-	  <div class="cell">
-        Action
-      </div>
-    </div>
-    
-   
-    <div class="rowtab" ng-repeat="task in taskList| filter:searchText">
-      <div class="cell">
-        {{task.taskListName}}
-      </div>
-      <div class="cell">
-        {{task.taskItemName}}
-      </div>
-      <div class="cell" style="width:350px;">
-        {{task.desc}}
-      </div>
-      <div class="cell">
-         <select class="form-control" ng-model="selectedAction" ng-change="selectAction(selectedAction, $index, task, hours)">	
-			<option value="">--- Select Action ---</option>
-			<option value="workedOn">Add to Worked On</option>
-			<option value="workingOn">Add to Working On</option>
-			<option value="blockers">Add to Blockers</option>
-		</select>
-      </div>
-	  <div class="cell">
-        <select chosen="selectables" ng-model="hours" id="hoursDropdown"  ng-disabled="selectedAction !== 'workedOn'" ng-change="updateHours(selectedAction, $index, task, hours)">
-			<option value="">Hrs</option>
-			<option ng-repeat="hr in hoursList" value="{{hr.id}}" >{{hr.id}}</option>
-		</select>
-      </div>
-    </div>
-    
-  </div>
-	
+        <div class="table">
+            <div class="rowtab header">
+                <div class="cell">
+                    Task Item
+                </div>
+                <div class="cell">
+                    Task List
+                </div>
+                <div class="cell">
+                    Description
+                </div>
+                <div class="cell">
+                    Spend Hours
+                </div>
+                <div class="cell">
+                    Action
+                </div>
+            </div>
+
+
+            <div class="rowtab" ng-repeat="task in taskList| filter:searchText">
+                <div class="cell">
+                    {{task.taskItemName}}
+                </div>
+                <div class="cell">
+                    {{task.taskListName}}
+                </div>
+                <div class="cell" style="width:350px;">
+                    {{task.desc}}
+                </div>
+                <div class="cell">
+                    <select class="form-control" ng-model="selectedAction" ng-change="selectAction(selectedAction, $index, task, hours)">	
+                        <option value="">--- Select Action ---</option>
+                        <option value="workedOn">Add to Worked On</option>
+                        <option value="workingOn">Add to Working On</option>
+                        <option value="blockers">Add to Blockers</option>
+                    </select>
+                </div>
+                <div class="cell">
+                    <select chosen="selectables" ng-model="hours" id="hoursDropdown"  ng-disabled="selectedAction !== 'workedOn'" ng-change="updateHours(selectedAction, $index, task, hours)">
+                        <option value="">Hrs</option>
+                        <option ng-repeat="hr in hoursList" value="{{hr.id}}" >{{hr.id}}</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
 
     </div>
 

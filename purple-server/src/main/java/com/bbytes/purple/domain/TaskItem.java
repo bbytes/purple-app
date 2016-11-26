@@ -115,9 +115,13 @@ public class TaskItem implements Comparable<TaskItem> {
 		this.spendHours = this.spendHours + spendHours;
 	}
 	
-	public boolean isJiraIssueTaskItem() {
-		return jiraIssueKey == null ? false : true;
+	public void removeSpendHours(double spendHours) {
+
+		this.spendHours = this.spendHours - spendHours;
 	}
 
+		public boolean isJiraIssueTaskItem() {
+		return jiraIssueKey == null ? false : true;
+	}
 
 }
