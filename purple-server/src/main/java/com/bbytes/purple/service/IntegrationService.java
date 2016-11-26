@@ -3,6 +3,7 @@ package com.bbytes.purple.service;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +35,8 @@ import com.bbytes.purple.repository.SocialConnectionRepository;
 import com.bbytes.purple.social.MongoConnectionTransformers;
 import com.bbytes.purple.utils.ErrorHandler;
 
+import net.rcarz.jiraclient.Issue;
+import net.rcarz.jiraclient.Issue.SearchResult;
 import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.JiraException;
 import net.rcarz.jiraclient.Role;
@@ -46,9 +49,9 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private IntegrationRepository integrationRepository;
 
-//	@Autowired
-//	private ApplicationContext appContext;
-//	
+	// @Autowired
+	// private ApplicationContext appContext;
+	//
 	@Autowired
 	private SocialConnectionRepository socialConnectionRepository;
 
@@ -111,11 +114,41 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		return integration;
 	}
 
-	public List<net.rcarz.jiraclient.Project> syncJiraProjectWithUser(Integration integration) throws JiraException {
+	public List<net.rcarz.jiraclient.Project> getJiraProjects(Integration integration) throws JiraException {
 		JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(), integration.getJiraBasicAuthHeader());
 		JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
 		List<net.rcarz.jiraclient.Project> jiraProjects = jira.getProjects();
 		return jiraProjects;
+	}
+
+	public Map<String, Map<String,List<Issue>>> getJiraProjectWithIssueTypeToIssueList(Integration integration) throws JiraException {
+		JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(), integration.getJiraBasicAuthHeader());
+		JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
+		List<net.rcarz.jiraclient.Project> jiraProjects = jira.getProjects();
+		Map<String, Map<String,List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String,List<Issue>>>();
+		try {
+			for (net.rcarz.jiraclient.Project project : jiraProjects) {
+				Map<String,List<Issue>> issueTypeToIssueList  = new HashMap<>();
+				SearchResult issueResult = jira.searchIssues("project=" + project.getKey());
+				for (Issue issue : issueResult.issues) {
+					List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
+					if(issueList==null){
+						 issueList = new LinkedList<Issue>();
+						 issueTypeToIssueList.put(issue.getIssueType().getName(), issueList);
+					}
+					
+					issueList.add(issue);
+				}
+			
+				
+					
+				projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return projectNameToIssueList;
 	}
 
 	public Map<String, List<User>> getJiraProjectWithUserList(Integration integration) throws JiraException {
@@ -281,7 +314,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	private Slack getSlackApi(User user) {
 		if (user == null)
 			return null;
-//		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
+		// SocialConnectionRepository socialConnectionRepository =
+		// appContext.getBean(SocialConnectionRepository.class);
 		List<SocialConnection> socialConnections = socialConnectionRepository.findByUserIdAndProviderId(user.getEmail(), "slack");
 		if (socialConnections != null && !socialConnections.isEmpty()) {
 			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialConnections.get(0));
@@ -293,7 +327,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private BitBucket getBitBucketApi() {
 		String userId = userService.getLoggedInUserEmail();
-//		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
+		// SocialConnectionRepository socialConnectionRepository =
+		// appContext.getBean(SocialConnectionRepository.class);
 		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, "bitbucket");
 		if (socialCnnections != null && !socialCnnections.isEmpty()) {
 			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialCnnections.get(0));
@@ -305,7 +340,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private GitHub getGithubApi() {
 		String userId = userService.getLoggedInUserEmail();
-//		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
+		// SocialConnectionRepository socialConnectionRepository =
+		// appContext.getBean(SocialConnectionRepository.class);
 		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, "github");
 		if (socialCnnections != null && !socialCnnections.isEmpty()) {
 			Connection<?> connection = mongoConnectionTransformers.toConnection().apply(socialCnnections.get(0));
@@ -333,7 +369,8 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private void deleteConnection(String connectionType) {
 		String userId = userService.getLoggedInUserEmail();
-//		SocialConnectionRepository socialConnectionRepository = appContext.getBean(SocialConnectionRepository.class);
+		// SocialConnectionRepository socialConnectionRepository =
+		// appContext.getBean(SocialConnectionRepository.class);
 		List<SocialConnection> socialCnnections = socialConnectionRepository.findByUserIdAndProviderId(userId, connectionType);
 		if (socialCnnections != null && !socialCnnections.isEmpty()) {
 			socialConnectionRepository.delete(socialCnnections);

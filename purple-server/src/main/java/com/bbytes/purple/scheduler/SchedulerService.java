@@ -271,7 +271,7 @@ public class SchedulerService {
 				boolean flag = true;
 				// iterating all projects of above user
 				for (Project project : projectList) {
-					Set<User> usersFromProject = project.getUser();
+					Set<User> usersFromProject = project.getUsers();
 					// iterating all users of above project to search
 					// manager or ADMIN present
 					for (User userToSendList : usersFromProject) {

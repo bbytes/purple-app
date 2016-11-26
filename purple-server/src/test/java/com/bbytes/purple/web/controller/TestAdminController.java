@@ -280,7 +280,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 		Project project1 = new Project("purple");
 		project1.setOrganization(org);
-		project1.setUser(userList);
+		project1.setUsers(userList);
 		projectService.save(project1);
 
 		String id = project1.getProjectId();
@@ -446,7 +446,7 @@ public class TestAdminController extends PurpleWebBaseApplicationTests {
 
 		Project project1 = new Project("purple");
 		project1.setOrganization(org);
-		project1.setUser(userList);
+		project1.setUsers(userList);
 		projectService.save(project1);
 
 		Project project2 = new Project("reveal");

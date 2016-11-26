@@ -35,6 +35,8 @@ import com.bbytes.purple.service.IntegrationService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.PasswordHashService;
 import com.bbytes.purple.service.ProjectService;
+import com.bbytes.purple.service.TaskItemService;
+import com.bbytes.purple.service.TaskListService;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
@@ -42,6 +44,7 @@ import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.StringUtils;
 import com.bbytes.purple.utils.SuccessHandler;
 
+import net.rcarz.jiraclient.Issue;
 import net.rcarz.jiraclient.Project;
 
 /**
@@ -56,13 +59,18 @@ public class IntegrationController {
 	private static final Logger logger = LoggerFactory.getLogger(IntegrationController.class);
 
 	private static final String BASIC = "Basic ";
+	
+	private static final String JIRA_TASK = "Jira Task ";
 
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private ProjectService projectService;
-
+	
+	@Autowired
+	private TaskListService taskListService;
+	
 	@Autowired
 	private IntegrationService integrationService;
 
@@ -120,8 +128,7 @@ public class IntegrationController {
 		}
 
 		logger.debug("User with email  '" + jiraUsername + "' is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
-				SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return response;
 	}
@@ -163,21 +170,18 @@ public class IntegrationController {
 
 		if (statusCode != 200) {
 			if (statusCode == 502) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
-						ErrorHandler.BAD_GATEWAY);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.BAD_GATEWAY);
 
 				return jiraRestResponse;
 			} else if (statusCode == 401) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
-						ErrorHandler.AUTH_FAILURE);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
 
 				return jiraRestResponse;
 			}
 		}
 
 		logger.debug("User is connected to JIRA successfully");
-		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
-				SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return jiraRestResponse;
 	}
@@ -190,7 +194,7 @@ public class IntegrationController {
 		try {
 			Integration integration = integrationService.getJIRAConnection(loggedInUser);
 
-			List<Project> jiraProjects = integrationService.syncJiraProjectWithUser(integration);
+			List<Project> jiraProjects = integrationService.getJiraProjects(integration);
 
 			integrationService.addJiraProjects(jiraProjects, loggedInUser);
 
@@ -199,8 +203,43 @@ public class IntegrationController {
 		}
 
 		logger.debug("Jira Projects are sync successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
-				SuccessHandler.JIRA_SYNC_PROJECTS_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG, SuccessHandler.JIRA_SYNC_PROJECTS_SUCCESS);
+
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/integration/jira/syncTask", method = RequestMethod.GET)
+	public RestResponse syncJIRATask() throws PurpleException {
+		final String JIRA_ADD_TASK_MSG = "Jira project to jira task are sync successfully";
+		
+		User loggedInUser = userService.getLoggedInUser();
+		try {
+			Integration integration = integrationService.getJIRAConnection(loggedInUser);
+
+			Map<String, Map<String, List<Issue>>> projectToIssueListMap = integrationService
+					.getJiraProjectWithIssueTypeToIssueList(integration);
+			for (String projectName : projectToIssueListMap.keySet()) {
+				com.bbytes.purple.domain.Project projectFromDb = projectService.findByProjectName(projectName);
+				if (projectFromDb != null) {
+					Map<String, List<Issue>> issueTypeToIssueList=	projectToIssueListMap.get(projectName);
+					for (String issueType : issueTypeToIssueList.keySet()) {
+						String taskListName = JIRA_TASK + issueType;
+						List<Issue> issues = issueTypeToIssueList.get(issueType);
+						for (Issue issue : issues) {
+							taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
+						}
+					}
+				}
+			}
+
+		} catch (Throwable e) {
+			e.printStackTrace();
+			throw new PurpleException(e.getMessage(),ErrorHandler.JIRA_TASK_ISSUE_SYNC_FAILED);
+		}
+
+		logger.debug("Jira Projects to task sync done successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_TASK_MSG,
+				SuccessHandler.JIRA_SYNC_PROJECTS_AND_USERS_SUCCESS);
 
 		return response;
 	}
@@ -217,18 +256,20 @@ public class IntegrationController {
 			// checking jira is connected or not
 			Integration integration = integrationService.getJIRAConnection(loggedInUser);
 
+			Map<String, Map<String, List<Issue>>> projectToIssueListMap = integrationService
+					.getJiraProjectWithIssueTypeToIssueList(integration);
+
 			Map<String, List<User>> projectToUsersMap = integrationService.getJiraProjectWithUserList(integration);
 			// iterating project to users map
 			for (Map.Entry<String, List<User>> entry : projectToUsersMap.entrySet()) {
 				// checking project from JIRA is present in db
-				if (projectService.findByProjectName(entry.getKey()) != null) {
+				com.bbytes.purple.domain.Project projectFromDb = projectService.findByProjectName(entry.getKey());
+				if (projectFromDb != null) {
 					// looping all user of project
 					for (User jiraUser : entry.getValue()) {
 						User userFromDB = userService.getUserByEmail(jiraUser.getEmail());
 						if (userFromDB != null) {
 							// fetching user from db and adding to project
-							com.bbytes.purple.domain.Project projectFromDb = projectService
-									.findByProjectName(entry.getKey());
 							projectFromDb.addUser(userFromDB);
 							projectService.save(projectFromDb);
 						} else {
@@ -246,16 +287,13 @@ public class IntegrationController {
 								User savedUser = userService.addUsers(jiraUser);
 								// after saving user to db, this user is getting
 								// added to project
-								com.bbytes.purple.domain.Project projectFromDb = projectService
-										.findByProjectName(entry.getKey());
 								projectFromDb.addUser(savedUser);
 								projectService.save(projectFromDb);
 
 								// since user is getting created, sending
 								// invitation
 								// email to activate account
-								final String xauthToken = tokenAuthenticationProvider
-										.getAuthTokenForUser(savedUser.getEmail(), 720);
+								final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(savedUser.getEmail(), 720);
 								String postDate = dateFormat.format(new Date());
 								List<String> emailList = new ArrayList<String>();
 								emailList.add(savedUser.getEmail());
@@ -264,8 +302,7 @@ public class IntegrationController {
 								emailBody.put(GlobalConstants.USER_NAME, savedUser.getName());
 								emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 								emailBody.put(GlobalConstants.PASSWORD, generatePassword);
-								emailBody.put(GlobalConstants.ACTIVATION_LINK,
-										baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
+								emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
 
 								notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
 							}
@@ -276,9 +313,11 @@ public class IntegrationController {
 			}
 
 		} catch (Throwable e) {
-			e.printStackTrace();
+			throw new PurpleException(e.getMessage(),ErrorHandler.JIRA_USER_SYNC_FAILED);
 		}
 
+		syncJIRATask();
+		
 		logger.debug("Jira Projects to users are sync successfully");
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
 				SuccessHandler.JIRA_SYNC_PROJECTS_AND_USERS_SUCCESS);

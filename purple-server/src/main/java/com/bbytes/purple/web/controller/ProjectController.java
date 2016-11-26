@@ -92,7 +92,7 @@ public class ProjectController {
 		for (String i : projectDTO.getUsers()) {
 			usersTobeAdded.add(userService.getUserByEmail(i));
 		}
-		addProject.setUser(usersTobeAdded);
+		addProject.setUsers(usersTobeAdded);
 		Project project = projectService.createProject(addProject, usersTobeAdded);
 
 		String postDate = dateFormat.format(new Date());
@@ -146,7 +146,7 @@ public class ProjectController {
 		for (String i : projectDTO.getUsers()) {
 			usersTobeAdded.add(userService.getUserByEmail(i));
 		}
-		Set<User> usersFromProject = projectService.findByProjectId(projectId).getUser();
+		Set<User> usersFromProject = projectService.findByProjectId(projectId).getUsers();
 
 		List<User> updateUserList = new LinkedList<User>();
 		for (User user : usersTobeAdded) {
@@ -154,7 +154,7 @@ public class ProjectController {
 			if (!usersFromProject.contains(user))
 				updateUserList.add(user);
 		}
-		updateProject.setUser(usersTobeAdded);
+		updateProject.setUsers(usersTobeAdded);
 		Project project = projectService.updateProject(projectId, updateProject);
 
 		String postDate = dateFormat.format(new Date());
@@ -229,7 +229,7 @@ public class ProjectController {
 
 		Project project = projectService.deleteUsers(projectId, emailList);
 
-		logger.debug(project.getUser().size() + "' users are deleted successfully");
+		logger.debug(project.getUsers().size() + "' users are deleted successfully");
 		RestResponse projectReponse = new RestResponse(RestResponse.SUCCESS, project,
 				SuccessHandler.DELETE_STATUS_SUCCESS);
 

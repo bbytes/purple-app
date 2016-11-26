@@ -211,7 +211,7 @@ public class UserService extends AbstractService<User, String> {
 		try {
 			for (String projectId : projectList) {
 				Project project = projectService.findByProjectId(projectId);
-				allUsers.addAll(project.getUser());
+				allUsers.addAll(project.getUsers());
 			}
 
 		} catch (Throwable e) {
@@ -226,7 +226,7 @@ public class UserService extends AbstractService<User, String> {
 		try {
 			for (Project project : projectList) {
 				Project getProject = projectService.findByProjectId(project.getProjectId());
-				allUsers.addAll(getProject.getUser());
+				allUsers.addAll(getProject.getUsers());
 			}
 
 		} catch (Throwable e) {

@@ -93,7 +93,7 @@ public class ProjectService extends AbstractService<Project, String> {
 			try {
 				updateProject = findByProjectId(projectId);
 
-				updateProject.setUser(projectToBeUpdated.getUser());
+				updateProject.setUsers(projectToBeUpdated.getUsers());
 				updateProject.setProjectName(projectToBeUpdated.getProjectName());
 				updateProject = projectRepository.save(updateProject);
 
@@ -113,7 +113,7 @@ public class ProjectService extends AbstractService<Project, String> {
 				throw new PurpleException("Error while adding users in project", ErrorHandler.ADD_USER_FAILED);
 			try {
 				Project getproject = findByProjectId(projectId);
-				getproject.setUser(users);
+				getproject.setUsers(users);
 				project = projectRepository.save(getproject);
 			} catch (Throwable e) {
 				throw new PurpleException(e.getMessage(), ErrorHandler.ADD_USER_FAILED);
@@ -132,14 +132,14 @@ public class ProjectService extends AbstractService<Project, String> {
 		}
 		try {
 			Project userProject = findByProjectId(projectId);
-			Set<User> existUsers = userProject.getUser();
+			Set<User> existUsers = userProject.getUsers();
 			List<User> temp = new ArrayList<User>();
 			for (User user : existUsers) {
 				if (toBeRemoved.contains(user.getEmail()))
 					temp.add(user);
 			}
 			existUsers.removeAll(temp);
-			userProject.setUser(existUsers);
+			userProject.setUsers(existUsers);
 			project = projectRepository.save(userProject);
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_STATUS_FAILED);
@@ -159,7 +159,7 @@ public class ProjectService extends AbstractService<Project, String> {
 
 		Set<User> users = new HashSet<User>();
 		try {
-			users = findByProjectId(projectId).getUser();
+			users = findByProjectId(projectId).getUsers();
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.GET_USER_FAILED);
 		}

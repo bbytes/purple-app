@@ -59,6 +59,14 @@ public class Project {
 		}
 	}
 
+	public Set<User> getUsers() {
+		return this.user;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.user = users;
+	}
+
 	public void addUser(Collection<User> userList) {
 		// clear old user list
 		// removeUser(getUser());

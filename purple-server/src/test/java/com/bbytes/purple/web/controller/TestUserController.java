@@ -98,12 +98,12 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 
 		Project project1 = new Project("web");
 		project1.setOrganization(org);
-		project1.setUser(userList);
+		project1.setUsers(userList);
 		projectService.save(project1);
 
 		Project project2 = new Project("reveal");
 		project2.setOrganization(org);
-		project2.setUser(userList);
+		project2.setUsers(userList);
 		projectService.save(project2);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
@@ -132,10 +132,10 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 		Set<User> userList2 = new HashSet<User>();
 		userList2.add(user2);
 
-		project1.setUser(userList1);
+		project1.setUsers(userList1);
 		projectService.save(project1);
 
-		project2.setUser(userList2);
+		project2.setUsers(userList2);
 		projectService.save(project2);
 
 		List<String> projectList = new ArrayList<String>();
@@ -171,10 +171,10 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 		Set<User> userList2 = new HashSet<User>();
 		userList2.add(user2);
 
-		project1.setUser(userList1);
+		project1.setUsers(userList1);
 		projectService.save(project1);
 
-		project2.setUser(userList2);
+		project2.setUsers(userList2);
 		projectService.save(project2);
 
 		List<String> projectList = new ArrayList<String>();

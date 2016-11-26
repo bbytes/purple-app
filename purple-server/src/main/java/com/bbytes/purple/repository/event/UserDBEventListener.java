@@ -126,7 +126,7 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 		List<Project> projectsToBeSaved = new ArrayList<>();
 		if (user != null && projectListOfUser != null) {
 			for (Project project : projectListOfUser) {
-				project.getUser().remove(user);
+				project.getUsers().remove(user);
 				projectsToBeSaved.add(project);
 			}
 		}

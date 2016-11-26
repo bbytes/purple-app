@@ -75,6 +75,7 @@ public class TaskList implements Comparable<TaskList> {
 	public void addTaskItem(TaskItem taskItem) {
 		taskItems.add(taskItem);
 		taskItem.setTaskList(this);
+		taskItem.setProject(getProject());
 		calculateProperties();
 	}
 
@@ -82,7 +83,7 @@ public class TaskList implements Comparable<TaskList> {
 		taskItems.remove(taskItem);
 		calculateProperties();
 	}
-	
+
 	public void setProject(Project project) {
 		this.project = project;
 		for (TaskItem taskItem : taskItems) {
@@ -163,7 +164,7 @@ public class TaskList implements Comparable<TaskList> {
 		}
 
 	}
-	
+
 	public void addSpendHours(double spendHours) {
 		this.spendHours = this.spendHours + spendHours;
 	}

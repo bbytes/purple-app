@@ -123,6 +123,10 @@ public class ErrorHandler {
 	public static final String FUTURE_DATE_STATUS_EDIT = "future_date_status_edit";
 
 	public static final String JIRA_CONNECTION_FAILED = "jira_connection_failed";
+	
+	public static final String JIRA_USER_SYNC_FAILED = "jira_user_syncfailed";
+	
+	public static final String JIRA_TASK_ISSUE_SYNC_FAILED = "jira_task_issue_sync_failed";
 
 	public static final String DISPOSABLE_EMAIL_DOMAIN = "Email domain is not supported";
 

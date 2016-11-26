@@ -436,17 +436,17 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		userList2.add(user1);
 		userList2.add(user2);
 
-		project.setUser(userList1);
+		project.setUsers(userList1);
 		projectService.save(project);
 
 		Project project1 = new Project("Project1");
 		project1.setOrganization(org);
-		project1.setUser(userList1);
+		project1.setUsers(userList1);
 		projectService.save(project1);
 
 		Project project2 = new Project("Project2");
 		project2.setOrganization(org);
-		project2.setUser(userList2);
+		project2.setUsers(userList2);
 		projectService.save(project2);
 
 		Status status1 = new Status("status1", "status1", 3, new Date());
@@ -502,17 +502,17 @@ public class TestStatusController extends PurpleWebBaseApplicationTests {
 		userList2.add(user1);
 		userList2.add(user2);
 
-		project.setUser(userList1);
+		project.setUsers(userList1);
 		projectService.save(project);
 
 		Project project1 = new Project("Project1");
 		project1.setOrganization(org);
-		project1.setUser(userList1);
+		project1.setUsers(userList1);
 		projectService.save(project1);
 
 		Project project2 = new Project("Project2");
 		project2.setOrganization(org);
-		project2.setUser(userList2);
+		project2.setUsers(userList2);
 		projectService.save(project2);
 
 		Status status1 = new Status("status1", "status1", 3, new Date(10000000));

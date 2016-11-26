@@ -90,7 +90,7 @@ public class TestProjectController extends PurpleWebBaseApplicationTests {
 
 		List<User> userList = userService.getUsersByRole(UserRole.NORMAL_USER_ROLE);
 		Set<User> projectSet = new HashSet<User>(userList);
-		project1.setUser(projectSet);
+		project1.setUsers(projectSet);
 		projectService.save(project1);
 
 		String id = projectService.findByProjectName("purple").getProjectId();
@@ -277,7 +277,7 @@ public class TestProjectController extends PurpleWebBaseApplicationTests {
 		List<User> userListWithNormalRole = userService.getUsersByRole(UserRole.NORMAL_USER_ROLE);
 		Set<User> projectSet = new HashSet<User>(userListWithNormalRole);
 		
-		project1.setUser(projectSet);
+		project1.setUsers(projectSet);
 		projectService.save(project1);
 
 		List<String> userList = new ArrayList<String>();

@@ -114,10 +114,10 @@ public class ProjectRepositoryTest extends PurpleBaseApplicationTests {
 		userRepository.save(user2);
 		List<User> users = userRepository.findAll();
 		Set<User> projectSet = new HashSet<User>(users);
-		proj1.setUser(projectSet);
+		proj1.setUsers(projectSet);
 		projectRepository.save(proj1);
 
-		assertTrue(proj1.getUser().size() > 0);
+		assertTrue(proj1.getUsers().size() > 0);
 
 	}
 

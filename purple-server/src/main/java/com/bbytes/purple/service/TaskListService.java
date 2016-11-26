@@ -7,15 +7,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
+import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.repository.TaskListRepository;
 
+import net.rcarz.jiraclient.Issue;
+
 @Service
 public class TaskListService extends AbstractService<TaskList, String> {
 
 	private TaskListRepository taskListRepository;
+
+	@Autowired
+	private TaskItemService taskItemService;
+	
+	@Autowired
+	private ProjectService projectService;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	public TaskListService(TaskListRepository taskListRepository) {
@@ -25,6 +37,10 @@ public class TaskListService extends AbstractService<TaskList, String> {
 
 	public List<TaskList> findByStateAndUsers(TaskState state, User user) {
 		return taskListRepository.findByStateAndUsers(state, user);
+	}
+
+	public List<TaskList> findByNameAndProject(String tasklistName, Project project) {
+		return taskListRepository.findByNameAndProject(tasklistName, project);
 	}
 
 	public List<TaskList> findByProjectAndStateAndUsers(Project project, TaskState state, User user) {
@@ -83,9 +99,41 @@ public class TaskListService extends AbstractService<TaskList, String> {
 		return taskListRepository.findByDueDateBetweenAndProjectIn(startDate, endDate, projects);
 	}
 
-	public List<TaskList> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate,
-			List<Project> projects, List<User> users) {
+	public List<TaskList> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate, List<Project> projects,
+			List<User> users) {
 		return taskListRepository.findByDueDateBetweenAndProjectInAndUsersIn(startDate, endDate, projects, users);
+	}
+
+	public void addJiraIssueToTaskList(String taskListName, Project project, Issue issue) {
+		TaskList taskList = null;
+		List<TaskList> taskLists = findByNameAndProject(taskListName, project);
+		if (taskLists != null && !taskLists.isEmpty()) {
+			taskList = taskLists.get(0);
+		} else {
+			taskList = new TaskList(taskListName);
+			taskList.setProject(project);
+			save(taskList);
+		}
+
+		TaskItem item = new TaskItem(issue.getSummary(), issue.getDescription(), issue.getTimeEstimate(), issue.getDueDate());
+		taskList.addTaskItem(item);
+		if(issue.getAssignee()!=null && issue.getAssignee().getEmail()!=null){
+			User userAssignee = userService.getUserByEmail(issue.getAssignee().getEmail());
+			project.addUser(userAssignee);
+			item.addUsers(userAssignee);
+		}
+		
+		if(issue.getReporter()!=null && issue.getReporter().getEmail()!=null){
+			User userReporter = userService.getUserByEmail(issue.getReporter().getEmail());
+			project.addUser(userReporter);
+		}
+		
+		item.setTaskItemId(issue.getId());
+		item.setJiraIssueKey(issue.getKey());
+		
+		projectService.save(project);
+		taskItemService.save(item);
+		save(taskList);
 	}
 
 }
