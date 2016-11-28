@@ -16,6 +16,8 @@ public interface TaskItemRepository extends MongoRepository<TaskItem, String> {
 	List<TaskItem> findByState(TaskState state);
 
 	List<TaskItem> findByTaskList(TaskList taskList);
+	
+	List<TaskItem> findByTaskListAndUsers(TaskList taskList,User user);
 
 	List<TaskItem> findByProject(Project project);
 
@@ -47,6 +49,8 @@ public interface TaskItemRepository extends MongoRepository<TaskItem, String> {
 			List<User> user);
 
 	List<TaskItem> findByTaskListAndState(TaskList taskList, TaskState taskState);
+	
+	List<TaskItem> findByTaskListAndStateAndUsers(TaskList taskList, TaskState taskState,User user);
 
 	List<TaskItem> findByProjectAndStateAndUsers(Project project, TaskState taskState, User user);
 

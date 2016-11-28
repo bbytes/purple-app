@@ -27,6 +27,10 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 	public List<TaskItem> findByTaskList(TaskList taskList) {
 		return taskItemRepository.findByTaskList(taskList);
 	}
+	
+	public List<TaskItem> findByTaskListAndUsers(TaskList taskList,User user) {
+		return taskItemRepository.findByTaskListAndUsers(taskList, user);
+	}
 
 	public List<TaskItem> findByState(TaskState state) {
 		return taskItemRepository.findByState(state);
@@ -91,6 +95,10 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 
 	public List<TaskItem> findByTaskListAndState(TaskList taskList, TaskState taskState) {
 		return taskItemRepository.findByTaskListAndState(taskList, taskState);
+	}
+	
+	public List<TaskItem> findByTaskListAndStateAndUsers(TaskList taskList, TaskState taskState,User user) {
+		return taskItemRepository.findByTaskListAndStateAndUsers(taskList, taskState,user);
 	}
 
 	public List<TaskItem> findByProjectAndStateAndUsers(Project project, TaskState taskState, User user) {

@@ -35,7 +35,6 @@ import com.bbytes.purple.service.IntegrationService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.PasswordHashService;
 import com.bbytes.purple.service.ProjectService;
-import com.bbytes.purple.service.TaskItemService;
 import com.bbytes.purple.service.TaskListService;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.service.UserService;
@@ -60,7 +59,7 @@ public class IntegrationController {
 
 	private static final String BASIC = "Basic ";
 	
-	private static final String JIRA_TASK = "Jira Task ";
+	private static final String JIRA_TASK = "Jira ";
 
 	@Autowired
 	private UserService userService;
@@ -315,8 +314,6 @@ public class IntegrationController {
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(),ErrorHandler.JIRA_USER_SYNC_FAILED);
 		}
-
-		syncJIRATask();
 		
 		logger.debug("Jira Projects to users are sync successfully");
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,

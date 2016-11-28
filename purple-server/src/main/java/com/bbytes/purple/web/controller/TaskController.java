@@ -144,7 +144,7 @@ public class TaskController {
 		Project project = null;
 		List<TaskItem> taskItemList = null;
 		if (projectId.equals("All") && state.equals("All"))
-			taskLists = taskListService.findAll();
+			taskLists = taskListService.findByUsers(user);
 		else if (projectId.equals("All") && !state.equals("All")) {
 			taskState = TaskState.valueOf(state);
 			taskItemList = taskItemService.findByStateAndUsers(taskState, user);
@@ -305,13 +305,15 @@ public class TaskController {
 
 	@RequestMapping(value = "/api/v1/task/taskItems/{taskListId}/{state}", method = RequestMethod.GET)
 	public RestResponse getTaskItems(@PathVariable String taskListId, @PathVariable String state) throws PurpleException {
+		User user = userService.getLoggedInUser();
+		
 		List<TaskItem> taskItems;
 		TaskList taskList = taskListService.findOne(taskListId);
 		if (state.equals("All"))
-			taskItems = taskItemService.findByTaskList(taskList);
+			taskItems = taskItemService.findByTaskListAndUsers(taskList,user);
 		else {
 			TaskState taskState = TaskState.valueOf(state);
-			taskItems = taskItemService.findByTaskListAndState(taskList, taskState);
+			taskItems = taskItemService.findByTaskListAndStateAndUsers(taskList, taskState,user);
 		}
 		List<TaskItemDTO> taskItemDtos = dataModelToDTOConversionService.convertTaskItem(taskItems);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDtos);
@@ -365,13 +367,13 @@ public class TaskController {
 			projectUsers = taskItem.getProject().getUsers();
 		else
 			projectUsers = new HashSet<>();
-		
+
 		Set<User> taskItemUsers;
 		if (taskItem.getUsers() != null)
-			 taskItemUsers =taskItem.getUsers();
+			taskItemUsers = taskItem.getUsers();
 		else
-			 taskItemUsers = new HashSet<>();
-		
+			taskItemUsers = new HashSet<>();
+
 		projectUsers.removeAll(taskItemUsers);
 		List<UserDTO> usersDto = dataModelToDTOConversionService.convertUsers(new ArrayList<>(projectUsers));
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, usersDto);

@@ -3,6 +3,7 @@ package com.bbytes.purple.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -524,7 +525,7 @@ public class DataModelToDTOConversionService {
 		return itemDTO;
 	}
 
-	public List<TaskListDTO> convertTaskLists(List<TaskList> taskLists) {
+	public List<TaskListDTO> convertTaskLists(Collection<TaskList> taskLists) {
 		List<TaskListDTO> taskListDtos = new ArrayList<TaskListDTO>();
 		for (TaskList taskList : taskLists) {
 			taskListDtos.add(convertTaskList(taskList));
