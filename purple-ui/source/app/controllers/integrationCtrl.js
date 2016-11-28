@@ -93,6 +93,18 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
         });
     };
 
+    // method is used to sync the JIRA Task and Issues to projects
+    $scope.syncJiraTasksAndIssues = function () {
+
+        integrationService.getJiraTasksAndIssues().then(function (response) {
+            if (response.success) {
+                appNotifyService.success('Tasks and issues to projects synced successfully');
+            }
+        }, function (error) {
+            appNotifyService.error('Error getting JIRA Connection');
+        });
+    };
+
     // method is used to disconnect JIRA Connection
     $scope.disconnectJIRAConnection = function () {
 

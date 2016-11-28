@@ -85,6 +85,26 @@ angular.module('rootApp').service('integrationService', function ($rootScope, $h
         return deferred.promise;
     };
 
+    this.getJiraTasksAndIssues = function () {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/integration/jira/syncTask',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+
     // method is used to delete JIRA connection
     this.deleteJiraIntegration = function () {
 
@@ -103,7 +123,7 @@ angular.module('rootApp').service('integrationService', function ($rootScope, $h
         });
         return deferred.promise;
     };
-    
+
     // method is used to delete SLACK connection
     this.deleteSlackIntegration = function () {
 
