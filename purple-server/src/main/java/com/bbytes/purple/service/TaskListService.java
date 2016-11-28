@@ -127,6 +127,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 			User userReporter = userService.getUserByEmail(issue.getReporter().getEmail());
 			project.addUser(userReporter);
 			item.setOwner(userReporter);
+			taskList.setOwner(userReporter);
 		}
 		
 		item.setTaskItemId(issue.getId());
