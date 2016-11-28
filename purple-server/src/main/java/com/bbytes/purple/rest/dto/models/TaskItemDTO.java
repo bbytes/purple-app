@@ -34,5 +34,7 @@ public class TaskItemDTO implements Serializable {
 	private List<String> userIds = new ArrayList<String>();
 
 	private List<UserDTO> users = new ArrayList<UserDTO>();
+	
+	private String ownerEmail;
 
 }

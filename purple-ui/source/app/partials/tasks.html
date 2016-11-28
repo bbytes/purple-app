@@ -1,189 +1,192 @@
 <a class="tiny button" href="" ng-click="toggle()"><i
-	class="fa fa-list" aria-hidden="true"></i></a>
+        class="fa fa-list" aria-hidden="true"></i></a>
 <div class="taskLeftSidebar" style="width: 22.5%">
-	<div class="theiaStickySidebar">
-		<div class="panel-group" id="accordion" ng-init="initTasks()">
-			<div class="panel panel-default">
-				<div class="panel-heading project-active task-panel">
-					<h4 class="panel-title">
-						<a class="accordion-toggle" data-toggle="collapse"
-							data-target="#collapseOne"> <img src="assets/img/state.png"></i> <span class="task-p">STATE</span></a>
-					</h4>
-				</div>
-				<div id="collapseOne" class="panel-collapse collapse in">
-					<div class="panel-body">
-						<ul class="list-group project-nav">
-							<li ng-class="{'selected':selectedSateIndex ==-1}" role="menu"
-								aria-labelledby="dropdownMenu"><a
-								ng-click="loadStateProjectTasks('All',-1)">All</a></li>
-							<li ng-class="{'selected':$index == selectedSateIndex}"
-								role="menu" aria-labelledby="dropdownMenu"
-								ng-repeat="taskState in taskStates"><a
-								ng-click="loadStateProjectTasks(taskState,$index)">{{taskState.value}}</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading project-active">
-					<h4 class="panel-title">
-						<a class="accordion-toggle" data-toggle="collapse"
-							data-target="#collapseTwo"> <i class="fa fa-file"></i> <span>PROJECTS</span></a>
-					</h4>
-				</div>
+    <div class="theiaStickySidebar">
+        <div class="panel-group" id="accordion" ng-init="initTasks()">
+            <div class="panel panel-default">
+                <div class="panel-heading project-active task-panel">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse"
+                           data-target="#collapseOne"> <img src="assets/img/state.png"></i> <span class="task-p">STATE</span></a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <ul class="list-group project-nav">
+                            <li ng-class="{'selected':selectedSateIndex == -1}" role="menu"
+                                aria-labelledby="dropdownMenu"><a
+                                    ng-click="loadStateProjectTasks('All', -1)">All</a></li>
+                            <li ng-class="{'selected':$index == selectedSateIndex}"
+                                role="menu" aria-labelledby="dropdownMenu"
+                                ng-repeat="taskState in taskStates"><a
+                                    ng-click="loadStateProjectTasks(taskState, $index)">{{taskState.value}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading project-active">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse"
+                           data-target="#collapseTwo"> <i class="fa fa-file"></i> <span>PROJECTS</span></a>
+                    </h4>
+                </div>
 
-				<div id="collapseTwo" class="panel-collapse collapse in">
-					<div class="panel-body">
-						<ul class="list-group project-nav">
-							<li ng-class="{'selected':selectedPjtIndex==-1}" role="menu"
-								aria-labelledby="dropdownMenu"><a
-								ng-click="loadProjectStateTasks('All',-1)">All</a></li>
-							<li ng-class="{'selected':$index == selectedPjtIndex}"
-								role="menu" aria-labelledby="dropdownMenu"
-								ng-repeat="project in userprojects| orderBy:'projectName' | filter:searchProjects">
-								<a ng-click="loadProjectStateTasks(project,$index)">{{project.projectName}}</a>
-							</li>
-							<li
-								ng-show="userprojects.length != 0 && (userprojects | filter:searchProjects).length == 0"
-								class="null-results"><p>
-									No results found for <span
-										style="font-weight: bold; color: #222;">"{{searchProjects}}"</span>
-								</p></li>
-							<li ng-show="userprojects.length == 0" class="null-results"><p>No
-									Projects found</p></li>
-						</ul>
-					</div>
-				</div>
+                <div id="collapseTwo" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <ul class="list-group project-nav">
+                            <li ng-class="{'selected':selectedPjtIndex == -1}" role="menu"
+                                aria-labelledby="dropdownMenu"><a
+                                    ng-click="loadProjectStateTasks('All', -1)">All</a></li>
+                            <li ng-class="{'selected':$index == selectedPjtIndex}"
+                                role="menu" aria-labelledby="dropdownMenu"
+                                ng-repeat="project in userprojects| orderBy:'projectName' | filter:searchProjects">
+                                <a ng-click="loadProjectStateTasks(project, $index)">{{project.projectName}}</a>
+                            </li>
+                            <li
+                                ng-show="userprojects.length != 0 && (userprojects | filter:searchProjects).length == 0"
+                                class="null-results"><p>
+                                    No results found for <span
+                                        style="font-weight: bold; color: #222;">"{{searchProjects}}"</span>
+                                </p></li>
+                            <li ng-show="userprojects.length == 0" class="null-results"><p>No
+                                    Projects found</p></li>
+                        </ul>
+                    </div>
+                </div>
 
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="group task-header">
-	<div class="col span_1_of_2 task-head">
-	  <div class="task-p">TASK LIST</div>
-	  <div class="task-icon search">
-	
-    <input id="search-box" ng-model="searchText" type="text" name="search">
-		<!--
-	     <div class="right-inner-addon style=" style="width: 80%;float: left;margin: 0px 5px;">
-        	<i class="fa fa-search"></i> <input ng-model="searchText" class="form-control" placeholder="Search...">
-   		</div>-->
-		 <a href="#" ng-click="showTaskListModal()"><img src="assets/img/add-task.png" style="width: 22px;"></a>
-	  </div>
-	</div>
-	
-	<div class="col span_1_of_2 second_col task-head">
-	    <div class="task-p">TASK ITEMS</div>
-	     <div class="task-icon search">
-		 <input id="search-box" ng-model="searchItem" type="text" name="search">
-		 <!--
-	    	<div class="right-inner-addon style=" style="width: 80%;float: left;margin: 0px 5px;">
-        		<i class="fa fa-search"></i> <input ng-model="searchItem" class="form-control" placeholder="Search...">
-   			</div> -->
-			 <a href="#" ng-click="showTaskItemModal()"><img src="assets/img/add-task.png" style="width: 22px;"></a>
-		</div>
-	</div>
-	
-	
-	<div class="col span_1_of_2">
-	    <div id="tasksList">
-		   <div class="panel-body">  
-			<ul class="task-list-group project-nav"
-				ng-show="taskLists.length>0">
-				<li ng-class="{'selectedtl':$index == selectedTLIndx}"
-					role="menu" aria-labelledby="dropdownMenu"
-					ng-repeat="taskList in taskLists | filter:searchText" class="task-list">
-					<div ng-click="loadTaskItems(taskList,$index)">
-						
-						<p class="t-head">{{taskList.name}}</p> 
-						<p>{{taskList.spendHours}} Hrs of {{taskList.estimatedHours}} Hrs</p> 
-						<p>{{taskList.taskItems.length}} tasks {{selectedState.value}}</p>
-					</div> 
-						<!-- <div class="graph-icon">
-						  <img src="assets/img/bar-graph.png">
-						</div> -->
-					<div>
-						<ul class="task-list-icon nav">
-						  
-							<li class="navbar-right" role="button"><a  ng-click="deleteTaskList(taskList);" confirm="Are you sure you want to delete the task list?"><img src="assets/img/delete-task.png" tooltips tooltip-template="Delete" tooltip-side="top"><span></span></a></li>
-							
-							<li class="navbar-right" role="button"> <a  ng-click="editTaskList(taskList);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a></li>
-						  
-						   
-						</ul>
-						
-					</div>
-				</li>
-			</ul>
-			<div style="height: 250px; text-align: center; vertical-align: middle; line-height: 250px; color: grey"
-				ng-show="taskLists==null || taskLists.length==0" aria-hidden="false" class="">No task list to show at this time
-			</div>
-		 </div>
-	  </div>	  
-	</div>
-	
-	<div class="col span_1_of_2 second_col_task" style="padding:0;">
-	    <div class="task-list-group-right project-nav"  ng-repeat="taskItem in taskItemsLists|filter:searchItem">
-		  <div  ng-show="taskItemsLists.length>0">
-		     <p class="t-head">{{taskItem.name}}</p>
-			<!-- <p>{{taskItem.state}}</p> -->
-			 <p style="color:#bebebe; font-size:11px;">{{taskItem.spendHours}} Hrs of {{taskItem.estimatedHours}} Hrs</p> 
-			 <p style="color:#bebebe; font-size:11px;">EDC: {{taskItem.dueDate| date:'dd MMM' }}</p> 
-			 <p style="font-size:14px; line-height: 17px;">{{taskItem.desc}}</p>
-			 
-			 <!-- <div class="graph-icon">
-				 <img src="assets/img/bar-graph.png"  style="margin-top: -55px;">
-			 </div> -->
-			 
-			 <div class="task-tag">
-			    <ul class="tags">
-				  <li class="tag-task" ng-repeat="user in taskItem.users">@{{user.userName}} <a href="#" ng-click="deleteUserFromProject(user.id,taskItem)"><img src="assets/img/cross-tag.png"></a></li>
-				  <li><a ng-click="getUsersToBeAddedToTask(taskItem);" href="#"><img src="assets/img/add-tag.png" class="tag-img"></a></li>
-				</ul>
-			 </div>
-			 
-			 
-			 
-			 <!--<span class="alert alert-dismissible"
-				ng-repeat="user in taskItem.users"> <span
-				style="color: #cc95b5">@{{user.userName}}</span> <a
-				class="fa fa-close" style="color: #cc95b5"
-				ng-click="deleteUserFromProject(user.id,taskItem)"
-				role="button"></a>&nbsp
-			</span> <a class="fa fa-plus-circle ng-isolate-scope"
-				style="color: #cc95b5;"
-				ng-click="getAllUsersOfProject(taskItem);" role="button"
-				title="Add Users"></a> -->
-				
-				<ul class="task-bottom-icon nav">
-				
-				   <li class="navbar-right"><a href="#" ng-click="deleteTaskItem(taskItem)" confirm="Are you sure you want to delete the task?" tooltips tooltip-template="Delete" tooltip-side="top"><img src="assets/img/delete-task.png"><span></span></a></li>
-				   
-				  <li class="navbar-right"><a href="#" ng-click="editTaskItem(taskItem);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a></li>
-					<!-- <li> <img src="assets/img/update.png"> <span>Updated</span>&nbsp;&nbsp; </li> -->
-					
-				  <li class="navbar-right" style="padding: 0px"><a ng-show="taskItem.state!='Completed'" href="#" ng-click="markCompleted(taskItem);" 
-				    confirm="Users will not be able to update status for these tasks. Do you still want to mark the task as completed?"><img src="assets/img/mark-read.png"> <span>Mark as completed</span></a></li>
-					
-				</ul>
-				
-				
-				
-		  </div>
-		</div>
-	</div>
+    <div class="col span_1_of_2 task-head">
+        <div class="task-p">TASK LIST</div>
+        <div class="task-icon search">
+
+            <input id="search-box" ng-model="searchText" type="text" name="search">
+            <!--
+         <div class="right-inner-addon style=" style="width: 80%;float: left;margin: 0px 5px;">
+            <i class="fa fa-search"></i> <input ng-model="searchText" class="form-control" placeholder="Search...">
+            </div>-->
+            <a href="#" ng-click="showTaskListModal()"><img src="assets/img/add-task.png" style="width: 22px;"></a>
+        </div>
+    </div>
+
+    <div class="col span_1_of_2 second_col task-head">
+        <div class="task-p">TASK ITEMS</div>
+        <div class="task-icon search">
+            <input id="search-box" ng-model="searchItem" type="text" name="search">
+            <!--
+           <div class="right-inner-addon style=" style="width: 80%;float: left;margin: 0px 5px;">
+                   <i class="fa fa-search"></i> <input ng-model="searchItem" class="form-control" placeholder="Search...">
+                   </div> -->
+            <a href="#" ng-click="showTaskItemModal()"><img src="assets/img/add-task.png" style="width: 22px;"></a>
+        </div>
+    </div>
+
+
+    <div class="col span_1_of_2">
+        <div id="tasksList">
+            <div class="panel-body">  
+                <ul class="task-list-group project-nav"
+                    ng-show="taskLists.length > 0">
+                    <li ng-class="{'selectedtl':$index == selectedTLIndx}"
+                        role="menu" aria-labelledby="dropdownMenu"
+                        ng-repeat="taskList in taskLists| filter:searchText" class="task-list">
+                        <div ng-click="loadTaskItems(taskList, $index)">
+
+                            <p class="t-head">{{taskList.name}}</p>
+                            <p><span >#</span>
+                                {{taskList.projectName}} 
+                            </p>
+                            <p style="margin-top: 15px;">{{taskList.spendHours}} Hrs of {{taskList.estimatedHours}} Hrs</p> 
+                            <p>{{taskList.taskItems.length}} tasks {{selectedState.value}}</p>
+                        </div> 
+                        <!-- <div class="graph-icon">
+                          <img src="assets/img/bar-graph.png">
+                        </div> -->
+                        <div>
+                            <ul class="task-list-icon nav">
+
+                                <li class="navbar-right" role="button"  ng-show="taskList.ownerEmail === loggedInUser"><a  ng-click="deleteTaskList(taskList);" confirm="Are you sure you want to delete the task list?"><img src="assets/img/delete-task.png" tooltips tooltip-template="Delete" tooltip-side="top"><span></span></a></li>
+
+                                <li class="navbar-right" role="button" ng-show="taskList.ownerEmail === loggedInUser"> <a  ng-click="editTaskList(taskList);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a></li>
+
+
+                            </ul>
+
+                        </div>
+                    </li>
+                </ul>
+                <div style="height: 250px; text-align: center; vertical-align: middle; line-height: 250px; color: grey"
+                     ng-show="taskLists == null || taskLists.length == 0" aria-hidden="false" class="">No task list to show at this time
+                </div>
+            </div>
+        </div>	  
+    </div>
+
+    <div class="col span_1_of_2 second_col_task" style="padding:0;">
+        <div class="task-list-group-right project-nav"  ng-repeat="taskItem in taskItemsLists|filter:searchItem">
+            <div  ng-show="taskItemsLists.length > 0">
+                <p class="t-head">{{taskItem.name}}</p>
+                <!-- <p>{{taskItem.state}}</p> -->
+                <p style="color:#bebebe; font-size:11px;">{{taskItem.spendHours}} Hrs of {{taskItem.estimatedHours}} Hrs</p> 
+                <p style="color:#bebebe; font-size:11px;">EDC: {{taskItem.dueDate| date:'dd MMM' }}</p> 
+                <p style="font-size:14px; line-height: 17px;">{{taskItem.desc}}</p>
+
+                <!-- <div class="graph-icon">
+                        <img src="assets/img/bar-graph.png"  style="margin-top: -55px;">
+                </div> -->
+
+                <div class="task-tag">
+                    <ul class="tags">
+                        <li class="tag-task" ng-repeat="user in taskItem.users">@{{user.userName}} <a href="#" ng-click="deleteUserFromProject(user.id, taskItem)"><img src="assets/img/cross-tag.png"></a></li>
+                        <li><a ng-click="getUsersToBeAddedToTask(taskItem);" href="#"><img src="assets/img/add-tag.png" class="tag-img"></a></li>
+                    </ul>
+                </div>
+
+
+
+                <!--<span class="alert alert-dismissible"
+                       ng-repeat="user in taskItem.users"> <span
+                       style="color: #cc95b5">@{{user.userName}}</span> <a
+                       class="fa fa-close" style="color: #cc95b5"
+                       ng-click="deleteUserFromProject(user.id,taskItem)"
+                       role="button"></a>&nbsp
+               </span> <a class="fa fa-plus-circle ng-isolate-scope"
+                       style="color: #cc95b5;"
+                       ng-click="getAllUsersOfProject(taskItem);" role="button"
+                       title="Add Users"></a> -->
+
+                <ul class="task-bottom-icon nav">
+
+                    <li class="navbar-right" ng-show="taskItem.ownerEmail === loggedInUser"><a href="#" ng-click="deleteTaskItem(taskItem)" confirm="Are you sure you want to delete the task?" tooltips tooltip-template="Delete" tooltip-side="top"><img src="assets/img/delete-task.png"><span></span></a></li>
+
+                    <li class="navbar-right"  ng-show="taskItem.ownerEmail === loggedInUser"><a href="#" ng-click="editTaskItem(taskItem);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a></li>
+                    <!-- <li> <img src="assets/img/update.png"> <span>Updated</span>&nbsp;&nbsp; </li> -->
+
+                    <li class="navbar-right" style="padding: 0px" ><a ng-show="taskItem.state != 'Completed'" href="#" ng-click="markCompleted(taskItem);" 
+                                                                      confirm="Users will not be able to update status for these tasks. Do you still want to mark the task as completed?"><img src="assets/img/mark-read.png"> <span>Mark as completed</span></a></li>
+
+                </ul>
+
+
+
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
 
-	<script>
-		$(document).ready(function() {
-			$('.taskLeftSidebar, .content, .rightSidebar').theiaStickySidebar({
-				additionalMarginTop : 53
-			});
-		});
-	</script>
+<script>
+    $(document).ready(function () {
+        $('.taskLeftSidebar, .content, .rightSidebar').theiaStickySidebar({
+            additionalMarginTop: 53
+        });
+    });
+</script>
 </div>

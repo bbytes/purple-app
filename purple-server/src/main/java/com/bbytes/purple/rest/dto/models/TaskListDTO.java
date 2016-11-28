@@ -15,7 +15,7 @@ public class TaskListDTO implements Serializable {
 	private String name;
 
 	private String projectId;
-	
+
 	private String projectName;
 
 	private double spendHours;
@@ -23,6 +23,8 @@ public class TaskListDTO implements Serializable {
 	private double estimatedHours;
 
 	private List<TaskItemDTO> taskItems;
-	
+
 	private int taskItemsForGivenState;
+
+	private String ownerEmail;
 }

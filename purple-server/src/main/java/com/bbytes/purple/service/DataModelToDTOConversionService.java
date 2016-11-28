@@ -251,7 +251,8 @@ public class DataModelToDTOConversionService {
 		return getResponseMapWithGridDataAndProjectCount(projectCount, projectDTOList);
 	}
 
-	private Map<String, Object> getResponseMapWithGridDataAndUserStatusCount(long joinedCount, long pendingCount, List<UserDTO> gridData) {
+	private Map<String, Object> getResponseMapWithGridDataAndUserStatusCount(long joinedCount, long pendingCount,
+			List<UserDTO> gridData) {
 		Map<String, Object> responseData = new LinkedHashMap<String, Object>();
 		responseData.put(JOINED_USERS_COUNT, joinedCount);
 		responseData.put(PENDING_USERS_COUNT, pendingCount);
@@ -259,7 +260,8 @@ public class DataModelToDTOConversionService {
 		return responseData;
 	}
 
-	private Map<String, Object> getResponseMapWithGridDataAndProjectCount(long projectCount, List<ProjectDTO> gridData) {
+	private Map<String, Object> getResponseMapWithGridDataAndProjectCount(long projectCount,
+			List<ProjectDTO> gridData) {
 		Map<String, Object> responseData = new LinkedHashMap<String, Object>();
 		responseData.put(PROJECT_COUNT, projectCount);
 		responseData.put(RestResponse.GRID_DATA, gridData);
@@ -280,8 +282,8 @@ public class DataModelToDTOConversionService {
 		return responseData;
 	}
 
-	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalyticsbyProject(List<ProjectUserCountStats> projectUserCountStatsList,
-			String groupBy, String aggrType) {
+	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalyticsbyProject(
+			List<ProjectUserCountStats> projectUserCountStatsList, String groupBy, String aggrType) {
 
 		ProjectUserCountStatsDTO projectUserCountStatsDTO = new ProjectUserCountStatsDTO();
 		List<String> labels = new LinkedList<>();
@@ -297,12 +299,12 @@ public class DataModelToDTOConversionService {
 					series.add(projectUsesrCountStats.getProject().getProjectName());
 
 				if (groupBy.equals(STATUS_HOURS)) {
-					mapProjectDateToStatusHrCount.put(
-							projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
-							projectUsesrCountStats.getHours().toString());
+					mapProjectDateToStatusHrCount.put(projectUsesrCountStats.getProject().getProjectName() + ":"
+							+ projectUsesrCountStats.getDate(), projectUsesrCountStats.getHours().toString());
 				} else {
 					mapProjectDateToStatusHrCount.put(
-							projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getDate(),
+							projectUsesrCountStats.getProject().getProjectName() + ":"
+									+ projectUsesrCountStats.getDate(),
 							projectUsesrCountStats.getStatusCount().toString());
 				}
 			}
@@ -315,12 +317,12 @@ public class DataModelToDTOConversionService {
 					series.add(projectUsesrCountStats.getProject().getProjectName());
 
 				if (groupBy.equals(STATUS_HOURS)) {
-					mapProjectDateToStatusHrCount.put(
-							projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getMonth(),
-							projectUsesrCountStats.getHours().toString());
+					mapProjectDateToStatusHrCount.put(projectUsesrCountStats.getProject().getProjectName() + ":"
+							+ projectUsesrCountStats.getMonth(), projectUsesrCountStats.getHours().toString());
 				} else {
 					mapProjectDateToStatusHrCount.put(
-							projectUsesrCountStats.getProject().getProjectName() + ":" + projectUsesrCountStats.getMonth(),
+							projectUsesrCountStats.getProject().getProjectName() + ":"
+									+ projectUsesrCountStats.getMonth(),
 							projectUsesrCountStats.getStatusCount().toString());
 				}
 			}
@@ -348,8 +350,8 @@ public class DataModelToDTOConversionService {
 		return projectUserCountStatsDTO;
 	}
 
-	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalyticsbyUser(List<ProjectUserCountStats> projectUserCountStatsList,
-			String groupBy, String aggrType) {
+	public ProjectUserCountStatsDTO getResponseMapWithStatusAnalyticsbyUser(
+			List<ProjectUserCountStats> projectUserCountStatsList, String groupBy, String aggrType) {
 
 		ProjectUserCountStatsDTO projectUserCountStatsDTO = new ProjectUserCountStatsDTO();
 		List<String> labels = new LinkedList<>();
@@ -366,10 +368,12 @@ public class DataModelToDTOConversionService {
 					series.add(projectUsesrCountStats.getUser().getName());
 
 				if (groupBy.equals(STATUS_HOURS)) {
-					mapProjectDateToStatusHrCount.put(projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
 							projectUsesrCountStats.getHours().toString());
 				} else {
-					mapProjectDateToStatusHrCount.put(projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getDate(),
 							projectUsesrCountStats.getStatusCount().toString());
 				}
 			}
@@ -382,10 +386,12 @@ public class DataModelToDTOConversionService {
 					series.add(projectUsesrCountStats.getUser().getName());
 
 				if (groupBy.equals(STATUS_HOURS)) {
-					mapProjectDateToStatusHrCount.put(projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getMonth(),
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getMonth(),
 							projectUsesrCountStats.getHours().toString());
 				} else {
-					mapProjectDateToStatusHrCount.put(projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getMonth(),
+					mapProjectDateToStatusHrCount.put(
+							projectUsesrCountStats.getUser().getName() + ":" + projectUsesrCountStats.getMonth(),
 							projectUsesrCountStats.getStatusCount().toString());
 				}
 			}
@@ -426,7 +432,8 @@ public class DataModelToDTOConversionService {
 		return DateTime.now().withMonthOfYear(month).toString("MMM");
 	}
 
-	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses, User user) throws ParseException {
+	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses, User user)
+			throws ParseException {
 
 		String date = null;
 		String time = null;
@@ -487,6 +494,8 @@ public class DataModelToDTOConversionService {
 					itemDTO.setUsers(convertUsers(new ArrayList<>(item.getUsers())));
 				itemDTO.setSpendHours(item.getSpendHours());
 				itemDTO.setState(item.getState().getDisplayName());
+				if (item.getOwner() != null)
+					itemDTO.setOwnerEmail(item.getOwner().getEmail());
 				taskItemDTOList.add(itemDTO);
 			}
 		}
@@ -534,15 +543,17 @@ public class DataModelToDTOConversionService {
 	}
 
 	public TaskListDTO convertTaskList(TaskList taskList) {
-		TaskListDTO taskListDto = new TaskListDTO();
-		taskListDto.setName(taskList.getName());
-		taskListDto.setTaskListId(taskList.getTaskListId());
-		taskListDto.setSpendHours(taskList.getSpendHours());
-		taskListDto.setEstimatedHours(taskList.getEstimatedHours());
-		taskListDto.setProjectId(taskList.getProject().getProjectId());
-		taskListDto.setProjectName(taskList.getProject().getProjectName());
-		taskListDto.setTaskItems(convertTaskItem(new ArrayList<>(taskList.getTaskItems())));
-		return taskListDto;
+		TaskListDTO taskListDTO = new TaskListDTO();
+		taskListDTO.setName(taskList.getName());
+		taskListDTO.setTaskListId(taskList.getTaskListId());
+		taskListDTO.setSpendHours(taskList.getSpendHours());
+		taskListDTO.setEstimatedHours(taskList.getEstimatedHours());
+		taskListDTO.setProjectId(taskList.getProject().getProjectId());
+		taskListDTO.setProjectName(taskList.getProject().getProjectName());
+		taskListDTO.setTaskItems(convertTaskItem(new ArrayList<>(taskList.getTaskItems())));
+		if (taskList.getOwner() != null)
+			taskListDTO.setOwnerEmail(taskList.getOwner().getEmail());
+		return taskListDTO;
 	}
 
 }
