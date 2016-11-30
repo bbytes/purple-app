@@ -1,16 +1,16 @@
 /**
  * Service to authenticate
  */
-rootApp.service('appAuthenticationService', function($rootScope,$window) {
+rootApp.service('appAuthenticationService', function ($rootScope, $window) {
 
-	this.isAuthenticated = function() {
+    this.isAuthenticated = function () {
 
-		if ($window.sessionStorage.token == null) {
-			return false;
-		}
+        if ($window.sessionStorage.token == null) {
+            return false;
+        }
 
-		// Authentication success.
-		return true;
-	};
+        // Authentication success.
+        return true;
+    };
 
 });

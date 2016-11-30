@@ -1,33 +1,32 @@
-	/**
-	 *  Activate Account Service
-	 */
-	rootApp.service('activateAccountService', function($rootScope, $http, $q, $window) {
-		
-		
-		this.activate = function(tokenstored) {
+/* 
+ * Activate Account Service
+ * @author - Akshay
+ */
+angular.module('rootApp').service('activateAccountService', function ($rootScope, $http, $q, $window) {
 
-			var deferred = $q.defer();
-			$http({
-				method : 'GET',
-				url : $rootScope.baseUrl + 'api/v1/admin/activateAccount',
-			
-				headers : {
-					'Content-Type' : 'application/json',
-				}
+    this.activate = function (tokenstored) {
 
-			}).success(function(response, status, headers, config) {
+        var deferred = $q.defer();
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/admin/activateAccount',
+            headers: {
+                'Content-Type': 'application/json'
+            }
 
-				deferred.resolve(response);
-			}).error(function() {
-				// Something went wrong.
-				deferred.reject({
-					'success' : false,
-					'msg' : 'Oops! Something went wrong. Please try again later.'
-				});
-			});
+        }).success(function (response, status, headers, config) {
 
-			return deferred.promise;
+            deferred.resolve(response);
+        }).error(function () {
+            // Something went wrong.
+            deferred.reject({
+                'success': false,
+                'msg': 'Oops! Something went wrong. Please try again later.'
+            });
+        });
 
-		};
-		
-	});
+        return deferred.promise;
+
+    };
+
+});

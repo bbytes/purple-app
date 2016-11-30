@@ -1,0 +1,116 @@
+<!-- /.main -->
+<div class="col-md-offset-2 col-md-8">
+    <div></div>
+    <br><br><br>
+    <div class="create-project">
+        <form name="myForm">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <!--label for="comment" class="settings" >Customer Name</label-->
+                            <input type="text" ng-model="customer" name="customer"
+                                   placeholder='Customer Name' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
+                            <span style="color: red"
+                                  ng-show="!isSubmitted && myForm.customer.$dirty && myForm.customer.$error.required">The
+                                name is required.</span> <span style="color: red" ng-show="myForm.customer.$dirty && myForm.customer.$error.pattern">name
+                                is invalid</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <!--label for="comment" class="settings" >Customer Name</label-->
+                            <input
+                                type="email" placeholder='Email ID' name="email" ng-model="email"
+                                class="form-control" required> <span style="color: red"
+                                ng-show="myForm.email.$dirty && myForm.email.$invalid"> <span
+                                    ng-show=" !isSubmitted && myForm.email.$error.required">Email is required.</span>
+                                <span ng-show="myForm.email.$error.email">Invalid email
+                                    address.</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <!--label for="comment" class="settings" >Customer Name</label-->
+                            <input type="text" ng-model="mobile" name="mobile"
+                                   placeholder='Mobile No' class="form-control" ng-required="true" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required>
+                            <span style="color: red"
+                                  ng-show="!isSubmitted && myForm.mobile.$dirty && myForm.mobile.$error.required">The
+                                mobile number is required.</span> <span style="color: red"
+                                                           ng-show="myForm.mobile.$dirty && myForm.mobile.$error.pattern">
+                                invalid mobile number</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <!--label for="comment" class="settings" >Customer Name</label-->
+                            <input type="text" ng-model="adress1" name="adress1"
+                                   placeholder='Full Billing Adress' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
+                            <span style="color: red"
+                                  ng-show="!isSubmitted && myForm.adress1.$dirty && myForm.adress1.$error.required">The
+                                name is required.</span> <span style="color: red"
+                                                           ng-show="myForm.adress1.$dirty && myForm.adress1.$error.pattern">name
+                                is invalid</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <!--label for="comment" class="settings" >Customer Name</label-->
+                            <input type="text" ng-model="adress2" name="adress2"
+                                   placeholder='Billing Related adress' class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
+                            <span style="color: red"
+                                  ng-show="!isSubmitted && myForm.adress2.$dirty && myForm.adress2.$error.required">The
+                                name is required.</span> <span style="color: red"
+                                                           ng-show="myForm.adress2.$dirty && myForm.adress2.$error.pattern">name
+                                is invalid</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <!--label for="comment" class="settings" >Customer Name</label-->
+                    <input type="text" ng-model="website" name="website"
+                           placeholder='Website' class="form-control" ng-pattern="/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/" required>
+                    <span style="color: red"
+                          ng-show="!isSubmitted && myForm.website.$dirty && myForm.website.$error.required">The
+                        name is required.</span> <span style="color: red"
+                                                   ng-show="myForm.website.$dirty && myForm.website.$error.pattern">
+                        invalid website</span>
+                </div>
+            </div>
+    </div>
+    <button type="button" class="btn btn-default create" ng-disabled="myForm.$invalid"
+            ng-click="saveChanges(myForm.$valid)">Save Changes</button>
+
+</form>
+</div>
+
+
+
+</div>

@@ -1,0 +1,158 @@
+<!-- /.main -->
+<div class="col-md-offset-2 col-md-8">
+    <div class="main-title">
+        <h4>INVITE</h4>
+
+        <div class="upload ">
+            <label for="file-upload" class="custom-file-upload"> <img
+                    src="../../assets/img/upload.png"> BULK UPLOAD
+            </label> <input id="file-upload" file-model = "myFile" type="file" onchange="angular.element(this).scope().bulkupload(this)"/>
+        </div>
+        <div class="cvg-user">
+            <label > <img ng-click="sampleBulkUploadDownload()"
+                          src="../../assets/img/export_csv-32.png" tooltips tooltip-template="Sample CSV Format" tooltip-side="left">
+            </label> 
+        </div>
+    </div>
+
+    <div class="create-project">
+        <form name="myForm">
+            <div class="row">
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label for="comment" class="settings">EMAIL</label> <input
+                            type="email" name="email" ng-model="admin.email"
+                            class="form-control" required> <span style="color: red"
+                            ng-show="myForm.email.$dirty && myForm.email.$invalid"> <span
+                                ng-show=" !isSubmitted && myForm.email.$error.required">Email is required.</span>
+                            <span ng-show="myForm.email.$error.email">Invalid email
+                                address.</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="comment" class="settings">USERNAME</label> <input
+                            type="text" ng-model="admin.userName" name="myName"
+                            class="form-control" ng-pattern="/^[a-zA-Z0-9\_\- ]*$/" required>
+                        <span style="color: red"
+                              ng-show="!isSubmitted && myForm.myName.$dirty && myForm.myName.$error.required">The
+                            name is required.</span> <span style="color: red"
+                                                       ng-show="myForm.myName.$dirty && myForm.myName.$error.pattern">name
+                            is invalid</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default create" ng-disabled="myForm.$invalid"
+                    ng-click="invite(myForm.$valid)">send invite</button>
+
+        </form>
+    </div>
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="main-title">
+                <div class="section group">
+                    <div class="col span_1_of_3">
+                        <h4>user activity </h4>
+                    </div>
+
+                    <div class="col span_1_of_3">
+                        <div class="right-inner-addon ">
+                            <i class="fa fa-search"></i> <input ng-model="searchText"
+                                                                class="form-control" placeholder="Search...">
+                        </div>
+                    </div>
+
+                    <div class="col span_1_of_3">
+                        <span class="list-member">{{joinedCount}}
+                            Joined {{pendingCount}} Pending</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="project-table" ng-init="initUser()">
+                <table>
+                    <thead>
+                        <tr>
+                            <th ng-click="sort('userName')">User Name
+                                <span class="glyphicon sort-icon" ng-hide="isSortKeyIcon" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                            <th ng-click="sort('status')">Status
+                                <span class="glyphicon sort-icon" ng-show="sortKey === 'status'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                            <th ng-click="sort('userRole.id')">Role
+                                <span class="glyphicon sort-icon" ng-show="sortKey === 'userRole.id'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+							<th></th>
+							<th  style="text-align:center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="user in allusers|orderBy:sortKey:reverse| filter:searchText|itemsPerPage:10">
+                            <td class="table-user"><small> <ng-letter-avatar
+                                        data="{{user.userName}}" shape="round" width="40px" height="40px" fontsize="22px"></ng-letter-avatar>
+                                </small>
+
+                                <div class="user-label">
+                                    <h4>{{user.userName}}</h4>
+                                    <p style="font-size:10px; margin-left: 45px;">{{user.email}}</p>
+                                </div></td>
+                            <td><img src="../../assets/img/pending.png" ng-if="user.status === 'Pending'">
+                                <img src="../../assets/img/join.png" ng-if="user.status === 'Joined'">
+                                {{user.status}}
+                            </td>
+                            <td width="180">
+                                <select class="form-control" ng-readonly="userRole !== 'ADMIN'" ng-options="roles.id as roles.value for roles in userRoles" ng-model="user.userRole.id" ng-change="roleChange(user.userRole.id, user, allusers.indexOf(user))">			
+                                </select>
+                            </td>
+
+                            <td class="re-invite" width="80">
+                    <center><a href="#" ng-click="resend(user.userName, user.email)" ng-hide= "user.status !== 'Pending'"><img src="../../assets/img/re-invite.png"  tooltips tooltip-template="Re-invite User" style="width:25px;"></a></center>
+                    </td>
+					
+                    <td class="disable-light" style="text-align:right;">
+                        <span ng-show="userName !== user.userName">
+						<toggle-switch ng-model="user.disableState" ng-change="disableUser(user.id, allusers.indexOf(user),user.disableState)" off-label="Active" on-label="Disabled" style="margin-top: -22px;"></toggle-switch>
+						<!--
+                            <a href="" ng-show="user.disableState"
+                               ng-click="disableUser(user.id, allusers.indexOf(user), false)"
+                               confirm="Are you sure you want to enable this user?"> <img
+                                    src="../../assets/img/disabled_dark.png" tooltips tooltip-template="Enable User"></a>
+                            <a href="" ng-hide="user.disableState"
+                               ng-click="disableUser(user.id, allusers.indexOf(user), true)"
+                               confirm="Are you sure you want to disable this user?"> <img
+                                    src="../../assets/img/disabled_light.png" tooltips tooltip-template="Disable User"></a>
+									-->
+									
+							<a class="delete-img" href="" ng-show="user.markDeleteState"
+                           ng-click="markForDelete(user.id, allusers.indexOf(user), false)"
+                           confirm="Do you want to restore this user?"> <img
+                                src="../../assets/img/delete.png" tooltips tooltip-template="Unmark for delete" style="width:20px;"></a>
+                        <a class="delete-light-img" href="" ng-hide="user.markDeleteState"
+                           ng-click="markForDelete(user.id, allusers.indexOf(user), true)"
+                           confirm="User has been marked for delete. All user related data will be deleted after {{days}} days from today. Do you want to continue?"> <img
+                                src="../../assets/img/cross.png" tooltips tooltip-template="Mark for delete"></a>
+                        </span>
+						 <a href="" ng-show="user.markDeleteState"
+                           csv-download-user="user.id"><img
+                          src="../../assets/img/export_csv-32.png" tooltips tooltip-template="Download Data" style="width:18px;"></a>
+                    </td>
+                   
+
+                   
+                    </tr>
+                    </tbody>
+                </table>
+                <dir-pagination-controls
+                    max-size="10"
+                    direction-links="true"
+                    boundary-links="true" >
+                </dir-pagination-controls>
+            </div>
+        </div>
+    </div>
+
+</div>

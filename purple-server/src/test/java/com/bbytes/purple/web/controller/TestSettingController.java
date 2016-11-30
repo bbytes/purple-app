@@ -94,25 +94,13 @@ public class TestSettingController extends PurpleWebBaseApplicationTests {
 		mockMvc.perform(post("/api/v1/user/setting/password")).andExpect(status().is4xxClientError()).andDo(print());
 	}
 
-	@Test
-	public void testUpdateTimeZone_pass() throws Exception {
-		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/admin/setting/timezone").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
-				.param("timeZone", "UTC")).andExpect(status().is2xxSuccessful()).andDo(print());
-	}
-
-	@Test
-	public void testUpdateTimeZone_fail() throws Exception {
-		mockMvc.perform(post("/api/v1/admin/setting/timezone")).andExpect(status().is4xxClientError()).andDo(print());
-	}
-
 	/**
-	 * Test cases for notification setting
+	 * Test cases for config setting
 	 */
 
 	@Test
 	public void testNotificationSettingFailed() throws Exception {
-		mockMvc.perform(post("/api/v1/admin/notificationSetting")).andExpect(status().is4xxClientError())
+		mockMvc.perform(post("/api/v1/admin/configSetting/update")).andExpect(status().is4xxClientError())
 				.andDo(print());
 	}
 
@@ -137,7 +125,7 @@ public class TestSettingController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(requestNotification);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(adminUser.getEmail(), 1);
-		mockMvc.perform(post("/api/v1/admin/notificationSetting").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/admin/configSetting/update").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().is2xxSuccessful())
 				.andDo(print());
 	}

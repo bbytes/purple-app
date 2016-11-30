@@ -28,7 +28,7 @@ import com.bbytes.purple.rest.dto.models.SettingDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.SettingService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -61,10 +61,13 @@ public class SettingController {
 	private UserService userService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Value("${base.url}")
 	private String baseUrl;
+	
+	@Value("${email.forgot.password.subject}")
+	private String forgotPasswordSubject;
 
 	/**
 	 * The reset password method is used to reset password for admin as well as
@@ -165,7 +168,6 @@ public class SettingController {
 	public RestResponse forgotPassword(@RequestParam String email) throws PurpleException {
 
 		final String FORGOT_PASSWORD_SUCCESS_MSG = "Forgot password link is successfully sent to your register email address";
-		final String subject = GlobalConstants.FORGOT_PASSWORD_SUBJECT;
 		final String template = GlobalConstants.EMAIL_FORGOT_PASSWORD_TEMPLATE;
 
 		User user = settingService.forgotPassword(email);
@@ -177,7 +179,7 @@ public class SettingController {
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.FORGOT_PASSWORD_URL + xauthToken);
 
-		emailService.sendEmail(emailList, emailBody, subject, template);
+		notificationService.sendTemplateEmail(emailList, forgotPasswordSubject, template, emailBody);
 
 		logger.debug("Forgot password is done successfully");
 		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, FORGOT_PASSWORD_SUCCESS_MSG,

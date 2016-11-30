@@ -1,28 +1,32 @@
-rootApp.service('forgotPasswordService', function ($rootScope, $http, $q) {
-	 return {
+/* 
+ * Forgot Password Service
+ * @author - Akshay
+ */
+angular.module('rootApp').service('forgotPasswordService', function ($rootScope, $http, $q) {
+    return {
         submitForgotPassword: function (user) {
 
             var email = user.username;
             var deferred = $q.defer();
 
-        $http({
-            method : 'GET',
-            url : $rootScope.baseUrl + 'auth/forgotPassword',
-            params : {email : email},
-            headers : {
-                'Content-Type' : 'application/json',
-            }
+            $http({
+                method: 'GET',
+                url: $rootScope.baseUrl + 'auth/forgotPassword',
+                params: {email: email},
+                headers: {
+                    'Content-Type': 'application/json',
+                }
 
-        }).success(function(response, status, headers, config) {
+            }).success(function (response, status, headers, config) {
 
-            deferred.resolve(response);
-        }).error(function(response) {
-          
-             deferred.reject(response);
-        });
+                deferred.resolve(response);
+            }).error(function (response) {
 
-        return deferred.promise;
+                deferred.reject(response);
+            });
+
+            return deferred.promise;
 
         },
-	};
+    };
 });

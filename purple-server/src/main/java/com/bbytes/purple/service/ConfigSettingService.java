@@ -80,6 +80,11 @@ public class ConfigSettingService extends AbstractService<ConfigSetting, String>
 		ConfigSetting configSetting = null;
 		try {
 			configSetting = getConfigSettingbyOrganization(org);
+			if (configSetting == null) {
+				configSetting = new ConfigSetting();
+				configSetting.setOrganization(org);
+				configSetting = configSettingRepository.save(configSetting);
+			}
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.NOTIFICATION_FAILED);
 		}

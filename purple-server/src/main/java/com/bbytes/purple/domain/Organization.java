@@ -33,6 +33,12 @@ public class Organization {
 	@Field("time_preference")
 	private String timePreference;
 	
+	@Field("subscription_key")
+	private String subscriptionKey;
+
+	@Field("subscription_secret")
+	private String subscriptionSecret;
+	
 	@CreatedDate
 	private Date creationDate;
 	

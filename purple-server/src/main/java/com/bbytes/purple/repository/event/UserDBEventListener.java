@@ -13,11 +13,22 @@ import org.springframework.data.mongodb.core.mapping.event.BeforeDeleteEvent;
 import org.springframework.data.mongodb.core.mapping.event.BeforeSaveEvent;
 import org.springframework.stereotype.Component;
 
+import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Project;
+import com.bbytes.purple.domain.Status;
+import com.bbytes.purple.domain.StatusTaskEvent;
+import com.bbytes.purple.domain.TaskItem;
+import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.repository.ProjectRepository;
 import com.bbytes.purple.repository.UserRepository;
+import com.bbytes.purple.service.CommentService;
+import com.bbytes.purple.service.StatusService;
+import com.bbytes.purple.service.StatusTaskEventService;
+import com.bbytes.purple.service.TaskItemService;
+import com.bbytes.purple.service.TaskListService;
 import com.bbytes.purple.service.TenantResolverService;
+import com.bbytes.purple.service.UserService;
 import com.mongodb.DBObject;
 
 /**
@@ -38,6 +49,24 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private StatusService statusService;
+
+	@Autowired
+	private CommentService commentService;
+
+	@Autowired
+	private StatusTaskEventService statusTaskEventService;
+
+	@Autowired
+	private TaskListService taskListService;
+
+	@Autowired
+	private TaskItemService taskItemService;
 
 	/**
 	 * Remove uses from tenant resolver after user delete command
@@ -78,22 +107,66 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 	}
 
 	/**
-	 * Remove the user from the project list when the user is deleted - Cascade
-	 * delete
+	 * Remove the user from the project list, taskList and taskItems and
+	 * deleting user's statuses, comments, statusTaskEvents, taskLists and
+	 * taskItems when the user is deleted - Cascade delete
 	 */
 	@Override
 	public void onBeforeDelete(BeforeDeleteEvent<User> event) {
 		final DBObject userDeleted = event.getSource();
 		User user = userRepository.findOne(userDeleted.get("userId").toString());
+		// getting all projectList from db by user
+		List<Project> projectListOfUser = new ArrayList<Project>();
+		try {
+			projectListOfUser = userService.getProjects(user);
+		} catch (Throwable e) {
+			e.getMessage();
+		}
+		// removing ref of user from userList of project
 		List<Project> projectsToBeSaved = new ArrayList<>();
-		if (user != null && user.getProjects() != null) {
-			for (Project project : user.getProjects()) {
-				project.getUser().remove(user);
+		if (user != null && projectListOfUser != null) {
+			for (Project project : projectListOfUser) {
+				project.getUsers().remove(user);
 				projectsToBeSaved.add(project);
 			}
 		}
+		List<Status> statusFromDB = statusService.getStatusByUser(user);
+		List<Comment> commentFromDB = commentService.getCommentByStatus(statusFromDB);
+		List<StatusTaskEvent> statusTaskEvents = statusTaskEventService.findByUser(user);
+		List<TaskList> taskListByOwner = taskListService.findByOwner(user);
+		List<TaskItem> taskItemByOwner = taskItemService.findByOwner(user);
 
+		commentService.delete(commentFromDB);
+		statusService.delete(statusFromDB);
 		projectRepository.save(projectsToBeSaved);
-	}
+		statusTaskEventService.delete(statusTaskEvents);
+		taskItemService.delete(taskItemByOwner);
+		taskListService.delete(taskListByOwner);
 
+		// getting all taskList from db by user
+		List<TaskList> taskListFromDB = taskListService.findByUsers(user);
+
+		// removing ref of user from userList of taskList
+		List<TaskList> taskListToBeSaved = new ArrayList<TaskList>();
+		if (user != null && taskListFromDB != null) {
+			for (TaskList taskList : taskListFromDB) {
+				taskList.getUsers().remove(user);
+				taskListToBeSaved.add(taskList);
+			}
+		}
+		taskListService.save(taskListToBeSaved);
+
+		// getting all taskItem from db by user
+		List<TaskItem> taskItemFromDB = taskItemService.findByUsers(user);
+
+		// removing ref of user from userList of taskItem
+		List<TaskItem> taskItemToBeSaved = new ArrayList<TaskItem>();
+		if (user != null && taskItemFromDB != null) {
+			for (TaskItem taskItem : taskItemFromDB) {
+				taskItem.getUsers().remove(user);
+				taskItemToBeSaved.add(taskItem);
+			}
+		}
+		taskItemService.save(taskItemToBeSaved);
+	}
 }

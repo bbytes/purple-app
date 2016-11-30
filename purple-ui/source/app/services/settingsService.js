@@ -2,96 +2,115 @@
  * 
  */
 
-rootApp.service('settingsService', function($rootScope, $http, $q, $window) {
+rootApp.service('settingsService', function ($rootScope, $http, $q, $window) {
 
-	this.updatePassword = function(newpassword) {
+    this.updatePassword = function (newpassword) {
 
-		var deferred = $q.defer();
+        var deferred = $q.defer();
 
-		$http({
-			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/user/setting/password',
-			data:newpassword,
-			headers : {
-				'Content-Type' : 'application/json',
+        $http({
+            method: 'POST',
+            url: $rootScope.baseUrl + 'api/v1/user/setting/password',
+            data: newpassword,
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-			}
+        }).success(function (response, status, headers, config) {
 
-		}).success(function(response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
 
-			deferred.resolve(response);
-		}).error(function(response) {
-				 deferred.reject(response);
-		});
+        return deferred.promise;
 
-		return deferred.promise;
+    };
 
-	};
-	
-	
-	this.updateSetting = function(settingObj) {
-		
-		var deferred = $q.defer();
 
-		$http({
-			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/setting',
-			data : settingObj,
-			headers : {
-				'Content-Type' : 'application/json',
+    this.updateSetting = function (settingObj) {
 
-			}
+        var deferred = $q.defer();
 
-		}).success(function(response, status, headers, config) {
+        $http({
+            method: 'POST',
+            url: $rootScope.baseUrl + 'api/v1/setting',
+            data: settingObj,
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-			deferred.resolve(response);
-		}).error(function(response) {
-			deferred.reject(response);
-		});
+        }).success(function (response, status, headers, config) {
 
-		return deferred.promise;
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
 
-	};
+        return deferred.promise;
 
-	this.saveConfigSetting = function(admin) {
+    };
 
-		var deferred = $q.defer();
+    this.saveConfigSetting = function (admin) {
 
-		$http({
-			method : 'POST',
-			url : $rootScope.baseUrl + 'api/v1/admin/configSetting/update',
-			data : admin,
-			headers : {
-				'Content-Type' : 'application/json',
-			}
+        var deferred = $q.defer();
 
-		}).success(function(response, status, headers, config) {
-				deferred.resolve(response);
-		}).error(function(response) {
-				deferred.reject(response);
-		});
+        $http({
+            method: 'POST',
+            url: $rootScope.baseUrl + 'api/v1/admin/configSetting/update',
+            data: admin,
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-		return deferred.promise;
-	};
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
 
-	this.getConfigSetting = function(admin) {
+        return deferred.promise;
+    };
 
-		var deferred = $q.defer();
+    this.updateProfile = function (user) {
 
-		$http({
-			method : 'GET',
-			url : $rootScope.baseUrl + 'api/v1/admin/configSetting',
-			headers : {
-				'Content-Type' : 'application/json',
-			}
+        var deferred = $q.defer();
 
-		}).success(function(response, status, headers, config) {
-				deferred.resolve(response);
-		}).error(function(response) {
-				deferred.reject(response);
-		});
+        $http({
+            method: 'PUT',
+            url: $rootScope.baseUrl + 'api/v1/user/update',
+            params: {"userName": user},
+            headers: {
+                'Content-Type': 'application/json',
+            }
 
-		return deferred.promise;
-	};
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+
+    this.getConfigSetting = function (admin) {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/admin/configSetting',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
 
 });

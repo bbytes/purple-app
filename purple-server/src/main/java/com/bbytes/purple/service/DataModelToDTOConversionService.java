@@ -1,7 +1,10 @@
 package com.bbytes.purple.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -19,6 +22,8 @@ import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.Reply;
 import com.bbytes.purple.domain.Status;
+import com.bbytes.purple.domain.TaskItem;
+import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.rest.dto.models.BaseDTO;
 import com.bbytes.purple.rest.dto.models.CommentDTO;
@@ -30,8 +35,12 @@ import com.bbytes.purple.rest.dto.models.ReplyDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.StatusDTO;
 import com.bbytes.purple.rest.dto.models.StatusResponseDTO;
+import com.bbytes.purple.rest.dto.models.TaskItemDTO;
+import com.bbytes.purple.rest.dto.models.TaskListDTO;
+import com.bbytes.purple.rest.dto.models.TaskListResponseDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.utils.GlobalConstants;
+import com.bbytes.purple.utils.StringUtils;
 
 @Service
 public class DataModelToDTOConversionService {
@@ -50,10 +59,33 @@ public class DataModelToDTOConversionService {
 		return baseDTO;
 	}
 
+	public BaseDTO convertToBaseDTOidValue(String value, String id) {
+		BaseDTO baseDTO = new BaseDTO();
+		baseDTO.setId(id);
+		baseDTO.setValue(value);
+		return baseDTO;
+	}
+
 	public List<BaseDTO> convertRolesToEntityDTOList(List<String> values) {
 		List<BaseDTO> baseDTOList = new ArrayList<BaseDTO>();
 		for (String value : values) {
 			baseDTOList.add(convertToBaseDTO(value));
+		}
+		return baseDTOList;
+	}
+
+	/**
+	 * <code>convertRolesToEntityDTOList</code> method returns id and value in
+	 * list.
+	 * 
+	 * @param mapValues
+	 * @return
+	 */
+	public List<BaseDTO> convertRolesToEntityDTOList(Map<String, String> mapValues) {
+		List<BaseDTO> baseDTOList = new ArrayList<BaseDTO>();
+
+		for (Map.Entry<String, String> entry : mapValues.entrySet()) {
+			baseDTOList.add(convertToBaseDTOidValue(entry.getValue(), entry.getKey()));
 		}
 		return baseDTOList;
 	}
@@ -77,13 +109,15 @@ public class DataModelToDTOConversionService {
 		userDTO.setTimePreference(user.getTimePreference());
 		userDTO.setEmailNotificationState(user.isEmailNotificationState());
 		userDTO.setTimeZone(user.getTimeZone());
+		userDTO.setDisableState(user.isDisableState());
+		userDTO.setMarkDeleteState(user.isMarkDelete());
 		return userDTO;
 	}
 
 	public ProjectDTO convertProject(Project project) {
 
 		List<UserDTO> userDTOList = new ArrayList<UserDTO>();
-		for (User user : project.getUser()) {
+		for (User user : project.getUsers()) {
 			UserDTO userDTO = new UserDTO();
 			userDTO.setEmail(user.getEmail());
 			userDTO.setUserName(user.getName());
@@ -93,7 +127,9 @@ public class DataModelToDTOConversionService {
 		projectDTO.setProjectId(project.getProjectId());
 		projectDTO.setProjectName(project.getProjectName());
 		projectDTO.setUserList(userDTOList);
-		projectDTO.setUsersCount(project.getUser().size());
+		projectDTO.setUsersCount(project.getUsers().size());
+		if (project.getProjectOwner() != null)
+			projectDTO.setProjectOwner(project.getProjectOwner().getName());
 		return projectDTO;
 	}
 
@@ -105,9 +141,7 @@ public class DataModelToDTOConversionService {
 		return projectDTO;
 	}
 
-	public StatusDTO convertStatus(Status status) {
-
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.TIME_FORMAT);
+	public StatusDTO convertStatus(Status status, String statusTime) {
 
 		StatusDTO statusDTO = new StatusDTO();
 		statusDTO.setStatusId(status.getStatusId());
@@ -118,8 +152,9 @@ public class DataModelToDTOConversionService {
 		statusDTO.setWorkingOn(status.getWorkingOn());
 		statusDTO.setHours(status.getHours());
 		statusDTO.setBlockers(status.getBlockers());
-		statusDTO.setTime(simpleDateFormat.format(status.getDateTime()).toString());
+		statusDTO.setTime(statusTime);
 		statusDTO.setCommentCount(status.getCommentCount());
+		statusDTO.setTaskDataMap(status.getTaskDataMap());
 		return statusDTO;
 	}
 
@@ -305,11 +340,11 @@ public class DataModelToDTOConversionService {
 		}
 		projectUserCountStatsDTO.setData(data);
 		projectUserCountStatsDTO.setSeries(series.toArray(new String[series.size()]));
-		
+
 		if (aggrType.equals("month")) {
 			labels = convertIntMonthToStringMonthLabels(labels);
 		}
-		
+
 		projectUserCountStatsDTO.setLabels(labels.toArray(new String[labels.size()]));
 
 		return projectUserCountStatsDTO;
@@ -374,11 +409,11 @@ public class DataModelToDTOConversionService {
 		}
 		projectUserCountStatsDTO.setData(data);
 		projectUserCountStatsDTO.setSeries(series.toArray(new String[series.size()]));
-		
+
 		if (aggrType.equals("month")) {
 			labels = convertIntMonthToStringMonthLabels(labels);
 		}
-		
+
 		projectUserCountStatsDTO.setLabels(labels.toArray(new String[labels.size()]));
 
 		return projectUserCountStatsDTO;
@@ -389,21 +424,36 @@ public class DataModelToDTOConversionService {
 		for (String month : labels) {
 			monthlabels.add(getMonthName(Integer.parseInt(month)));
 		}
-		
+
 		return monthlabels;
 	}
-	
+
 	private String getMonthName(Integer month) {
 		return DateTime.now().withMonthOfYear(month).toString("MMM");
 	}
 
-	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses) {
+	public Map<String, Object> getResponseMapWithGridDataAndStatus(List<Status> statusses, User user)
+			throws ParseException {
 
+		String date = null;
+		String time = null;
+		StatusDTO statusDTO = null;
 		Map<String, List<StatusDTO>> statusMap = new LinkedHashMap<String, List<StatusDTO>>();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+
 		for (Status status : statusses) {
-			String date = simpleDateFormat.format(status.getDateTime());
-			StatusDTO statusDTO = convertStatus(status);
+
+			if (user.getTimeZone() != null) {
+				Date statuDate = StringUtils.getDateByTimezone(status.getDateTime(), user.getTimeZone());
+				date = new SimpleDateFormat(GlobalConstants.DATE_FORMAT).format(statuDate);
+				time = new SimpleDateFormat(GlobalConstants.TIME_FORMAT).format(statuDate);
+			} else {
+				date = new SimpleDateFormat(GlobalConstants.DATE_FORMAT).format(status.getDateTime());
+				time = new SimpleDateFormat(GlobalConstants.TIME_FORMAT).format(status.getDateTime());
+			}
+
+			if (status.getUser() != null) {
+				statusDTO = convertStatus(status, time);
+			}
 
 			if (statusMap.containsKey(date)) {
 				statusMap.get(date).add(statusDTO);
@@ -430,6 +480,80 @@ public class DataModelToDTOConversionService {
 		return statusResponseDTOList;
 	}
 
-	
+	public List<TaskItemDTO> convertTaskItem(List<TaskItem> taskItems) {
+		List<TaskItemDTO> taskItemDTOList = new LinkedList<TaskItemDTO>();
+		for (TaskItem item : taskItems) {
+			if (item != null) {
+				TaskItemDTO itemDTO = new TaskItemDTO();
+				itemDTO.setTaskItemId(item.getTaskItemId());
+				itemDTO.setDesc(item.getDesc());
+				itemDTO.setDueDate(item.getDueDate());
+				itemDTO.setEstimatedHours(item.getEstimatedHours());
+				itemDTO.setName(item.getName());
+				if (item.getUsers() != null)
+					itemDTO.setUsers(convertUsers(new ArrayList<>(item.getUsers())));
+				itemDTO.setSpendHours(item.getSpendHours());
+				itemDTO.setState(item.getState().getDisplayName());
+				if (item.getOwner() != null)
+					itemDTO.setOwnerEmail(item.getOwner().getEmail());
+				taskItemDTOList.add(itemDTO);
+			}
+		}
+		return taskItemDTOList;
+	}
+
+	public List<TaskListResponseDTO> convertTaskListItem(List<TaskItem> taskItemList) {
+		List<TaskListResponseDTO> taskListDTOList = new LinkedList<TaskListResponseDTO>();
+		for (TaskItem taskItem : taskItemList) {
+			TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
+			taskListResponseDTO.setTaskItemId(taskItem.getTaskItemId());
+			taskListResponseDTO.setTaskListId(taskItem.getTaskList().getTaskListId());
+			taskListResponseDTO.setTaskListName(taskItem.getTaskList().getName());
+			taskListResponseDTO.setTaskItemName(taskItem.getName());
+			taskListResponseDTO.setDesc(taskItem.getDesc());
+			taskListResponseDTO.setDueDate(taskItem.getDueDate());
+			taskListResponseDTO.setEstimatedHours(taskItem.getEstimatedHours());
+			taskListResponseDTO.setSpendHours(taskItem.getSpendHours());
+			taskListDTOList.add(taskListResponseDTO);
+		}
+		return taskListDTOList;
+
+	}
+
+	public TaskItemDTO convertTaskItem(TaskItem taskItem) {
+		TaskItemDTO itemDTO = new TaskItemDTO();
+		itemDTO.setTaskItemId(taskItem.getTaskItemId());
+		itemDTO.setDesc(taskItem.getDesc());
+		itemDTO.setDueDate(taskItem.getDueDate());
+		itemDTO.setEstimatedHours(taskItem.getEstimatedHours());
+		itemDTO.setName(taskItem.getName());
+		if (taskItem.getUsers() != null)
+			itemDTO.setUsers(convertUsers(new ArrayList<>(taskItem.getUsers())));
+		itemDTO.setSpendHours(taskItem.getSpendHours());
+		itemDTO.setState(taskItem.getState().getDisplayName());
+		return itemDTO;
+	}
+
+	public List<TaskListDTO> convertTaskLists(Collection<TaskList> taskLists) {
+		List<TaskListDTO> taskListDtos = new ArrayList<TaskListDTO>();
+		for (TaskList taskList : taskLists) {
+			taskListDtos.add(convertTaskList(taskList));
+		}
+		return taskListDtos;
+	}
+
+	public TaskListDTO convertTaskList(TaskList taskList) {
+		TaskListDTO taskListDTO = new TaskListDTO();
+		taskListDTO.setName(taskList.getName());
+		taskListDTO.setTaskListId(taskList.getTaskListId());
+		taskListDTO.setSpendHours(taskList.getSpendHours());
+		taskListDTO.setEstimatedHours(taskList.getEstimatedHours());
+		taskListDTO.setProjectId(taskList.getProject().getProjectId());
+		taskListDTO.setProjectName(taskList.getProject().getProjectName());
+		taskListDTO.setTaskItems(convertTaskItem(new ArrayList<>(taskList.getTaskItems())));
+		if (taskList.getOwner() != null)
+			taskListDTO.setOwnerEmail(taskList.getOwner().getEmail());
+		return taskListDTO;
+	}
 
 }

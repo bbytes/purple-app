@@ -61,10 +61,12 @@ public class MultiTenantAuthenticationToken extends AbstractAuthenticationToken 
 
 	@Override
 	public Collection<GrantedAuthority> getAuthorities() {
+		if (this.user != null)
+			return user.getAuthorities();
+
 		return AuthorityUtils.createAuthorityList(UserRole.NORMAL_USER_ROLE.getRoleName());
 	}
 
-	
 	@Override
 	@JsonIgnore
 	public User getDetails() {

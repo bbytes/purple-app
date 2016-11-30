@@ -11,7 +11,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,6 @@ import com.bbytes.purple.utils.GlobalConstants;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@Profile("dev")
 public class CorsFilter implements Filter {
 
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)

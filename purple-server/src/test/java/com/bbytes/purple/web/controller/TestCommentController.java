@@ -52,7 +52,6 @@ public class TestCommentController extends PurpleWebBaseApplicationTests {
 		project = new Project("purple");
 		project.setOrganization(org);
 		status = new Status("purple", "reveal", 40, new Date());
-		status.setUser(user);
 
 		TenancyContextHolder.setTenant(org.getOrgId());
 
@@ -61,6 +60,7 @@ public class TestCommentController extends PurpleWebBaseApplicationTests {
 		user.setOrganization(org);
 		userRepository.save(user);
 		projectService.save(project);
+		status.setUser(user);
 
 		userService.updatePassword("test123", user);
 		status = statusService.save(status);

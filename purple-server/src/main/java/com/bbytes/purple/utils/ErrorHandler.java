@@ -16,13 +16,21 @@ public class ErrorHandler {
 
 	public static final String AUTH_FAILURE = "authentication_failure";
 
+	public static final String BAD_GATEWAY = "bad_gateway";
+
+	public static final String RESET_FAILED = "reset_failed";
+
 	public static final String ACCOUNT_ACTIVATION_FAILURE = "account_inactive";
+
+	public static final String RESEND_ACTIVATION_FAILURE = "resend_activation_failure";
 
 	public static final String USER_NOT_FOUND = "user_not_found";
 
 	public static final String PASSWORD_MISMATCH = "password_mistach";
 
 	public static final String PROJECT_NOT_FOUND = "project_not_found";
+	
+	public static final String TASK_LIST_NOT_FOUND = "task_list_not_found";
 
 	public static final String PROJECT_ALREADY_EXIST = "project_already_exist";
 
@@ -36,9 +44,19 @@ public class ErrorHandler {
 
 	public static final String ADD_USER_FAILED = "add_user_failed";
 
+	public static final String BULD_UPLAOD_FAILED = "buld_uplaod_failed";
+
+	public static final String REINVITE_FAILED = "reinvite_failed";
+
 	public static final String DELETE_USER_FAILED = "delete_user_failed";
 
+	public static final String DISABLE_USER_FAILED = "disable_user_failed";
+	
+	public static final String DEVICE_TOKEN_ADD_FAILED = "device_token_add_failed";
+
 	public static final String GET_USER_FAILED = "get_user_failed";
+
+	public static final String CHANGED_PROJECTOWNER_FALIED = "changed_projectowner_falied";
 
 	public static final String ADD_PROJECT_FAILED = "add_project_failed";
 
@@ -71,24 +89,50 @@ public class ErrorHandler {
 	public static final String SERVER_ERROR = "server_error";
 
 	public static final String ADD_COMMENT_FAILED = "add_comment_failed";
+	
+	public static final String NOT_CONNECTED = "not_connected";
 
 	public static final String ADD_REPLY_FAILED = "add_reply_failed";
 
 	public static final String UPDATE_REPLY_FAILED = "update_reply_failed";
 
 	public static final String DELETE_REPLY_FAILED = "delete_reply_failed";
+	
+	public static final String GET_REPLY_FAILED = "get_reply_failed";
 
 	public static final String UPDATE_COMMENT_FAILED = "update_comment_failed";
 
 	public static final String UPDATE_SETTING_FAILED = "update_setting_failed";
 
+	public static final String SET_TIMEZONE_TIMEPREFERENCE_FAILED = "set timezone or timepreference failed";
+
 	public static final String HOURS_EXCEEDED = "hours_exceeded";
 
+	public static final String PROJECT_OWNER_DELETE_FAILED = "project_owner_delete_failed";
+
 	public static final String UPDATE_USERROLE_FAILED = "update_userrole_failed";
+
+	public static final String ROLE_CHANGED_NOT_ALLOWED = "role_changed_not_allowed";
+
+	public static final String DELETION_NOT_ALLOWED = "deletion_not_allowed";
+
+	public static final String UPDATE_USER_PROFILE_FAILED = "update_user_profile_failed";
 
 	public static final String PASS_DUEDATE_STATUS_EDIT = "pass_duedate_status_edit";
 
 	public static final String FUTURE_DATE_STATUS_EDIT = "future_date_status_edit";
+
+	public static final String JIRA_CONNECTION_FAILED = "jira_connection_failed";
+	
+	public static final String JIRA_USER_SYNC_FAILED = "jira_user_syncfailed";
+	
+	public static final String JIRA_TASK_ISSUE_SYNC_FAILED = "jira_task_issue_sync_failed";
+
+	public static final String DISPOSABLE_EMAIL_DOMAIN = "Email domain is not supported";
+
+	public static final String NORMAL_USER_URL_ACCESS_DENIED = "normal_user_url_access_denied";
+
+	public static final String INVALID_EMAIL = "invalid_email";
 
 	public static String resolveAuthError(AuthenticationException authEx) {
 		try {

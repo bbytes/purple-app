@@ -18,5 +18,15 @@ public interface UserRepository extends MongoRepository<User, String> {
 	List<User> findByNameIn(List<String> names);
 
 	List<User> findByUserRole(UserRole role);
+	
+	List<User> findByUserRoleIn(List<UserRole> role);
+	
+	long countByUserRole(UserRole role);
+	
+	long countByMarkDelete(boolean markDelete);
+	
+	long countByDisableState(boolean disableState);
+	
+	User findTopByOrderByCreationDateAsc();
 
 }

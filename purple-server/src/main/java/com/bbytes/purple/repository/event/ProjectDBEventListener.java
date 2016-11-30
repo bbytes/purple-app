@@ -1,6 +1,5 @@
 package com.bbytes.purple.repository.event;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +8,16 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.BeforeDeleteEvent;
 import org.springframework.stereotype.Component;
 
+import com.bbytes.purple.domain.Comment;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.Status;
-import com.bbytes.purple.domain.User;
+import com.bbytes.purple.domain.TaskItem;
+import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.repository.ProjectRepository;
-import com.bbytes.purple.repository.UserRepository;
+import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.StatusService;
+import com.bbytes.purple.service.TaskItemService;
+import com.bbytes.purple.service.TaskListService;
 import com.mongodb.DBObject;
 
 @Component
@@ -25,30 +28,35 @@ public class ProjectDBEventListener extends AbstractMongoEventListener<Project> 
 	private ProjectRepository projectRepository;
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
 	private StatusService statusService;
 
+	@Autowired
+	private CommentService commentService;
+
+	@Autowired
+	private TaskListService taskListService;
+
+	@Autowired
+	private TaskItemService taskItemService;
+
 	/**
-	 * Remove the project from the user list when the project is deleted -
-	 * Cascade delete
+	 * Deleting user's statuses, comments, taskList and taskItems when the
+	 * project is deleted - Cascade delete
 	 */
 	@Override
 	public void onBeforeDelete(BeforeDeleteEvent<Project> event) {
 		final DBObject projectDeleted = event.getSource();
 		Project project = projectRepository.findOne(projectDeleted.get("projectId").toString());
 
-		List<User> usersToBeSaved = new ArrayList<>();
-		if (project != null && project.getUser() != null) {
-			for (User user : project.getUser()) {
-				user.getProjects().remove(project);
-				usersToBeSaved.add(user);
-			}
-		}
 		List<Status> statusFromDB = statusService.getStatusByProject(project);
+		List<Comment> commentFromDB = commentService.getCommentByStatus(statusFromDB);
+		List<TaskList> taskListFromDB = taskListService.findByProject(project);
+		List<TaskItem> taskItemFromDB = taskItemService.findByProject(project);
+
+		commentService.delete(commentFromDB);
 		statusService.delete(statusFromDB);
-		userRepository.save(usersToBeSaved);
+		taskItemService.delete(taskItemFromDB);
+		taskListService.delete(taskListFromDB);
 	}
 
 }

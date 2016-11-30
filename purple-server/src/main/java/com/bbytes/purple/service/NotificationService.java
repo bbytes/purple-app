@@ -1,8 +1,10 @@
 package com.bbytes.purple.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -12,14 +14,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import flowctrl.integration.slack.SlackClientFactory;
-import flowctrl.integration.slack.webapi.SlackWebApiClient;
+import com.bbytes.mailgun.api.MailOperations;
+import com.bbytes.mailgun.api.ResponseCallback;
+import com.bbytes.mailgun.client.MailgunClient;
+import com.bbytes.mailgun.model.MailgunSendResponse;
+import com.bbytes.purple.domain.User;
+import com.bbytes.purple.utils.GlobalConstants;
 
 @Service
 public class NotificationService {
@@ -27,16 +34,30 @@ public class NotificationService {
 	private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
 	@Autowired
+	protected Environment env;
+
+	@Autowired
 	private JavaMailSender javaMailSender;
 
 	@Autowired
 	private VelocityEngine templateEngine;
 
+	@Autowired
+	private IntegrationService integrationService;
+
 	@Value("${spring.mail.from}")
 	private String fromEmail;
 
-	@Value("${slack.channel.name}")
-	private String slackChannelName;
+	private MailgunClient client;
+
+	private String domain;
+
+	@PostConstruct
+	private void init() {
+		String mailgunAPIKey = env.getProperty("mailgun.api.key");
+		domain = env.getProperty("mailgun.domain");
+		client = MailgunClient.create(mailgunAPIKey);
+	}
 
 	/**
 	 * Send simple mail api. TODO: Need to implement html email template logic
@@ -74,11 +95,28 @@ public class NotificationService {
 		return true;
 	}
 
+	public boolean mail(String subject, String body, String from, String... to) {
+		MailOperations mailOperations = client.mailOperations(domain);
+		mailOperations.sendHtmlMailAsync(from, to, subject, body, new ResponseCallback<MailgunSendResponse>() {
+
+			@Override
+			public void onSuccess(MailgunSendResponse result) {
+				// do nothing
+			}
+
+			@Override
+			public void onFailure(Throwable ex) {
+				logger.error(ex.getMessage(),ex);
+			}
+		});
+		return true;
+	}
+
 	public boolean sendTemplateEmail(List<String> toEmailList, String subject, String emailTemplateName,
 			Map<String, Object> templateVariableMap) {
-		String emailHTMLContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine, emailTemplateName,
-				"UTF-8", templateVariableMap);
-		return sendEmail(toEmailList, subject, emailHTMLContent, true);
+		String emailHTMLContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine, emailTemplateName, "UTF-8",
+				templateVariableMap);
+		return mail(subject, emailHTMLContent, fromEmail, toEmailList.toArray(new String[toEmailList.size()]));
 	}
 
 	/**
@@ -89,11 +127,36 @@ public class NotificationService {
 	 * @param message
 	 * @return
 	 */
-	public boolean sendSlackMessage(String token, String message) {
+	public boolean sendSlackMessage(String message) {
 		try {
-			SlackWebApiClient webApiClient = SlackClientFactory.createWebApiClient(token);
-			webApiClient.postMessage(slackChannelName, message);
-			webApiClient.shutdown();
+			integrationService.postMessageToSlack(message);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+		return true;
+	}
+
+	public boolean sendSlackMessage(User user, String message) {
+		try {
+			integrationService.postMessageToSlack(user, message);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+		return true;
+	}
+
+	public boolean sendSlackMessage(User user, String type, String link) {
+		try {
+			Map<String, Object> templateVariableMap = new HashMap<String, Object>();
+			templateVariableMap.put("type", type);
+			templateVariableMap.put("link", link);
+
+			String slackMessageContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine,
+					GlobalConstants.SCHEDULER_SLACK_TEMPLATE, "UTF-8", templateVariableMap);
+
+			integrationService.postMessageToSlack(user, slackMessageContent);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return false;

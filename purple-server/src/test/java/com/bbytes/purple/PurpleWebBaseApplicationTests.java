@@ -24,9 +24,12 @@ import com.bbytes.purple.repository.HolidaysRepository;
 import com.bbytes.purple.repository.OrganizationRepository;
 import com.bbytes.purple.repository.ProjectRepository;
 import com.bbytes.purple.repository.StatusRepository;
+import com.bbytes.purple.repository.TaskItemRepository;
+import com.bbytes.purple.repository.TaskListRepository;
 import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
+import com.bbytes.purple.service.IntegrationService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
@@ -61,6 +64,9 @@ public class PurpleWebBaseApplicationTests extends PurpleApplicationTests {
 
 	@Autowired
 	protected ProjectService projectService;
+	
+	@Autowired
+	protected IntegrationService integrationService;
 
 	@Autowired
 	protected NotificationService notificationService;
@@ -85,6 +91,12 @@ public class PurpleWebBaseApplicationTests extends PurpleApplicationTests {
 
 	@Autowired
 	protected HolidaysRepository holiDaysRepository;
+	
+	@Autowired
+	protected TaskListRepository taskListRepository;
+	
+	@Autowired
+	protected TaskItemRepository taskItemRepository;
 
 	@Autowired
 	protected WebApplicationContext context;

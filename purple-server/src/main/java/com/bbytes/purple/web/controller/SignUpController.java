@@ -15,21 +15,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.rest.dto.models.SignUpRequestDTO;
 import com.bbytes.purple.rest.dto.models.UserDTO;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.RegistrationService;
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.SuccessHandler;
+import com.bbytes.purple.utils.ValidateEmailDomain;
 
 /**
  * Sign-up controller
@@ -48,16 +53,28 @@ public class SignUpController {
 	protected TokenAuthenticationProvider tokenAuthenticationProvider;
 
 	@Autowired
+	private SpringProfileService springProfileService;
+
+	@Autowired
 	private UserService userService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
+	@Value("${enterprise.default.orgname}")
+	private String enterpriseModeDefaultOrgName;
+
 	@Value("${base.url}")
 	private String baseUrl;
+
+	@Value("${email.signup.subject}")
+	private String signupSubject;
+
+	@Value("${email.register.tenant.subject}")
+	private String registerTenantSubject;
 
 	/**
 	 * The Sign up method is used to register organization and user
@@ -72,33 +89,53 @@ public class SignUpController {
 		// we assume the angular layer will do empty/null org name , user email
 		// etc.. validation
 		final String SIGN_UP_SUCCESS_MSG = "Activation link is successfully sent to your register email address";
-		final String subject = GlobalConstants.EMAIL_SIGNUP_SUBJECT;
-		final String template = GlobalConstants.EMAIL_SIGNUP_TEMPLATE;
+		final String clientTemplate = GlobalConstants.EMAIL_SIGNUP_TEMPLATE;
+
+		final String template = GlobalConstants.EMAIL_REGISTER_TENANT_TEMPLATE;
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
+		if (springProfileService.isEnterpriseMode() && signUpRequestDTO.getOrgName() == null
+				|| signUpRequestDTO.getOrgName().isEmpty()) {
+			signUpRequestDTO.setOrgName(enterpriseModeDefaultOrgName);
+		}
 		String orgId = signUpRequestDTO.getOrgName().replaceAll("\\s+", "_").trim();
 
 		Organization organization = new Organization(orgId, signUpRequestDTO.getOrgName().trim());
 
-		User user = new User(orgId, signUpRequestDTO.getEmail());
+		if (ValidateEmailDomain.isEmailDomainNotValid(signUpRequestDTO.getEmail()))
+			throw new PurpleException(ErrorHandler.DISPOSABLE_EMAIL_DOMAIN, ErrorHandler.INVALID_EMAIL);
+
+		User user = new User(signUpRequestDTO.getOrgName().trim(), signUpRequestDTO.getEmail());
 		user.setEmail(signUpRequestDTO.getEmail().toLowerCase());
 		user.setPassword(signUpRequestDTO.getPassword());
 		user.setOrganization(organization);
-		List<String> emailList = new ArrayList<String>();
-		emailList.add(user.getEmail());
+		List<String> clientEmailList = new ArrayList<String>();
+		clientEmailList.add(user.getEmail());
 
 		registrationService.signUp(organization, user);
 
-		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(signUpRequestDTO.getEmail().toLowerCase(), 720);
+		final String xauthToken = tokenAuthenticationProvider
+				.getAuthTokenForUser(signUpRequestDTO.getEmail().toLowerCase(), 720);
 		String postDate = dateFormat.format(new Date());
+
+		Map<String, Object> clientEmailBody = new HashMap<>();
+		clientEmailBody.put(GlobalConstants.USER_NAME, user.getName());
+		clientEmailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		clientEmailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
+
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(GlobalConstants.STATUSNAP_EMAIL_ADDRESS);
+		emailList.add(GlobalConstants.SALES_EMAIL_ADDRESS);
 
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
-		
-		emailService.sendEmail(emailList, emailBody, subject, template);
-		
+		emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
+		emailBody.put(GlobalConstants.EMAIL_ADDRESS, user.getEmail());
+
+		notificationService.sendTemplateEmail(clientEmailList, signupSubject, clientTemplate, clientEmailBody);
+		if (springProfileService.isSaasMode())
+			notificationService.sendTemplateEmail(emailList, registerTenantSubject, template, emailBody);
+
 		logger.debug("User with email  '" + user.getEmail() + "' signed up successfully");
 
 		RestResponse signUpResponse = new RestResponse(RestResponse.SUCCESS, SIGN_UP_SUCCESS_MSG,
@@ -107,6 +144,13 @@ public class SignUpController {
 		return signUpResponse;
 
 	}
+
+	/**
+	 * accountActivation Method is used to activate account for user.
+	 * 
+	 * @return
+	 * @throws PurpleException
+	 */
 
 	@RequestMapping(value = "/api/v1/admin/activateAccount", method = RequestMethod.GET)
 	public RestResponse accountActivation() throws PurpleException {
@@ -120,4 +164,50 @@ public class SignUpController {
 				SuccessHandler.SIGN_UP_SUCCESS);
 		return activeResponse;
 	}
+
+	/**
+	 * The resendActivationLink method is used to send the activation link.
+	 * 
+	 * @param email
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/auth/resendActivation", method = RequestMethod.GET)
+	public RestResponse resendActivationLink(@RequestParam String email) throws PurpleException {
+
+		final String RESEND_ACTIVATION_SUCCESS_MSG = "Activation link is successfully sent to your register email address";
+		final String template = GlobalConstants.EMAIL_SIGNUP_TEMPLATE;
+		RestResponse userReponse = null;
+
+		User user = registrationService.resendActivation(email);
+		if (!user.getUserRole().getRoleName().equals(UserRole.ADMIN_USER_ROLE.getRoleName())) {
+			userReponse = new RestResponse(RestResponse.FAILED, "Resend activation link failed",
+					SuccessHandler.RESEND_ACTIVATION_LINK_SUCCESS);
+			return userReponse;
+		}
+
+		final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), 720);
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(email);
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, user.getName());
+		emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.FORGOT_PASSWORD_URL + xauthToken);
+
+		notificationService.sendTemplateEmail(emailList, signupSubject, template, emailBody);
+
+		logger.debug("Resend activation link is done successfully");
+		userReponse = new RestResponse(RestResponse.SUCCESS, RESEND_ACTIVATION_SUCCESS_MSG,
+				SuccessHandler.RESEND_ACTIVATION_LINK_SUCCESS);
+
+		return userReponse;
+	}
+
+	@RequestMapping(value = "/auth/enterprise/mode", method = RequestMethod.GET)
+	public RestResponse isEnterpriseMode() throws PurpleException {
+
+		RestResponse activeResponse = new RestResponse(RestResponse.SUCCESS, springProfileService.isEnterpriseMode());
+		return activeResponse;
+	}
+
 }

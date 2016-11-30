@@ -1,14 +1,18 @@
 <div>
-  <div class="island">
-     <h3>Feedback</h3>
-	 <hr />
-	 <select class="form-control">
-	    <option value="">-- Select Category --</option>
-	    <option value="Bugs">Bugs</option>
-		<option value="Enhancement">Enhancement</option>
-        <option value="Comments">Comments</option>		
-		</select>
-	 <textarea name="" class="form-control" placeholder="Send us your comments or suggestion..."></textarea>
-	
-	 <button class="btn btn-default"> Send</button>
-  </div>
+    <div class="island" ng-controller="feebackCtrl">
+        <h3>Feedback to Statusnap</h3>
+        <hr />
+        <form name="myForm">
+            <select class="form-control" ng-model="category" required>
+                <option value="">-- Select Category --</option>
+                <option value="Bugs">Bugs</option>
+                <option value="Enhancement">Enhancement</option>
+                <option value="Comments">Comments</option>
+                <option value="Others">Others</option>
+            </select>
+            <textarea name="" class="form-control" placeholder="Send us your comments or suggestion..." ng-model="commentText" required></textarea>
+
+            <input type="button" class="btn btn-default fancymodal-close" id="close-button" ng-click="sendFeedback()" ng-disabled="myForm.$invalid" value="Send"> 
+        </form>
+    </div>
+</div>

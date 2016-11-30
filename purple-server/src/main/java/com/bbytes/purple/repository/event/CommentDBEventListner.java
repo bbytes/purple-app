@@ -40,7 +40,6 @@ public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 		count--;
 		status.setCommentCount(count);
 		statusService.save(status);
-
 	}
 
 	/**
@@ -54,8 +53,6 @@ public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 		long count = commentService.getCountByStatus(status);
 		status.setCommentCount(count);
 		statusService.save(status);
-
 	}
-
 	
 }

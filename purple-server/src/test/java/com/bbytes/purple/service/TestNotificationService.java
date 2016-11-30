@@ -38,11 +38,5 @@ public class TestNotificationService extends PurpleBaseApplicationTests {
 		Assert.assertTrue(notificationService.sendTemplateEmail(toEmailList, subject, "email-text-only.html", ctx));
 	}
 
-	@Test
-	public void testSlackMessaging() {
-		String message = "Test sample message from purple app";
-		Assert.assertTrue(
-				notificationService.sendSlackMessage("xoxp-3105667121-3107455865-8187187190-11282c", message));
-	}
 
 }

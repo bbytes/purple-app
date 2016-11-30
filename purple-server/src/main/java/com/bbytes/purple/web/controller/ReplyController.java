@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +19,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.domain.Comment;
+import com.bbytes.purple.domain.Reply;
 import com.bbytes.purple.domain.Status;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.ReplyDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
+import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.ReplyService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
@@ -33,7 +37,7 @@ import com.bbytes.purple.utils.SuccessHandler;
 /**
  * Reply Controller
  * 
- * @author akshay
+ * @author Akshay
  *
  */
 @RestController
@@ -48,13 +52,22 @@ public class ReplyController {
 	private UserService userService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
+
+	@Autowired
+	private CommentService commentService;
 
 	@Autowired
 	private StatusService statusService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
+
+	@Value("${email.reply.subject}")
+	private String replySubject;
+
+	@Value("${email.tag.subject}")
+	private String tagSubject;
 
 	/**
 	 * The addReply method is used to add reply to comment
@@ -64,42 +77,83 @@ public class ReplyController {
 	 * @return
 	 * @throws PurpleException
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/v1/comment/{commentid}/reply", method = RequestMethod.POST)
 	public RestResponse addReply(@PathVariable("commentid") String commentId, @RequestBody ReplyDTO replyDTO)
 			throws PurpleException {
 
-		final String subject = GlobalConstants.EMAIL_REPLY_SUBJECT;
 		final String template = GlobalConstants.REPLY_EMAIL_TEMPLATE;
-		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
-
-
-		// We will get current logged in user
 		User user = userService.getLoggedInUser();
-
+		final String subject = user.getName() + " " + tagSubject;
+		Map<String, Object> replyMap = commentService.checkMentionUser(replyDTO.getReplyDesc());
+		replyDTO.setReplyDesc((String) replyMap.get("desc"));
 		Comment comment = replyService.postReply(commentId, replyDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
-		
+		Set<String> mentioneEmailSet = (Set<String>) replyMap.get("mentionEmailList");
+		List<String> mentioneEmailList = new ArrayList<String>();
+		mentioneEmailList.addAll(mentioneEmailSet);
+
 		int replySize = comment.getReplies().size();
-		String postDate = dateFormat.format(comment.getCreationDate());;
 
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
 		emailList.add(comment.getUser().getEmail());
 
+		Map<String, Object> emailBody = replyEmailBody(user, comment, status, replySize,
+				GlobalConstants.REPLY_EMAIL_TEXT);
+
+		notificationService.sendTemplateEmail(emailList, replySubject, template, emailBody);
+
+		if (mentioneEmailList != null && !mentioneEmailList.isEmpty()) {
+			Map<String, Object> mentionEmailBody = replyEmailBody(user, comment, status, replySize,
+					GlobalConstants.MENTIONED_EMAIL_TEXT);
+			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
+		}
+
+		if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
+			replySize = comment.getReplies().size();
+			Reply reply = comment.getReplies().get(replySize - 1);
+			notificationService.sendSlackMessage(status.getUser(), "Statusnap comment reply notification",
+					replyService.replySnippetUrl(status.getUser(), comment, reply));
+			notificationService.sendSlackMessage(comment.getUser(), "Statusnap comment reply notification ",
+					replyService.replySnippetUrl(comment.getUser(), comment, reply));
+		}
+
+		Map<String, Object> replyResponseMap = dataModelToDTOConversionService
+				.getResponseMapWithGridDataAndReply(comment);
+
+		logger.debug("Reply for comment Id  '" + commentId + "' is added successfully");
+		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyResponseMap,
+				SuccessHandler.ADD_REPLY_SUCCESS);
+
+		return replyReponse;
+	}
+
+	/**
+	 * Return email body for reply email template
+	 * 
+	 * @param user
+	 * @param comment
+	 * @param status
+	 * @param replySize
+	 * @return
+	 */
+	private Map<String, Object> replyEmailBody(User user, Comment comment, Status status, int replySize,
+			String emailText) {
+
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		String postDate = dateFormat.format(comment.getCreationDate());
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, user.getName());
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize-1).getReplyDesc());
-
-		emailService.sendEmail(emailList, emailBody, subject, template);
-
-		Map<String, Object> replyMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndReply(comment);
-
-		logger.debug("Reply for comment Id  '" + commentId + "' is added successfully");
-		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyMap, SuccessHandler.ADD_REPLY_SUCCESS);
-
-		return replyReponse;
+		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize - 1).getReplyDesc());
+		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
+		emailBody.put(GlobalConstants.WORKED_ON, status.getWorkedOn() == null ? "" : status.getWorkedOn());
+		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn() == null ? "" : status.getWorkingOn());
+		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers() == null ? "" : status.getBlockers());
+		emailBody.put(GlobalConstants.EMAIL_STRING_TEXT, emailText);
+		return emailBody;
 	}
 
 	/**
@@ -163,6 +217,26 @@ public class ReplyController {
 		Map<String, Object> replyMap = dataModelToDTOConversionService.getResponseMapWithGridDataAndReply(comment);
 
 		logger.debug("All Replies for comment Id  '" + commentId + "' is fetched successfully");
+		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyMap, SuccessHandler.GET_REPLY_SUCCESS);
+
+		return replyReponse;
+	}
+
+	/**
+	 * The getReply method is used to get particular reply of comment
+	 * 
+	 * @param commentId
+	 * @param replyId
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/comment/{commentId}/reply/{replyId}", method = RequestMethod.GET)
+	public RestResponse getReply(@PathVariable("commentId") String commentId, @PathVariable("replyId") String replyId)
+			throws PurpleException {
+
+		Map<String, Object> replyMap = replyService.getReply(commentId, replyId);
+
+		logger.debug("Reply for comment Id  '" + commentId + "' is fetched successfully");
 		RestResponse replyReponse = new RestResponse(RestResponse.SUCCESS, replyMap, SuccessHandler.GET_REPLY_SUCCESS);
 
 		return replyReponse;

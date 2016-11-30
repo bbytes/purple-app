@@ -3,12 +3,15 @@ package com.bbytes.purple.web.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -89,18 +92,18 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testGetAllProjectByUser() throws Exception {
 
-		List<User> userList = new ArrayList<User>();
+		Set<User> userList = new HashSet<User>();
 		userList.add(normalUser);
 		userList.add(user1);
 
 		Project project1 = new Project("web");
 		project1.setOrganization(org);
-		project1.setUser(userList);
+		project1.setUsers(userList);
 		projectService.save(project1);
 
 		Project project2 = new Project("reveal");
 		project2.setOrganization(org);
-		project2.setUser(userList);
+		project2.setUsers(userList);
 		projectService.save(project2);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
@@ -122,17 +125,17 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testGetAllUsersByProjectsMapPasses() throws Exception {
 
-		List<User> userList1 = new ArrayList<User>();
+		Set<User> userList1 = new HashSet<User>();
 		userList1.add(user1);
 		userList1.add(user2);
 
-		List<User> userList2 = new ArrayList<User>();
+		Set<User> userList2 = new HashSet<User>();
 		userList2.add(user2);
 
-		project1.setUser(userList1);
+		project1.setUsers(userList1);
 		projectService.save(project1);
 
-		project2.setUser(userList2);
+		project2.setUsers(userList2);
 		projectService.save(project2);
 
 		List<String> projectList = new ArrayList<String>();
@@ -150,7 +153,7 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 	}
-	
+
 	@Test
 	public void testGetAllUsersByProjectsFailed() throws Exception {
 
@@ -161,17 +164,17 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 	@Test
 	public void testGetAllUsersByProjectsPasses() throws Exception {
 
-		List<User> userList1 = new ArrayList<User>();
+		Set<User> userList1 = new HashSet<User>();
 		userList1.add(user1);
 		userList1.add(user2);
 
-		List<User> userList2 = new ArrayList<User>();
+		Set<User> userList2 = new HashSet<User>();
 		userList2.add(user2);
 
-		project1.setUser(userList1);
+		project1.setUsers(userList1);
 		projectService.save(project1);
 
-		project2.setUser(userList2);
+		project2.setUsers(userList2);
 		projectService.save(project2);
 
 		List<String> projectList = new ArrayList<String>();
@@ -184,8 +187,46 @@ public class TestUserController extends PurpleWebBaseApplicationTests {
 		String requestJson = ow.writeValueAsString(projectList);
 
 		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
-		mockMvc.perform(get("/api/v1/projects/users/all").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+		mockMvc.perform(post("/api/v1/projects/users/all").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
 				.contentType(APPLICATION_JSON_UTF8).content(requestJson)).andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
+
+	// Test cases for update user
+
+	@Test
+	public void testUpdateUserPasses() throws Exception {
+
+		String userName = "Updated Name";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
+		mockMvc.perform(put("/api/v1/user/update").param("userName", userName)
+				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
+
+	@Test
+	public void testaddDeviceTokenPasses() throws Exception {
+
+		String deviceToken = "cdjcdndsjc";
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
+		mockMvc.perform(put("/api/v1/user/devicetoken/add").param("deviceToken", deviceToken)
+				.header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken).contentType(APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk()).andDo(print())
+				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
+
+	}
+
+	@Test
+	public void testisDeviceTokenPasses() throws Exception {
+
+		String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(normalUser.getEmail(), 30);
+		mockMvc.perform(get("/api/v1/user/devicetoken").header(GlobalConstants.HEADER_AUTH_TOKEN, xauthToken)
+				.contentType(APPLICATION_JSON_UTF8)).andExpect(status().isOk()).andDo(print())
 				.andExpect(content().string(containsString("{\"success\":true"))).andExpect(status().isOk());
 
 	}

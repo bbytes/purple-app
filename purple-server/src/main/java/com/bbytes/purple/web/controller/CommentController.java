@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +27,7 @@ import com.bbytes.purple.rest.dto.models.CommentDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.CommentService;
 import com.bbytes.purple.service.DataModelToDTOConversionService;
-import com.bbytes.purple.service.EmailService;
+import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
@@ -52,33 +54,53 @@ public class CommentController {
 	private StatusService statusService;
 
 	@Autowired
-	private EmailService emailService;
+	private NotificationService notificationService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
 
+	@Value("${email.comment.subject}")
+	private String commentSubject;
+
+	@Value("${email.updateComment.subject}")
+	private String updateCommentSubject;
+
+	@Value("${email.tag.subject}")
+	private String tagSubject;
+
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/api/v1/comment/add", method = RequestMethod.POST)
 	public RestResponse saveComment(@RequestBody CommentDTO commentDTO) throws PurpleException {
 
-		final String subject = GlobalConstants.EMAIL_COMMENT_SUBJECT;
 		final String template = GlobalConstants.COMMENT_EMAIL_TEMPLATE;
-		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 		User user = userService.getLoggedInUser();
+		final String subject = user.getName() + " " + tagSubject;
+
+		Map<String, Object> commentMap = commentService.checkMentionUser(commentDTO.getCommentDesc());
+		commentDTO.setCommentDesc((String) commentMap.get("desc"));
 		Comment comment = commentService.addComment(commentDTO, user);
 		Status status = statusService.findOne(comment.getStatus().getStatusId());
+		Set<String> mentioneEmailSet = (Set<String>) commentMap.get("mentionEmailList");
+		List<String> mentioneEmailList = new ArrayList<String>();
+		mentioneEmailList.addAll(mentioneEmailSet);
 
-		String postDate = dateFormat.format(status.getDateTime());
 		List<String> emailList = new ArrayList<String>();
 		emailList.add(status.getUser().getEmail());
 
-		Map<String, Object> emailBody = new HashMap<>();
-		emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
-		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
-		emailBody.put("userName", user.getName());
+		Map<String, Object> commentEmailBody = commentEmailBody(user, comment, status,
+				GlobalConstants.COMMENT_EMAIL_TEXT, status.getUser().getName());
 
-		emailService.sendEmail(emailList, emailBody, subject, template);
+		notificationService.sendTemplateEmail(emailList, commentSubject, template, commentEmailBody);
+
+		if (mentioneEmailList != null && !mentioneEmailList.isEmpty()) {
+			Map<String, Object> mentionEmailBody = commentEmailBody(user, comment, status,
+					GlobalConstants.MENTIONED_EMAIL_TEXT, "");
+			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
+		}
+
+		notificationService.sendSlackMessage(user, "Statusnap comment notification",
+				commentService.commentSnippetUrl(status.getUser(), comment));
 
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 
@@ -87,6 +109,31 @@ public class CommentController {
 				SuccessHandler.ADD_COMMENT_SUCCESS);
 
 		return commentReponse;
+	}
+
+	/**
+	 * Return email body for comment email template
+	 * 
+	 * @param user
+	 * @param comment
+	 * @param status
+	 * @return
+	 */
+	private Map<String, Object> commentEmailBody(User user, Comment comment, Status status, String emailText,
+			String userName) {
+		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		String postDate = dateFormat.format(status.getDateTime());
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, userName);
+		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
+		emailBody.put(GlobalConstants.WORKED_ON, status.getWorkedOn() == null ? "" : status.getWorkedOn());
+		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn() == null ? "" : status.getWorkingOn());
+		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers() == null ? "" : status.getBlockers());
+		emailBody.put(GlobalConstants.EMAIL_STRING_TEXT, emailText);
+		emailBody.put("userName", user.getName());
+		return emailBody;
 	}
 
 	@RequestMapping(value = "/api/v1/comment/delete/{commentId}", method = RequestMethod.DELETE)
@@ -105,7 +152,33 @@ public class CommentController {
 	public RestResponse updateComment(@PathVariable("commentId") String commentId, @RequestBody CommentDTO commentDTO)
 			throws PurpleException {
 
+		/*
+		 * final String template =
+		 * GlobalConstants.UPDATE_COMMENT_EMAIL_TEMPLATE; DateFormat dateFormat
+		 * = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
+		 * 
+		 * User user = userService.getLoggedInUser();
+		 */
 		Comment comment = commentService.updateComment(commentId, commentDTO);
+		/*
+		 * Status status =
+		 * statusService.findOne(comment.getStatus().getStatusId());
+		 * 
+		 * final String updateCommentSub = "Statusnap - " + " " +
+		 * status.getUser().getName() + " " + updateCommentSubject; String
+		 * postDate = dateFormat.format(status.getDateTime()); List<String>
+		 * emailList = new ArrayList<String>();
+		 * emailList.add(status.getUser().getEmail());
+		 * 
+		 * Map<String, Object> emailBody = new HashMap<>();
+		 * emailBody.put(GlobalConstants.USER_NAME, status.getUser().getName());
+		 * emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
+		 * emailBody.put(GlobalConstants.COMMENT_DESC,
+		 * comment.getCommentDesc()); emailBody.put("userName", user.getName());
+		 * 
+		 * emailService.sendEmail(emailList, emailBody, updateCommentSub,
+		 * template);
+		 */
 		CommentDTO commentResponse = dataModelToDTOConversionService.convertComment(comment);
 
 		logger.debug("Comment is updated successfully");
@@ -130,5 +203,24 @@ public class CommentController {
 
 		return commentReponse;
 
+	}
+
+	/**
+	 * This method is used to get the comment by commentId
+	 * 
+	 * @param commentId
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/comment/{commentId}", method = RequestMethod.GET)
+	public RestResponse getComment(@PathVariable("commentId") String commentId) throws PurpleException {
+
+		Comment comment = commentService.getComment(commentId);
+
+		logger.debug("Comment with comment Id - " + commentId + " is fetched successfully");
+		RestResponse commentReponse = new RestResponse(RestResponse.SUCCESS, comment,
+				SuccessHandler.GET_COMMENT_SUCCESS);
+
+		return commentReponse;
 	}
 }

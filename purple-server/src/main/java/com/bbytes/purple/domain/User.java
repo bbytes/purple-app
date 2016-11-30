@@ -1,8 +1,6 @@
 package com.bbytes.purple.domain;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -48,15 +46,24 @@ public class User {
 
 	@Field("time_preference")
 	private String timePreference;
-	
+
 	@Field("email_notification_state")
 	private boolean emailNotificationState = true;
 
+	@Field("disable_state")
+	private boolean disableState = false;
+
+	@Field("mark_delete")
+	private boolean markDelete = false;
+
+	@Field("device_token")
+	private String deviceToken;
+
+	@Field("mark_delete_date")
+	private Date markDeleteDate;
+
 	@DBRef
 	private Organization organization;
-
-	@DBRef(lazy = true)
-	private List<Project> projects = new ArrayList<>();
 
 	// embedded
 	private UserRole userRole = UserRole.NORMAL_USER_ROLE;
@@ -75,4 +82,5 @@ public class User {
 	public static String PENDING = "Pending";
 	public static String JOINED = "Joined";
 	public static String DEFAULT_EMAIL_REMINDER_TIME = "1970-01-01T12:30:00.000Z";
+
 }

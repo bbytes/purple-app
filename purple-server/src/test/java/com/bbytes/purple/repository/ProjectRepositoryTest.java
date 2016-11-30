@@ -6,7 +6,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -111,11 +113,11 @@ public class ProjectRepositoryTest extends PurpleBaseApplicationTests {
 		userRepository.save(user1);
 		userRepository.save(user2);
 		List<User> users = userRepository.findAll();
-
-		proj1.setUser(users);
+		Set<User> projectSet = new HashSet<User>(users);
+		proj1.setUsers(projectSet);
 		projectRepository.save(proj1);
 
-		assertTrue(proj1.getUser().size() > 0);
+		assertTrue(proj1.getUsers().size() > 0);
 
 	}
 

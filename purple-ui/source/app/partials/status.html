@@ -1,322 +1,176 @@
-
-<div ng-init="usersstatusLoad(mytime)" class="mobile-version">
-<div class="col-md-8" >
-	<div class="wrapper" >
-	  <div class="search-status">
-	     <ul>
-			  <li><select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timePeriodChange(mytime)" >
-             </select></li>
-  
-			<li><a href="#" purple-csv-download="mytime"><img src="../../assets/img/csv.png" class="cvg" tooltips tooltip-template="CSV Download" tooltip-side="bottom"></a></li>
-	      </ul>
-			</div>
-
-		<div class="top-header" style="margin-top: 27px;">
-			<span class="project"><span
-					class="username"><span class="hash">@ </span>
-						{{userName}}</span></span>
-		</div>
-
-		<ul class="timeline newid" ng-repeat="artist in artists">
-	
-			<div class="date-time" >
-				<p>{{artist.date}}</p>
-			</div>
-			
-			<li ng-repeat="status in artist.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
-				<div class="timeline-badge"></div>
-
-				<div class="timeline-panel">
-					<div class="edit">
-					    <a href="#" ng-click="deleteStatus(status.statusId,$index)" confirm="Are you sure you want to delete the item?" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"  tooltips tooltip-template="Delete"></a>
-					
-						<a ng-show ="showEditIcon(artist.date)" href="#" ng-click="showUpdatePage(status.statusId)" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"  tooltips tooltip-template="Edit"></a> 
-						
-						
-					</div>
-					<div class="timeline-heading">
-						<h4>
-							<span class="hash"> <span class="hash">#</span>
-							
-								{{status.projectName}}        <span  style="float:right"> {{status.time}}</span>
-						</h4>
-						
-						<p>{{status.hours}}hrs, {{artist.date}}</p>
-					</div>
-					<div class="timeline-body worked-on">
-						<h3>worked on</h3>
-						<p ng-bind-html="status.workedOn">{{status.workedOn}}</p>
-					</div>
-
-					<div class="timeline-body working-on">
-						<h3>working on</h3>
-						<p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
-					</div>
-
-					<div class="timeline-body blocker-on">
-						<h3>blockers</h3>
-						<p ng-bind-html="status.blockers">{{status.blockers}}</p>
-					</div>
-					
-				</div>
-			</li>
-			<li class="clearfix no-float"></li>
-		</ul>
-
-	</div>
-</div>
-
-
-<form name="myForm">
-	<div class="col-md-4 side">
-
-		<div class="row" >
-			<div class="col-md-9" 
-				ng-init="loadProjects()">
-				<div class="form-sidebar">
-				
-					<div class="form-group" >
-						<select class="form-control" name="project" ng-model="project" 
-						required>
-						 <option value="">--- Select Project ---</option>
-                        <option ng-repeat="project in allprojects" value="{{project.projectId}}" >{{project.projectName}}</option>
-						</select> <span style="color: red" ng-show="myForm.project.$error.required"></span>		
-					</div>
-					
-				</div>
-			</div>
-
-			<div class="col-md-3">
-				<div class="form-sidebar">
-					<div class="form-group side-slide-panel">
-						<select class="form-control turnintodropdown" name="hours"
-							ng-model="hours">
-							<option value="">Hrs</option>		
-							<option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
-						 
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="form-group side-slide-panel">
-			<label for="comment">WORKED ON</label>
-
-	       <div text-angular-toolbar class="toolbar button-toolbar" name="workedOn" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]">
- 		   </div>
-		
-		<div class="status-text">
-   			 <div text-angular ta-target-toolbars="workedOn" ng-model="workedOn" name="workedOn" id="workedOn" ta-paste="stripFormat($html)"></div>
-		</div>
-
-		</div>
-
-		<div class="form-group side-slide-panel">
-			<label for="comment">WORKING ON</label>
-
-				 <div text-angular-toolbar class="toolbar button-toolbar" name="workingOn" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]" >
- 		        </div>
-		<div class="status-text">
-   			 <div text-angular ta-target-toolbars="workingOn" ng-model="workingOn" name="workingOn" id="workingOn" ta-paste="stripFormat($html)"></div>
-		</div>
-
-</div>	
-		<div class="form-group side-slide-panel">
-			<label for="comment">BLOCKERS</label>
-
-				<div text-angular-toolbar class="toolbar button-toolbar" name="blockers" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]">
- 		         </div>
-		<div class="status-text">
-   			 <div text-angular ta-target-toolbars="blockers" ng-model="blockers" name="blockers" id="blockers" ta-paste="stripFormat($html)"></div>
-		</div>
-
-		</div>	
-      
-	   
-          <div class="col-md-8"> 
-            <div class="row">		  
-		    <button type="button" class="btn btn-default status-submit" ng-click="submitStatus()" ng-show="isSubmit">SUBMIT</button>
-		    <button type="button" class="btn btn-default status-submit" ng-click="updateStatus()" ng-show="isUpdate">UPDATE</button>       
-          </div>
-		  </div>
-		
-		  <div class="col-md-4">
-           <div class="row">		  
-            <button type="reset" class="btn btn-default status-submit" ng-click="blockers = orightml; workingOn = orightml; workedOn = orightml; reset()">CANCEL</button>
-         </div>
-        </div>
-	
-	
-	</div>
-</form>
-
-
-<!---mobile---->
-
-
-</div>
-
-
 <!--desktop-->
 
-<div ng-init="usersstatusLoad(mytime)" class="desktop-version">
+<div ng-init="initStatus()" class="{{version}}">
+    <div class="col-md-8" >
+        <div class="wrapper" > 
+            <div class="search-status">
+                <ul>
+                    <li><select ng-model="timeValue" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timePeriodChange(timeValue)" >
+                        </select></li>
 
-<form name="myForm">
-	<div class="col-md-4 side">
+                    <li><a href="#" purple-csv-download="timeValue"><img src="../../assets/img/export_csv-32.png" class="cvg" tooltips tooltip-template="CSV Download" tooltip-side="bottom"></a></li>
+                </ul>
+            </div>
 
-		<div class="row" >
-			<div class="col-md-9" 
-				ng-init="loadProjects()">
-				<div class="form-sidebar">
-				
-					<div class="form-group" >
-						<select class="form-control" name="project" ng-model="project" 
-						required>
-						 <option value="">--- Select Project ---</option>
-                        <option ng-repeat="project in allprojects" value="{{project.projectId}}" >{{project.projectName}}</option>
-						</select> <span style="color: red" ng-show="myForm.project.$error.required"></span>		
-					</div>
-					
-				</div>
-			</div>
+            <div ng-if="isMobileMode === false" class="top-header" style="margin-top: 17px;">
+                <span class="project"><span
+                        class="username username-status"><span class="hash"><ng-letter-avatar
+                                data="{{userName}}" shape="round"  width="25px" height="25px" fontSize="15px"></ng-letter-avatar> </span>
+                        {{userName}}</span></span>
+            </div>
+            <div ng-if="isMobileMode === true" class="top-header" style="margin-top: 27px;">
+                <span class="project"><span
+                        class="username"><span class="hash">@ </span>
+                        {{userName}}</span></span>
+            </div>
 
-			<div class="col-md-3">
-				<div class="form-sidebar">
-					<div class="form-group side-slide-panel">
-						<select class="form-control turnintodropdown" name="hours"
-							ng-model="hours">
-							<option value="">Hrs</option>		
-							<option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
-						 
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
+            <ul class="timeline newid" ng-repeat="userStatus in allstatus">
 
-		<div class="form-group side-slide-panel">
-			<label for="comment">WORKED ON</label>
+                <div class="date-time" >
+                    <p>{{userStatus.date}}</p>
+                </div>
 
-	       <div text-angular-toolbar class="toolbar button-toolbar" name="workedOn1" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]">
- 		   </div>
-		
-		<div class="status-text">
-   			 <div text-angular ta-target-toolbars="workedOn" ng-model="workedOn" name="workedOn" id="workedOn" ta-paste="stripFormat($html)"></div>
-		</div>
+                <li ng-repeat="status in userStatus.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
+                    <div class="timeline-badge"></div>
 
-		</div>
+                    <div class="timeline-panel">
+                        <div class="edit-status">
+                            <a href="#" ng-click="deleteStatus(status.statusId, $parent.$index, $index)" confirm="Are you sure you want to delete the item?" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"  tooltips tooltip-template="Delete"></a>
 
-		<div class="form-group side-slide-panel">
-			<label for="comment">WORKING ON</label>
+                            <a ng-show ="showEditIcon(userStatus.date)" href="#" ng-click="showUpdatePage(status.statusId)" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"  tooltips tooltip-template="Edit"></a> 
 
-				 <div text-angular-toolbar class="toolbar button-toolbar" name="workingOn1" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]" >
- 		        </div>
-		<div class="status-text">
-   			 <div text-angular ta-target-toolbars="workingOn" ng-model="workingOn" name="workingOn" id="workingOn" ta-paste="stripFormat($html)"></div>
-		</div>
+                        </div>
+                        <div class="timeline-heading">
+                            <h4>
+                                <span class="hash username-status"> <span class="hash hash-tag">#</span>
 
-</div>	
-		<div class="form-group side-slide-panel">
-			<label for="comment">BLOCKERS</label>
+                                    {{status.projectName}}        <span  style="float:right"> {{status.time}}</span>
+                            </h4>
 
-				<div text-angular-toolbar class="toolbar button-toolbar" name="blockers1" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]">
- 		         </div>
-		<div class="status-text">
-   			 <div text-angular ta-target-toolbars="blockers" ng-model="blockers" name="blockers" id="blockers" ta-paste="stripFormat($html)"></div>
-		</div>
+                            <p>{{status.hours}}hrs, {{userStatus.date}}</p>
+                        </div>
+                        <div class="timeline-body worked-on">
+                            <h3>worked on</h3>
+                            <p ng-bind-html="status.workedOn">{{status.workedOn}}</p>
+                        </div>
 
-		</div>	
-      
-	   
-          <div class="col-md-8"> 
-            <div class="row">		  
-		    <button type="button" class="btn btn-default status-submit" ng-click="submitStatus()" ng-show="isSubmit">SUBMIT</button>
-		    <button type="button" class="btn btn-default status-submit" ng-click="updateStatus()" ng-show="isUpdate">UPDATE</button>       
-          </div>
-		  </div>
-		
-		  <div class="col-md-4">
-           <div class="row">		  
-            <button type="reset" class="btn btn-default status-submit" ng-click="blockers = orightml; workingOn = orightml; workedOn = orightml; reset()">CANCEL</button>
-         </div>
+                        <div class="timeline-body working-on">
+                            <h3>working on</h3>
+
+                            <p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
+                        </div>
+
+                        <div class="timeline-body blocker-on">
+                            <h3>blockers</h3>
+                            <p ng-bind-html="status.blockers">{{status.blockers}}</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="clearfix no-float"></li>
+            </ul>
+
         </div>
-	
-	
-	</div>
-</form>
+    </div>
+
+
+    <form name="myForm">
+        <div class="col-md-4">
+            <div class="side">
+                <div class="row" ng-init="loadProjects()">
+
+                    <div class="date-display">
+                        <!-- p>{{current_date | date:'MMM dd, yyyy'}}</p -->
+                        <div class="col-md-9" style="padding-right: 4px; padding-left: 15px;">
+                            <select class="form-control" id="statusDate" name="statusDate" ng-model="statusDate" 
+                                    ng-disabled="isDisable">
+                                <option ng-repeat="date in dateArray" value="{{date}}" >{{date| date:'MMM dd, yyyy'}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3" style="padding-left: 4px;">
+                            <div class="form-sidebar">
+
+                                <div class="form-group" >
+                                    <select chosen="selectables" ng-model="hours" id="hoursDropdown" >
+                                        <option value="">Hrs</option>
+                                        <option ng-repeat="hr in selectables" value="{{hr.id}}" >{{hr.id}}</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-9" style="padding-right: 4px; padding-left: 15px;">
+                        <div class="form-sidebar">
+
+                            <div class="form-group" >
+                                <select chosen="allprojects" ng-model="project" id="projectDropdown">
+                                    <option value="">--- Select Project ---</option>
+                                    <option ng-repeat="project in allprojects" value="{{project.projectId}}" >{{project.projectName}}</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3" style="padding-right: 4px; padding-left: 5px;">
+                        <a href="" style="color:rgb(124, 105, 145);" ng-click="openTaskModal(project)"><i class="fa fa-tasks fa-2x" aria-hidden="true" tooltips tooltip-template="Task View" tooltip-side="bottom" style="margin-top: 5px;"></i></a>
+                    </div>
 
 
 
-<div class="col-md-8" >
-	<div class="wrapper" >
-	  <div class="search-status">
-	     <ul>
-			  <li><select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timePeriodChange(mytime)" >
-             </select></li>
-  
-			<li><a href="#" purple-csv-download="mytime"><img src="../../assets/img/csv.png" class="cvg" tooltips tooltip-template="CSV Download" tooltip-side="bottom"></a></li>
-	      </ul>
-			</div>
+                    <!--                    					<div class="col-sm-2" style="padding-right: 4px; padding-left: 4px;">
+                                                                <div class="form-sidebar">
+                                                                    <div class="form-group side-slide-panel">
+                                                                        <select chosen class="form-control turnintodropdown" name="hours"
+                                                                                ng-model="hours">
+                                                                            <option value="">Min</option>		
+                                                                            <option ng-repeat="hours in selectables" value="{{hours.value}}">{{hours.id}}</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                            </div>-->
 
-		<div class="top-header" style="margin-top: 27px;">
-			<span class="project"><span
-					class="username"><span class="hash">@ </span>
-						{{userName}}</span></span>
-		</div>
 
-		<ul class="timeline newid" ng-repeat="artist in artists">
-	
-			<div class="date-time" >
-				<p>{{artist.date}}</p>
-			</div>
-			
-			<li ng-repeat="status in artist.statusList"  ng-class-odd="'timeline-inverted'" ng-class-even="''">
-				<div class="timeline-badge"></div>
+                </div>
 
-				<div class="timeline-panel">
-					<div class="edit">
-					    <a href="#" ng-click="deleteStatus(status.statusId,$index)" confirm="Are you sure you want to delete the item?" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/delete.svg"  tooltips tooltip-template="Delete"></a>
-					
-						<a ng-show ="showEditIcon(artist.date)" href="#" ng-click="showUpdatePage(status.statusId)" class="navbar-toggle collapse in icon-menu" data-toggle="collapse" id="menu-toggle-2"><img src="../../assets/img/edit.svg"  tooltips tooltip-template="Edit"></a> 
-						
-						
-					</div>
-					<div class="timeline-heading">
-						<h4>
-							<span class="hash"> <span class="hash">#</span>
-							
-								{{status.projectName}}        <span  style="float:right"> {{status.time}}</span>
-						</h4>
-						
-						<p>{{status.hours}}hrs, {{artist.date}}</p>
-					</div>
-					<div class="timeline-body worked-on">
-						<h3>worked on</h3>
-						<p ng-bind-html="status.workedOn">{{status.workedOn}}</p>
-					</div>
+                <div class="form-group side-slide-panel">
+                    <label for="comment">WORKED ON</label>
+                    <workedon-text-angular-mentio ng-model="workedOn"></workedon-text-angular-mentio>
+                </div>
 
-					<div class="timeline-body working-on">
-						<h3>working on</h3>
-						<p ng-bind-html="status.workingOn">{{status.workingOn}}</p>
-					</div>
+                <div class="form-group side-slide-panel">
+                    <label for="comment">WORKING ON</label>
+                    <workingon-text-angular-mentio ng-model="workingOn"></workingon-text-angular-mentio>
+                </div>	
+                <div class="form-group side-slide-panel">
+                    <label for="comment">BLOCKERS</label>
+                    <blockers-text-angular-mentio ng-model="blockers"></blockers-text-angular-mentio>
+                </div>
 
-					<div class="timeline-body blocker-on">
-						<h3>blockers</h3>
-						<p ng-bind-html="status.blockers">{{status.blockers}}</p>
-					</div>
-					
-				</div>
-			</li>
-			<li class="clearfix no-float"></li>
-		</ul>
+                <div class="col-md-8"> 
+                    <div class="row">		  
+                        <button type="button" class="btn btn-default status-submit" ng-click="isSubmit ? submitStatus() : updateStatus()()" ng-click="submitStatus()" >{{submitButtonText}}</button>
+                    </div>
+                </div>
 
-	</div>
+                <div class="col-md-4">
+                    <div class="row">		  
+                        <button type="reset" class="btn btn-default status-submit" ng-click="blockers = orightml; workingOn = orightml; workedOn = orightml; reset()">CANCEL</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <!--desktop-->
+
 </div>
 
 
 
-<!---mobile---->
-
-
-</div>

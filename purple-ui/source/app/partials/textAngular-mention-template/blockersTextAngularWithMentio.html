@@ -1,0 +1,22 @@
+<div text-angular-toolbar class="toolbar button-toolbar" name="blockers" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]">
+</div>
+<div class="status-text">
+    <div text-angular ng-model="ngModel" ta-paste="stripFormat($html)" ta-text-editor-setup='setup' ta-target-toolbars="blockers"></div>
+</div>
+
+<mentio-menu mentio-for="'content-editor+$id'"
+             mentio-trigger-char="'@'"
+             mentio-items="people"
+             mentio-template-url="/iterator.tpl"
+             mentio-search="searchPeople(term)"
+             mentio-select="getPeopleText(item)">
+</mentio-menu>
+
+<script type="text/ng-template" id="/iterator.tpl">
+    <ul class="list-group user-search demo-scrollable-menu">
+    <li mentio-menu-item="item" ng-repeat="item in items" class="list-group-item">
+    <span class="text-primary" ng-bind-html="item.userName"></span> -
+    <span class="text-primary" ng-bind-html="item.email"></span>
+    </li>
+    </ul>
+</script>
