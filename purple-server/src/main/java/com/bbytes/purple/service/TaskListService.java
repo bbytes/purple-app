@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.util.UrlUtils;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
@@ -12,6 +13,7 @@ import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.repository.TaskListRepository;
+import com.bbytes.purple.utils.URLUtil;
 
 import net.rcarz.jiraclient.Issue;
 
@@ -115,7 +117,15 @@ public class TaskListService extends AbstractService<TaskList, String> {
 			save(taskList);
 		}
 
-		TaskItem item = new TaskItem(issue.getSummary(), issue.getDescription(), issue.getTimeEstimate(), issue.getDueDate());
+		String jiraIssueURLHref="";
+		
+		String baseURL  = URLUtil.getBaseURL(issue.getUrl());
+		if(baseURL!=null && !baseURL.isEmpty()){
+			String jiraURL  = URLUtil.getJiraIssueURL(baseURL, issue.getKey());
+			jiraIssueURLHref = URLUtil.getHTMLHref(jiraURL, issue.getKey() + " - "+ issue.getSummary());
+		}
+		
+		TaskItem item = new TaskItem(jiraIssueURLHref, issue.getDescription(), issue.getTimeEstimate(), issue.getDueDate());
 		taskList.addTaskItem(item);
 		if(issue.getAssignee()!=null && issue.getAssignee().getEmail()!=null){
 			User userAssignee = userService.getUserByEmail(issue.getAssignee().getEmail());

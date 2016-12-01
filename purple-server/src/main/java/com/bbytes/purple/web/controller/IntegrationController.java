@@ -255,9 +255,6 @@ public class IntegrationController {
 			// checking jira is connected or not
 			Integration integration = integrationService.getJIRAConnection(loggedInUser);
 
-			Map<String, Map<String, List<Issue>>> projectToIssueListMap = integrationService
-					.getJiraProjectWithIssueTypeToIssueList(integration);
-
 			Map<String, List<User>> projectToUsersMap = integrationService.getJiraProjectWithUserList(integration);
 			// iterating project to users map
 			for (Map.Entry<String, List<User>> entry : projectToUsersMap.entrySet()) {
