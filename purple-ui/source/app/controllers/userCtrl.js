@@ -42,7 +42,7 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
 
         userService.reInviteUser(name, email).then(function (response) {
             if (response.success) {
-                appNotifyService.success('You have been successfully invited to user : ' + name);
+                appNotifyService.success('You have successfully re-invited to ' + name);
             }
         });
     };
