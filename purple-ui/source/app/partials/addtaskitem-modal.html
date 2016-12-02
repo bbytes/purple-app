@@ -1,91 +1,107 @@
 <div class="modal-header header-back clearfix" style="padding:5px;">
-	<h4 class="modal-title" style="float:left; margin-left:10px;">{{title}}</h4><br />	
-	<h5 class="modal-title"  style="float:left; margin-left:10px; color:#ccc;">{{taskList.projectName}}/</h5>
-	<h5 class="modal-title"  style="float:left; color:#ccc;">{{taskList.name }}</h5>
+    <h4 class="modal-title" style="float:left; margin-left:10px;">{{title}}</h4><br />	
+    <h5 class="modal-title"  style="float:left; margin-left:10px; color:#ccc;">{{taskList.projectName}}/</h5>
+    <h5 class="modal-title"  style="float:left; color:#ccc;">{{taskList.name}}</h5>
 
-	<a class="pull-right glyphicon glyphicon-remove icon-clear"
-		ng-click="cancel()"></a>
+    <a style="margin-top: -6px;" class="pull-right glyphicon glyphicon-remove icon-clear"
+       ng-click="cancel()"></a>
 </div>
 <div class="modal-body data-row-body addtask-modal">
-	<div class="create-project">
-		<form name="myForm" novalidate>
-		<div class="col-md-12">
-			<div class="row">
-					<div class="form-group">
-						<label for="comment" class="settings">TASK NAME</label> <input
-							type="text" name="taskItem" ng-model="taskItem.name"
-							class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required maxlength="40">
-							<h6 class="pull-right">
-                                    {{40 - taskItem.name.length}} / 40
-                            </h6>
-					</div>
-					
-					</div>
-					</div>
-					
-					<div class="col-md-6">
-					 <div class="row">
-						<div class="form-group" ng-init="getHours();">
-							<label for="comment" class="settings">HOURS</label><input
-								type="number" name="taskItem" ng-model="taskItem.estimatedHours"
-								class="form-control" ng-pattern="/^[0-9]{1,7}$/" required min="1">
-						   </div>
-						  </div>
-						</div>
-                        
-						<div class="col-md-6">
-						 <div class="row">
-						  <div class="form-group date-picker-task">
-							<label for="comment" class="settings">DUE DATE</label> <input
-								type="text" class="form-control"
-								uib-datepicker-popup="{{format}}" ng-model="taskItem.dueDate"
-								is-open="popup.opened" datepicker-options="dateOptions"
-								ng-required="true" close-text="Close"
-								alt-input-formats="altInputFormats" ng-click="openDp()" /> </span>
-						   </div>
-						</div>
-					</div>
-					
-					
-					<div class="col-md-12">
-			         <div class="row">
-					   <div class="form-group" ng-init="getAllUsersOfProject();">
-						<label for="comment" class="settings">USERS</label> 
-						 <select
-							chosen="projectUsers" ng-model="taskItem.userIds" data-placeholder="Add Users"
-							id="usersDropdown" multiple="multiple" style="height: 150px">
-							<option ng-repeat="user in projectUsers" value="{{user.id}}">{{user.userName}}</option>
-						</select>
-					  </div>
-				   </div>
-                 </div>
-					
-					<div class="col-md-12">
-			         <div class="row">
-					   <div class="form-group">
-						<label for="comment" class="settings">DESCRIPTION</label>
-						<textarea name="taskItem" ng-model="taskItem.desc"
-							class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required style="height:70px;"></textarea>
-					    </div>
-					 </div>
-				  </div>
-			
-					
-              </div>
-		</form>
-  </div>
-	
+    <div class="create-project">
+        <form name="myForm" novalidate>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group">
+                        <!--                        <label for="comment" class="settings">TASK NAME</label> <input
+                                                    type="text" name="taskItem" ng-model="taskItem.name"
+                                                    class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required maxlength="40">
+                                                <h6 class="pull-right">
+                                                    {{40 - taskItem.name.length}} / 40
+                                                </h6>
+                        -->
+                        <label for="comment" class="settings">TASK NAME</label> 
+                        <div text-angular-toolbar class="toolbar button-toolbar" name="taskItem" ta-toolbar="[['h4','p'],['bold','italics', 'underline'],['ul', 'ol', 'insertLink']]">
+                        </div>
+
+                        <div class="status-text task-edit">
+                            <div text-angular ta-target-toolbars="taskItem" ng-model="taskItem.name" ta-maxlength="40" ng-pattern="/[a-zA-Z0-9^ ]/" name="taskItem" id="taskItem" ta-paste="stripFormat($html)" ng-pattern="/[a-zA-Z0-9^ ]/" required maxlength="40"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="comment" class="settings">DESCRIPTION</label>
+                        <div text-angular-toolbar class="toolbar button-toolbar" name="desc" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]">
+                        </div>
+
+                        <div class="status-text">
+                            <div text-angular ta-target-toolbars="desc" ng-model="taskItem.desc" ng-pattern="/[a-zA-Z0-9^ ]/" name="desc" id="desc" ta-paste="stripFormat($html)"></div>
+                        </div>
+
+
+
+                        <!--						<label for="comment" class="settings">DESCRIPTION</label>
+                                                                        <textarea name="taskItem" ng-model="taskItem.desc"
+                                                                                class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required style="height:70px;"></textarea>-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="form-group" ng-init="getHours();">
+                        <label for="comment" class="settings">HOURS</label><input
+                            type="number" name="taskItem" ng-model="taskItem.estimatedHours"
+                            class="form-control" ng-pattern="/^[0-9]{1,7}$/" required min="1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="form-group date-picker-task">
+                        <label for="comment" class="settings">DUE DATE</label> <input
+                            type="text" class="form-control"
+                            uib-datepicker-popup="{{format}}" ng-model="taskItem.dueDate"
+                            is-open="popup.opened" datepicker-options="dateOptions"
+                            ng-required="true" close-text="Close"
+                            alt-input-formats="altInputFormats" ng-click="openDp()" /> </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group" ng-init="getAllUsersOfProject();">
+                        <label for="comment" class="settings">USERS</label> 
+                        <select
+                            chosen="projectUsers" ng-model="taskItem.userIds" data-placeholder="Add Users"
+                            id="usersDropdown" multiple="multiple" style="height: 150px">
+                            <option ng-repeat="user in projectUsers" value="{{user.id}}">{{user.userName}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+</form>
+</div>
+
 
 <div class="modal-footer add-user addtask-modal">
-	<div class="col-md-6">
-      <div class="row">
-		<button class="btn save-close" ng-click="createTaskItem(taskItem)"
-			ng-click="cancel()">SAVE & CLOSE</button>
-	  </div>
-	</div>
-	<div class="col-md-6">
-      <div class="row">
-		<button class="btn save-close" ng-click="createMoreTaskItem(taskItem)">ADD MORE TASK</button>
-	  </div>
-	</div>
+    <div class="col-md-6">
+        <div class="row">
+            <button class="btn save-close" ng-click="createTaskItem(taskItem)"
+                    ng-click="cancel()">SAVE & CLOSE</button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <button class="btn save-close" ng-click="createMoreTaskItem(taskItem)">ADD MORE TASK</button>
+        </div>
+    </div>
 </div>
