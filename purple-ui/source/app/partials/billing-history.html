@@ -1,0 +1,45 @@
+<div class="col-md-offset-2 col-md-8" ng-init="init();">
+    <div class="main-title">
+        <h3>Current Payment and Charges</h3>
+    </div>
+    <br>
+
+    <div class="create-project">
+        <div class="col-md-6" ng-if="plutusLogin == true">
+            <label for="comment" class="settings" ><h4><b>Total Amount Pay Due &nbsp;&nbsp; &nbsp;&nbsp;{{currentDueDetails.billingAmount}}&nbsp;&nbsp;{{currentDueDetails.currency}}</b><h4></label>   
+                        </div>
+
+                        <div class="col-md-6" ng-if="plutusLogin == false">
+                            <label for="comment" class="settings" ><h4><b>Total Amount Pay Due &nbsp;&nbsp; &nbsp;&nbsp;NA</b><h4></label>          
+                                        </div>
+                                        </div>
+
+                                        <br>
+                                        <br>
+                                        <br>
+
+                                        <div class="main-title">
+                                            <h3>Bill History</h3>
+                                        </div>
+                                        <div class="project-table"> 
+                                            <table >
+                                                <thead>
+                                                    <tr ng-if="plutusLogin == true">
+                                                        <th style="width:30%;">Payment Date</th>                             
+                                                        <th style="width:40%;">Payment Mode</th>
+                                                        <th style="width:30%;">Amount</th> 
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="hist in billHistory| filter:searchText" >   
+
+                                                        <td style="width:30%;">{{hist.paymentDate}}</td>
+                                                        <td style="width:40%;">{{hist.paymentMode}}</td>
+                                                        <td style="width:30%;">{{hist.amount}}</td>                    
+                                                    </tr>
+                                                    <tr ng-if="plutusLogin == false">
+                                                        <th style="width:100%;">NA</th></tr>
+                                                </tbody>               
+                                            </table>    
+                                        </div>
+                                        </div>

@@ -1,4 +1,6 @@
 angular.module('rootApp').service('billingInfoService', function ($rootScope, $http, $q) {
+    
+    
 
     this.addBillingDetails = function (customer) {
 
@@ -38,8 +40,27 @@ angular.module('rootApp').service('billingInfoService', function ($rootScope, $h
 
         return deferred.promise;
     };
-    
-    this.getInvoiceDetails = function () {
+    //getting current due
+    this.getCurrentDue = function () {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: $rootScope.baseUrl + 'api/v1/billing/currentDue',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function () {
+            deferred.reject({'success': false, 'msg': 'Oops! Something went wrong. Please try again later.'});
+        });
+
+        return deferred.promise;
+    };
+   //getting Billing History
+    this.getBillHistory = function () {
 
         var deferred = $q.defer();
 
@@ -57,6 +78,7 @@ angular.module('rootApp').service('billingInfoService', function ($rootScope, $h
 
         return deferred.promise;
     };
+   
    
     this.getOnlyCurrentPlan = function () {
 

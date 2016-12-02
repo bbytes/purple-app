@@ -376,20 +376,21 @@ rootApp.config([
             views: {
                 '': {
                     templateUrl: 'app/partials/home.html'
+
                 },
                 'header@billing': {
                     templateUrl: 'app/partials/home-header.html'
                 },
                 'main@billing': {
-                    templateUrl: 'app/partials/billing-nav.html',
-                    controller: 'billingInfoCtrl'
+                    templateUrl: 'app/partials/billing-history.html',
+                    controller: 'billingHistoryCtrl'
                 },
                 'footer@billing': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
             },
             data: {
-                authorization: 'User Manager',
+                authorization: 'ADMIN',
                 redirectTo: 'login'
             }
         }).state('access-denied', {
