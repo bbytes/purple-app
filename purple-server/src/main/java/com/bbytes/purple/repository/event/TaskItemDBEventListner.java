@@ -3,7 +3,6 @@ package com.bbytes.purple.repository.event;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeDeleteEvent;
@@ -16,7 +15,6 @@ import com.bbytes.purple.service.TaskItemService;
 import com.mongodb.DBObject;
 
 @Component
-@Profile("saas")
 public class TaskItemDBEventListner extends AbstractMongoEventListener<TaskItem> {
 
 	@Autowired
