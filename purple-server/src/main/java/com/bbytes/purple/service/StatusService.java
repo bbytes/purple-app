@@ -420,7 +420,6 @@ public class StatusService extends AbstractService<Status, String> {
 		Matcher mentionBlockerOnMatcher, taskListBlockerOnMatcher = null;
 
 		Map<String, List<Object>> statusTaskEventMap = new LinkedHashMap<String, List<Object>>();
-		List<Double> totalTaskItemsHours = new ArrayList<Double>();
 
 		String mentionRegexPattern = GlobalConstants.MENTION_REGEX_PATTERN;
 		String taskListRegexPattern = GlobalConstants.TASKLIST_REGEX_PATTERN;
@@ -603,15 +602,17 @@ public class StatusService extends AbstractService<Status, String> {
 			throw new PurpleException("Error while updating status", ErrorHandler.STATUS_NOT_FOUND);
 		Status statusFromDb = findOne(statusId);
 		double totalSpendHours = 0;
+		double totalSpendHoursToTaskList = 0;
 		List<StatusTaskEvent> statusTaskEventList = statusTaskEventService.findByTaskItem(taskItem);
 		for (StatusTaskEvent statusTaskEvent : statusTaskEventList) {
 			totalSpendHours = totalSpendHours + statusTaskEvent.getSpendHours();
 		}
-		totalSpendHours = totalSpendHours
-				- statusTaskEventService.findByStatusAndTaskItem(findOne(statusId), taskItem).getSpendHours();
+		StatusTaskEvent statusTaskEventFromDB = statusTaskEventService.findByStatusAndTaskItem(findOne(statusId),
+				taskItem);
+		totalSpendHours = totalSpendHours - (statusTaskEventFromDB == null ? 0 : statusTaskEventFromDB.getSpendHours());
 		taskItem.setSpendHours(spendHoursOnTaskFromStatus + totalSpendHours);
-		double totalSpendHoursToTaskList = spendHoursOnTaskFromStatus
-				- statusTaskEventService.findByStatusAndTaskItem(findOne(statusId), taskItem).getSpendHours();
+		totalSpendHoursToTaskList = spendHoursOnTaskFromStatus
+				- (statusTaskEventFromDB == null ? 0 : statusTaskEventFromDB.getSpendHours());
 		taskItem.getTaskList().addSpendHours(totalSpendHoursToTaskList);
 		StatusTaskEvent statusTaskEventByStatusAndTaskItem = statusTaskEventService
 				.findByStatusAndTaskItem(statusFromDb, taskItem);
