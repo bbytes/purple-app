@@ -89,7 +89,7 @@ public class TaskItem implements Comparable<TaskItem> {
 
 	public void removeUsers(User user) {
 		users.remove(user);
-		taskList.addUsers(user);
+		taskList.removeUsers(user);
 	}
 
 	public void setOwner(User owner) {
