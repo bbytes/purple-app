@@ -130,11 +130,11 @@
     <div class="col span_1_of_2 second_col_task" style="padding:0;">
         <div class="task-list-group-right project-nav"  ng-repeat="taskItem in taskItemsLists|filter:searchItem">
             <div  ng-show="taskItemsLists.length > 0">
-                <p class="t-head">{{taskItem.name}}</p>
+                <p class="t-head" ng-bind-html="taskItem.name">{{taskItem.name}}</p>
                 <!-- <p>{{taskItem.state}}</p> -->
                 <p style="color:#bebebe; font-size:11px;">{{taskItem.spendHours}} Hrs of {{taskItem.estimatedHours}} Hrs</p> 
                 <p style="color:#bebebe; font-size:11px;">EDC: {{taskItem.dueDate| date:'dd MMM' }}</p> 
-                <p style="font-size:14px; line-height: 17px;">{{taskItem.desc}}</p>
+                <p style="font-size:14px; line-height: 17px;" ng-bind-html="taskItem.desc">{{taskItem.desc}}</p>
 
                 <!-- <div class="graph-icon">
                         <img src="assets/img/bar-graph.png"  style="margin-top: -55px;">
