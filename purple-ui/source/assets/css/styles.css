@@ -4602,7 +4602,7 @@ tabs-left, .tabs-right {
 .task-bottom-icon li{
 	list-style:none;
 	display:inline-block;
-	margin: 0px 13px;
+	margin: 0px 0px;
 }
 .task-bottom-icon img{
 	width:19px;
