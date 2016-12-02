@@ -20,11 +20,11 @@
                                                 </h6>
                         -->
                         <label for="comment" class="settings">TASK NAME</label> 
-                        <div text-angular-toolbar class="toolbar button-toolbar" name="taskItem" ta-toolbar="[['h4','p'],['bold','italics', 'underline'],['ul', 'ol', 'insertLink']]">
+                        <div text-angular-toolbar class="toolbar button-toolbar" name="taskItemName" ta-toolbar="[['h4','p'],['bold','italics', 'underline'],['ul', 'ol', 'insertLink']]">
                         </div>
 
                         <div class="status-text task-edit">
-                            <div text-angular ta-target-toolbars="taskItem" ng-model="taskItem.name" ta-maxlength="40" ng-pattern="/[a-zA-Z0-9^ ]/" name="taskItem" id="taskItem" ta-paste="stripFormat($html)" ng-pattern="/[a-zA-Z0-9^ ]/" required maxlength="40"></div>
+                            <div text-angular ta-target-toolbars="taskItemName" ng-model="taskItem.name" ta-maxlength="40" name="taskItemName" id="taskItemName" ta-paste="stripFormat($html)" ng-pattern="/[a-zA-Z0-9^ ]/"></div>
                         </div>
                     </div>
 
