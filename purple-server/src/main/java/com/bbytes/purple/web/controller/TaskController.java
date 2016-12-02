@@ -367,6 +367,11 @@ public class TaskController {
 		User user = userService.findOne(userid);
 		taskItem.getUsers().remove(user);
 		taskItem = taskItemService.save(taskItem);
+		List<TaskItem> taskItemList = taskItemService.findByTaskListAndUsers(taskItem.getTaskList(), user);
+		if (taskItemList.isEmpty()) {
+			taskItem.getTaskList().getUsers().remove(user);
+			taskListService.save(taskItem.getTaskList());
+		}
 		TaskItemDTO taskItemDto = dataModelToDTOConversionService.convertTaskItem(taskItem);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDto);
 		return response;
