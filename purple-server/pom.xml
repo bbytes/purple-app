@@ -19,57 +19,6 @@
 		<github.global.server>github</github.global.server>
 	</properties>
 
-	<repositories>
-
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/libs-milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-snapshots</id>
-			<url>http://maven.springframework.org/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>atlassian-public</id>
-			<url>https://maven.atlassian.com/repository/public</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-		</repository>
-		<repository>
-			<id>release.repo.bbytes.co</id>
-			<url>s3://repo.bbytes.co/snapshot</url>
-		</repository>
-		<repository>
-			<id>snapshot.repo.bbytes.co</id>
-			<url>s3://repo.bbytes.co/release</url>
-		</repository>
-		<repository>
-			<id>release.public.repo.bbytes.co</id>
-			<url>s3://public.repo.bbytes.co/snapshot</url>
-		</repository>
-		<repository>
-			<id>snapshot.public.repo.bbytes.co</id>
-			<url>s3://public.repo.bbytes.co/release</url>
-		</repository>
-	</repositories>
-
-
-
-
 
 	<dependencies>
 
