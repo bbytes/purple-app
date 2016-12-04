@@ -11,14 +11,14 @@
 
 	<artifactId>purple-server</artifactId>
 	<name>purple-server</name>
-	<packaging>jar</packaging>
+
 	<description>The backend rest api server for purple app</description>
 
-	<properties>
-		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
-		<github.global.server>github</github.global.server>
-	</properties>
-
+	<scm>
+		<url>https://github.com/bbytes/purple-app</url>
+		<connection>scm:git:git://github.com/bbytes/purple-app.git</connection>
+		<developerConnection>scm:git:git@github.com:bbytes/purple-app.git</developerConnection>
+	</scm>
 
 	<dependencies>
 
@@ -135,7 +135,7 @@
 			<artifactId>jira-rest-java-client</artifactId>
 			<version>2.0.0-m2</version>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -144,7 +144,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpasyncclient</artifactId>
 		</dependency>
-		
+
 
 		<dependency>
 			<groupId>net.rcarz</groupId>
@@ -196,6 +196,24 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>1.3.3.RELEASE</version>
 			</plugin>
+
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<!-- Ensure that the revision goal is invoked during the initialize phase. -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- Configure the location of the .git directory. -->
+					<dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+				</configuration>
+			</plugin>
+
 		</plugins>
 
 		<extensions>
@@ -205,6 +223,14 @@
 				<version>5.0.0.RELEASE</version>
 			</extension>
 		</extensions>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
 	</build>
 
 
