@@ -65,7 +65,7 @@
         <div class="task-p">TASK LIST</div>
         <div class="task-icon search">
 
-            <input id="search-box" ng-model="searchText" type="text" name="search">
+            <input id="search-box" ng-model="searchText" type="text" name="search" placeholder="Search...">
             <!--
          <div class="right-inner-addon style=" style="width: 80%;float: left;margin: 0px 5px;">
             <i class="fa fa-search"></i> <input ng-model="searchText" class="form-control" placeholder="Search...">
@@ -77,7 +77,7 @@
     <div class="col span_1_of_2 second_col task-head">
         <div class="task-p">TASK ITEMS</div>
         <div class="task-icon search">
-            <input id="search-box" ng-model="searchItem" type="text" name="search">
+            <input id="search-box" ng-model="searchItem" type="text" name="search"  placeholder="Search...">
             <!--
            <div class="right-inner-addon style=" style="width: 80%;float: left;margin: 0px 5px;">
                    <i class="fa fa-search"></i> <input ng-model="searchItem" class="form-control" placeholder="Search...">
@@ -130,11 +130,11 @@
     <div class="col span_1_of_2 second_col_task" style="padding:0;">
         <div class="task-list-group-right project-nav"  ng-repeat="taskItem in taskItemsLists|filter:searchItem">
             <div  ng-show="taskItemsLists.length > 0">
-                <p class="t-head">{{taskItem.name}}</p>
+                <p class="t-head" ng-bind-html="taskItem.name">{{taskItem.name}}</p>
                 <!-- <p>{{taskItem.state}}</p> -->
                 <p style="color:#bebebe; font-size:11px;">{{taskItem.spendHours}} Hrs of {{taskItem.estimatedHours}} Hrs</p> 
-                <p style="color:#bebebe; font-size:11px;">EDC: {{taskItem.dueDate| date:'dd MMM' }}</p> 
-                <p style="font-size:14px; line-height: 17px;">{{taskItem.desc}}</p>
+                <p style="color:#bebebe; font-size:11px;">Due Date: {{taskItem.dueDate| date:'dd MMM yyyy' }}</p> 
+                <p style="font-size:14px; line-height: 17px;" ng-bind-html="taskItem.desc">{{taskItem.desc}}</p>
 
                 <!-- <div class="graph-icon">
                         <img src="assets/img/bar-graph.png"  style="margin-top: -55px;">
@@ -142,8 +142,8 @@
 
                 <div class="task-tag">
                     <ul class="tags">
-                        <li class="tag-task" ng-repeat="user in taskItem.users track by $index">@{{user.userName}} <a href="#" ng-click="deleteUserFromProject(user.id, taskItem)"><img src="assets/img/cross-tag.png"></a></li>
-                        <li><a ng-click="getUsersToBeAddedToTask(taskItem);" href="#"><img src="assets/img/add-tag.png" class="tag-img"></a></li>
+                        <li class="tag-task" ng-repeat="user in taskItem.users track by $index">@{{user.userName}} <a href="#" ng-click="deleteUserFromProject(user.id, taskItem)" ng-show="taskItem.ownerEmail === loggedInUser"><img src="assets/img/cross-tag.png"></a></li>
+                        <li ng-show="taskItem.ownerEmail === loggedInUser"><a ng-click="getUsersToBeAddedToTask(taskItem);" href="#"><img src="assets/img/add-tag.png" class="tag-img"></a></li>
                     </ul>
                 </div>
 
@@ -162,7 +162,7 @@
 
                 <ul class="task-bottom-icon nav">
 
-                    <li class="navbar-right" ng-show="taskItem.ownerEmail === loggedInUser"><a href="#" ng-click="deleteTaskItem(taskItem)" confirm="Are you sure you want to delete the task?" tooltips tooltip-template="Delete" tooltip-side="top"><img src="assets/img/delete-task.png"><span></span></a></li>
+                    <li class="navbar-right" ng-show="taskItem.ownerEmail === loggedInUser"><a href="#" ng-click="deleteTaskItem(taskItem)" confirm="Are you sure you want to delete this task item?" ><img src="assets/img/delete-task.png" tooltips tooltip-template="Delete" tooltip-side="top"><span></span></a></li>
 
                     <li class="navbar-right"  ng-show="taskItem.ownerEmail === loggedInUser"><a href="#" ng-click="editTaskItem(taskItem);" tooltips tooltip-template="Edit" tooltip-side="top"><img src="assets/img/edit-icon.png"><span></span></a></li>
                     <!-- <li> <img src="assets/img/update.png"> <span>Updated</span>&nbsp;&nbsp; </li> -->

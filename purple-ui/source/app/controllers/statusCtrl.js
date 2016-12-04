@@ -375,9 +375,9 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                     $scope.workingOn = '';
                 if (!$scope.blockers)
                     $scope.blockers = '';
-                $scope.workedOn = $scope.workedOn + " " + taskObject.addToWorkedOn;
-                $scope.workingOn = $scope.workingOn + " " + taskObject.addToWorkingOn;
-                $scope.blockers = $scope.blockers + " " + taskObject.addToBlockers;
+                $scope.workedOn = $scope.workedOn + taskObject.addToWorkedOn;
+                $scope.workingOn = $scope.workingOn + taskObject.addToWorkingOn;
+                $scope.blockers = $scope.blockers + taskObject.addToBlockers;
                 taskItemMap = taskObject.taskItemMap;
                 itemKey = taskObject.itemKey;
             });

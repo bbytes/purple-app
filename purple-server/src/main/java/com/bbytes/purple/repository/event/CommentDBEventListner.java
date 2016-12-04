@@ -1,7 +1,6 @@
 package com.bbytes.purple.repository.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.AfterSaveEvent;
@@ -15,7 +14,6 @@ import com.bbytes.purple.service.StatusService;
 import com.mongodb.DBObject;
 
 @Component
-@Profile("saas")
 public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 
 	@Autowired
@@ -26,11 +24,11 @@ public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
-	
+
 	/**
 	 * After removing comment, update commentCount in status object.
 	 */
-	
+
 	@Override
 	public void onBeforeDelete(BeforeDeleteEvent<Comment> event) {
 		final DBObject commentDeleted = event.getSource();
@@ -54,5 +52,5 @@ public class CommentDBEventListner extends AbstractMongoEventListener<Comment> {
 		status.setCommentCount(count);
 		statusService.save(status);
 	}
-	
+
 }

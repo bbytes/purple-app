@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.AfterDeleteEvent;
@@ -23,6 +22,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.repository.ProjectRepository;
 import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.service.CommentService;
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.StatusTaskEventService;
 import com.bbytes.purple.service.TaskItemService;
@@ -38,7 +38,6 @@ import com.mongodb.DBObject;
  * 
  */
 @Component
-@Profile("saas")
 public class UserDBEventListener extends AbstractMongoEventListener<User> {
 
 	@Autowired
@@ -49,6 +48,9 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private SpringProfileService springProfileService;
 
 	@Autowired
 	private UserService userService;
@@ -74,7 +76,9 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 	@Override
 	public void onAfterDelete(AfterDeleteEvent<User> event) {
 		final DBObject userDeleted = event.getSource();
-		tenantResolverService.deleteTenantResolverForUserId(userDeleted.get("userId").toString());
+		if (springProfileService.isSaasMode()) {
+			tenantResolverService.deleteTenantResolverForUserId(userDeleted.get("userId").toString());
+		}
 
 	}
 
@@ -85,11 +89,13 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 	@Override
 	public void onBeforeSave(BeforeSaveEvent<User> event) {
 		User userToBeSaved = event.getSource();
-		if (!tenantResolverService.doesTenantResolverExistForUser(userToBeSaved)) {
-			tenantResolverService.saveTenantResolverForUser(userToBeSaved);
-		} else {
-			if (userToBeSaved.getUserId() == null) {
-				throw new DuplicateKeyException("Trying to save user with same email address");
+		if (springProfileService.isSaasMode()) {
+			if (!tenantResolverService.doesTenantResolverExistForUser(userToBeSaved)) {
+				tenantResolverService.saveTenantResolverForUser(userToBeSaved);
+			} else {
+				if (userToBeSaved.getUserId() == null) {
+					throw new DuplicateKeyException("Trying to save user with same email address");
+				}
 			}
 		}
 	}
@@ -102,7 +108,9 @@ public class UserDBEventListener extends AbstractMongoEventListener<User> {
 	@Override
 	public void onAfterSave(AfterSaveEvent<User> event) {
 		User userToBeSaved = event.getSource();
-		tenantResolverService.updateUserIdInTenantResolverForUser(userToBeSaved);
+		if (springProfileService.isSaasMode()) {
+			tenantResolverService.updateUserIdInTenantResolverForUser(userToBeSaved);
+		}
 
 	}
 
