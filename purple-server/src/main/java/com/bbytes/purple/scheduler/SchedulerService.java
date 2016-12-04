@@ -49,6 +49,7 @@ import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
 import com.bbytes.purple.service.RegistrationService;
+import com.bbytes.purple.service.StatusService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
@@ -75,6 +76,9 @@ public class SchedulerService {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private StatusService statusService;
 
 	@Autowired
 	private OrganizationService organizationService;
@@ -255,7 +259,7 @@ public class SchedulerService {
 			Date endDate = new DateTime(new Date()).withTimeAtStartOfDay().toDate();
 
 			// getting list of defaulter users
-			List<User> defaulterUsers = userService.getDefaulterUsers(startDate, endDate);
+			List<User> defaulterUsers = statusService.getDefaulterUsers(startDate, endDate);
 
 			// creating map of users which will be key as ADMIN/Manager of
 			// project and value would be defaulter users

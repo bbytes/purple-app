@@ -45,9 +45,6 @@ public class UserService extends AbstractService<User, String> {
 	@Autowired
 	private ProjectService projectService;
 
-	@Autowired
-	private StatusService statusService;
-
 	private UserRepository userRepository;
 
 	@Autowired
@@ -509,27 +506,7 @@ public class UserService extends AbstractService<User, String> {
 		return user;
 	}
 
-	/**
-	 * getDefaulterUsers method is used to pull the all users who didn't fill
-	 * the status
-	 * 
-	 * @param startDate
-	 * @param endDate
-	 * @return
-	 * @throws PurpleException
-	 */
-	public List<User> getDefaulterUsers(Date startDate, Date endDate) throws PurpleException {
-
-		List<User> allUsers = getAllUsers();
-		Iterable<ProjectUserCountStats> result = statusService.getUserofStatus(startDate, endDate);
-		Set<User> userList = new LinkedHashSet<User>();
-		for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
-			ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
-			userList.add(projectUserCountStats.getUser());
-		}
-		allUsers.removeAll(userList);
-		return allUsers;
-	}
+	
 
 	/**
 	 * check the user is active or not, active means should be activate their
