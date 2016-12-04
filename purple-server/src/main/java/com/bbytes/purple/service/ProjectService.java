@@ -13,15 +13,16 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.ProjectRepository;
+import com.bbytes.purple.repository.UserRepository;
 import com.bbytes.purple.utils.ErrorHandler;
 
 @Service
 public class ProjectService extends AbstractService<Project, String> {
 
-	private ProjectRepository projectRepository;
-
 	@Autowired
-	private UserService userService;
+	private UserRepository userRepository;
+	
+	private ProjectRepository projectRepository;
 
 	@Autowired
 	public ProjectService(ProjectRepository projectRepository) {
@@ -199,7 +200,7 @@ public class ProjectService extends AbstractService<Project, String> {
 			User projectOwner = findByProjectId(projectId).getProjectOwner();
 
 			// getting all user who has role "ADMIN" and "Manager"
-			users = userService.getUsersByRole(userRoleList);
+			users = userRepository.findByUserRoleIn(userRoleList);
 
 			// final user list excluding current project owner
 			users.remove(projectOwner);

@@ -7,11 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
-import com.bbytes.purple.domain.ProjectUserCountStats;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
@@ -46,15 +42,12 @@ public class UserService extends AbstractService<User, String> {
 	private ProjectService projectService;
 
 	@Autowired
-	private StatusService statusService;
-
-	private UserRepository userRepository;
-
-	@Autowired
 	private SpringProfileService springProfileService;
 
 	@Autowired
 	private TenantResolverService tenantResolverService;
+	
+	private UserRepository userRepository;
 
 	@Autowired
 	public UserService(UserRepository userRepository) {
@@ -509,27 +502,7 @@ public class UserService extends AbstractService<User, String> {
 		return user;
 	}
 
-	/**
-	 * getDefaulterUsers method is used to pull the all users who didn't fill
-	 * the status
-	 * 
-	 * @param startDate
-	 * @param endDate
-	 * @return
-	 * @throws PurpleException
-	 */
-	public List<User> getDefaulterUsers(Date startDate, Date endDate) throws PurpleException {
-
-		List<User> allUsers = getAllUsers();
-		Iterable<ProjectUserCountStats> result = statusService.getUserofStatus(startDate, endDate);
-		Set<User> userList = new LinkedHashSet<User>();
-		for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
-			ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
-			userList.add(projectUserCountStats.getUser());
-		}
-		allUsers.removeAll(userList);
-		return allUsers;
-	}
+	
 
 	/**
 	 * check the user is active or not, active means should be activate their

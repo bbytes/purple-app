@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
 
 import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.service.TenantResolverService;
 import com.bbytes.purple.utils.GlobalConstants;
 
+@Component
 public class TokenAuthenticationProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationProvider.class);

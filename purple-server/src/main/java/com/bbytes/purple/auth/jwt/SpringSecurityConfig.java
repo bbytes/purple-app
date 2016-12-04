@@ -24,14 +24,12 @@ import com.bbytes.purple.service.UserService;
 @Order(2)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private AuthUserDetailsService userDetailsService;
-
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
-
+	
 	@Autowired
 	private TokenAuthenticationProvider tokenAuthenticationProvider;
 
@@ -47,9 +45,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				// All of Spring Security will ignore the requests.
 				// '/{[path:[^\\.]*}' is to avoid all the angualr internal urls
 				.antMatchers("/").antMatchers("/public/**").antMatchers("/signup/**").antMatchers("/connect/**").antMatchers("/social/**")
-				.antMatchers("/{[path:[^\\.]*}").antMatchers("/resources/**").antMatchers("/assets/**")
-				.antMatchers("/favicon.ico").antMatchers("/**/*.html").antMatchers("/resources/**")
-				.antMatchers("/static/**").antMatchers("/app/**").antMatchers("/**/*.css").antMatchers("/**/*.js");
+				.antMatchers("/{[path:[^\\.]*}").antMatchers("/resources/**").antMatchers("/assets/**").antMatchers("/favicon.ico")
+				.antMatchers("/**/*.html").antMatchers("/resources/**").antMatchers("/static/**").antMatchers("/app/**")
+				.antMatchers("/**/*.css").antMatchers("/**/*.js");
 	}
 
 	@Override
@@ -63,8 +61,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		 * JWT as you will see." (JWT = Json Web Token, a Token based
 		 * authentication for stateless apps)
 		 */
-		http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-				.exceptionHandling().and().servletApi().and().authorizeRequests()
+		http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling().and()
+				.servletApi().and().authorizeRequests()
 
 				// Allow logins urls
 				.antMatchers("/auth/**").permitAll().antMatchers("/api/**").authenticated().and()
@@ -74,7 +72,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterAfter(new StatelessAuthenticationFilter("/auth/**", tokenAuthenticationProvider),
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(new StatelessLoginFilter("/auth/login", userService, dataModelToDTOConversionService,
-						tokenAuthenticationProvider, userDetailsService, tenantResolverService, authenticationManager),
+						tokenAuthenticationProvider, userDetailsService(), tenantResolverService, authenticationManager),
 						StatelessAuthenticationFilter.class)
 				.headers().cacheControl().and();
 
@@ -100,13 +98,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	@Override
 	public AuthUserDetailsService userDetailsService() {
-		this.userDetailsService = new AuthUserDetailsService();
-		return userDetailsService;
+		return new AuthUserDetailsService();
 	}
 
-	@Bean
-	public TokenAuthenticationProvider tokenAuthenticationProvider() {
-		this.tokenAuthenticationProvider = new TokenAuthenticationProvider();
-		return tokenAuthenticationProvider;
-	}
 }

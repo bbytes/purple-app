@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -644,6 +645,28 @@ public class StatusService extends AbstractService<Status, String> {
 		String snippetUrl = baseUrl + GlobalConstants.STATUS_SNIPPET_URL + xauthToken + GlobalConstants.STATUS_ID_PARAM
 				+ status.getStatusId();
 		return snippetUrl;
+	}
+	
+	/**
+	 * getDefaulterUsers method is used to pull the all users who didn't fill
+	 * the status
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 * @throws PurpleException
+	 */
+	public List<User> getDefaulterUsers(Date startDate, Date endDate) throws PurpleException {
+
+		List<User> allUsers = userService.getAllUsers();
+		Iterable<ProjectUserCountStats> result = getUserofStatus(startDate, endDate);
+		Set<User> userList = new LinkedHashSet<User>();
+		for (Iterator<ProjectUserCountStats> iterator = result.iterator(); iterator.hasNext();) {
+			ProjectUserCountStats projectUserCountStats = (ProjectUserCountStats) iterator.next();
+			userList.add(projectUserCountStats.getUser());
+		}
+		allUsers.removeAll(userList);
+		return allUsers;
 	}
 
 }
