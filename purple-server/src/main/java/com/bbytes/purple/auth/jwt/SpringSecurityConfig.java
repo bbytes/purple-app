@@ -29,6 +29,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private DataModelToDTOConversionService dataModelToDTOConversionService;
+	
+	@Autowired
+	private TokenAuthenticationProvider tokenAuthenticationProvider;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -66,10 +69,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				// Custom Token based authentication based on the header
 				// previously given to the client
-				.addFilterAfter(new StatelessAuthenticationFilter("/auth/**", tokenAuthenticationProvider()),
+				.addFilterAfter(new StatelessAuthenticationFilter("/auth/**", tokenAuthenticationProvider),
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(new StatelessLoginFilter("/auth/login", userService, dataModelToDTOConversionService,
-						tokenAuthenticationProvider(), userDetailsService(), tenantResolverService, authenticationManager),
+						tokenAuthenticationProvider, userDetailsService(), tenantResolverService, authenticationManager),
 						StatelessAuthenticationFilter.class)
 				.headers().cacheControl().and();
 
@@ -98,8 +101,4 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new AuthUserDetailsService();
 	}
 
-	@Bean
-	public TokenAuthenticationProvider tokenAuthenticationProvider() {
-		return new TokenAuthenticationProvider();
-	}
 }

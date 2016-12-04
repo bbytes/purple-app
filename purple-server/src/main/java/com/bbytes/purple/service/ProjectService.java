@@ -19,10 +19,10 @@ import com.bbytes.purple.utils.ErrorHandler;
 @Service
 public class ProjectService extends AbstractService<Project, String> {
 
-	private ProjectRepository projectRepository;
-
 	@Autowired
 	private UserRepository userRepository;
+	
+	private ProjectRepository projectRepository;
 
 	@Autowired
 	public ProjectService(ProjectRepository projectRepository) {

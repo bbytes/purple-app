@@ -41,13 +41,13 @@ public class UserService extends AbstractService<User, String> {
 	@Autowired
 	private ProjectService projectService;
 
-	private UserRepository userRepository;
-
 	@Autowired
 	private SpringProfileService springProfileService;
 
 	@Autowired
 	private TenantResolverService tenantResolverService;
+	
+	private UserRepository userRepository;
 
 	@Autowired
 	public UserService(UserRepository userRepository) {
