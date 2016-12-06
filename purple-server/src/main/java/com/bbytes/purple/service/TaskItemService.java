@@ -27,9 +27,13 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 	public List<TaskItem> findByTaskList(TaskList taskList) {
 		return taskItemRepository.findByTaskList(taskList);
 	}
-	
-	public List<TaskItem> findByTaskListAndUsers(TaskList taskList,User user) {
+
+	public List<TaskItem> findByTaskListAndUsers(TaskList taskList, User user) {
 		return taskItemRepository.findByTaskListAndUsers(taskList, user);
+	}
+	
+	public List<TaskItem> findByTaskListAndOwner(TaskList taskList, User user) {
+		return taskItemRepository.findByTaskListAndOwner(taskList, user);
 	}
 
 	public List<TaskItem> findByState(TaskState state) {
@@ -63,6 +67,10 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 	public List<TaskItem> findByProjectAndUsersAndStateIn(Project project, User user, List<TaskState> states) {
 		return taskItemRepository.findByProjectAndUsersAndStateIn(project, user, states);
 	}
+	
+	public List<TaskItem> findByProjectAndOwnerAndStateIn(Project project, User user, List<TaskState> states) {
+		return taskItemRepository.findByProjectAndOwnerAndStateIn(project, user, states);
+	}
 
 	public List<TaskItem> findByProjectInAndUsersIn(List<Project> project, List<User> user) {
 		return taskItemRepository.findByProjectInAndUsersIn(project, user);
@@ -74,6 +82,10 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 
 	public List<TaskItem> findByStateAndUsers(TaskState state, User user) {
 		return taskItemRepository.findByStateAndUsers(state, user);
+	}
+	
+	public List<TaskItem> findByStateAndOwner(TaskState state, User user) {
+		return taskItemRepository.findByStateAndOwner(state, user);
 	}
 
 	public List<TaskItem> findByDueDateBetweenAndUsers(Date startDate, Date endDate, User user) {
@@ -88,21 +100,29 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 		return taskItemRepository.findByDueDateBetweenAndProjectIn(startDate, endDate, projects);
 	}
 
-	public List<TaskItem> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate,
-			List<Project> projects, List<User> users) {
+	public List<TaskItem> findByDueDateBetweenAndProjectInAndUsersIn(Date startDate, Date endDate, List<Project> projects,
+			List<User> users) {
 		return taskItemRepository.findByDueDateBetweenAndProjectInAndUsersIn(startDate, endDate, projects, users);
 	}
 
 	public List<TaskItem> findByTaskListAndState(TaskList taskList, TaskState taskState) {
 		return taskItemRepository.findByTaskListAndState(taskList, taskState);
 	}
+
+	public List<TaskItem> findByTaskListAndStateAndUsers(TaskList taskList, TaskState taskState, User user) {
+		return taskItemRepository.findByTaskListAndStateAndUsers(taskList, taskState, user);
+	}
 	
-	public List<TaskItem> findByTaskListAndStateAndUsers(TaskList taskList, TaskState taskState,User user) {
-		return taskItemRepository.findByTaskListAndStateAndUsers(taskList, taskState,user);
+	public List<TaskItem> findByTaskListAndStateAndOwner(TaskList taskList, TaskState taskState, User user) {
+		return taskItemRepository.findByTaskListAndStateAndOwner(taskList, taskState, user);
 	}
 
 	public List<TaskItem> findByProjectAndStateAndUsers(Project project, TaskState taskState, User user) {
 		return taskItemRepository.findByProjectAndStateAndUsers(project, taskState, user);
+	}
+	
+	public List<TaskItem> findByProjectAndStateAndOwner(Project project, TaskState taskState, User user) {
+		return taskItemRepository.findByProjectAndStateAndOwner(project, taskState, user);
 	}
 
 }

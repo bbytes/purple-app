@@ -94,7 +94,6 @@ public class TaskItem implements Comparable<TaskItem> {
 
 	public void setOwner(User owner) {
 		this.owner = owner;
-		addUsers(owner);
 	}
 
 	@Override

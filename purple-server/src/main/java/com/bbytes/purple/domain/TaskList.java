@@ -118,7 +118,6 @@ public class TaskList implements Comparable<TaskList> {
 
 	public void setOwner(User owner) {
 		this.owner = owner;
-		addUsers(owner);
 	}
 
 	@Override

@@ -480,7 +480,7 @@ public class DataModelToDTOConversionService {
 		return statusResponseDTOList;
 	}
 
-	public List<TaskItemDTO> convertTaskItem(List<TaskItem> taskItems) {
+	public List<TaskItemDTO> convertTaskItem(Collection<TaskItem> taskItems) {
 		List<TaskItemDTO> taskItemDTOList = new LinkedList<TaskItemDTO>();
 		for (TaskItem item : taskItems) {
 			if (item != null) {
@@ -502,7 +502,7 @@ public class DataModelToDTOConversionService {
 		return taskItemDTOList;
 	}
 
-	public List<TaskListResponseDTO> convertTaskListItem(List<TaskItem> taskItemList) {
+	public List<TaskListResponseDTO> convertTaskListItem(Collection<TaskItem> taskItemList) {
 		List<TaskListResponseDTO> taskListDTOList = new LinkedList<TaskListResponseDTO>();
 		for (TaskItem taskItem : taskItemList) {
 			TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();

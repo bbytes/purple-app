@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.util.UrlUtils;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
@@ -24,10 +23,10 @@ public class TaskListService extends AbstractService<TaskList, String> {
 
 	@Autowired
 	private TaskItemService taskItemService;
-	
+
 	@Autowired
 	private ProjectService projectService;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -40,6 +39,10 @@ public class TaskListService extends AbstractService<TaskList, String> {
 	public List<TaskList> findByStateAndUsers(TaskState state, User user) {
 		return taskListRepository.findByStateAndUsers(state, user);
 	}
+	
+	public List<TaskList> findByStateAndOwner(TaskState state, User user) {
+		return taskListRepository.findByStateAndOwner(state, user);
+	}
 
 	public List<TaskList> findByNameAndProject(String tasklistName, Project project) {
 		return taskListRepository.findByNameAndProject(tasklistName, project);
@@ -47,6 +50,10 @@ public class TaskListService extends AbstractService<TaskList, String> {
 
 	public List<TaskList> findByProjectAndStateAndUsers(Project project, TaskState state, User user) {
 		return taskListRepository.findByProjectAndStateAndUsers(project, state, user);
+	}
+	
+	public List<TaskList> findByProjectAndStateAndOwner(Project project, TaskState state, User user) {
+		return taskListRepository.findByProjectAndStateAndOwner(project, state, user);
 	}
 
 	public List<TaskList> findByProjectAndState(Project project, TaskState state) {
@@ -117,32 +124,45 @@ public class TaskListService extends AbstractService<TaskList, String> {
 			save(taskList);
 		}
 
-		String jiraIssueURLHref="";
-		
-		String baseURL  = URLUtil.getBaseURL(issue.getUrl());
-		if(baseURL!=null && !baseURL.isEmpty()){
-			String jiraURL  = URLUtil.getJiraIssueURL(baseURL, issue.getKey());
-			jiraIssueURLHref = URLUtil.getHTMLHref(jiraURL, issue.getKey() + " - "+ issue.getSummary());
+		String jiraIssueURLHref = "";
+
+		String baseURL = URLUtil.getBaseURL(issue.getUrl());
+		if (baseURL != null && !baseURL.isEmpty()) {
+			String jiraURL = URLUtil.getJiraIssueURL(baseURL, issue.getKey());
+			jiraIssueURLHref = URLUtil.getHTMLHref(jiraURL, issue.getKey() + " - " + issue.getSummary());
 		}
+
+		TaskItem itemFromDb = taskItemService.findOne(issue.getId());
+		TaskItem item;
+		if (itemFromDb == null) {
+			item = new TaskItem(jiraIssueURLHref, issue.getDescription(), issue.getTimeEstimate(), issue.getDueDate());
+			item.setEstimatedHours(issue.getTimeEstimate());
+			item.setDueDate(issue.getDueDate());
+			taskList.addTaskItem(item);
+			item.setTaskItemId(issue.getId());
+			item.setJiraIssueKey(issue.getKey());
+		} else {
+			item = itemFromDb;
+			
+		}
+
+		item.setName(jiraIssueURLHref);
+		item.setDesc(issue.getDescription());
 		
-		TaskItem item = new TaskItem(jiraIssueURLHref, issue.getDescription(), issue.getTimeEstimate(), issue.getDueDate());
-		taskList.addTaskItem(item);
-		if(issue.getAssignee()!=null && issue.getAssignee().getEmail()!=null){
+		if (issue.getAssignee() != null && issue.getAssignee().getEmail() != null) {
 			User userAssignee = userService.getUserByEmail(issue.getAssignee().getEmail());
 			project.addUser(userAssignee);
 			item.addUsers(userAssignee);
 		}
-		
-		if(issue.getReporter()!=null && issue.getReporter().getEmail()!=null){
+
+		if (issue.getReporter() != null && issue.getReporter().getEmail() != null) {
 			User userReporter = userService.getUserByEmail(issue.getReporter().getEmail());
 			project.addUser(userReporter);
 			item.setOwner(userReporter);
 			taskList.setOwner(userReporter);
 		}
-		
-		item.setTaskItemId(issue.getId());
-		item.setJiraIssueKey(issue.getKey());
-		
+
+
 		projectService.save(project);
 		taskItemService.save(item);
 		save(taskList);
