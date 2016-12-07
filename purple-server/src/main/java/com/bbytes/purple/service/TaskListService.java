@@ -79,6 +79,10 @@ public class TaskListService extends AbstractService<TaskList, String> {
 	public List<TaskList> findByUsers(User user) {
 		return taskListRepository.findByUsers(user);
 	}
+	
+	public List<TaskList> findByOwnerOrUsers(User user,User owner) {
+		return taskListRepository.findByOwnerOrUsers(user, owner);
+	}
 
 	public List<TaskList> findByProjectAndUsers(Project project, User user) {
 		return taskListRepository.findByProjectAndUsers(project, user);

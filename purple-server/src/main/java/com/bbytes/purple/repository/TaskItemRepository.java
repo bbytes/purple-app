@@ -34,6 +34,8 @@ public interface TaskItemRepository extends MongoRepository<TaskItem, String> {
 	List<TaskItem> findByStateAndUsers(TaskState state, User user);
 	
 	List<TaskItem> findByStateAndOwner(TaskState state, User owner);
+	
+	List<TaskItem> findByProjectAndOwner(Project project, User owner);
 
 	List<TaskItem> findByProjectAndUsers(Project project, User user);
 
