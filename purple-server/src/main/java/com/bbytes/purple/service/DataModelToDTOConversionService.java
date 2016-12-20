@@ -514,6 +514,9 @@ public class DataModelToDTOConversionService {
 			taskListResponseDTO.setDueDate(taskItem.getDueDate());
 			taskListResponseDTO.setEstimatedHours(taskItem.getEstimatedHours());
 			taskListResponseDTO.setSpendHours(taskItem.getSpendHours());
+			if (taskItem.getLastModified() != null)
+				taskListResponseDTO.setCreationDate(
+						taskItem.getCreationDate() == null ? taskItem.getLastModified() : taskItem.getCreationDate());
 			taskListDTOList.add(taskListResponseDTO);
 		}
 		return taskListDTOList;

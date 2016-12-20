@@ -27,5 +27,7 @@ public class TaskListResponseDTO implements Serializable {
 	private Date dueDate;
 
 	private String state;
+	
+	private Date creationDate;
 
 }
