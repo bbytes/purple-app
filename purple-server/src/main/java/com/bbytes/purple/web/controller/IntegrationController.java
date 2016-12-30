@@ -44,6 +44,7 @@ import com.bbytes.purple.utils.StringUtils;
 import com.bbytes.purple.utils.SuccessHandler;
 
 import net.rcarz.jiraclient.Issue;
+import net.rcarz.jiraclient.JiraException;
 import net.rcarz.jiraclient.Project;
 
 /**
@@ -58,38 +59,12 @@ public class IntegrationController {
 	private static final Logger logger = LoggerFactory.getLogger(IntegrationController.class);
 
 	private static final String BASIC = "Basic ";
-	
-	private static final String JIRA_TASK = "Jira ";
 
 	@Autowired
 	private UserService userService;
 
 	@Autowired
-	private ProjectService projectService;
-	
-	@Autowired
-	private TaskListService taskListService;
-	
-	@Autowired
 	private IntegrationService integrationService;
-
-	@Autowired
-	protected TokenAuthenticationProvider tokenAuthenticationProvider;
-
-	@Autowired
-	private PasswordHashService passwordHashService;
-
-	@Autowired
-	private NotificationService notificationService;
-
-	@Autowired
-	private TenantResolverService tenantResolverService;
-
-	@Value("${base.url}")
-	private String baseUrl;
-
-	@Value("${email.invite.subject}")
-	private String inviteSubject;
 
 	@RequestMapping(value = "/api/v1/integration/jira/addAuthentication", method = RequestMethod.POST)
 	public RestResponse connectToJIRA(@RequestBody IntegrationRequestDTO integrationRequestDTO) throws PurpleException {
@@ -209,31 +184,15 @@ public class IntegrationController {
 
 	@RequestMapping(value = "/api/v1/integration/jira/syncTask", method = RequestMethod.GET)
 	public RestResponse syncJIRATask() throws PurpleException {
-		final String JIRA_ADD_TASK_MSG = "Jira project to jira task are sync successfully";
-		
+		final String JIRA_ADD_TASK_MSG = "Jira project to jira task sync successful";
+
 		User loggedInUser = userService.getLoggedInUser();
 		try {
 			Integration integration = integrationService.getJIRAConnection(loggedInUser);
-
-			Map<String, Map<String, List<Issue>>> projectToIssueListMap = integrationService
-					.getJiraProjectWithIssueTypeToIssueList(integration);
-			for (String projectName : projectToIssueListMap.keySet()) {
-				com.bbytes.purple.domain.Project projectFromDb = projectService.findByProjectName(projectName);
-				if (projectFromDb != null) {
-					Map<String, List<Issue>> issueTypeToIssueList=	projectToIssueListMap.get(projectName);
-					for (String issueType : issueTypeToIssueList.keySet()) {
-						String taskListName = JIRA_TASK + issueType;
-						List<Issue> issues = issueTypeToIssueList.get(issueType);
-						for (Issue issue : issues) {
-							taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
-						}
-					}
-				}
-			}
+			integrationService.updateProjectWithJiraTask(integration);
 
 		} catch (Throwable e) {
-			e.printStackTrace();
-			throw new PurpleException(e.getMessage(),ErrorHandler.JIRA_TASK_ISSUE_SYNC_FAILED);
+			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_TASK_ISSUE_SYNC_FAILED);
 		}
 
 		logger.debug("Jira Projects to task sync done successfully");
@@ -247,71 +206,18 @@ public class IntegrationController {
 	public RestResponse syncJIRAUsers() throws PurpleException {
 
 		final String JIRA_ADD_PROJECT_MSG = "Jira project to users are sync successfully";
-		final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
-		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
 		User loggedInUser = userService.getLoggedInUser();
 		try {
 			// checking jira is connected or not
 			Integration integration = integrationService.getJIRAConnection(loggedInUser);
 
-			Map<String, List<User>> projectToUsersMap = integrationService.getJiraProjectWithUserList(integration);
-			// iterating project to users map
-			for (Map.Entry<String, List<User>> entry : projectToUsersMap.entrySet()) {
-				// checking project from JIRA is present in db
-				com.bbytes.purple.domain.Project projectFromDb = projectService.findByProjectName(entry.getKey());
-				if (projectFromDb != null) {
-					// looping all user of project
-					for (User jiraUser : entry.getValue()) {
-						User userFromDB = userService.getUserByEmail(jiraUser.getEmail());
-						if (userFromDB != null) {
-							// fetching user from db and adding to project
-							projectFromDb.addUser(userFromDB);
-							projectService.save(projectFromDb);
-						} else {
-
-							// creating random generated password string
-							String generatePassword = StringUtils.nextSessionId();
-
-							// saving jira user to statusnap user list
-							Organization org = loggedInUser.getOrganization();
-							jiraUser.setOrganization(org);
-							jiraUser.setPassword(passwordHashService.encodePassword(generatePassword));
-							jiraUser.setStatus(User.PENDING);
-							jiraUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
-							if (!tenantResolverService.emailExist(jiraUser.getEmail())) {
-								User savedUser = userService.addUsers(jiraUser);
-								// after saving user to db, this user is getting
-								// added to project
-								projectFromDb.addUser(savedUser);
-								projectService.save(projectFromDb);
-
-								// since user is getting created, sending
-								// invitation
-								// email to activate account
-								final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(savedUser.getEmail(), 720);
-								String postDate = dateFormat.format(new Date());
-								List<String> emailList = new ArrayList<String>();
-								emailList.add(savedUser.getEmail());
-
-								Map<String, Object> emailBody = new HashMap<>();
-								emailBody.put(GlobalConstants.USER_NAME, savedUser.getName());
-								emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-								emailBody.put(GlobalConstants.PASSWORD, generatePassword);
-								emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
-
-								notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
-							}
-						}
-
-					}
-				}
-			}
+			integrationService.syncProjectToJiraUser(loggedInUser, integration);
 
 		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(),ErrorHandler.JIRA_USER_SYNC_FAILED);
+			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_USER_SYNC_FAILED);
 		}
-		
+
 		logger.debug("Jira Projects to users are sync successfully");
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
 				SuccessHandler.JIRA_SYNC_PROJECTS_AND_USERS_SUCCESS);

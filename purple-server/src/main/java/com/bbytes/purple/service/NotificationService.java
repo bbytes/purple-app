@@ -112,6 +112,7 @@ public class NotificationService {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean sendTemplateEmail(List<String> toEmailList, String subject, String emailTemplateName,
 			Map<String, Object> templateVariableMap) {
 		String emailHTMLContent = VelocityEngineUtils.mergeTemplateIntoString(this.templateEngine, emailTemplateName, "UTF-8",

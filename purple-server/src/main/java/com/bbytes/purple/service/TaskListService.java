@@ -126,6 +126,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 
 		String jiraIssueURLHref = "";
 
+		
 		String baseURL = URLUtil.getBaseURL(issue.getUrl());
 		if (baseURL != null && !baseURL.isEmpty()) {
 			String jiraURL = URLUtil.getJiraIssueURL(baseURL, issue.getKey());

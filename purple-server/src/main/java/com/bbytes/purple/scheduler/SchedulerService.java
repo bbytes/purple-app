@@ -37,6 +37,7 @@ import com.bbytes.plutus.response.ProductStatsRestResponse;
 import com.bbytes.plutus.util.BillingConstant;
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.ConfigSetting;
+import com.bbytes.purple.domain.Integration;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.TenantResolver;
@@ -45,6 +46,7 @@ import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.TenantResolverRepository;
 import com.bbytes.purple.service.ConfigSettingService;
+import com.bbytes.purple.service.IntegrationService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
@@ -76,7 +78,7 @@ public class SchedulerService {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private StatusService statusService;
 
@@ -91,6 +93,9 @@ public class SchedulerService {
 
 	@Autowired
 	private RegistrationService registrationService;
+
+	@Autowired
+	private IntegrationService integrationService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -145,8 +150,7 @@ public class SchedulerService {
 			// checking current day is weekend or not
 			if (todaysDate.getDayOfWeek() == SATURDAY || todaysDate.getDayOfWeek() == SUNDAY) {
 				// getting config setting
-				ConfigSetting configSetting = configSettingService
-						.getConfigSetting(organizationService.findByOrgId(orgId));
+				ConfigSetting configSetting = configSettingService.getConfigSetting(organizationService.findByOrgId(orgId));
 				if (configSetting != null) {
 					if (configSetting.isWeekendNotification())
 						sendDailyEmail = true;
@@ -194,8 +198,7 @@ public class SchedulerService {
 							List<String> emailList = new ArrayList<String>();
 
 							long currentDate = new Date().getTime();
-							String statusEditEnableDays = configSettingService.getConfigSetting(user.getOrganization())
-									.getStatusEnable();
+							String statusEditEnableDays = configSettingService.getConfigSetting(user.getOrganization()).getStatusEnable();
 
 							if (statusEditEnableDays == null)
 								statusEditEnableDays = "1";
@@ -204,22 +207,21 @@ public class SchedulerService {
 
 							String postDate = dateFormat.format(new Date());
 
-							final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(),
-									validHours);
+							final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(user.getEmail(), validHours);
 
 							Map<String, Object> emailBody = new HashMap<>();
 							emailBody.put(GlobalConstants.USER_NAME, user.getName());
 							emailBody.put(GlobalConstants.CURRENT_DATE, postDate);
-							emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.STATUS_URL
-									+ xauthToken + GlobalConstants.STATUS_DATE + currentDate);
-							emailBody.put(GlobalConstants.SETTING_LINK,
-									baseUrl + GlobalConstants.SETTING_URL + xauthToken);
+							emailBody.put(GlobalConstants.ACTIVATION_LINK,
+									baseUrl + GlobalConstants.STATUS_URL + xauthToken + GlobalConstants.STATUS_DATE + currentDate);
+							emailBody.put(GlobalConstants.SETTING_LINK, baseUrl + GlobalConstants.SETTING_URL + xauthToken);
 							emailBody.put(GlobalConstants.VALID_HOURS, validHours);
 
 							emailList.add(user.getEmail());
 							// this is to schedule task for particular time
-							taskScheduler.schedule(new EmailAndSlackSendJob(user, emailBody, emailList,
-									notificationService, schedulerSubject), dateTime.toDate());
+							taskScheduler.schedule(
+									new EmailAndSlackSendJob(user, emailBody, emailList, notificationService, schedulerSubject),
+									dateTime.toDate());
 
 						}
 					}
@@ -395,6 +397,43 @@ public class SchedulerService {
 						userService.delete(userFromDb);
 				}
 			}
+		}
+
+		TenancyContextHolder.clearContext();
+	}
+
+	/* Cron Runs every day at 6 am */
+//	@Scheduled(cron = "	0 0 6 * * ?")
+	@Scheduled(cron = "0 0/5 0 * * ?")
+	public void runJiraSync() {
+
+		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
+
+		// creating a hashset to store orgId's
+		Set<String> orgIdList = new LinkedHashSet<String>();
+		for (TenantResolver tr : tenantResolverList) {
+			orgIdList.add(tr.getOrgId());
+		}
+
+		for (String orgId : orgIdList) {
+			TenancyContextHolder.setTenant(orgId);
+			try {
+				List<User> allUsers = userService.getAllUsers();
+
+				for (User userFromDb : allUsers) {
+					// checking condition for mark delete
+					if (!userFromDb.isDisableState() && !userFromDb.isMarkDelete()) {
+						Integration integration = integrationService.getJIRAConnection(userFromDb);
+						List<net.rcarz.jiraclient.Project> jiraProjects = integrationService.getJiraProjects(integration);
+						integrationService.addJiraProjects(jiraProjects, userFromDb);
+						integrationService.syncProjectToJiraUser(userFromDb, integration);
+						integrationService.updateProjectWithJiraTask(integration);
+					}
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+
 		}
 
 		TenancyContextHolder.clearContext();
