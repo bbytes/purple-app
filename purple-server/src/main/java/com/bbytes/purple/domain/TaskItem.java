@@ -49,7 +49,7 @@ public class TaskItem implements Comparable<TaskItem> {
 
 	@Field("due_date")
 	private Date dueDate;
-	
+
 	@Field("jira_issue_key")
 	private String jiraIssueKey;
 
@@ -113,13 +113,13 @@ public class TaskItem implements Comparable<TaskItem> {
 	public void addSpendHours(double spendHours) {
 		this.spendHours = this.spendHours + spendHours;
 	}
-	
+
 	public void removeSpendHours(double spendHours) {
 
-		this.spendHours = this.spendHours - spendHours;
+		this.spendHours = (this.spendHours - spendHours) <= 0 ? 0 : (this.spendHours - spendHours);
 	}
 
-		public boolean isJiraIssueTaskItem() {
+	public boolean isJiraIssueTaskItem() {
 		return jiraIssueKey == null ? false : true;
 	}
 

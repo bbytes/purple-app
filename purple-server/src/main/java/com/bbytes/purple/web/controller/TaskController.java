@@ -148,27 +148,29 @@ public class TaskController {
 	@RequestMapping(value = "/api/v1/task/taskList/{projectId}/{state}", method = RequestMethod.GET)
 	public RestResponse getTaskListForProjectAndState(@PathVariable String projectId, @PathVariable String state) throws PurpleException {
 
-		User user = userService.getLoggedInUser();
+		User loggedInUser = userService.getLoggedInUser();
 		List<TaskList> taskLists = null;
 		TaskState taskState = null;
 		Project project = null;
 		List<TaskItem> taskItemList = null;
 		List<TaskItem> taskItemListOwner = null;
-		if (projectId.equals("All") && state.equals("All"))
-			taskLists = taskListService.findByUsers(user);
+		if (projectId.equals("All") && state.equals("All")){
+			taskLists = taskListService.findByOwnerOrUsers(loggedInUser,loggedInUser);
+		}
 		else if (projectId.equals("All") && !state.equals("All")) {
 			taskState = TaskState.valueOf(state);
-			taskItemList = taskItemService.findByStateAndUsers(taskState, user);
-			taskItemListOwner = taskItemService.findByStateAndOwner(taskState, user);
+			taskItemList = taskItemService.findByStateAndUsers(taskState, loggedInUser);
+			taskItemListOwner = taskItemService.findByStateAndOwner(taskState, loggedInUser);
 
 		} else if (state.equals("All") && !projectId.equals("All")) {
 			project = projectService.findByProjectId(projectId);
-			taskLists = taskListService.findByProjectAndUsers(project, user);
+			taskItemList = taskItemService.findByProjectAndUsers(project, loggedInUser);
+			taskItemListOwner = taskItemService.findByProjectAndOwner(project, loggedInUser);
 		} else if (!projectId.equals("All") && !state.equals("All")) {
 			taskState = TaskState.valueOf(state);
 			project = projectService.findByProjectId(projectId);
-			taskItemList = taskItemService.findByProjectAndStateAndUsers(project, taskState, user);
-			taskItemListOwner = taskItemService.findByProjectAndStateAndOwner(project, taskState, user);
+			taskItemList = taskItemService.findByProjectAndStateAndUsers(project, taskState, loggedInUser);
+			taskItemListOwner = taskItemService.findByProjectAndStateAndOwner(project, taskState, loggedInUser);
 		}
 		if (taskLists == null && taskItemList != null) {
 			Set<TaskList> result = new HashSet<>();
@@ -180,9 +182,9 @@ public class TaskController {
 					result.add(taskItem.getTaskList());
 				}
 			}
-			if (taskState.equals(TaskState.YET_TO_START)) {
-				List<TaskList> ytsTaskLists = taskListService.findByProjectAndStateAndUsers(project, taskState, user);
-				List<TaskList> ytsTaskListsOwner = taskListService.findByProjectAndStateAndOwner(project, taskState, user);
+			if (TaskState.YET_TO_START.equals(taskState)) {
+				List<TaskList> ytsTaskLists = taskListService.findByProjectAndStateAndUsers(project, taskState, loggedInUser);
+				List<TaskList> ytsTaskListsOwner = taskListService.findByProjectAndStateAndOwner(project, taskState, loggedInUser);
 				for (TaskList taskList : ytsTaskLists) {
 					if (taskList.getTaskItems() == null || taskList.getTaskItems().size() == 0)
 						result.add(taskList);

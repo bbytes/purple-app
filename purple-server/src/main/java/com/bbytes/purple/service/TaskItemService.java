@@ -63,6 +63,10 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 	public List<TaskItem> findByProjectAndUsers(Project project, User user) {
 		return taskItemRepository.findByProjectAndUsers(project, user);
 	}
+	
+	public List<TaskItem> findByProjectAndOwner(Project project, User owner) {
+		return taskItemRepository.findByProjectAndOwner(project, owner);
+	}
 
 	public List<TaskItem> findByProjectAndUsersAndStateIn(Project project, User user, List<TaskState> states) {
 		return taskItemRepository.findByProjectAndUsersAndStateIn(project, user, states);

@@ -31,6 +31,8 @@ public interface TaskListRepository extends MongoRepository<TaskList, String> {
 	List<TaskList> findByOwner(User user);
 
 	List<TaskList> findByUsers(User user);
+	
+	List<TaskList> findByOwnerOrUsers(User user,User owner);
 
 	List<TaskList> findByUsersIn(List<User> users);
 
