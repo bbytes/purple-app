@@ -1,13 +1,7 @@
 package com.bbytes.purple.web.controller;
 
 import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
@@ -18,34 +12,23 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Integration;
-import com.bbytes.purple.domain.Organization;
+import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.IntegrationRequestDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.IntegrationService;
-import com.bbytes.purple.service.NotificationService;
-import com.bbytes.purple.service.PasswordHashService;
-import com.bbytes.purple.service.ProjectService;
-import com.bbytes.purple.service.TaskListService;
-import com.bbytes.purple.service.TenantResolverService;
+import com.bbytes.purple.service.JiraIntegrationService;
 import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
-import com.bbytes.purple.utils.GlobalConstants;
-import com.bbytes.purple.utils.StringUtils;
 import com.bbytes.purple.utils.SuccessHandler;
 
-import net.rcarz.jiraclient.Issue;
-import net.rcarz.jiraclient.JiraException;
-import net.rcarz.jiraclient.Project;
 
 /**
  * Integration Controller
@@ -65,6 +48,9 @@ public class IntegrationController {
 
 	@Autowired
 	private IntegrationService integrationService;
+	
+	@Autowired
+	private JiraIntegrationService jiraIntegrationService;
 
 	@RequestMapping(value = "/api/v1/integration/jira/addAuthentication", method = RequestMethod.POST)
 	public RestResponse connectToJIRA(@RequestBody IntegrationRequestDTO integrationRequestDTO) throws PurpleException {
@@ -116,7 +102,7 @@ public class IntegrationController {
 		RestResponse jiraRestResponse;
 		try {
 
-			Integration integration = integrationService.getJIRAConnection(loggedInUser);
+			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
 			if (integration == null) {
 				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
 						ErrorHandler.JIRA_CONNECTION_FAILED);
@@ -166,11 +152,11 @@ public class IntegrationController {
 		final String JIRA_ADD_PROJECT_MSG = "Jira projects are added successfully";
 		User loggedInUser = userService.getLoggedInUser();
 		try {
-			Integration integration = integrationService.getJIRAConnection(loggedInUser);
+			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
 
-			List<Project> jiraProjects = integrationService.getJiraProjects(integration);
+			List<Project> jiraProjects = jiraIntegrationService.getJiraProjects(integration);
 
-			integrationService.addJiraProjects(jiraProjects, loggedInUser);
+			jiraIntegrationService.addJiraProjects(jiraProjects, loggedInUser);
 
 		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
@@ -188,10 +174,11 @@ public class IntegrationController {
 
 		User loggedInUser = userService.getLoggedInUser();
 		try {
-			Integration integration = integrationService.getJIRAConnection(loggedInUser);
-			integrationService.updateProjectWithJiraTask(integration);
+			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
+			jiraIntegrationService.updateProjectWithJiraTask(integration);
 
 		} catch (Throwable e) {
+			e.printStackTrace();
 			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_TASK_ISSUE_SYNC_FAILED);
 		}
 
@@ -210,9 +197,9 @@ public class IntegrationController {
 		User loggedInUser = userService.getLoggedInUser();
 		try {
 			// checking jira is connected or not
-			Integration integration = integrationService.getJIRAConnection(loggedInUser);
+			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
 
-			integrationService.syncProjectToJiraUser(loggedInUser, integration);
+			jiraIntegrationService.syncProjectToJiraUser(loggedInUser, integration);
 
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_USER_SYNC_FAILED);
@@ -257,7 +244,7 @@ public class IntegrationController {
 	@RequestMapping(value = "/api/v1/integration/jira", method = RequestMethod.DELETE)
 	public RestResponse deleteJiraIntegration() throws PurpleException {
 		User user = userService.getLoggedInUser();
-		Integration integration = integrationService.getJIRAConnection(user);
+		Integration integration = integrationService.getIntegrationForUser(user);
 		if (integration != null) {
 			integration.setJiraBaseURL(null);
 			integration.setJiraBasicAuthHeader(null);

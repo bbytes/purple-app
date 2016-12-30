@@ -47,6 +47,7 @@ import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.TenantResolverRepository;
 import com.bbytes.purple.service.ConfigSettingService;
 import com.bbytes.purple.service.IntegrationService;
+import com.bbytes.purple.service.JiraIntegrationService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
@@ -96,6 +97,9 @@ public class SchedulerService {
 
 	@Autowired
 	private IntegrationService integrationService;
+	
+	@Autowired
+	private JiraIntegrationService jiraIntegrationService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -403,7 +407,8 @@ public class SchedulerService {
 	}
 
 	/* Cron Runs every day at 6 am */
-	@Scheduled(cron = "	0 0 6 * * ?")
+//	@Scheduled(cron = "	0 0 6 * * ?")
+	@Scheduled(cron = "0 0/5 * * * ?")
 	public void runJiraSync() {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
@@ -422,11 +427,11 @@ public class SchedulerService {
 				for (User userFromDb : allUsers) {
 					// checking condition for mark delete
 					if (!userFromDb.isDisableState() && !userFromDb.isMarkDelete()) {
-						Integration integration = integrationService.getJIRAConnection(userFromDb);
-						List<net.rcarz.jiraclient.Project> jiraProjects = integrationService.getJiraProjects(integration);
-						integrationService.addJiraProjects(jiraProjects, userFromDb);
-						integrationService.syncProjectToJiraUser(userFromDb, integration);
-						integrationService.updateProjectWithJiraTask(integration);
+						Integration integration = integrationService.getIntegrationForUser(userFromDb);
+						List<Project> jiraProjects = jiraIntegrationService.getJiraProjects(integration);
+						jiraIntegrationService.addJiraProjects(jiraProjects, userFromDb);
+						jiraIntegrationService.syncProjectToJiraUser(userFromDb, integration);
+						jiraIntegrationService.updateProjectWithJiraTask(integration);
 					}
 				}
 			} catch (Exception e) {

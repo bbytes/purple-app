@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.atlassian.jira.rest.client.api.domain.Issue;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.TaskList;
@@ -13,8 +14,6 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.repository.TaskListRepository;
 import com.bbytes.purple.utils.URLUtil;
-
-import net.rcarz.jiraclient.Issue;
 
 @Service
 public class TaskListService extends AbstractService<TaskList, String> {
@@ -39,7 +38,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 	public List<TaskList> findByStateAndUsers(TaskState state, User user) {
 		return taskListRepository.findByStateAndUsers(state, user);
 	}
-	
+
 	public List<TaskList> findByStateAndOwner(TaskState state, User user) {
 		return taskListRepository.findByStateAndOwner(state, user);
 	}
@@ -51,7 +50,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 	public List<TaskList> findByProjectAndStateAndUsers(Project project, TaskState state, User user) {
 		return taskListRepository.findByProjectAndStateAndUsers(project, state, user);
 	}
-	
+
 	public List<TaskList> findByProjectAndStateAndOwner(Project project, TaskState state, User user) {
 		return taskListRepository.findByProjectAndStateAndOwner(project, state, user);
 	}
@@ -79,8 +78,8 @@ public class TaskListService extends AbstractService<TaskList, String> {
 	public List<TaskList> findByUsers(User user) {
 		return taskListRepository.findByUsers(user);
 	}
-	
-	public List<TaskList> findByOwnerOrUsers(User user,User owner) {
+
+	public List<TaskList> findByOwnerOrUsers(User user, User owner) {
 		return taskListRepository.findByOwnerOrUsers(user, owner);
 	}
 
@@ -130,43 +129,50 @@ public class TaskListService extends AbstractService<TaskList, String> {
 
 		String jiraIssueURLHref = "";
 
-		
-		String baseURL = URLUtil.getBaseURL(issue.getUrl());
+		String baseURL = URLUtil.getBaseURL(issue.getSelf().toString());
 		if (baseURL != null && !baseURL.isEmpty()) {
 			String jiraURL = URLUtil.getJiraIssueURL(baseURL, issue.getKey());
 			jiraIssueURLHref = URLUtil.getHTMLHref(jiraURL, issue.getKey() + " - " + issue.getSummary());
 		}
 
-		TaskItem itemFromDb = taskItemService.findOne(issue.getId());
+		TaskItem itemFromDb = taskItemService.findOne(issue.getKey());
 		TaskItem item;
 		if (itemFromDb == null) {
-			item = new TaskItem(jiraIssueURLHref, issue.getDescription(), issue.getTimeEstimate(), issue.getDueDate());
-			item.setEstimatedHours(issue.getTimeEstimate());
-			item.setDueDate(issue.getDueDate());
+
+			item = new TaskItem(jiraIssueURLHref, issue.getDescription());
+			if (issue.getTimeTracking() != null) {
+				double estimatedHours = issue.getTimeTracking().getOriginalEstimateMinutes() / 60;
+				item.setEstimatedHours(estimatedHours);
+				double spendHours = issue.getTimeTracking().getTimeSpentMinutes() / 60;
+				item.setSpendHours(spendHours);
+			}
+			
+			if (issue.getDueDate() != null)
+				item.setDueDate(issue.getDueDate().toDate());
+			
 			taskList.addTaskItem(item);
-			item.setTaskItemId(issue.getId());
+			item.setTaskItemId(issue.getId().toString());
 			item.setJiraIssueKey(issue.getKey());
 		} else {
 			item = itemFromDb;
-			
+
 		}
 
 		item.setName(jiraIssueURLHref);
 		item.setDesc(issue.getDescription());
-		
-		if (issue.getAssignee() != null && issue.getAssignee().getEmail() != null) {
-			User userAssignee = userService.getUserByEmail(issue.getAssignee().getEmail());
+
+		if (issue.getAssignee() != null && issue.getAssignee().getEmailAddress() != null) {
+			User userAssignee = userService.getUserByEmail(issue.getAssignee().getEmailAddress());
 			project.addUser(userAssignee);
 			item.addUsers(userAssignee);
 		}
 
-		if (issue.getReporter() != null && issue.getReporter().getEmail() != null) {
-			User userReporter = userService.getUserByEmail(issue.getReporter().getEmail());
+		if (issue.getReporter() != null && issue.getReporter().getEmailAddress() != null) {
+			User userReporter = userService.getUserByEmail(issue.getReporter().getEmailAddress());
 			project.addUser(userReporter);
 			item.setOwner(userReporter);
 			taskList.setOwner(userReporter);
 		}
-
 
 		projectService.save(project);
 		taskItemService.save(item);

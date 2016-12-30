@@ -5,17 +5,11 @@ import static java.util.Arrays.asList;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.social.bitbucket.api.BitBucket;
 import org.springframework.social.bitbucket.api.BitBucketChangeset;
 import org.springframework.social.bitbucket.api.BitBucketChangesets;
@@ -30,48 +24,25 @@ import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Integration;
-import com.bbytes.purple.domain.Organization;
-import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.SocialConnection;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
-import com.bbytes.purple.integration.JiraBasicCredentials;
 import com.bbytes.purple.repository.IntegrationRepository;
 import com.bbytes.purple.repository.SocialConnectionRepository;
 import com.bbytes.purple.social.MongoConnectionTransformers;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
-import com.bbytes.purple.utils.StringUtils;
-
-import net.rcarz.jiraclient.Issue;
-import net.rcarz.jiraclient.Issue.SearchResult;
-import net.rcarz.jiraclient.JiraClient;
-import net.rcarz.jiraclient.JiraException;
-import net.rcarz.jiraclient.Role;
-import net.rcarz.jiraclient.RoleActor;
 
 @Service
 public class IntegrationService extends AbstractService<Integration, String> {
 
 	private static final Logger logger = LoggerFactory.getLogger(IntegrationService.class);
 
-	private static final String JIRA_TASK = "Jira ";
-		
 	final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
-	
+
 	final DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
-
 	private IntegrationRepository integrationRepository;
-
-	@Value("${base.url}")
-	private String baseUrl;
-
-	@Value("${email.invite.subject}")
-	private String inviteSubject;
-
-	@Autowired
-	private TaskListService taskListService;
 
 	@Autowired
 	private SocialConnectionRepository socialConnectionRepository;
@@ -80,23 +51,10 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	private MongoConnectionTransformers mongoConnectionTransformers;
 
 	@Autowired
-	private ProjectService projectService;
-
-	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private PasswordHashService passwordHashService;
 
-	@Autowired
-	private NotificationService notificationService;
-
-	@Autowired
-	private TenantResolverService tenantResolverService;
-	
 	@Autowired
 	protected TokenAuthenticationProvider tokenAuthenticationProvider;
-
 
 	@Autowired
 	public IntegrationService(IntegrationRepository integrationRepository) {
@@ -106,11 +64,6 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	public Integration getIntegrationByUser(User user) {
 		return integrationRepository.findByUser(user);
-	}
-
-	public boolean integrationExist(User user) {
-		boolean state = integrationRepository.findByUser(user) == null ? false : true;
-		return state;
 	}
 
 	public Integration connectToJIRA(User user, String jiraUserName, String basicAuth, String jiraBaseURL) throws PurpleException {
@@ -137,7 +90,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	}
 
-	public Integration getJIRAConnection(User user) throws PurpleException {
+	public Integration getIntegrationForUser(User user) throws PurpleException {
 		Integration integration = null;
 
 		try {
@@ -147,185 +100,10 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		}
 		return integration;
 	}
-
-	public void updateProjectWithJiraTask(Integration integration) throws JiraException {
-		if(integration==null)
-			return ;
-		
-		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
-		for (String projectName : projectToIssueListMap.keySet()) {
-			com.bbytes.purple.domain.Project projectFromDb = projectService.findByProjectName(projectName);
-			if (projectFromDb != null) {
-				Map<String, List<Issue>> issueTypeToIssueList = projectToIssueListMap.get(projectName);
-				for (String issueType : issueTypeToIssueList.keySet()) {
-					String taskListName = JIRA_TASK + issueType;
-					List<Issue> issues = issueTypeToIssueList.get(issueType);
-					for (Issue issue : issues) {
-						taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
-					}
-				}
-			}
-		}
-	}
-
-	public List<net.rcarz.jiraclient.Project> getJiraProjects(Integration integration) throws JiraException {
-		JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(), integration.getJiraBasicAuthHeader());
-		JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
-		List<net.rcarz.jiraclient.Project> jiraProjects = jira.getProjects();
-		return jiraProjects;
-	}
-
-	public Map<String, Map<String, List<Issue>>> getJiraProjectWithIssueTypeToIssueList(Integration integration) throws JiraException {
-		JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(), integration.getJiraBasicAuthHeader());
-		JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
-		List<net.rcarz.jiraclient.Project> jiraProjects = jira.getProjects();
-		Map<String, Map<String, List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String, List<Issue>>>();
-		try {
-			for (net.rcarz.jiraclient.Project project : jiraProjects) {
-				Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
-				SearchResult issueResult = jira.searchIssues("project=" + project.getKey());
-				for (Issue issue : issueResult.issues) {
-					List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
-					if (issueList == null) {
-						issueList = new LinkedList<Issue>();
-						issueTypeToIssueList.put(issue.getIssueType().getName(), issueList);
-					}
-
-					issueList.add(issue);
-				}
-
-				projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-
-		return projectNameToIssueList;
-	}
-
-	public void syncProjectToJiraUser(User user, Integration integration)
-			throws JiraException, PurpleException {
-		Map<String, List<User>> projectToUsersMap = getJiraProjectWithUserList(integration);
-		// iterating project to users map
-		for (Map.Entry<String, List<User>> entry : projectToUsersMap.entrySet()) {
-			// checking project from JIRA is present in db
-			com.bbytes.purple.domain.Project projectFromDb = projectService.findByProjectName(entry.getKey());
-			if (projectFromDb != null) {
-				// looping all user of project
-				for (User jiraUser : entry.getValue()) {
-					User userFromDB = userService.getUserByEmail(jiraUser.getEmail());
-					if (userFromDB != null) {
-						// fetching user from db and adding to project
-						projectFromDb.addUser(userFromDB);
-						projectService.save(projectFromDb);
-					} else {
-
-						// creating random generated password string
-						String generatePassword = StringUtils.nextSessionId();
-
-						// saving jira user to statusnap user list
-						Organization org = user.getOrganization();
-						jiraUser.setOrganization(org);
-						jiraUser.setPassword(passwordHashService.encodePassword(generatePassword));
-						jiraUser.setStatus(User.PENDING);
-						jiraUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
-						if (!tenantResolverService.emailExist(jiraUser.getEmail())) {
-							User savedUser = userService.addUsers(jiraUser);
-							// after saving user to db, this user is getting
-							// added to project
-							projectFromDb.addUser(savedUser);
-							projectService.save(projectFromDb);
-
-							// since user is getting created, sending
-							// invitation
-							// email to activate account
-							final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(savedUser.getEmail(), 720);
-							String postDate = dateFormat.format(new Date());
-							List<String> emailList = new ArrayList<String>();
-							emailList.add(savedUser.getEmail());
-
-							Map<String, Object> emailBody = new HashMap<>();
-							emailBody.put(GlobalConstants.USER_NAME, savedUser.getName());
-							emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-							emailBody.put(GlobalConstants.PASSWORD, generatePassword);
-							emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
-
-							notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
-						}
-					}
-
-				}
-			}
-		}
-	}
 	
-	public Map<String, List<User>> getJiraProjectWithUserList(Integration integration) throws JiraException {
-		JiraBasicCredentials creds = new JiraBasicCredentials(integration.getJiraUserName(), integration.getJiraBasicAuthHeader());
-		JiraClient jira = new JiraClient(integration.getJiraBaseURL(), creds);
-		List<net.rcarz.jiraclient.Project> jiraProjects = jira.getProjects();
-		Map<String, List<User>> projectNameToUserList = new LinkedHashMap<String, List<User>>();
-		try {
-			for (net.rcarz.jiraclient.Project project : jiraProjects) {
-				List<User> projectUserList = new LinkedList<User>();
-				net.rcarz.jiraclient.Project projectDetail = jira.getProject(project.getKey());
-				for (String role : projectDetail.getRoles().keySet()) {
-					Role roleObj = jira.getProjectRole(projectDetail.getRoles().get(role));
-					for (RoleActor roleActor : roleObj.getRoleActors()) {
-						if (roleActor.isUser()) {
-							net.rcarz.jiraclient.User userFromJira = roleActor.getUser();
-							try {
-								net.rcarz.jiraclient.User fullUser = jira.getUser(userFromJira.getName());
-								if (fullUser != null && fullUser.isActive()) {
-									User user = new User(fullUser.getDisplayName(), fullUser.getEmail().toLowerCase());
-									projectUserList.add(user);
-								}
-							} catch (Exception e) {
-								// do nothing
-							}
-
-						}
-					}
-				}
-				projectNameToUserList.put(project.getName(), projectUserList);
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-
-		return projectNameToUserList;
-	}
-
-	public void addJiraProjects(List<net.rcarz.jiraclient.Project> jiraProjects, User loggedInUser) throws PurpleException {
-		List<String> jiraProjectList = new LinkedList<String>();
-		List<String> finalProjectListToBeSaved = new LinkedList<String>();
-
-		try {
-			for (net.rcarz.jiraclient.Project jiraProject : jiraProjects) {
-				jiraProjectList.add(jiraProject.getName());
-			}
-			List<Project> list = projectService.findAll();
-			List<String> projectListFromDB = new ArrayList<String>();
-			for (Project project : list) {
-				projectListFromDB.add(project.getProjectName().toLowerCase());
-			}
-
-			for (String jiraProject : jiraProjectList) {
-				// make sure we dont add project with same name but different
-				// case Eg : ReCruiz and recruiz are same
-				if (!projectListFromDB.contains(jiraProject.toLowerCase()))
-					finalProjectListToBeSaved.add(jiraProject);
-			}
-
-			for (String project : finalProjectListToBeSaved) {
-				Project addProject = new Project(project);
-				addProject.setOrganization(loggedInUser.getOrganization());
-				// added loggedIn user as owner of project
-				addProject.setProjectOwner(loggedInUser);
-				addProject = projectService.save(addProject);
-			}
-		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_CONNECTION_FAILED);
-		}
+	public boolean integrationExist(User user) {
+		boolean state = integrationRepository.findByUser(user) == null ? false : true;
+		return state;
 	}
 
 	public String getSlackUserName() {
