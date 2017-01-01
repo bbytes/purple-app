@@ -24,6 +24,10 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 		this.taskItemRepository = taskItemRepository;
 	}
 
+	public TaskItem findByJiraIssueKey(String jiraIssueKey){
+		return taskItemRepository.findByJiraIssueKey(jiraIssueKey);
+	}
+	
 	public List<TaskItem> findByTaskList(TaskList taskList) {
 		return taskItemRepository.findByTaskList(taskList);
 	}

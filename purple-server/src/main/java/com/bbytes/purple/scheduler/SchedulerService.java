@@ -408,7 +408,7 @@ public class SchedulerService {
 
 	/* Cron Runs every day at 6 am */
 //	@Scheduled(cron = "	0 0 6 * * ?")
-	@Scheduled(cron = "0 0/5 * * * ?")
+	@Scheduled(cron = "0 0/2 * * * ?")
 	public void runJiraSync() {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
@@ -432,6 +432,8 @@ public class SchedulerService {
 						jiraIntegrationService.addJiraProjects(jiraProjects, userFromDb);
 						jiraIntegrationService.syncProjectToJiraUser(userFromDb, integration);
 						jiraIntegrationService.updateProjectWithJiraTask(integration);
+						jiraIntegrationService.pushTaskUpdatesToJira(integration, userFromDb);
+						
 					}
 				}
 			} catch (Exception e) {

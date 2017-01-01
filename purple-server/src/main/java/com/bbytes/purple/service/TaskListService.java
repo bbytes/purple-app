@@ -135,7 +135,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 			jiraIssueURLHref = URLUtil.getHTMLHref(jiraURL, issue.getKey() + " - " + issue.getSummary());
 		}
 
-		TaskItem itemFromDb = taskItemService.findOne(issue.getKey());
+		TaskItem itemFromDb = taskItemService.findByJiraIssueKey(issue.getKey());
 		TaskItem item;
 		if (itemFromDb == null) {
 
@@ -143,13 +143,14 @@ public class TaskListService extends AbstractService<TaskList, String> {
 			if (issue.getTimeTracking() != null) {
 				double estimatedHours = issue.getTimeTracking().getOriginalEstimateMinutes() / 60;
 				item.setEstimatedHours(estimatedHours);
-				double spendHours = issue.getTimeTracking().getTimeSpentMinutes() / 60;
-				item.setSpendHours(spendHours);
+				double spentHours = issue.getTimeTracking().getTimeSpentMinutes() / 60;
+				if (spentHours > 0)
+					item.setSpendHours(spentHours);
 			}
-			
+
 			if (issue.getDueDate() != null)
 				item.setDueDate(issue.getDueDate().toDate());
-			
+
 			taskList.addTaskItem(item);
 			item.setTaskItemId(issue.getId().toString());
 			item.setJiraIssueKey(issue.getKey());

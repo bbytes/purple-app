@@ -13,6 +13,8 @@ import com.bbytes.purple.enums.TaskState;
 
 public interface TaskItemRepository extends MongoRepository<TaskItem, String> {
 
+	TaskItem findByJiraIssueKey(String jiraIssueKey);
+	
 	List<TaskItem> findByState(TaskState state);
 
 	List<TaskItem> findByTaskList(TaskList taskList);
@@ -26,7 +28,7 @@ public interface TaskItemRepository extends MongoRepository<TaskItem, String> {
 	List<TaskItem> findByProjectIn(List<Project> project);
 
 	List<TaskItem> findByOwner(User user);
-
+	
 	List<TaskItem> findByUsers(User user);
 
 	List<TaskItem> findByUsersIn(List<User> user);

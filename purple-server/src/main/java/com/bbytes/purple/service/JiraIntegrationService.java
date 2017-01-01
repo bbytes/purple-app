@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -27,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.atlassian.httpclient.api.Request.Builder;
 import com.atlassian.jira.rest.client.api.AuthenticationHandler;
+import com.atlassian.jira.rest.client.api.IssueRestClient;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.JiraRestClientFactory;
 import com.atlassian.jira.rest.client.api.ProjectRolesRestClient;
@@ -44,14 +46,13 @@ import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Integration;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
+import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.exception.PurpleIntegrationException;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.StringUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class JiraIntegrationService {
@@ -76,6 +77,9 @@ public class JiraIntegrationService {
 
 	@Autowired
 	private TaskListService taskListService;
+
+	@Autowired
+	private TaskItemService taskItemService;
 
 	@Autowired
 	private ProjectService projectService;
@@ -149,6 +153,38 @@ public class JiraIntegrationService {
 		}
 
 		return jiraProjects;
+	}
+
+	public void pushTaskUpdatesToJira(final Integration integration, User user) throws PurpleIntegrationException {
+		if (integration == null || user == null)
+			return;
+
+		List<TaskItem> taskItems = taskItemService.findByUsers(user);
+
+		for (TaskItem taskItem : taskItems) {
+
+			if (taskItem.getSpendHours() > 0) {
+				final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
+				final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey()).path("worklog");
+
+				MultiValueMap<String, String> headers = new HttpHeaders();
+				headers.add(HttpHeaders.AUTHORIZATION, integration.getJiraBasicAuthHeader());
+				headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+				RestTemplate restTemplate = new RestTemplate();
+
+				Integer timeSpendInSeconds = new Double(taskItem.getSpendHours() * 3600).intValue();
+				String requestJson = " { \"timeSpentSeconds\" :  " + timeSpendInSeconds + "}";
+
+				HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+
+				try {
+					restTemplate.postForEntity(uriBuilder.build().toURL().toURI(), entity, Void.class);
+				} catch (Exception e) {
+					throw new PurpleIntegrationException(e);
+				}
+			}
+		}
 	}
 
 	public Map<String, Map<String, List<Issue>>> getJiraProjectWithIssueTypeToIssueList(Integration integration)
@@ -273,7 +309,7 @@ public class JiraIntegrationService {
 						}
 
 					} else if (TYPE_ATLASSIAN_GROUP_ROLE.equals(roleActor.getType())) {
-						projectUserList = getUserNamesForGroup(integration, roleActor.getName());
+						projectUserList = getUserForGroup(integration, roleActor.getName());
 					}
 				}
 			}
@@ -284,7 +320,7 @@ public class JiraIntegrationService {
 		return projectNameToUserList;
 	}
 
-	private List<User> getUserNamesForGroup(Integration integration, String groupName) {
+	private List<User> getUserForGroup(Integration integration, String groupName) {
 		List<User> userList = new ArrayList<User>();
 
 		final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
