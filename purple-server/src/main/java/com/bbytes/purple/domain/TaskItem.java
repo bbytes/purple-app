@@ -67,6 +67,9 @@ public class TaskItem implements Comparable<TaskItem> {
 
 	@DBRef
 	private Set<User> users;
+	
+	@Field("dirty")
+	private boolean dirty = true;
 
 	@CreatedDate
 	private Date creationDate;
@@ -117,13 +120,23 @@ public class TaskItem implements Comparable<TaskItem> {
 
 	}
 
+	public void setState(TaskState state){
+		this.state = state;
+		this.dirty = true;
+	}
+	public void setSpendHours(double spendHours){
+		this.spendHours =spendHours;
+		this.dirty = true;
+	}
+	
 	public void addSpendHours(double spendHours) {
 		this.spendHours = this.spendHours + spendHours;
+		this.dirty = true;
 	}
 
 	public void removeSpendHours(double spendHours) {
-
 		this.spendHours = (this.spendHours - spendHours) <= 0 ? 0 : (this.spendHours - spendHours);
+		this.dirty = true;
 	}
 
 	public boolean isJiraIssueTaskItem() {

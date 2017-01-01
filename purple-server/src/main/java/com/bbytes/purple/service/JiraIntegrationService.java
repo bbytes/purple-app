@@ -40,6 +40,8 @@ import com.atlassian.jira.rest.client.api.domain.Issue;
 import com.atlassian.jira.rest.client.api.domain.ProjectRole;
 import com.atlassian.jira.rest.client.api.domain.RoleActor;
 import com.atlassian.jira.rest.client.api.domain.SearchResult;
+import com.atlassian.jira.rest.client.api.domain.Transition;
+import com.atlassian.jira.rest.client.api.domain.input.TransitionInput;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import com.atlassian.util.concurrent.Promise;
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
@@ -48,6 +50,7 @@ import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.TaskItem;
 import com.bbytes.purple.domain.User;
+import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.exception.PurpleIntegrationException;
 import com.bbytes.purple.utils.ErrorHandler;
@@ -159,13 +162,26 @@ public class JiraIntegrationService {
 		if (integration == null || user == null)
 			return;
 
+		final JiraRestClient restClient = getJiraRestClient(integration);
+		IssueRestClient issueRestClient = restClient.getIssueClient();
+
 		List<TaskItem> taskItems = taskItemService.findByUsers(user);
 
 		for (TaskItem taskItem : taskItems) {
-
-			if (taskItem.getSpendHours() > 0) {
+			if (taskItem.getSpendHours() > 0 && taskItem.isDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
 				final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
 				final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey()).path("worklog");
+
+				Issue issue = issueRestClient.getIssue(taskItem.getJiraIssueKey()).claim();
+				if (issue != null && TaskState.COMPLETED.equals(taskItem.getState())) {
+					Iterable<Transition> transitions = issueRestClient.getTransitions(issue).claim();
+					for (Transition transition : transitions) {
+						if ("done".equalsIgnoreCase(transition.getName())) {
+							issueRestClient.transition(issue, new TransitionInput(transition.getId()));
+							break;
+						}
+					}
+				}
 
 				MultiValueMap<String, String> headers = new HttpHeaders();
 				headers.add(HttpHeaders.AUTHORIZATION, integration.getJiraBasicAuthHeader());
@@ -180,6 +196,8 @@ public class JiraIntegrationService {
 
 				try {
 					restTemplate.postForEntity(uriBuilder.build().toURL().toURI(), entity, Void.class);
+					taskItem.setDirty(false);
+					taskItemService.save(taskItem);
 				} catch (Exception e) {
 					throw new PurpleIntegrationException(e);
 				}
