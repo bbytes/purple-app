@@ -15,6 +15,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     $scope.selectables;
     // varibale to store all task list and task item list
     $scope.taskList;
+    $scope.hours;
 
     // this map is create for storing key-value pair for taskitems and storing into db
     var taskItemMap;
@@ -380,6 +381,17 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                 $scope.blockers = $scope.blockers + taskObject.addToBlockers;
                 taskItemMap = taskObject.taskItemMap;
                 itemKey = taskObject.itemKey;
+                if (taskObject.totalHrs > 0 && !$scope.hours)
+                    $scope.hours = taskObject.totalHrs.toString();
+                else {
+                    var updatedHours = parseFloat($scope.hours);
+                    updatedHours = updatedHours + taskObject.totalHrs;
+                    if (updatedHours > 12) {
+                        appNotifyService.success('Maximum 12 hours allowed to add');
+                        updatedHours = 12;
+                    }
+                    $scope.hours = updatedHours.toString();
+                }
             });
         }
     };
