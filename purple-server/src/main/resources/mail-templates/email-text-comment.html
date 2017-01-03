@@ -34,7 +34,7 @@
                                             .lead { font-size: 19px; line-height: 27px; Margin-bottom: 16px; }
                                             .header_cell .column_cell { font-size: 20px; font-weight: bold; }
                                             .header_cell p { margin-bottom: 0; }
-                                            h1, h2, h3, h4, h5, h6 { Margin-left: 0; Margin-right: 0; Margin-top: 16px; Margin-bottom: 8px; padding: 0; }
+                                            h1, h2, h3, h4, h5, h6 { Margin-left: 0; Margin-right: 0; Margin-top: 0px; Margin-bottom: 8px; padding: 0; }
                                             .line-through { text-decoration: line-through; }
                                             h1,
                                             h2 {
@@ -392,8 +392,8 @@
                                                     <img src="https://www.statusnap.com/assets/img/logo-1.png" width="15%" height="50"></img>
                                                   
                                                 </div-->​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ 
-                                                <div style="margin-top:51px;margin-bottom: 1px;width:100%;">
-                                                    <img src="https://www.statusnap.com/assets/img/logo-1.png" style="width:120px;">
+                                                <div style="margin-top: 3px;margin-bottom: 1px;width:100%;">
+                                                    <a href="https://statusnap.com"> <img src="https://www.statusnap.com/assets/img/logo-1.png" style="width:120px;"></a>
                                                 </div>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
                                             </center>
                                             <div class="email_body" style="padding: 3px 6px;text-align: center;background-color: #ccc;">
@@ -419,72 +419,38 @@
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td class="column_cell font_default" align="center" valign="top" style="padding: 16px 16px 0;font-family: Helvetica, Arial, sans-serif;font-size: 15px;text-align: left;vertical-align: top;color: #888888;">
-                                                                                            <center> <h2 style="font-family: Helvetica, Arial, sans-serif; margin-left: 0; margin-right: 0; margin-top: 16px; margin-bottom: 8px; padding: 0; font-size: 26px; line-height: 36px; font-weight: bold; color: #7c6991;">Hi,
+                                                                                            <center> <h2 style="font-family: Helvetica, Arial, sans-serif; margin-left: 0; margin-right: 0; padding: 0; font-size: 26px; line-height: 36px; font-weight: bold; color: #7c6991;">Hi,
                                                                                                     ${name}</h2>
-                                                                                                <p class="lead" style="font-family: Helvetica, Arial, sans-serif; font-size: 19px; line-height: 27px; margin-top: 8px; margin-bottom: 8px;">${userName}
+                                                                                                <p class="lead" style="font-family: Helvetica, Arial, sans-serif; font-size: 19px; line-height: 27px; ">${userName}
                                                                                                     ${emailStringText} dated -
                                                                                                     ${subscriptionDate}. Do have a look.</p>
                                                                                             </center>
-                                                                                        </td><!-- /.column_cell -->
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-
-                                                                            <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%;vertical-align: top;">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="column_cell font_default" align="center" valign="top" style="padding: 16px 16px 0;font-family: Helvetica, Arial, sans-serif;font-size: 15px;text-align: left;vertical-align: top;color: #888888;">
-                                                                                            <h3 class="text-muted"
-                                                                                                style="font-family: Helvetica, Arial, sans-serif; margin-left: 0; margin-right: 0; margin-top: 16px; margin-bottom: 8px; padding: 0; font-size: 22px; line-height: 30px; font-weight: bold; color: #888888;">Comment
-                                                                                                Description:</h3>
+                                                                                            <h4 class="text-muted"
+                                                                                                style="font-family: Helvetica, Arial, sans-serif; margin-left: 0; margin-right: 0;  padding: 0; font-size: 22px; line-height: 30px; font-weight: bold; color: #888888;">Comment
+                                                                                                Description:</h4>
 
                                                                                             <p class="text-muted"
-                                                                                               style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 23px; margin-top: 16px; margin-bottom: 24px; color: #b3b3b5;">${comment_desc}</p>
-
-                                                                                        </td><!-- /.column_cell -->
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                            <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%;vertical-align: top;">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="column_cell font_default" align="center" valign="top" style="padding: 16px 16px 0;font-family: Helvetica, Arial, sans-serif;font-size: 15px;text-align: left;vertical-align: top;color: #888888;">
-                                                                                            <h3 class="text-muted"
-                                                                                                style="font-family: Helvetica, Arial, sans-serif; margin-left: 0; margin-right: 0; margin-top: 16px; margin-bottom: 8px; padding: 0; font-size: 22px; line-height: 30px; color: #888888;">Status
-                                                                                                Details:</h3>
+                                                                                               style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 23px; color: #b3b3b5;">${comment_desc}</p>
+                                                                                            <h4 class="text-muted"
+                                                                                                style="font-family: Helvetica, Arial, sans-serif; margin-left: 0; margin-right: 0;  padding: 0; font-size: 22px; line-height: 30px; color: #888888;">Status
+                                                                                                Details:</h4>
 
                                                                                             <p class="text-muted"
-                                                                                               style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 18px; margin-top: 16px; margin-bottom: 24px; font-weight: bold; color: #aa6489;">
+                                                                                               style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 18px;font-weight: bold; color: #aa6489;">
                                                                                                 Worked On :</p>
                                                                                             <p>
                                                                                                 <span style="color: #b3b3b5;">${workedOn}</span>
                                                                                             </p>
 
-                                                                                        </td><!-- /.column_cell -->
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                            <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%;vertical-align: top;">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="column_cell font_default" align="center" valign="top" style="padding: 16px 16px 0;font-family: Helvetica, Arial, sans-serif;font-size: 15px;text-align: left;vertical-align: top;color: #888888;">
+
                                                                                             <p class="text-muted"
-                                                                                               style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 18px; margin-top: 16px; margin-bottom: 24px; font-weight: bold; color: #63ccca;">
+                                                                                               style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 18px;  font-weight: bold; color: #63ccca;">
                                                                                                 Working On :</p>
                                                                                             <p>
                                                                                                 <span style="color: #b3b3b5;">${workingOn}</span>
                                                                                             </p>
-
-                                                                                        </td><!-- /.column_cell -->
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                            <table class="column" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%;vertical-align: top;">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="column_cell font_default" align="center" valign="top" style="padding: 16px 16px 0;font-family: Helvetica, Arial, sans-serif;font-size: 15px;text-align: left;vertical-align: top;color: #888888;">
                                                                                             <p class="text-muted"
-                                                                                               style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 18px; margin-top: 16px; margin-bottom: 24px; font-weight: bold; color: #ff8fa0;">
+                                                                                               style="font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 18px;  font-weight: bold; color: #ff8fa0;">
                                                                                                 Blockers :</p>
                                                                                             <p>
                                                                                                 <span style="color: #b3b3b5;">${blockers}</span>
@@ -494,6 +460,8 @@
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
+
+
                                                                             <!-- /.column_cell -->
                                                                             </tr>
                                                                             </tbody>
@@ -523,9 +491,9 @@
                                                                         <![endif]--> 
                                                                     </div><!-- /.email_body --> 
                                                                     <center>
-                                                                        <div style="margin-top: 33px;margin-bottom: 1px;">
+                                                                        <div style="margin-top: 3px;margin-bottom: 1px;">
                                                                             <p><small style="font-size: 86%;font-weight: normal;">© Copyright 2016, Beyond Bytes Technologies</small></p>
-                                                                            <a href="${twitter_link}"> <img src="https://www.statusnap.com/assets/img/twitterr.png"></a>
+                                                                            <a href="https://twitter.com/statusnap"> <img src="https://www.statusnap.com/assets/img/twitterr.png"></a>
                                                                             <a href="${facebook_link}"> <img src="https://www.statusnap.com/assets/img/facebook.png"></a>
                                                                             <a href="${linked_link}"><img src="https://www.statusnap.com/assets/img/linked.png"></a>
                                                                         </div>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                                        
