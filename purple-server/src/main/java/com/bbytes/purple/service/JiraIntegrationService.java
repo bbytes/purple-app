@@ -221,7 +221,7 @@ public class JiraIntegrationService {
 			for (BasicProject project : projects.claim()) {
 				Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
 
-				SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey()).claim();
+				SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(),1000,0,null).claim();
 				for (Issue issue : issueResult.getIssues()) {
 					List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
 					if (issueList == null) {
