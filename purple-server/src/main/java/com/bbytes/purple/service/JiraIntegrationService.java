@@ -4,6 +4,7 @@ import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -62,13 +63,15 @@ public class JiraIntegrationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(JiraIntegrationService.class);
 
-	private static final String JIRA_TASK = "Jira ";
+	private static final String JIRA_TASK = " jira ";
 
 	private static final String TYPE_ATLASSIAN_USER_ROLE = "atlassian-user-role-actor";
 
 	private static final String TYPE_ATLASSIAN_GROUP_ROLE = "atlassian-group-role-actor";
 
 	final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
+	
+	final List<String> statesToIgnore = new ArrayList<String>(Arrays.asList("done","closed","resolved"));
 
 	final DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
@@ -122,27 +125,56 @@ public class JiraIntegrationService {
 
 	}
 
-	public void updateProjectWithJiraTask(Integration integration) throws PurpleIntegrationException {
-		if (integration == null)
-			return;
+	/**
+	 * Sync jira projects from jira to statusnap
+	 * 
+	 * @param integration
+	 * @param loggedInUser
+	 * @throws PurpleIntegrationException
+	 * @throws PurpleException
+	 */
+	public void syncJiraProjects(final Integration integration, User loggedInUser) throws PurpleIntegrationException, PurpleException {
+		List<Project> jiraProjects = getJiraProjects(integration);
+		List<String> jiraProjectList = new LinkedList<String>();
+		List<String> finalProjectListToBeSaved = new LinkedList<String>();
 
-		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
-		for (String projectName : projectToIssueListMap.keySet()) {
-			Project projectFromDb = projectService.findByProjectName(projectName);
-			if (projectFromDb != null) {
-				Map<String, List<Issue>> issueTypeToIssueList = projectToIssueListMap.get(projectName);
-				for (String issueType : issueTypeToIssueList.keySet()) {
-					String taskListName = JIRA_TASK + issueType;
-					List<Issue> issues = issueTypeToIssueList.get(issueType);
-					for (Issue issue : issues) {
-						taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
-					}
-				}
+		try {
+			for (Project jiraProject : jiraProjects) {
+				jiraProjectList.add(jiraProject.getProjectName());
 			}
+			List<Project> list = projectService.findAll();
+			List<String> projectListFromDB = new ArrayList<String>();
+			for (Project project : list) {
+				projectListFromDB.add(project.getProjectName().toLowerCase());
+			}
+
+			for (String jiraProject : jiraProjectList) {
+				// make sure we dont add project with same name but different
+				// case Eg : ReCruiz and recruiz are same
+				if (!projectListFromDB.contains(jiraProject.toLowerCase()))
+					finalProjectListToBeSaved.add(jiraProject);
+			}
+
+			for (String project : finalProjectListToBeSaved) {
+				Project addProject = new Project(project);
+				addProject.setOrganization(loggedInUser.getOrganization());
+				// added loggedIn user as owner of project
+				addProject.setProjectOwner(loggedInUser);
+				addProject = projectService.save(addProject);
+			}
+		} catch (Throwable e) {
+			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_CONNECTION_FAILED);
 		}
 	}
 
-	public List<Project> getJiraProjects(final Integration integration) throws PurpleIntegrationException {
+	/**
+	 * Get all the projects from jira
+	 * 
+	 * @param integration
+	 * @return
+	 * @throws PurpleIntegrationException
+	 */
+	private List<Project> getJiraProjects(final Integration integration) throws PurpleIntegrationException {
 		List<Project> jiraProjects = new ArrayList<Project>();
 		if (integration == null)
 			return jiraProjects;
@@ -158,6 +190,14 @@ public class JiraIntegrationService {
 		return jiraProjects;
 	}
 
+	/**
+	 * Push update of task details like hours and state to jira from statusnap.
+	 * This updates the tickets in jira
+	 * 
+	 * @param integration
+	 * @param user
+	 * @throws PurpleIntegrationException
+	 */
 	public void pushTaskUpdatesToJira(final Integration integration, User user) throws PurpleIntegrationException {
 		if (integration == null || user == null)
 			return;
@@ -176,7 +216,7 @@ public class JiraIntegrationService {
 				if (issue != null && TaskState.COMPLETED.equals(taskItem.getState())) {
 					Iterable<Transition> transitions = issueRestClient.getTransitions(issue).claim();
 					for (Transition transition : transitions) {
-						if ("done".equalsIgnoreCase(transition.getName())) {
+						if (statesToIgnore.contains(transition.getName().toLowerCase())) {
 							issueRestClient.transition(issue, new TransitionInput(transition.getId()));
 							break;
 						}
@@ -205,7 +245,42 @@ public class JiraIntegrationService {
 		}
 	}
 
-	public Map<String, Map<String, List<Issue>>> getJiraProjectWithIssueTypeToIssueList(Integration integration)
+	/**
+	 * Sync jira issues to projects in statusnap side
+	 * 
+	 * @param integration
+	 * @throws PurpleIntegrationException
+	 */
+	public void updateProjectWithJiraTask(Integration integration) throws PurpleIntegrationException {
+		if (integration == null)
+			return;
+
+		
+		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
+		for (String projectName : projectToIssueListMap.keySet()) {
+			System.out.println("---------------------"+projectName+"-------------------");
+			Project projectFromDb = projectService.findByProjectName(projectName);
+			if (projectFromDb != null) {
+				Map<String, List<Issue>> issueTypeToIssueList = projectToIssueListMap.get(projectName);
+				
+				for (String issueType : issueTypeToIssueList.keySet()) {
+					String taskListName = projectFromDb.getProjectName() + JIRA_TASK + issueType.toLowerCase();
+					List<Issue> issues = issueTypeToIssueList.get(issueType);
+					System.out.println("---- SIZE -- "+issues.size()+" ------ " + issueType);
+					int index = 0 ;
+					for (Issue issue : issues) {
+						index++;
+						System.out.println("Processing : " + index + "  - " +  issue.getKey());
+						taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
+					}
+				}
+			}
+		}
+		
+		System.out.println("Done syncing project jira task items");
+	}
+
+	private Map<String, Map<String, List<Issue>>> getJiraProjectWithIssueTypeToIssueList(Integration integration)
 			throws PurpleIntegrationException {
 		Map<String, Map<String, List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String, List<Issue>>>();
 
@@ -220,15 +295,16 @@ public class JiraIntegrationService {
 			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
 			for (BasicProject project : projects.claim()) {
 				Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
-
-				SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(),1000,0,null).claim();
+				SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), 1000, 0, null).claim();
 				for (Issue issue : issueResult.getIssues()) {
+					if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
+						continue;
+					}
 					List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
 					if (issueList == null) {
 						issueList = new LinkedList<Issue>();
 						issueTypeToIssueList.put(issue.getIssueType().getName(), issueList);
 					}
-
 					issueList.add(issue);
 				}
 
@@ -241,7 +317,16 @@ public class JiraIntegrationService {
 		return projectNameToIssueList;
 	}
 
-	public void syncProjectToJiraUser(User user, Integration integration) throws PurpleIntegrationException, PurpleException {
+	/**
+	 * Sync project and jira user in statusnap side. This adds new users if not
+	 * there and sends an invite to join the app
+	 * 
+	 * @param user
+	 * @param integration
+	 * @throws PurpleIntegrationException
+	 * @throws PurpleException
+	 */
+	public void syncProjectToJiraUser(Integration integration,User user) throws PurpleIntegrationException, PurpleException {
 		Map<String, List<User>> projectToUsersMap = getJiraProjectWithUserList(integration);
 		// iterating project to users map
 		for (Map.Entry<String, List<User>> entry : projectToUsersMap.entrySet()) {
@@ -296,7 +381,7 @@ public class JiraIntegrationService {
 		}
 	}
 
-	public Map<String, List<User>> getJiraProjectWithUserList(Integration integration) throws PurpleIntegrationException {
+	private Map<String, List<User>> getJiraProjectWithUserList(Integration integration) throws PurpleIntegrationException {
 		Map<String, List<User>> projectNameToUserList = new LinkedHashMap<String, List<User>>();
 
 		if (integration == null)
@@ -327,7 +412,7 @@ public class JiraIntegrationService {
 						}
 
 					} else if (TYPE_ATLASSIAN_GROUP_ROLE.equals(roleActor.getType())) {
-						projectUserList = getUserForGroup(integration, roleActor.getName());
+						projectUserList = getUserForJiraGroup(integration, roleActor.getName());
 					}
 				}
 			}
@@ -338,7 +423,7 @@ public class JiraIntegrationService {
 		return projectNameToUserList;
 	}
 
-	private List<User> getUserForGroup(Integration integration, String groupName) {
+	private List<User> getUserForJiraGroup(Integration integration, String groupName) {
 		List<User> userList = new ArrayList<User>();
 
 		final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
@@ -377,39 +462,6 @@ public class JiraIntegrationService {
 		}
 
 		return userList;
-	}
-
-	public void addJiraProjects(List<Project> jiraProjects, User loggedInUser) throws PurpleException {
-		List<String> jiraProjectList = new LinkedList<String>();
-		List<String> finalProjectListToBeSaved = new LinkedList<String>();
-
-		try {
-			for (Project jiraProject : jiraProjects) {
-				jiraProjectList.add(jiraProject.getProjectName());
-			}
-			List<Project> list = projectService.findAll();
-			List<String> projectListFromDB = new ArrayList<String>();
-			for (Project project : list) {
-				projectListFromDB.add(project.getProjectName().toLowerCase());
-			}
-
-			for (String jiraProject : jiraProjectList) {
-				// make sure we dont add project with same name but different
-				// case Eg : ReCruiz and recruiz are same
-				if (!projectListFromDB.contains(jiraProject.toLowerCase()))
-					finalProjectListToBeSaved.add(jiraProject);
-			}
-
-			for (String project : finalProjectListToBeSaved) {
-				Project addProject = new Project(project);
-				addProject.setOrganization(loggedInUser.getOrganization());
-				// added loggedIn user as owner of project
-				addProject.setProjectOwner(loggedInUser);
-				addProject = projectService.save(addProject);
-			}
-		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_CONNECTION_FAILED);
-		}
 	}
 
 }

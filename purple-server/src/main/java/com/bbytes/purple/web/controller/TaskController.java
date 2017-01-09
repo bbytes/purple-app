@@ -3,7 +3,6 @@ package com.bbytes.purple.web.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,44 +91,50 @@ public class TaskController {
 	public RestResponse getTaskListForState(@PathVariable String state) throws PurpleException {
 		TaskState taskState = TaskState.valueOf(state);
 		User user = userService.getLoggedInUser();
-		List<TaskItem> taskItemList = taskItemService.findByStateAndUsers(taskState, user);
-		List<TaskItem> taskItemListOwner = taskItemService.findByStateAndOwner(taskState, user);
+		List<TaskItem> taskItemList = taskItemService.findByStateAndUsersOrOnwer(taskState, user, user);
+
 		Set<TaskList> result = new HashSet<>();
 		for (TaskItem taskItem : taskItemList) {
-			result.add(taskItem.getTaskList());
+			if (state.equals("All") || taskItem.getState().toString().equals(state))
+				result.add(taskItem.getTaskList());
 		}
-		for (TaskItem taskItem : taskItemListOwner) {
-			result.add(taskItem.getTaskList());
-		}
-		if (taskState.equals(TaskState.YET_TO_START)) {
-			List<TaskList> taskLists = taskListService.findByStateAndUsers(taskState, user);
-			List<TaskList> taskListsOwner = taskListService.findByStateAndOwner(taskState, user);
-			for (TaskList taskList : taskLists) {
-				if (taskList.getTaskItems() == null || taskList.getTaskItems().size() == 0)
-					result.add(taskList);
-			}
-			for (TaskList taskList : taskListsOwner) {
-				if (taskList.getTaskItems() == null || taskList.getTaskItems().size() == 0)
-					result.add(taskList);
-			}
-		}
-		result.remove(null);
+
+		// if (taskState.equals(TaskState.YET_TO_START)) {
+		// List<TaskList> taskLists =
+		// taskListService.findByStateAndUsers(taskState, user);
+		// List<TaskList> taskListsOwner =
+		// taskListService.findByStateAndOwner(taskState, user);
+		// for (TaskList taskList : taskLists) {
+		// if (taskList.getTaskItems() == null || taskList.getTaskItems().size()
+		// == 0)
+		// result.add(taskList);
+		// }
+		// for (TaskList taskList : taskListsOwner) {
+		// if (taskList.getTaskItems() == null || taskList.getTaskItems().size()
+		// == 0)
+		// result.add(taskList);
+		// }
+		// }
+
+		result.removeAll(Collections.singleton(null));
 		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(new ArrayList<>(result));
-		filterItemsForGivenState(taskListDtos, taskState);
+		// filterItemsForGivenState(taskListDtos, taskState);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDtos);
 		return response;
 	}
 
-	private void filterItemsForGivenState(List<TaskListDTO> taskListDtos, TaskState taskState) {
-		for (TaskListDTO tList : taskListDtos) {
-			for (Iterator<TaskItemDTO> taskItemItr = tList.getTaskItems().iterator(); taskItemItr.hasNext();) {
-				TaskItemDTO tItem = taskItemItr.next();
-				if (tItem != null && tItem.getState() != taskState.getDisplayName()) {
-					taskItemItr.remove();
-				}
-			}
-		}
-	}
+	// private void filterItemsForGivenState(List<TaskListDTO> taskListDtos,
+	// TaskState taskState) {
+	// for (TaskListDTO tList : taskListDtos) {
+	// for (Iterator<TaskItemDTO> taskItemItr = tList.getTaskItems().iterator();
+	// taskItemItr.hasNext();) {
+	// TaskItemDTO tItem = taskItemItr.next();
+	// if (tItem != null && tItem.getState() != taskState.getDisplayName()) {
+	// taskItemItr.remove();
+	// }
+	// }
+	// }
+	// }
 
 	@RequestMapping(value = "/api/v1/task/taskList/project/{projectId}", method = RequestMethod.GET)
 	public RestResponse getTaskListForProject(@PathVariable String projectId) throws PurpleException {
@@ -153,53 +158,51 @@ public class TaskController {
 		TaskState taskState = null;
 		Project project = null;
 		List<TaskItem> taskItemList = null;
-		List<TaskItem> taskItemListOwner = null;
-		if (projectId.equals("All") && state.equals("All")){
-			taskLists = taskListService.findByOwnerOrUsers(loggedInUser,loggedInUser);
-		}
-		else if (projectId.equals("All") && !state.equals("All")) {
+		// List<TaskItem> taskItemListOwner = null;
+		if (projectId.equals("All") && state.equals("All")) {
+			taskLists = taskListService.findByOwnerOrUsers(loggedInUser, loggedInUser);
+		} else if (projectId.equals("All") && !state.equals("All")) {
 			taskState = TaskState.valueOf(state);
-			taskItemList = taskItemService.findByStateAndUsers(taskState, loggedInUser);
-			taskItemListOwner = taskItemService.findByStateAndOwner(taskState, loggedInUser);
-
+			taskItemList = taskItemService.findByStateAndUsersOrOnwer(taskState, loggedInUser, loggedInUser);
 		} else if (state.equals("All") && !projectId.equals("All")) {
 			project = projectService.findByProjectId(projectId);
-			taskItemList = taskItemService.findByProjectAndUsers(project, loggedInUser);
-			taskItemListOwner = taskItemService.findByProjectAndOwner(project, loggedInUser);
+			taskItemList = taskItemService.findByProjectAndUsersOrOwner(project, loggedInUser, loggedInUser);
 		} else if (!projectId.equals("All") && !state.equals("All")) {
 			taskState = TaskState.valueOf(state);
 			project = projectService.findByProjectId(projectId);
-			taskItemList = taskItemService.findByProjectAndStateAndUsers(project, taskState, loggedInUser);
-			taskItemListOwner = taskItemService.findByProjectAndStateAndOwner(project, taskState, loggedInUser);
+			taskItemList = taskItemService.findByProjectAndStateAndUsersOrOwner(project, taskState, loggedInUser, loggedInUser);
 		}
 		if (taskLists == null && taskItemList != null) {
 			Set<TaskList> result = new HashSet<>();
 			for (TaskItem taskItem : taskItemList) {
-				result.add(taskItem.getTaskList());
-			}
-			if (taskItemListOwner != null) {
-				for (TaskItem taskItem : taskItemListOwner) {
+				if (state.equals("All") || taskItem.getState().toString().equals(state))
 					result.add(taskItem.getTaskList());
-				}
 			}
-			if (TaskState.YET_TO_START.equals(taskState)) {
-				List<TaskList> ytsTaskLists = taskListService.findByProjectAndStateAndUsers(project, taskState, loggedInUser);
-				List<TaskList> ytsTaskListsOwner = taskListService.findByProjectAndStateAndOwner(project, taskState, loggedInUser);
-				for (TaskList taskList : ytsTaskLists) {
-					if (taskList.getTaskItems() == null || taskList.getTaskItems().size() == 0)
-						result.add(taskList);
-				}
-				for (TaskList taskList : ytsTaskListsOwner) {
-					if (taskList.getTaskItems() == null || taskList.getTaskItems().size() == 0)
-						result.add(taskList);
-				}
-			}
+
+			// if (TaskState.YET_TO_START.equals(taskState)) {
+			// List<TaskList> ytsTaskLists =
+			// taskListService.findByProjectAndStateAndUsers(project, taskState,
+			// loggedInUser);
+			// List<TaskList> ytsTaskListsOwner =
+			// taskListService.findByProjectAndStateAndOwner(project, taskState,
+			// loggedInUser);
+			// for (TaskList taskList : ytsTaskLists) {
+			// if (taskList.getTaskItems() == null ||
+			// taskList.getTaskItems().size() == 0)
+			// result.add(taskList);
+			// }
+			// for (TaskList taskList : ytsTaskListsOwner) {
+			// if (taskList.getTaskItems() == null ||
+			// taskList.getTaskItems().size() == 0)
+			// result.add(taskList);
+			// }
+			// }
 			taskLists = new ArrayList<>(result);
 		}
 		taskLists.removeAll(Collections.singleton(null));
 		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(taskLists);
-		if (taskState != null)
-			filterItemsForGivenState(taskListDtos, taskState);
+//		if (taskState != null)
+//			filterItemsForGivenState(taskListDtos, taskState);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDtos);
 		return response;
 	}
@@ -335,22 +338,18 @@ public class TaskController {
 		User user = userService.getLoggedInUser();
 
 		List<TaskItem> taskItems;
-		List<TaskItem> taskItemsOwner;
+
 		TaskList taskList = taskListService.findOne(taskListId);
 		if (state.equals("All")) {
-			taskItems = taskItemService.findByTaskListAndUsers(taskList, user);
-			taskItemsOwner = taskItemService.findByTaskListAndOwner(taskList, user);
+			taskItems = taskItemService.findByTaskListAndUsersOrOwner(taskList, user, user);
 		} else {
 			TaskState taskState = TaskState.valueOf(state);
-			taskItems = taskItemService.findByTaskListAndStateAndUsers(taskList, taskState, user);
-			taskItemsOwner = taskItemService.findByTaskListAndStateAndOwner(taskList, taskState, user);
+			taskItems = taskItemService.findByTaskListAndStateAndUsersOrOwner(taskList, taskState, user, user);
 		}
-		
+
 		Set<TaskItem> result = new HashSet<>();
 		result.addAll(taskItems);
-		result.addAll(taskItemsOwner);
-		
-		
+
 		List<TaskItemDTO> taskItemDtos = dataModelToDTOConversionService.convertTaskItem(result);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDtos);
 		return response;

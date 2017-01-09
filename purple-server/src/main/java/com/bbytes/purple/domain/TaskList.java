@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -35,6 +36,7 @@ public class TaskList implements Comparable<TaskList> {
 	private String taskListId;
 
 	@Field("state")
+	@Indexed
 	private TaskState state = TaskState.YET_TO_START;
 
 	@Field("name")
@@ -50,16 +52,19 @@ public class TaskList implements Comparable<TaskList> {
 	private Date dueDate;
 
 	@JsonManagedReference
-	@DBRef
+	@DBRef(lazy=true)
 	private Set<TaskItem> taskItems = new HashSet<>();
 
-	@DBRef
+	@DBRef(lazy=true)
+	@Indexed
 	private Set<User> users = new HashSet<>();
 
 	@DBRef
+	@Indexed
 	private Project project;
 
 	@DBRef
+	@Indexed
 	private User owner;
 
 	@CreatedDate

@@ -29,7 +29,6 @@ import com.bbytes.purple.service.UserService;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
-
 /**
  * Integration Controller
  * 
@@ -48,7 +47,7 @@ public class IntegrationController {
 
 	@Autowired
 	private IntegrationService integrationService;
-	
+
 	@Autowired
 	private JiraIntegrationService jiraIntegrationService;
 
@@ -153,11 +152,7 @@ public class IntegrationController {
 		User loggedInUser = userService.getLoggedInUser();
 		try {
 			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
-
-			List<Project> jiraProjects = jiraIntegrationService.getJiraProjects(integration);
-
-			jiraIntegrationService.addJiraProjects(jiraProjects, loggedInUser);
-
+			jiraIntegrationService.syncJiraProjects(integration, loggedInUser);
 		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -176,7 +171,6 @@ public class IntegrationController {
 		try {
 			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
 			jiraIntegrationService.updateProjectWithJiraTask(integration);
-
 		} catch (Throwable e) {
 			e.printStackTrace();
 			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_TASK_ISSUE_SYNC_FAILED);
@@ -199,7 +193,7 @@ public class IntegrationController {
 			// checking jira is connected or not
 			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
 
-			jiraIntegrationService.syncProjectToJiraUser(loggedInUser, integration);
+			jiraIntegrationService.syncProjectToJiraUser(integration,loggedInUser);
 
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_USER_SYNC_FAILED);

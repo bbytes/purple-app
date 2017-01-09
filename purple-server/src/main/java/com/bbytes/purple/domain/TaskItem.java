@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -35,6 +36,7 @@ public class TaskItem implements Comparable<TaskItem> {
 	private String taskItemId;
 
 	@Field("state")
+	@Indexed
 	private TaskState state = TaskState.YET_TO_START;
 
 	@Field("name")
@@ -53,19 +55,24 @@ public class TaskItem implements Comparable<TaskItem> {
 	private Date dueDate;
 
 	@Field("jira_issue_key")
+	@Indexed
 	private String jiraIssueKey;
 
 	@DBRef
+	@Indexed
 	private Project project;
 
 	@JsonBackReference
 	@DBRef
+	@Indexed
 	private TaskList taskList;
 
 	@DBRef
+	@Indexed
 	private User owner;
 
 	@DBRef
+	@Indexed
 	private Set<User> users;
 	
 	@Field("dirty")

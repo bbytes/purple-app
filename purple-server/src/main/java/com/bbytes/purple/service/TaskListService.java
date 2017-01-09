@@ -117,6 +117,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 	}
 
 	public void addJiraIssueToTaskList(String taskListName, Project project, Issue issue) {
+
 		TaskList taskList = null;
 		List<TaskList> taskLists = findByNameAndProject(taskListName, project);
 		if (taskLists != null && !taskLists.isEmpty()) {

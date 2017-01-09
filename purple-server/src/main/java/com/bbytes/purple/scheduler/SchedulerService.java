@@ -97,7 +97,7 @@ public class SchedulerService {
 
 	@Autowired
 	private IntegrationService integrationService;
-	
+
 	@Autowired
 	private JiraIntegrationService jiraIntegrationService;
 
@@ -408,7 +408,7 @@ public class SchedulerService {
 
 	/* Cron Runs every day at 6 am */
 	@Scheduled(cron = "	0 0 6 * * ?")
-//	@Scheduled(cron = "0 0/2 * * * ?")
+	// @Scheduled(cron = "0 0/2 * * * ?")
 	public void runJiraSync() {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
@@ -428,12 +428,12 @@ public class SchedulerService {
 					// checking condition for mark delete
 					if (!userFromDb.isDisableState() && !userFromDb.isMarkDelete()) {
 						Integration integration = integrationService.getIntegrationForUser(userFromDb);
-						List<Project> jiraProjects = jiraIntegrationService.getJiraProjects(integration);
-						jiraIntegrationService.addJiraProjects(jiraProjects, userFromDb);
-						jiraIntegrationService.syncProjectToJiraUser(userFromDb, integration);
+
+						jiraIntegrationService.syncJiraProjects(integration, userFromDb);
+						jiraIntegrationService.syncProjectToJiraUser(integration, userFromDb);
 						jiraIntegrationService.updateProjectWithJiraTask(integration);
 						jiraIntegrationService.pushTaskUpdatesToJira(integration, userFromDb);
-						
+
 					}
 				}
 			} catch (Exception e) {

@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.domain.Project;
@@ -17,6 +20,10 @@ import com.bbytes.purple.repository.TaskItemRepository;
 public class TaskItemService extends AbstractService<TaskItem, String> {
 
 	private TaskItemRepository taskItemRepository;
+	
+	@Autowired
+	private MongoTemplate mongoTemplate;
+
 
 	@Autowired
 	public TaskItemService(TaskItemRepository taskItemRepository) {
@@ -34,6 +41,20 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 
 	public List<TaskItem> findByTaskListAndUsers(TaskList taskList, User user) {
 		return taskItemRepository.findByTaskListAndUsers(taskList, user);
+	}
+	
+	public List<TaskItem> findByTaskListAndUsersOrOwner(TaskList taskList, User user, User owner) {
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		
+		Criteria criteriaOR = new Criteria();
+		criteriaOR.orOperator(Criteria.where("users").is(user),Criteria.where("owner").is(owner));
+		
+		criteria.andOperator(Criteria.where("taskList").is(taskList),criteriaOR);
+		query.addCriteria(criteria);
+	
+		List<TaskItem> items = mongoTemplate.find(query,TaskItem.class);
+		return items;
 	}
 	
 	public List<TaskItem> findByTaskListAndOwner(TaskList taskList, User user) {
@@ -64,6 +85,19 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 		return taskItemRepository.findByUsersIn(users);
 	}
 
+	public List<TaskItem> findByProjectAndUsersOrOwner(Project project, User user,User owner) {
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		
+		Criteria criteriaOR = new Criteria();
+		criteriaOR.orOperator(Criteria.where("users").is(user),Criteria.where("owner").is(owner));
+		
+		criteria.andOperator(Criteria.where("project").is(project),criteriaOR);
+		query.addCriteria(criteria);
+		List<TaskItem> items = mongoTemplate.find(query,TaskItem.class);
+		return items;
+	}
+	
 	public List<TaskItem> findByProjectAndUsers(Project project, User user) {
 		return taskItemRepository.findByProjectAndUsers(project, user);
 	}
@@ -88,6 +122,20 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 		return taskItemRepository.findByDueDateBetween(startDate, endDate);
 	}
 
+	public List<TaskItem> findByStateAndUsersOrOnwer(TaskState state, User user,User owner) {
+		
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		
+		Criteria criteriaOR = new Criteria();
+		criteriaOR.orOperator(Criteria.where("users").is(user),Criteria.where("owner").is(owner));
+		
+		criteria.andOperator(Criteria.where("state").is(state),criteriaOR);
+		query.addCriteria(criteria);
+		List<TaskItem> items = mongoTemplate.find(query,TaskItem.class);
+		return items;
+	}
+	
 	public List<TaskItem> findByStateAndUsers(TaskState state, User user) {
 		return taskItemRepository.findByStateAndUsers(state, user);
 	}
@@ -117,6 +165,19 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 		return taskItemRepository.findByTaskListAndState(taskList, taskState);
 	}
 
+	public List<TaskItem> findByTaskListAndStateAndUsersOrOwner(TaskList taskList, TaskState taskState, User user,User owner) {
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		
+		Criteria criteriaOR = new Criteria();
+		criteriaOR.orOperator(Criteria.where("users").is(user),Criteria.where("owner").is(owner));
+		
+		criteria.andOperator(Criteria.where("taskList").is(taskList),Criteria.where("state").is(taskState),criteriaOR);
+		query.addCriteria(criteria);
+		List<TaskItem> items = mongoTemplate.find(query,TaskItem.class);
+		return items;
+	}
+	
 	public List<TaskItem> findByTaskListAndStateAndUsers(TaskList taskList, TaskState taskState, User user) {
 		return taskItemRepository.findByTaskListAndStateAndUsers(taskList, taskState, user);
 	}
@@ -125,6 +186,19 @@ public class TaskItemService extends AbstractService<TaskItem, String> {
 		return taskItemRepository.findByTaskListAndStateAndOwner(taskList, taskState, user);
 	}
 
+	public List<TaskItem> findByProjectAndStateAndUsersOrOwner(Project project, TaskState taskState, User user,User owner) {
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		
+		Criteria criteriaOR = new Criteria();
+		criteriaOR.orOperator(Criteria.where("users").is(user),Criteria.where("owner").is(owner));
+		
+		criteria.andOperator(Criteria.where("project").is(project),Criteria.where("state").is(taskState),criteriaOR);
+		query.addCriteria(criteria);
+		List<TaskItem> items = mongoTemplate.find(query,TaskItem.class);
+		return items;
+	}
+	
 	public List<TaskItem> findByProjectAndStateAndUsers(Project project, TaskState taskState, User user) {
 		return taskItemRepository.findByProjectAndStateAndUsers(project, taskState, user);
 	}
