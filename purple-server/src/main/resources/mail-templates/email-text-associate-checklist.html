@@ -387,14 +387,17 @@
                                         </style>
                                         </head>
                                         <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" style="margin: 0;padding: 0;min-width: 100%;background-color: #f9f9f9;">
-
+                                            <!--div style="margin-top: 33px;margin-bottom: 1px;">
+                                                                                      <img src="https://www.statusnap.com/assets/img/logo-1.png" width="15%" height="50"></img>
+                                                                                    
+                                                                                  </div-->​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ 
                                             <div style="margin-top: 3px;margin-bottom: 1px;width:100%;">
                                                 <center>
                                                     <a href="https://statusnap.com"> <img src="https://www.statusnap.com/assets/img/logo-1.png" style="width:120px;"></a>
                                                 </center>
                                             </div>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                                       
 
-                                            <div class="email_body" style="padding: 32px 6px;text-align: center;background-color: #f9f9f9;">
+                                            <div class="email_body" style="padding: 3px 6px;text-align: center;background-color: #f9f9f9;">
                                                 <!--[if (gte mso 9)|(IE)]>
                                                 <table width="588" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
                                                   <tbody>
@@ -408,7 +411,7 @@
                                                     <table class="content" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
                                                         <tbody>
                                                             <tr>
-                                                                <td class="content_cell product_row order_total_left" align="center" valign="top" style="padding: 0 0 16px;text-align: center;background-color: #ffffff;border-left: 4px solid;border-right: 4px solid;border-top: 1px solid;border-color: #d8dde4;font-size: 0 !important;">
+                                                                <td class="content_cell product_row order_total_left" align="center" valign="top" style="padding: 0 0 16px;text-align: center;background-color: #ffffff;border-left: 4px solid;border-right: 4px solid;border-top: 1px solid;border-color: #f9f9f9;font-size: 0 !important;">
                                                                     <!--[if (gte mso 9)|(IE)]>
                                                                     <table width="580" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align: top;">
                                                                       <tbody>
@@ -427,22 +430,22 @@
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td class="column_cell font_default" align="center" valign="top" style="padding: 16px 16px 0;font-family: Helvetica, Arial, sans-serif;font-size: 15px;text-align: left;vertical-align: top;color: #888888;">
-                                                                                            <center> <p style="font-family: Helvetica, Arial, sans-serif;font-size: 15px;line-height: 23px;margin-top: 8px;margin-bottom: 8px;"><h3><strong>Hi,</strong></h3></p>
-                                                                                                <h5 style="font-family: Helvetica, Arial, sans-serif;margin-left: 0;margin-right: 0;margin-top: 16px;margin-bottom: 8px;padding: 0;font-size: 18px;line-height: 26px;font-weight: bold;color:#b07edc;">Status update for your teams:</h5>
-                                                                                                <p style="font-family: Helvetica, Arial, sans-serif;font-size: 15px;line-height: 23px;margin-top: 8px;margin-bottom: 8px;">The following team members are yet to update their status for <b>${current_date}</b>:<br />
+                                                                                            <p style="font-family: Helvetica, Arial, sans-serif;font-size: 22px;line-height: 23px;margin-top: 8px;margin-bottom: 8px;"><h3><strong>Hi,</strong></h3></p>
+                                                                                            <h5 style="font-family: Helvetica, Arial, sans-serif;margin-left: 0;margin-right: 0;margin-top: 16px;margin-bottom: 8px;padding: 0;font-size: 18px;line-height: 26px;font-weight: bold;color:#b07edc;">Status update for your teams:</h5>
+                                                                                            <p style="font-family: Helvetica, Arial, sans-serif;font-size: 15px;line-height: 23px;margin-top: 8px;margin-bottom: 8px;">The following team members are yet to update their status for <b>${current_date}</b>:<br />
 
-                                                                                                    #set( $count = 1 )  
-                                                                                                    <table>
-                                                                                                        #foreach( $n in $name )
-                                                                                                        <tr>
-                                                                                                            <td>$count)</td>
-                                                                                                            <td>$n.name</td>
+                                                                                                #set( $count = 1 )  
+                                                                                                <table>
+                                                                                                    #foreach( $n in $name )
+                                                                                                    <tr>
+                                                                                                        <td>$count)</td>
+                                                                                                        <td>$n.name</td>
 
-                                                                                                        </tr>
-                                                                                                        #set( $count = $count + 1 )
-                                                                                                        #end
-                                                                                                    </table>
-                                                                                            </center>
+                                                                                                    </tr>
+                                                                                                    #set( $count = $count + 1 )
+                                                                                                    #end
+                                                                                                </table>
+
                                                                                         </td><!-- /.column_cell -->
                                                                                     </tr>
                                                                                 </tbody>
@@ -493,13 +496,15 @@
                                                 </table>
                                                 <![endif]--> 
                                             </div><!-- /.email_body --> 
-                                            <center>
-                                                <div style="margin-top: 3px;margin-bottom: 1px;">
+
+                                            <div style="margin-top: 3px;margin-bottom: 1px;">
+                                                <center>
                                                     <p><small style="font-size: 86%;font-weight: normal;">© Copyright 2016, Beyond Bytes Technologies</small></p>
                                                     <a href="https://twitter.com/statusnap"> <img src="https://www.statusnap.com/assets/img/twitterr.png"></a>
                                                     <a href="https://www.facebook.com/Beyond-Bytes-199170280096237/"> <img src="https://www.statusnap.com/assets/img/facebook.png"></a>
                                                     <a href="https://www.linkedin.com/company/beyond-bytes-technologies-pvt-ltd"><img src="https://www.statusnap.com/assets/img/linked.png"></a>
-                                                </div>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                                         
-                                            </center>
+                                                </center>
+                                            </div>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                                         
+
                                         </body>
                                         </html>
