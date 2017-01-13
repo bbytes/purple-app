@@ -407,8 +407,9 @@ public class SchedulerService {
 	}
 
 	/* Cron Runs every day at 6 am */
-	@Scheduled(cron = "	0 0 6 * * ?")
-	// @Scheduled(cron = "0 0/2 * * * ?")
+//	@Scheduled(cron = "	0 0 6 * * ?")
+// @Scheduled(cron = "0 0/2 * * * ?")
+	@Scheduled(cron = "0 0/60 * * * ?") // every one hr 
 	public void runJiraSync() {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
