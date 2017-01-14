@@ -208,15 +208,26 @@ public class JiraIntegrationService {
 		List<TaskItem> taskItems = taskItemService.findByUsers(user);
 
 		for (TaskItem taskItem : taskItems) {
+			if(taskItem.getSpendHours() > 0 )
+			{
+				logger.info("Task Item name " +  taskItem.getName());
+				logger.info("Spent hours " +  taskItem.getSpendHours());
+				logger.info("Task state " +  taskItem.getState());
+				logger.info("Task dirty " +  taskItem.isDirty());
+			}
+			
 			if (taskItem.getSpendHours() > 0 && taskItem.isDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
 				final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
 				final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey()).path("worklog");
 
 				Issue issue = issueRestClient.getIssue(taskItem.getJiraIssueKey()).claim();
+				
+				// check if the item is completed
 				if (issue != null && TaskState.COMPLETED.equals(taskItem.getState())) {
 					Iterable<Transition> transitions = issueRestClient.getTransitions(issue).claim();
 					for (Transition transition : transitions) {
 						if (statesToIgnore.contains(transition.getName().toLowerCase())) {
+							// move ticket to close or done in jira for statusnap completed state items 
 							issueRestClient.transition(issue, new TransitionInput(transition.getId()));
 							break;
 						}
