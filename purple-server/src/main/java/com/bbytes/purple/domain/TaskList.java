@@ -43,10 +43,10 @@ public class TaskList implements Comparable<TaskList> {
 	private String name;
 
 	@Field("estimated_hours")
-	private double estimatedHours;
+	private Double estimatedHours;
 
 	@Field("spent_hours")
-	private double spendHours;
+	private Double spendHours;
 
 	@Field("due_date")
 	private Date dueDate;
@@ -132,8 +132,8 @@ public class TaskList implements Comparable<TaskList> {
 
 	private void calculateProperties() {
 		state = null;
-		estimatedHours = 0;
-		spendHours = 0;
+		estimatedHours = 0d;
+		spendHours = 0d;
 		dueDate = DateTime.now().toDate();
 
 		for (TaskItem taskItem : taskItems) {

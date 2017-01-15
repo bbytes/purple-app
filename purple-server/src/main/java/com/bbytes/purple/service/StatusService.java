@@ -125,8 +125,7 @@ public class StatusService extends AbstractService<Status, String> {
 		return hours;
 	}
 
-	public Status create(StatusDTO statusDTO, List<Object> taskItemList, User loggedInUser)
-			throws PurpleException, ParseException {
+	public Status create(StatusDTO statusDTO, List<Object> taskItemList, User loggedInUser) throws PurpleException, ParseException {
 		Status savedStatus = null;
 		SimpleDateFormat formatter = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
@@ -140,26 +139,21 @@ public class StatusService extends AbstractService<Status, String> {
 				throw new PurpleException("Error while adding status", ErrorHandler.PROJECT_NOT_FOUND);
 
 			if (statusDTO.getDateTime() == null || statusDTO.getDateTime().isEmpty()) {
-				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
-						new Date());
+				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(), new Date());
 			} else {
 				Date statusDate = formatter.parse(statusDTO.getDateTime());
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(statusDate);
 				Date newTime = new DateTime(new Date())
-						.withDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH))
-						.toDate();
+						.withDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)).toDate();
 
-				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate))
-						.withTime(0, 0, 0, 0).toDate();
+				Date backDate = new DateTime(new Date()).minusDays(Integer.parseInt(statusEnableDate)).withTime(0, 0, 0, 0).toDate();
 				if (statusDate.before(backDate))
 					throw new PurpleException("Cannot add status past " + statusEnableDate + " days",
 							ErrorHandler.PASS_DUEDATE_STATUS_EDIT);
 				if (statusDate.after(new Date()))
-					throw new PurpleException("Cannot add status for future date",
-							ErrorHandler.FUTURE_DATE_STATUS_EDIT);
-				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(),
-						newTime);
+					throw new PurpleException("Cannot add status for future date", ErrorHandler.FUTURE_DATE_STATUS_EDIT);
+				savedStatus = new Status(statusDTO.getWorkingOn(), statusDTO.getWorkedOn(), statusDTO.getHours(), newTime);
 			}
 
 			Project project = projectService.findByProjectId(statusDTO.getProjectId());
@@ -312,8 +306,8 @@ public class StatusService extends AbstractService<Status, String> {
 		return newStatus;
 	}
 
-	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser,
-			Integer timePeriodValue) throws PurpleException {
+	public List<Status> getAllStatusByProjectAndUser(UsersAndProjectsDTO userAndProject, User currentUser, Integer timePeriodValue)
+			throws PurpleException {
 		List<Status> result = new ArrayList<Status>();
 		List<Project> currentUserProjectList = userService.getProjects(currentUser);
 		List<String> projectIdStringQueryList = userAndProject.getProjectList();
@@ -344,24 +338,20 @@ public class StatusService extends AbstractService<Status, String> {
 		}
 
 		// both empty
-		if ((userQueryList == null || userQueryList.isEmpty())
-				&& (projectQueryList == null || projectQueryList.isEmpty())) {
+		if ((userQueryList == null || userQueryList.isEmpty()) && (projectQueryList == null || projectQueryList.isEmpty())) {
 			return result;
 		}
 		// project list empty
-		else if (userQueryList != null && !userQueryList.isEmpty()
-				&& (projectQueryList == null || projectQueryList.isEmpty())) {
+		else if (userQueryList != null && !userQueryList.isEmpty() && (projectQueryList == null || projectQueryList.isEmpty())) {
 			result = statusRepository.findByDateTimeBetweenAndUserIn(startDate, startDate, userQueryList);
 		}
 		// user list empty
-		else if (projectQueryList != null && !projectQueryList.isEmpty()
-				&& (userQueryList == null || userQueryList.isEmpty())) {
+		else if (projectQueryList != null && !projectQueryList.isEmpty() && (userQueryList == null || userQueryList.isEmpty())) {
 			result = statusRepository.findByDateTimeBetweenAndProjectIn(startDate, endDate, projectQueryList);
 		}
 		// both the list not empty
 		else {
-			result = statusRepository.findByDateTimeBetweenAndProjectInAndUserIn(startDate, endDate, projectQueryList,
-					userQueryList);
+			result = statusRepository.findByDateTimeBetweenAndProjectInAndUserIn(startDate, endDate, projectQueryList, userQueryList);
 		}
 
 		try {
@@ -408,8 +398,7 @@ public class StatusService extends AbstractService<Status, String> {
 		TypedAggregation<ProjectUserCountStats> aggregation = newAggregation(ProjectUserCountStats.class,
 				match(Criteria.where("dateTime").gte(startDate).lte(endDate)), project().and("user").as("user"));
 
-		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class,
-				ProjectUserCountStats.class);
+		AggregationResults<ProjectUserCountStats> result = mongoTemplate.aggregate(aggregation, Status.class, ProjectUserCountStats.class);
 		return result;
 	}
 
@@ -444,8 +433,7 @@ public class StatusService extends AbstractService<Status, String> {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
 					String str = statusDTO.getWorkedOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<span style='color:#3b73af;font-weight: bold;'>@" + mentionUser.getName() + "</span>")
-							.trim();
+							"<span style='color:#3b73af;font-weight: bold;'>@" + mentionUser.getName() + "</span>").trim();
 					statusDTO.setWorkedOn(str);
 				}
 			}
@@ -464,8 +452,8 @@ public class StatusService extends AbstractService<Status, String> {
 					taskItem = taskItemService.findOne(StringUtils.substringAfter(taskItemValue, "id:"));
 				if (taskItem != null) {
 					// getting hours from status while entering from user
-					double spendHoursOnTaskFromStatus = Double.parseDouble(StringUtils
-							.substringAfter(taskListWorkedOnMatcher.group(1), GlobalConstants.HOURS_PATTERN));
+					double spendHoursOnTaskFromStatus = Double
+							.parseDouble(StringUtils.substringAfter(taskListWorkedOnMatcher.group(1), GlobalConstants.HOURS_PATTERN));
 					if (statusId == null) {
 						// adding taskDTO in map which will use in create status
 						// method
@@ -482,7 +470,10 @@ public class StatusService extends AbstractService<Status, String> {
 							taskItemList.add(taskItemDTO);
 							statusTaskEventMap.put("taskItem", taskItemList);
 						}
-						taskItem.addSpendHours(spendHoursOnTaskFromStatus);
+						
+						if (spendHoursOnTaskFromStatus > 0)
+							taskItem.addSpendHours(spendHoursOnTaskFromStatus);
+						
 						taskItem.getTaskList().addSpendHours(spendHoursOnTaskFromStatus);
 					} else {
 						taskItem = updateStatusTaskEvent(statusId, spendHoursOnTaskFromStatus, taskItem, loggedInUser);
@@ -506,8 +497,7 @@ public class StatusService extends AbstractService<Status, String> {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
 					String str = statusDTO.getWorkingOn().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<span style='color:#3b73af;font-weight: bold;'>@" + mentionUser.getName() + "</span>")
-							.trim();
+							"<span style='color:#3b73af;font-weight: bold;'>@" + mentionUser.getName() + "</span>").trim();
 					statusDTO.setWorkingOn(str);
 				}
 			}
@@ -549,8 +539,7 @@ public class StatusService extends AbstractService<Status, String> {
 					statusDTO.addMentionUser(mentionUser);
 					// replacing @mention pattern with @username
 					String str = statusDTO.getBlockers().replaceFirst(GlobalConstants.MENTION_REGEX_PATTERN,
-							"<span style='color:#3b73af;font-weight: bold;'>@" + mentionUser.getName() + "</span>")
-							.trim();
+							"<span style='color:#3b73af;font-weight: bold;'>@" + mentionUser.getName() + "</span>").trim();
 					statusDTO.setBlockers(str);
 				}
 			}
@@ -597,8 +586,8 @@ public class StatusService extends AbstractService<Status, String> {
 	 * @return
 	 * @throws PurpleException
 	 */
-	private TaskItem updateStatusTaskEvent(String statusId, double spendHoursOnTaskFromStatus, TaskItem taskItem,
-			User loggedInUser) throws PurpleException {
+	private TaskItem updateStatusTaskEvent(String statusId, double spendHoursOnTaskFromStatus, TaskItem taskItem, User loggedInUser)
+			throws PurpleException {
 		if (!statusIdExist(statusId))
 			throw new PurpleException("Error while updating status", ErrorHandler.STATUS_NOT_FOUND);
 		Status statusFromDb = findOne(statusId);
@@ -608,21 +597,22 @@ public class StatusService extends AbstractService<Status, String> {
 		for (StatusTaskEvent statusTaskEvent : statusTaskEventList) {
 			totalSpendHours = totalSpendHours + statusTaskEvent.getSpendHours();
 		}
-		StatusTaskEvent statusTaskEventFromDB = statusTaskEventService.findByStatusAndTaskItem(findOne(statusId),
-				taskItem);
+		StatusTaskEvent statusTaskEventFromDB = statusTaskEventService.findByStatusAndTaskItem(findOne(statusId), taskItem);
 		totalSpendHours = totalSpendHours - (statusTaskEventFromDB == null ? 0 : statusTaskEventFromDB.getSpendHours());
-		taskItem.setSpendHours(spendHoursOnTaskFromStatus + totalSpendHours);
+		double totalSpentHrs = spendHoursOnTaskFromStatus + totalSpendHours;
+		
+		if (totalSpentHrs > 0)
+			taskItem.setSpendHours(totalSpentHrs);
+		
 		totalSpendHoursToTaskList = spendHoursOnTaskFromStatus
 				- (statusTaskEventFromDB == null ? 0 : statusTaskEventFromDB.getSpendHours());
 		taskItem.getTaskList().addSpendHours(totalSpendHoursToTaskList);
-		StatusTaskEvent statusTaskEventByStatusAndTaskItem = statusTaskEventService
-				.findByStatusAndTaskItem(statusFromDb, taskItem);
+		StatusTaskEvent statusTaskEventByStatusAndTaskItem = statusTaskEventService.findByStatusAndTaskItem(statusFromDb, taskItem);
 		// checking statusTaskEvent exist by given statusAndTaskItem, if there
 		// updating new spend hours and if not then creating new statusTaskEvent
 		if (statusTaskEventByStatusAndTaskItem != null) {
 			statusTaskEventByStatusAndTaskItem.setSpendHours(spendHoursOnTaskFromStatus);
-			statusTaskEventByStatusAndTaskItem
-					.setRemainingHours(taskItem.getEstimatedHours() - spendHoursOnTaskFromStatus);
+			statusTaskEventByStatusAndTaskItem.setRemainingHours(taskItem.getEstimatedHours() - spendHoursOnTaskFromStatus);
 			statusTaskEventService.save(statusTaskEventByStatusAndTaskItem);
 		} else {
 			StatusTaskEvent statusTaskEvent = new StatusTaskEvent(taskItem, statusFromDb, loggedInUser);
@@ -646,7 +636,7 @@ public class StatusService extends AbstractService<Status, String> {
 				+ status.getStatusId();
 		return snippetUrl;
 	}
-	
+
 	/**
 	 * getDefaulterUsers method is used to pull the all users who didn't fill
 	 * the status

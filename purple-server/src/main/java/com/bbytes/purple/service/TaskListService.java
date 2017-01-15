@@ -145,6 +145,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 				double estimatedHours = issue.getTimeTracking().getOriginalEstimateMinutes() / 60;
 				item.setEstimatedHours(estimatedHours);
 				double spentHours = issue.getTimeTracking().getTimeSpentMinutes() / 60;
+				
 				if (spentHours > 0)
 					item.setSpendHours(spentHours);
 			}

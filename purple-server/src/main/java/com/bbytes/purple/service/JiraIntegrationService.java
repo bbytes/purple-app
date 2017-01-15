@@ -208,15 +208,18 @@ public class JiraIntegrationService {
 		List<TaskItem> taskItems = taskItemService.findByUsers(user);
 
 		for (TaskItem taskItem : taskItems) {
+			logger.info("Task Item name " +  taskItem.getName());
+			logger.info("Spent hours " +  taskItem.getSpendHours());
+			logger.info("estimated hours " +  taskItem.getEstimatedHours());
+			logger.info("task list spent hours " +  taskItem.getTaskList().getSpendHours());
+			
 			if(taskItem.getSpendHours() > 0 )
 			{
-				logger.info("Task Item name " +  taskItem.getName());
-				logger.info("Spent hours " +  taskItem.getSpendHours());
 				logger.info("Task state " +  taskItem.getState());
-				logger.info("Task dirty " +  taskItem.isDirty());
+				logger.info("Task dirty " +  taskItem.getDirty());
 			}
 			
-			if (taskItem.getSpendHours() > 0 && taskItem.isDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
+			if (taskItem.getSpendHours() > 0 && taskItem.getDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
 				final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
 				final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey()).path("worklog");
 
@@ -277,11 +280,11 @@ public class JiraIntegrationService {
 				for (String issueType : issueTypeToIssueList.keySet()) {
 					String taskListName = projectFromDb.getProjectName() + JIRA_TASK + issueType.toLowerCase();
 					List<Issue> issues = issueTypeToIssueList.get(issueType);
-					System.out.println("---- SIZE -- "+issues.size()+" ------ " + issueType);
-					int index = 0 ;
+//					System.out.println("---- SIZE -- "+issues.size()+" ------ " + issueType);
+//					int index = 0 ;
 					for (Issue issue : issues) {
-						index++;
-						System.out.println("Processing : " + index + "  - " +  issue.getKey());
+//						index++;
+//						System.out.println("Processing : " + index + "  - " +  issue.getKey());
 						taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
 					}
 				}

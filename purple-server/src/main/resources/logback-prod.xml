@@ -36,6 +36,7 @@
 		<environment>prod</environment>
 	</appender>
 
+	<logger name="com.bbytes" level="INFO" />
 
 	<root level="ERROR">
 		<appender-ref ref="FILE" />
