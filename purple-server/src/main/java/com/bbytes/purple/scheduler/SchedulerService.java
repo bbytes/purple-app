@@ -132,7 +132,7 @@ public class SchedulerService {
 	 * Initialize view type to user if not present
 	 */
 	@PostConstruct
-	private void cleanUpOrghanStatus() throws PurpleException {
+	private void initViewType() throws PurpleException {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
 		// creating a hashset to store orgId's
