@@ -19,6 +19,7 @@ angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $
                     $rootScope.timePreference = userInfo.timePreference;
                     $rootScope.switchState = userInfo.emailNotificationState;
                     $rootScope.timeZone = userInfo.timeZone;
+					$rootScope.viewType = userInfo.viewType;
                 }
             }
             return config;

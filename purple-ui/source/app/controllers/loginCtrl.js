@@ -25,6 +25,7 @@ angular.module('rootApp').controller('loginCtrl', function ($scope, $rootScope, 
                 $rootScope.timePreference = response.data.timePreference;
                 $rootScope.switchState = response.data.emailNotificationState;
                 $rootScope.timeZone = response.data.timeZone;
+				$rootScope.viewType = response.data.viewType;
 
                 var userInfo = {
                     accessToken: response.headers["x-auth-token"],
@@ -33,7 +34,8 @@ angular.module('rootApp').controller('loginCtrl', function ($scope, $rootScope, 
                     userRoles: $rootScope.userRole,
                     timePreference: $rootScope.timePreference,
                     emailNotificationState: $rootScope.switchState,
-                    timeZone: $rootScope.timeZone
+                    timeZone: $rootScope.timeZone,
+					viewType: $rootScope.viewType
                 };
 
                 $sessionStorage.userInfo = userInfo;

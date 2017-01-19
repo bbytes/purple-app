@@ -111,6 +111,7 @@ public class DataModelToDTOConversionService {
 		userDTO.setTimeZone(user.getTimeZone());
 		userDTO.setDisableState(user.isDisableState());
 		userDTO.setMarkDeleteState(user.isMarkDelete());
+		userDTO.setViewType(user.getViewType());
 		return userDTO;
 	}
 
@@ -143,6 +144,7 @@ public class DataModelToDTOConversionService {
 
 	public StatusDTO convertStatus(Status status, String statusTime) {
 
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 		StatusDTO statusDTO = new StatusDTO();
 		statusDTO.setStatusId(status.getStatusId());
 		statusDTO.setProjectId(status.getProject().getProjectId());
@@ -155,6 +157,8 @@ public class DataModelToDTOConversionService {
 		statusDTO.setTime(statusTime);
 		statusDTO.setCommentCount(status.getCommentCount());
 		statusDTO.setTaskDataMap(status.getTaskDataMap());
+		statusDTO.setDateTime(simpleDateFormat.format(status.getDateTime()));
+
 		return statusDTO;
 	}
 

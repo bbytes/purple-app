@@ -62,6 +62,9 @@ public class User {
 	@Field("mark_delete_date")
 	private Date markDeleteDate;
 
+	@Field("view_type")
+	private String viewType;
+
 	@DBRef
 	private Organization organization;
 
@@ -82,5 +85,8 @@ public class User {
 	public static String PENDING = "Pending";
 	public static String JOINED = "Joined";
 	public static String DEFAULT_EMAIL_REMINDER_TIME = "1970-01-01T12:30:00.000Z";
+	
+	public static String TIMELINE_VIEW = "Timeline";
+	public static String TABLE_VIEW = "Table";
 
 }

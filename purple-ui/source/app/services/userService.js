@@ -159,6 +159,29 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
 
         return deferred.promise;
     };
+	
+	// this method is used to enable/disable user
+    this.setViewType = function (viewType) {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'PUT',
+            url: $rootScope.baseUrl + 'api/v1/user/viewtype',
+            params: {"viewType": viewType},
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        }).success(function (response, status, headers, config) {
+
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
 
     // this method is used to set user as mark for delete (user and their statuses,comments
     // will be deleted after 30 Days, it been taking care by server side)

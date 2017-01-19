@@ -274,11 +274,18 @@
 </md-sidenav> 
 
 <div class="col-md-9">
-    <div class="content">
-
-        <!-- Page Content -->
+ <div class="content">
+   <!-- Page Content -->
         <div class="search-filter">
             <ul>
+			  <li> 
+			  <div class="switch-view">
+               <div class="btn-group">
+                 <a href="#" ng-click="setViewType('Timeline')" tooltips tooltip-template="Timeline View" tooltip-side="bottom" id="list" class="btn btn-default btn-sm"><i class="fa fa-list" aria-hidden="true"></i></a> 
+			     <a href="#" ng-click="setViewType('Table')" tooltips tooltip-template="Table View" tooltip-side="bottom" id="grid" class="btn btn-default btn-sm"><i class="fa fa-th" aria-hidden="true"></i></a>
+                </div>
+              </div>
+	          </li>
                 <li>
                     <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timeChange(mytime)">
                     </select>
@@ -286,8 +293,13 @@
 
                 <li><a href="#" ng-click="csvDownloadTimeline(mytime)" csv-download="options"><img src="../../assets/img/export_csv-32.png" class="cvg"tooltips tooltip-template="CSV Download" tooltip-side="bottom"></a></li>
             </ul>
+			<div class="clearfix"></div>
         </div>
-        <div class="wrapper">
+ </div>
+    <div class="content">
+
+        
+        <div class="wrapper"  ng-if="viewType === 'Timeline'">
             <div class="top-header">
                 <!--  <span class="project"><span class="hash"># </span>{{status.projectName}}</span> -->
 
@@ -357,9 +369,39 @@
                 <li class="clearfix no-float"></li>
             </ul>
 
-
         </div>
+		
+		<div class="clearfix"></div>
+		
+		<div class="table-responsive" ng-if="viewType === 'Table'">
+
+    <table id="productSizes" class="table" >	
+        <thead>
+            <tr >
+                <th style="width:15%">Date</th>
+                <th style="width:10%">User</th>
+                <th style="width:10%">Project</th>
+                <th style="width:10%">Hours</th>
+				 <th style="width:20%">Worked On</th>
+                <th style="width:20%">Working On</th>
+                <th style="width:15%">Blocker</th>
+            </tr>
+        </thead>
+		
+        <tr ng-repeat="data in timelineTableData">
+           <td>{{data.dateTime}}</td>
+		   <td>{{data.userName}}</td>
+		   <td>{{data.projectName}}</td>
+		   <td>{{data.time}}</td>
+		   <td ng-bind-html="data.workedOn">{{data.workedOn}}</td>
+		   <td ng-bind-html="data.workingOn">{{data.workingOn}}</td>
+		   <td ng-bind-html="data.blockers">{{data.blockers}}</td>
+        </tr>
+		
+    </table>
+</div>
     </div>
+	
 
 
     <script>

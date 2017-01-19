@@ -4676,3 +4676,21 @@ tabs-left, .tabs-right {
     font-family: inherit !important;
     font-size: 100% !important;
 }
+.table-responsive {
+    min-height: .01%;
+    overflow-x: visible;
+	margin-top: 45px;
+}
+.switch-view #list, #grid{
+	background:#FFF !important;
+	color:#222;
+	border:1px solid #ccc !important;
+	font-size:12px;
+	padding:5px !important;
+}
+.switch-view .btn-default:hover{
+	color:#222 !important;
+}
+.table-responsive td{
+	border:1px solid #eeeeee;
+}

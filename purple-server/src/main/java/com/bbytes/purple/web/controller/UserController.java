@@ -429,6 +429,26 @@ public class UserController {
 	}
 
 	/**
+	 * Method is used to set the view type for timeline
+	 * 
+	 * @param viewType
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/user/viewtype", method = RequestMethod.PUT)
+	public RestResponse setViewType(@RequestParam(value = "viewType") String viewType) throws PurpleException {
+
+		User loggedInUser = userService.getLoggedInUser();
+		loggedInUser = userService.setViewType(viewType, loggedInUser);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(loggedInUser);
+		logger.debug("View Type is updated successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO,
+				SuccessHandler.UPDATE_USER_SUCCESS);
+
+		return userReponse;
+	}
+
+	/**
 	 * The getUsersByProjects method is used to fetched all user which are part
 	 * of projects in user
 	 * 

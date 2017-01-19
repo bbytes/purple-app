@@ -46,7 +46,7 @@ public class UserService extends AbstractService<User, String> {
 
 	@Autowired
 	private TenantResolverService tenantResolverService;
-	
+
 	private UserRepository userRepository;
 
 	@Autowired
@@ -502,7 +502,20 @@ public class UserService extends AbstractService<User, String> {
 		return user;
 	}
 
-	
+	public User setViewType(String viewType, User loggedInUser) throws PurpleException {
+
+		if (loggedInUser != null) {
+			if (!userEmailExist(loggedInUser.getEmail()))
+				throw new PurpleException("Error while setting view type", ErrorHandler.USER_NOT_FOUND);
+			try {
+				loggedInUser.setViewType(viewType);
+				loggedInUser = save(loggedInUser);
+			} catch (Throwable e) {
+				throw new PurpleException(e.getMessage(), ErrorHandler.UPDATE_VIEWTYPE_FAILED);
+			}
+		}
+		return loggedInUser;
+	}
 
 	/**
 	 * check the user is active or not, active means should be activate their
