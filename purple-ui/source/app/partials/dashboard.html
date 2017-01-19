@@ -281,8 +281,8 @@
 			  <li> 
 			  <div class="switch-view">
                <div class="btn-group">
-                 <a href="#" ng-click="setViewType('Timeline')" tooltips tooltip-template="Timeline View" tooltip-side="bottom" id="list" class="btn btn-default btn-sm"><i class="fa fa-list" aria-hidden="true"></i></a> 
-			     <a href="#" ng-click="setViewType('Table')" tooltips tooltip-template="Table View" tooltip-side="bottom" id="grid" class="btn btn-default btn-sm"><i class="fa fa-th" aria-hidden="true"></i></a>
+                 <a href="#" ng-click="setViewType('Timeline')" id="list" class="btn btn-default btn-sm"><i tooltips tooltip-template="Timeline View" tooltip-side="top"  class="fa fa-list" aria-hidden="true"></i></a> 
+			     <a href="#" ng-click="setViewType('Table')" id="grid" class="btn btn-default btn-sm"><i tooltips tooltip-template="Table View" tooltip-side="top" class="fa fa-th" aria-hidden="true"></i></a>
                 </div>
               </div>
 	          </li>
@@ -376,7 +376,7 @@
 		<div class="table-responsive" ng-if="viewType === 'Table'">
 
     <table id="productSizes" class="table" >	
-        <thead>
+        <thead style="background:#cc95b5;">
             <tr >
                 <th style="width:15%">Date</th>
                 <th style="width:10%">User</th>
@@ -392,7 +392,7 @@
            <td>{{data.dateTime}}</td>
 		   <td>{{data.userName}}</td>
 		   <td>{{data.projectName}}</td>
-		   <td>{{data.time}}</td>
+		   <td>{{data.hours}}</td>
 		   <td ng-bind-html="data.workedOn">{{data.workedOn}}</td>
 		   <td ng-bind-html="data.workingOn">{{data.workingOn}}</td>
 		   <td ng-bind-html="data.blockers">{{data.blockers}}</td>

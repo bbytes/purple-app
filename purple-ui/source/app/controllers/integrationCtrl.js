@@ -4,9 +4,14 @@
  */
 angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootScope, appNotifyService, $state, $location, integrationService) {
 
-    $rootScope.navClass = 'nav navbar-nav';
-    $rootScope.navstatusClass = 'right-nav-ct';
-    $rootScope.bodyClass = 'body-standalone1';
+	$rootScope.bodyClass = 'body-standalone1';
+    $rootScope.navClass = 'nav-control';
+    $rootScope.navstatusClass = 'nav navbar-nav';
+
+    $rootScope.statusClass = 'status-current';
+    $rootScope.dashboardClass = 'dashboard-nav';
+    $rootScope.settingClass = 'setting-nav';
+    $rootScope.feedbackClass = 'feedback-log feedback-show';
 
     // this variable is used for slack url
     $scope.slackUrl = $rootScope.baseUrl + 'social/slack?emailId=' + $rootScope.loggedInUser;
