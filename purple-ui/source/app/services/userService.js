@@ -1,5 +1,6 @@
 /*
  * User Service
+ * @author - Akshay
  */
 angular.module('rootApp').service('userService', function ($rootScope, $http, $q) {
 
@@ -159,8 +160,8 @@ angular.module('rootApp').service('userService', function ($rootScope, $http, $q
 
         return deferred.promise;
     };
-	
-	// this method is used to enable/disable user
+
+    // this method is used to enable/disable user
     this.setViewType = function (viewType) {
 
         var deferred = $q.defer();

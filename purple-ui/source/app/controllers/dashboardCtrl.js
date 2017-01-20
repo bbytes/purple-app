@@ -53,13 +53,13 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
         statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
             if (response.success) {
                 $scope.timelineData = response.data.gridData;
-					$scope.timelineTableData = [];
-					angular.forEach(response.data.gridData, function (value, key) {
-							angular.forEach(value.statusList, function (value,key) {
-							$scope.timelineTableData.push(value);
-						});
-					 });
-				
+                $scope.timelineTableData = [];
+                angular.forEach(response.data.gridData, function (value, key) {
+                    angular.forEach(value.statusList, function (value, key) {
+                        $scope.timelineTableData.push(value);
+                    });
+                });
+
                 $scope.isActive = true;
                 $scope.isProject = false;
                 $scope.isUser = false;
@@ -235,13 +235,13 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
         statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
             if (response.success) {
                 $scope.timelineData = response.data.gridData;
-				$scope.timelineTableData = [];
-				angular.forEach(response.data.gridData, function (value, key) {
-							angular.forEach(value.statusList, function (value,key) {
-								$scope.timelineTableData.push(value);
-					});
-				 });
-				
+                $scope.timelineTableData = [];
+                angular.forEach(response.data.gridData, function (value, key) {
+                    angular.forEach(value.statusList, function (value, key) {
+                        $scope.timelineTableData.push(value);
+                    });
+                });
+
                 $scope.selected = project;
                 $scope.isProject = true;
                 $scope.isActive = false;
@@ -262,14 +262,14 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
         statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
             if (response.success) {
                 $scope.timelineData = response.data.gridData;
-				
-				$scope.timelineTableData = [];
-				angular.forEach(response.data.gridData, function (value, key) {
-						angular.forEach(value.statusList, function (value,key) {
-                    $scope.timelineTableData.push(value);
+
+                $scope.timelineTableData = [];
+                angular.forEach(response.data.gridData, function (value, key) {
+                    angular.forEach(value.statusList, function (value, key) {
+                        $scope.timelineTableData.push(value);
+                    });
                 });
-				 });
-				
+
                 $scope.selected = user;
                 $scope.isUser = true;
                 $scope.isProject = false;
@@ -347,18 +347,18 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
             $scope.loadReply(commentId);
         });
     };
-	
-	  //setting view type for timeline
-    $scope.setViewType = function (viewType) {
-		if(viewType){
-			userService.setViewType(viewType).then(function (response) {
-				if (response.success) {
-				$rootScope.viewType = response.data.viewType;
 
-                $sessionStorage.userInfo.viewType = $rootScope.viewType;
-				}
-			});
-		}
+    //setting view type for timeline
+    $scope.setViewType = function (viewType) {
+        if (viewType) {
+            userService.setViewType(viewType).then(function (response) {
+                if (response.success) {
+                    $rootScope.viewType = response.data.viewType;
+
+                    $sessionStorage.userInfo.viewType = $rootScope.viewType;
+                }
+            });
+        }
     };
 
     $rootScope.isOpen = false;
