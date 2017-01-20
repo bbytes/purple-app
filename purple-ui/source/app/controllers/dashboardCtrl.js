@@ -378,5 +378,24 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
             $scope.timeChange(timePeriod);
         };
     };
+	
+	$(window).scroll(function() {     
+    var scroll = $(window).scrollTop();
+    if (scroll > 0) {
+        $(".header-dashboard").addClass("activehead");
+    }
+    else {
+        $(".header-dashboard").removeClass("activehead");
+    }
+});
+
+$('.leftColumn').on( 'mousewheel DOMMouseScroll', function (e) { 
+  
+  var e0 = e.originalEvent;
+  var delta = e0.wheelDelta || -e0.detail;
+
+  this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+  e.preventDefault();  
+});
 
 });

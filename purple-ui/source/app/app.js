@@ -35,7 +35,8 @@ var rootApp = angular.module('rootApp',
             'angular.chosen',
             'ui.bootstrap.datetimepicker',
             'angularUtils.directives.dirPagination',
-            'mentio'
+            'mentio',
+			'ngScrollbars'
         ]);
 
 // avoid the spacing while copy paste in text angular 
