@@ -4754,6 +4754,7 @@ table.responsive-table th {
 	top: 50px;
 	table-layout: fixed;
     display: table;
+	margin-bottom: 20px;
 }
 
 .box > .table-responsive .table > tbody > tr th:first-child, .table-responsive .table > tbody > tr td:first-child {
