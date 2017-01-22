@@ -1,5 +1,6 @@
 package com.bbytes.purple.service;
 
+import java.io.IOException;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -70,8 +71,8 @@ public class JiraIntegrationService {
 	private static final String TYPE_ATLASSIAN_GROUP_ROLE = "atlassian-group-role-actor";
 
 	final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
-	
-	final List<String> statesToIgnore = new ArrayList<String>(Arrays.asList("done","closed","resolved"));
+
+	final List<String> statesToIgnore = new ArrayList<String>(Arrays.asList("done", "closed", "resolved"));
 
 	final DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
@@ -180,14 +181,23 @@ public class JiraIntegrationService {
 			return jiraProjects;
 
 		final JiraRestClient restClient = getJiraRestClient(integration);
+		try {
+			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
+			for (BasicProject project : projects.claim()) {
+				Project coreProject = new Project(project.getName());
+				jiraProjects.add(coreProject);
+			}
 
-		Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
-		for (BasicProject project : projects.claim()) {
-			Project coreProject = new Project(project.getName());
-			jiraProjects.add(coreProject);
+			return jiraProjects;
+		} finally {
+			if (restClient != null) {
+				try {
+					restClient.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
 		}
-
-		return jiraProjects;
 	}
 
 	/**
@@ -203,60 +213,74 @@ public class JiraIntegrationService {
 			return;
 
 		final JiraRestClient restClient = getJiraRestClient(integration);
-		IssueRestClient issueRestClient = restClient.getIssueClient();
+		try {
 
-		List<TaskItem> taskItems = taskItemService.findByUsers(user);
+			IssueRestClient issueRestClient = restClient.getIssueClient();
 
-		for (TaskItem taskItem : taskItems) {
-			logger.info("Task Item name " +  taskItem.getName());
-			logger.info("Spent hours " +  taskItem.getSpendHours());
-			logger.info("estimated hours " +  taskItem.getEstimatedHours());
-			logger.info("task list spent hours " +  taskItem.getTaskList().getSpendHours());
-			
-			if(taskItem.getSpendHours() > 0 )
-			{
-				logger.info("Task state " +  taskItem.getState());
-				logger.info("Task dirty " +  taskItem.getDirty());
-			}
-			
-			if (taskItem.getSpendHours() > 0 && taskItem.getDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
-				final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
-				final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey()).path("worklog");
+			List<TaskItem> taskItems = taskItemService.findByUsers(user);
 
-				Issue issue = issueRestClient.getIssue(taskItem.getJiraIssueKey()).claim();
-				
-				// check if the item is completed
-				if (issue != null && TaskState.COMPLETED.equals(taskItem.getState())) {
-					Iterable<Transition> transitions = issueRestClient.getTransitions(issue).claim();
-					for (Transition transition : transitions) {
-						if (statesToIgnore.contains(transition.getName().toLowerCase())) {
-							// move ticket to close or done in jira for statusnap completed state items 
-							issueRestClient.transition(issue, new TransitionInput(transition.getId()));
-							break;
-						}
-					}
+			for (TaskItem taskItem : taskItems) {
+
+				if (taskItem.getSpendHours() > 0) {
+					logger.debug("Task Item name " + taskItem.getName());
+					logger.debug("Spent hours " + taskItem.getSpendHours());
+					logger.debug("Task state " + taskItem.getState());
+					logger.debug("Task dirty " + taskItem.getDirty());
 				}
 
-				MultiValueMap<String, String> headers = new HttpHeaders();
-				headers.add(HttpHeaders.AUTHORIZATION, integration.getJiraBasicAuthHeader());
-				headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+				// sync only when dirty means the user has updated the hrs from
+				// ui
+				// and it is marked as dirty to sync to jira
+				if (taskItem.getSpendHours() > 0 && taskItem.getDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
+					final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
+					final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey())
+							.path("worklog");
 
-				RestTemplate restTemplate = new RestTemplate();
+					Issue issue = issueRestClient.getIssue(taskItem.getJiraIssueKey()).claim();
 
-				Integer timeSpendInSeconds = new Double(taskItem.getSpendHours() * 3600).intValue();
-				String requestJson = " { \"timeSpentSeconds\" :  " + timeSpendInSeconds + "}";
+					// check if the item is completed
+					if (issue != null && TaskState.COMPLETED.equals(taskItem.getState())) {
+						Iterable<Transition> transitions = issueRestClient.getTransitions(issue).claim();
+						for (Transition transition : transitions) {
+							if (statesToIgnore.contains(transition.getName().toLowerCase())) {
+								// move ticket to close or done in jira for
+								// statusnap completed state items
+								issueRestClient.transition(issue, new TransitionInput(transition.getId()));
+								break;
+							}
+						}
+					}
 
-				HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+					MultiValueMap<String, String> headers = new HttpHeaders();
+					headers.add(HttpHeaders.AUTHORIZATION, integration.getJiraBasicAuthHeader());
+					headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
+					RestTemplate restTemplate = new RestTemplate();
+
+					Integer timeSpendInSeconds = new Double(taskItem.getSpendHours() * 3600).intValue();
+					String requestJson = " { \"timeSpentSeconds\" :  " + timeSpendInSeconds + "}";
+
+					HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+
+					try {
+						restTemplate.postForEntity(uriBuilder.build().toURL().toURI(), entity, Void.class);
+						taskItem.setDirty(false);
+						taskItemService.save(taskItem);
+					} catch (Exception e) {
+						throw new PurpleIntegrationException(e);
+					}
+				}
+			}
+		} finally {
+			if (restClient != null) {
 				try {
-					restTemplate.postForEntity(uriBuilder.build().toURL().toURI(), entity, Void.class);
-					taskItem.setDirty(false);
-					taskItemService.save(taskItem);
-				} catch (Exception e) {
-					throw new PurpleIntegrationException(e);
+					restClient.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -269,28 +293,23 @@ public class JiraIntegrationService {
 		if (integration == null)
 			return;
 
-		
 		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
 		for (String projectName : projectToIssueListMap.keySet()) {
-			System.out.println("---------------------"+projectName+"-------------------");
+			System.out.println("---------------------" + projectName + "-------------------");
 			Project projectFromDb = projectService.findByProjectName(projectName);
 			if (projectFromDb != null) {
 				Map<String, List<Issue>> issueTypeToIssueList = projectToIssueListMap.get(projectName);
-				
+
 				for (String issueType : issueTypeToIssueList.keySet()) {
 					String taskListName = projectFromDb.getProjectName() + JIRA_TASK + issueType.toLowerCase();
 					List<Issue> issues = issueTypeToIssueList.get(issueType);
-//					System.out.println("---- SIZE -- "+issues.size()+" ------ " + issueType);
-//					int index = 0 ;
 					for (Issue issue : issues) {
-//						index++;
-//						System.out.println("Processing : " + index + "  - " +  issue.getKey());
 						taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
 					}
 				}
 			}
 		}
-		
+
 		System.out.println("Done syncing project jira task items");
 	}
 
@@ -302,33 +321,45 @@ public class JiraIntegrationService {
 			return projectNameToIssueList;
 
 		final JiraRestClient restClient = getJiraRestClient(integration);
-		SearchRestClient searchRestClient = restClient.getSearchClient();
 
 		try {
+			SearchRestClient searchRestClient = restClient.getSearchClient();
 
-			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
-			for (BasicProject project : projects.claim()) {
-				Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
-				SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), 1000, 0, null).claim();
-				for (Issue issue : issueResult.getIssues()) {
-					if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
-						continue;
+			try {
+
+				Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
+				for (BasicProject project : projects.claim()) {
+					Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
+					SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), 1000, 0, null).claim();
+					for (Issue issue : issueResult.getIssues()) {
+						if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
+							continue;
+						}
+						List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
+						if (issueList == null) {
+							issueList = new LinkedList<Issue>();
+							issueTypeToIssueList.put(issue.getIssueType().getName(), issueList);
+						}
+						issueList.add(issue);
 					}
-					List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
-					if (issueList == null) {
-						issueList = new LinkedList<Issue>();
-						issueTypeToIssueList.put(issue.getIssueType().getName(), issueList);
-					}
-					issueList.add(issue);
+
+					projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
 				}
-
-				projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
 			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+
+			return projectNameToIssueList;
+		} finally {
+			if (restClient != null) {
+				try {
+					restClient.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
 		}
 
-		return projectNameToIssueList;
 	}
 
 	/**
@@ -340,7 +371,7 @@ public class JiraIntegrationService {
 	 * @throws PurpleIntegrationException
 	 * @throws PurpleException
 	 */
-	public void syncProjectToJiraUser(Integration integration,User user) throws PurpleIntegrationException, PurpleException {
+	public void syncProjectToJiraUser(Integration integration, User user) throws PurpleIntegrationException, PurpleException {
 		Map<String, List<User>> projectToUsersMap = getJiraProjectWithUserList(integration);
 		// iterating project to users map
 		for (Map.Entry<String, List<User>> entry : projectToUsersMap.entrySet()) {
@@ -403,38 +434,51 @@ public class JiraIntegrationService {
 
 		JiraRestClient restClient = getJiraRestClient(integration);
 
-		ProjectRolesRestClient projectRolesRestClient = restClient.getProjectRolesRestClient();
-		UserRestClient userClient = restClient.getUserClient();
+		try {
 
-		Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
+			ProjectRolesRestClient projectRolesRestClient = restClient.getProjectRolesRestClient();
+			UserRestClient userClient = restClient.getUserClient();
 
-		for (BasicProject project : projects.claim()) {
-			List<User> projectUserList = new LinkedList<User>();
-			Promise<Iterable<ProjectRole>> projectRoles = projectRolesRestClient.getRoles(project.getSelf());
-			for (ProjectRole projectRole : projectRoles.claim()) {
-				for (RoleActor roleActor : projectRole.getActors()) {
-					if (TYPE_ATLASSIAN_USER_ROLE.equals(roleActor.getType())) {
-						com.atlassian.jira.rest.client.api.domain.User jiraUser = null;
-						try {
-							jiraUser = userClient.getUser(roleActor.getName()).claim();
-						} catch (RestClientException e) {
-							// ignore : The user does not exist exception
+			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
+
+			for (BasicProject project : projects.claim()) {
+				List<User> projectUserList = new LinkedList<User>();
+				Promise<Iterable<ProjectRole>> projectRoles = projectRolesRestClient.getRoles(project.getSelf());
+				for (ProjectRole projectRole : projectRoles.claim()) {
+					for (RoleActor roleActor : projectRole.getActors()) {
+						if (TYPE_ATLASSIAN_USER_ROLE.equals(roleActor.getType())) {
+							com.atlassian.jira.rest.client.api.domain.User jiraUser = null;
+							try {
+								jiraUser = userClient.getUser(roleActor.getName()).claim();
+							} catch (RestClientException e) {
+								// ignore : The user does not exist exception
+							}
+							if (jiraUser != null) {
+								User user = new User(jiraUser.getDisplayName(), jiraUser.getEmailAddress().toLowerCase());
+								projectUserList.add(user);
+							}
+
+						} else if (TYPE_ATLASSIAN_GROUP_ROLE.equals(roleActor.getType())) {
+							projectUserList = getUserForJiraGroup(integration, roleActor.getName());
 						}
-						if (jiraUser != null) {
-							User user = new User(jiraUser.getDisplayName(), jiraUser.getEmailAddress().toLowerCase());
-							projectUserList.add(user);
-						}
-
-					} else if (TYPE_ATLASSIAN_GROUP_ROLE.equals(roleActor.getType())) {
-						projectUserList = getUserForJiraGroup(integration, roleActor.getName());
 					}
 				}
+
+				projectNameToUserList.put(project.getName(), projectUserList);
 			}
 
-			projectNameToUserList.put(project.getName(), projectUserList);
+			return projectNameToUserList;
+
+		} finally {
+			if (restClient != null) {
+				try {
+					restClient.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
 		}
 
-		return projectNameToUserList;
 	}
 
 	private List<User> getUserForJiraGroup(Integration integration, String groupName) {
