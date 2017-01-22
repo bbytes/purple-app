@@ -1,7 +1,7 @@
 /*
  *  Activate Account Controller
  */
-angular.module('rootApp').controller('activateAccountCtrl', function ($rootScope, $state, $q, $http, $window, $sessionStorage, appNotifyService) {
+angular.module('rootApp').controller('activateAccountCtrl', function ($rootScope, $state, $q, $http, $window, $localStorage, appNotifyService) {
 
     $window.sessionStorage.token = $state.params.token;
     $rootScope.authToken = $state.params.token;
@@ -25,9 +25,9 @@ angular.module('rootApp').controller('activateAccountCtrl', function ($rootScope
             accessToken: $rootScope.authToken
         };
 
-        $sessionStorage.userInfo = userInfo;
+        $localStorage.userInfo = userInfo;
         deferred.resolve(response);
-        if (response.data.accountInitialise === true && ($sessionStorage.userInfo.userRoles === "NORMAL" || $sessionStorage.userInfo.userRoles === "MANAGER"))
+        if (response.data.accountInitialise === true && ($localStorage.userInfo.userRoles === "NORMAL" || $localStorage.userInfo.userRoles === "MANAGER"))
         {
             appNotifyService.success('Your account has been activated successfully. Redirecting to settings.');
             $state.go("settings");
