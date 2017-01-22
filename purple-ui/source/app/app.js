@@ -36,7 +36,7 @@ var rootApp = angular.module('rootApp',
             'ui.bootstrap.datetimepicker',
             'angularUtils.directives.dirPagination',
             'mentio',
-			'ngScrollbars'
+            'ngScrollbars'
         ]);
 
 // avoid the spacing while copy paste in text angular 
@@ -121,7 +121,7 @@ rootApp.config([
                 },
                 'main@home': {
                     templateUrl: 'app/partials/home-main.html',
-                    controller: 'indexCtrl',
+                    controller: 'indexCtrl'
                 },
                 'footer@home': {
                     templateUrl: 'app/partials/home-footer.html'
@@ -191,8 +191,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'dashboard',
-                redirectTo: 'login'
+                authorization: 'dashboard'
             }
         }).state('metrics', {
             url: '/metrics',
@@ -213,8 +212,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'metrics',
-                redirectTo: 'login'
+                authorization: 'metrics'
             }
         }).state('integration', {
             url: '/integration?app',
@@ -235,8 +233,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'integration',
-                redirectTo: 'login'
+                authorization: 'integration'
             }
         }).state('status', {
             url: '/status',
@@ -259,8 +256,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'My Status',
-                redirectTo: 'login'
+                authorization: 'My Status'
             }
         }).state('tasks', {
             url: '/tasks',
@@ -283,8 +279,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'tasks',
-                redirectTo: 'login'
+                authorization: 'tasks'
             }
         }).state('projects', {
             url: '/projects',
@@ -305,8 +300,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'projects',
-                redirectTo: 'login'
+                authorization: 'projects'
             }
         }).state('admin-settings', {
             url: '/admin-settings',
@@ -327,8 +321,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'settings',
-                redirectTo: 'login'
+                authorization: 'settings'
             }
         }).state('settings', {
             url: '/settings',
@@ -348,8 +341,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'user settings',
-                redirectTo: 'login'
+                authorization: 'user settings'
             }
         }).state('user-manager', {
             url: '/user-manager',
@@ -369,8 +361,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'User Manager',
-                redirectTo: 'login'
+                authorization: 'User Manager'
             }
         }).state('billing', {
             url: '/billing?app',
@@ -391,8 +382,7 @@ rootApp.config([
                 }
             },
             data: {
-                authorization: 'ADMIN',
-                redirectTo: 'login'
+                authorization: 'ADMIN'
             }
         }).state('access-denied', {
             url: '/accessDenied',
