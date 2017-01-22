@@ -1,7 +1,7 @@
 /*
  *  Update Status Controller
  */
-angular.module('rootApp').controller('updateStatusCtrl', function ($rootScope, $state, $q, $http, $window, $sessionStorage, appNotifyService) {
+angular.module('rootApp').controller('updateStatusCtrl', function ($rootScope, $state, $q, $http, $window, $localStorage, appNotifyService) {
 
     $window.sessionStorage.token = $state.params.token;
 
@@ -34,7 +34,7 @@ angular.module('rootApp').controller('updateStatusCtrl', function ($rootScope, $
             timeZone: $rootScope.timeZone
         };
 
-        $sessionStorage.userInfo = userInfo;
+        $localStorage.userInfo = userInfo;
         $state.go("status");
 
         deferred.resolve(response);

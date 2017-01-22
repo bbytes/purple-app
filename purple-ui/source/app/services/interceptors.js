@@ -2,15 +2,15 @@
  * Interceptor declaration Service
  * @author - Akshay
  */
-angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $sessionStorage, $injector, $location, appNotifyService) {
+angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $localStorage, $injector, $location, appNotifyService) {
     return {
         request: function (config) {
             config.headers = config.headers || {};
             if ($rootScope.authToken) {
                 config.headers['x-auth-token'] = $rootScope.authToken;
             }
-            if (!$rootScope.authToken && $sessionStorage.userInfo) {
-                var userInfo = $sessionStorage.userInfo;
+            if (!$rootScope.authToken && $localStorage.userInfo) {
+                var userInfo = $localStorage.userInfo;
                 if (userInfo) {
                     $rootScope.authToken = userInfo.accessToken;
                     $rootScope.loggedInUser = userInfo.email;
@@ -19,7 +19,7 @@ angular.module('rootApp').factory('authInterceptor', function ($rootScope, $q, $
                     $rootScope.timePreference = userInfo.timePreference;
                     $rootScope.switchState = userInfo.emailNotificationState;
                     $rootScope.timeZone = userInfo.timeZone;
-					$rootScope.viewType = userInfo.viewType;
+                    $rootScope.viewType = userInfo.viewType;
                 }
             }
             return config;

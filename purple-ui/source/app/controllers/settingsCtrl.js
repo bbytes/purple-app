@@ -1,7 +1,7 @@
 /*
  * User setting controller
  */
-angular.module('rootApp').controller('settingsCtrl', function ($scope, $rootScope, $sessionStorage, settingsService, appNotifyService, cfpLoadingBar) {
+angular.module('rootApp').controller('settingsCtrl', function ($scope, $rootScope, $localStorage, settingsService, appNotifyService, cfpLoadingBar) {
 
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.navClass = 'nav-control';
@@ -52,9 +52,9 @@ angular.module('rootApp').controller('settingsCtrl', function ($scope, $rootScop
                 $rootScope.switchState = response.data.emailNotificationState;
                 $rootScope.timeZone = response.data.timeZone;
 
-                $sessionStorage.userInfo.timePreference = $rootScope.timePreference;
-                $sessionStorage.userInfo.emailNotificationState = $rootScope.switchState;
-                $sessionStorage.userInfo.timeZone = $rootScope.timeZone;
+                $localStorage.userInfo.timePreference = $rootScope.timePreference;
+                $localStorage.userInfo.emailNotificationState = $rootScope.switchState;
+                $localStorage.userInfo.timeZone = $rootScope.timeZone;
                 appNotifyService.success('Preference has been successfully updated.');
             }
 
@@ -115,7 +115,7 @@ angular.module('rootApp').controller('settingsCtrl', function ($scope, $rootScop
                 $rootScope.userName = response.data.userName;
                 $rootScope.userRole = response.data.userRole.id;
 
-                $sessionStorage.userInfo.name = $rootScope.userName;
+                $localStorage.userInfo.name = $rootScope.userName;
                 appNotifyService.success('Profile has been successfully updated.');
             }
 

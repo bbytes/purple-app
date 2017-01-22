@@ -1,7 +1,7 @@
 /*
  * Dashboard controller
  */
-angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, $sessionStorage, userService, projectService, appNotifyService, $window, $location, statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
+angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, $localStorage, userService, projectService, appNotifyService, $window, $location, statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
     $scope.commentDesc = '';
     $scope.isActive = function (route) {
         return route === $location.path();
@@ -355,7 +355,7 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
                 if (response.success) {
                     $rootScope.viewType = response.data.viewType;
 
-                    $sessionStorage.userInfo.viewType = $rootScope.viewType;
+                    $localStorage.userInfo.viewType = $rootScope.viewType;
                 }
             });
         }

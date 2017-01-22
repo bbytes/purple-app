@@ -1,7 +1,7 @@
 /*
  *  Update Status Controller
  */
-angular.module('rootApp').controller('updateSettingCtrl', function ($rootScope, $state, $q, $http, $window, $sessionStorage, appNotifyService) {
+angular.module('rootApp').controller('updateSettingCtrl', function ($rootScope, $state, $q, $http, $window, $localStorage, appNotifyService) {
 
     $window.sessionStorage.token = $state.params.token;
 
@@ -33,7 +33,7 @@ angular.module('rootApp').controller('updateSettingCtrl', function ($rootScope, 
             emailNotificationState: $rootScope.switchState
         };
 
-        $sessionStorage.userInfo = userInfo;
+        $localStorage.userInfo = userInfo;
         $state.go("settings");
         deferred.resolve(response);
     }).error(function (response) {
