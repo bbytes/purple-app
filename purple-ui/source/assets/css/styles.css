@@ -8,6 +8,14 @@ body, html{
     overflow:visible ;
     background:initial ;
     position:static;
+	white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+    white-space: -webkit-pre-wrap; /*Chrome & Safari */ 
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    white-space: pre-wrap;       /* css-3 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    word-break: break-all;
+    white-space: normal;
 }
 
 
@@ -4804,4 +4812,15 @@ table.responsive-table th {
      background-color:transparent;
     filter: "alpha(opacity=40)";
     -ms-filter: "alpha(opacity=40)";
+}
+.leftColumn:hover .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+	background:#7c6991;
+}
+.mCSB_dragger{
+    position: absolute;
+    min-height: 30px;
+    height: 350px;
+    top: 0px;
+    display: block;
+    max-height: 559px;
 }
