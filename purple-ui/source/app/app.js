@@ -189,9 +189,6 @@ rootApp.config([
                 'footer@dashboard': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'dashboard'
             }
         }).state('metrics', {
             url: '/metrics',
@@ -210,9 +207,6 @@ rootApp.config([
                 'footer@metrics': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'metrics'
             }
         }).state('integration', {
             url: '/integration?app',
@@ -231,9 +225,6 @@ rootApp.config([
                 'footer@integration': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'integration'
             }
         }).state('status', {
             url: '/status',
@@ -254,9 +245,6 @@ rootApp.config([
                 'footer@status': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'My Status'
             }
         }).state('tasks', {
             url: '/tasks',
@@ -277,9 +265,6 @@ rootApp.config([
                 'footer@tasks': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'tasks'
             }
         }).state('projects', {
             url: '/projects',
@@ -298,9 +283,6 @@ rootApp.config([
                 'footer@projects': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'projects'
             }
         }).state('admin-settings', {
             url: '/admin-settings',
@@ -319,9 +301,6 @@ rootApp.config([
                 'footer@admin-settings': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'settings'
             }
         }).state('settings', {
             url: '/settings',
@@ -339,9 +318,6 @@ rootApp.config([
                 'footer@settings': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'user settings'
             }
         }).state('user-manager', {
             url: '/user-manager',
@@ -359,9 +335,6 @@ rootApp.config([
                 'footer@user-manager': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'User Manager'
             }
         }).state('billing', {
             url: '/billing?app',
@@ -380,9 +353,6 @@ rootApp.config([
                 'footer@billing': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'ADMIN'
             }
         }).state('access-denied', {
             url: '/accessDenied',
