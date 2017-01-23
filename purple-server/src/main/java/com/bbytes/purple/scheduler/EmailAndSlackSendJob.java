@@ -45,7 +45,7 @@ public class EmailAndSlackSendJob implements Runnable {
 		try {
 			// setting tenant for the current thread
 			TenancyContextHolder.setTenant(tenantId);
-			notificationService.sendSlackMessage(user, "Statusnap - Status update reminder",
+			notificationService.sendSlackMessage(user, "Statusnap - It's time to update your daily status ",
 					emailBody.get("activationLink").toString());
 			notificationService.sendTemplateEmail(emailList, subject, GlobalConstants.SCHEDULER_EMAIL_TEMPLATE,
 					emailBody);
