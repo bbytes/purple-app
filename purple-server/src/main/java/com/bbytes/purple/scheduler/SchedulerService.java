@@ -160,8 +160,8 @@ public class SchedulerService {
 	 * @throws ParseException
 	 */
 
-	/* Cron Runs every 30 minutes */
-	@Scheduled(cron = "0 0/30 * * * ?")
+	/* Cron Runs every 1 hour */
+	@Scheduled(cron = "0 0/60 * * * ?")
 	public void dailyEmailSchedule() throws PurpleException, ParseException {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
@@ -252,7 +252,7 @@ public class SchedulerService {
 
 							emailList.add(user.getEmail());
 							// this is to schedule task for particular time
-							taskScheduler.schedule(new EmailAndSlackSendJob(user, emailBody, emailList,
+							taskScheduler.schedule(new EmailAndSlackSendJob(orgId, user, emailBody, emailList,
 									notificationService, schedulerSubject), dateTime.toDate());
 
 						}
@@ -437,7 +437,8 @@ public class SchedulerService {
 	/* Cron Runs every day at 6 am */
 	// @Scheduled(cron = " 0 0 6 * * ?")
 	// @Scheduled(cron = "0 0/2 * * * ?")
-	@Scheduled(cron = "0 0/60 * * * ?") // every one hr
+	// @Scheduled(cron = "0 0/60 * * * ?") // every one hr
+	@Scheduled(cron = "0 0 0/6 * * ?") // every 4 hr
 	public void runJiraSync() {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
