@@ -160,8 +160,8 @@ public class SchedulerService {
 	 * @throws ParseException
 	 */
 
-	/* Cron Runs every 1 hour */
-	@Scheduled(cron = "0 0/60 * * * ?")
+	/* Cron Runs every 30 minutes */
+	@Scheduled(cron = "0 0/30 * * * ?")
 	public void dailyEmailSchedule() throws PurpleException, ParseException {
 
 		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
