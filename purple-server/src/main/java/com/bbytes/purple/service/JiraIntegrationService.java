@@ -82,6 +82,9 @@ public class JiraIntegrationService {
 	@Value("${email.invite.subject}")
 	private String inviteSubject;
 
+	@Value("${jira.issue.query.page.size}")
+	private String jiraIssueQueryPageSize;
+
 	@Autowired
 	private TaskListService taskListService;
 
@@ -319,6 +322,15 @@ public class JiraIntegrationService {
 		if (integration == null)
 			return projectNameToIssueList;
 
+		int pageSize = 1000;
+		if (jiraIssueQueryPageSize != null) {
+			try {
+				pageSize = Integer.parseInt(jiraIssueQueryPageSize);
+			} catch (Exception e) {
+				// ignore exception
+			}
+		}
+
 		final JiraRestClient restClient = getJiraRestClient(integration);
 
 		try {
@@ -329,7 +341,8 @@ public class JiraIntegrationService {
 				Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
 				for (BasicProject project : projects.claim()) {
 					Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
-					SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), 1000, 0, null).claim();
+
+					SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), pageSize, 0, null).claim();
 					for (Issue issue : issueResult.getIssues()) {
 						if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
 							continue;
