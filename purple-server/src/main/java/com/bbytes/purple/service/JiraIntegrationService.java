@@ -295,7 +295,6 @@ public class JiraIntegrationService {
 
 		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
 		for (String projectName : projectToIssueListMap.keySet()) {
-			System.out.println("---------------------" + projectName + "-------------------");
 			Project projectFromDb = projectService.findByProjectName(projectName);
 			if (projectFromDb != null) {
 				Map<String, List<Issue>> issueTypeToIssueList = projectToIssueListMap.get(projectName);

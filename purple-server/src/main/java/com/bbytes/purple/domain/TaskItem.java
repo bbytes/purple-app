@@ -46,10 +46,10 @@ public class TaskItem implements Comparable<TaskItem> {
 	private String desc;
 
 	@Field("estimated_hours")
-	private Double estimatedHours;
+	private double estimatedHours;
 
 	@Field("spent_hours")
-	private Double spendHours;
+	private double spendHours;
 
 	@Field("due_date")
 	private Date dueDate;
