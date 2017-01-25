@@ -277,7 +277,7 @@ public class UserController {
 		User updatedUser = userService.markForDeleteUser(userId, markdeleteState, days);
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(updatedUser);
 
-		logger.debug("User with email  '" + updatedUser.getEmail() + "' is set mark for delete successfully");
+		logger.debug("User with email  '" + updatedUser.getEmail() + "' is marked for delete");
 		userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO);
 
 		return userReponse;
