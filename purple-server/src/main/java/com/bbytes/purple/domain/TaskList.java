@@ -43,10 +43,10 @@ public class TaskList implements Comparable<TaskList> {
 	private String name;
 
 	@Field("estimated_hours")
-	private Double estimatedHours;
+	private double estimatedHours;
 
 	@Field("spent_hours")
-	private Double spendHours;
+	private double spendHours;
 
 	@Field("due_date")
 	private Date dueDate;
