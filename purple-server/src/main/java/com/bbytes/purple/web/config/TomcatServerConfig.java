@@ -33,6 +33,7 @@ public class TomcatServerConfig  {
 	    return tomcat;
 	  }
 	  
+	  // TODO: we will have to do this with ngnix
 	  private Connector createHttpConnector() {
 	    Connector connector =
 	      new Connector("org.apache.coyote.http11.Http11NioProtocol");
