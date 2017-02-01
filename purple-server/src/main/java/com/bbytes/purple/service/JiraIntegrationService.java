@@ -6,7 +6,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -101,9 +100,6 @@ public class JiraIntegrationService {
 	private PasswordHashService passwordHashService;
 
 	@Autowired
-	private NotificationService notificationService;
-
-	@Autowired
 	private TenantResolverService tenantResolverService;
 
 	@Autowired
@@ -137,7 +133,8 @@ public class JiraIntegrationService {
 	 * @throws PurpleIntegrationException
 	 * @throws PurpleException
 	 */
-	public void syncJiraProjects(final Integration integration, User loggedInUser) throws PurpleIntegrationException, PurpleException {
+	public void syncJiraProjects(final Integration integration, User loggedInUser)
+			throws PurpleIntegrationException, PurpleException {
 		List<Project> jiraProjects = getJiraProjects(integration);
 		List<String> jiraProjectList = new LinkedList<String>();
 		List<String> finalProjectListToBeSaved = new LinkedList<String>();
@@ -234,10 +231,12 @@ public class JiraIntegrationService {
 				// sync only when dirty means the user has updated the hrs from
 				// ui
 				// and it is marked as dirty to sync to jira
-				if (taskItem.getSpendHours() > 0 && taskItem.getDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
-					final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
-					final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey())
-							.path("worklog");
+				if (taskItem.getSpendHours() > 0 && taskItem.getDirty()
+						&& !TaskState.YET_TO_START.equals(taskItem.getState())) {
+					final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest")
+							.build();
+					final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue")
+							.path(taskItem.getJiraIssueKey()).path("worklog");
 
 					Issue issue = issueRestClient.getIssue(taskItem.getJiraIssueKey()).claim();
 
@@ -296,7 +295,8 @@ public class JiraIntegrationService {
 		if (integration == null)
 			return;
 
-		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
+		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(
+				integration);
 		for (String projectName : projectToIssueListMap.keySet()) {
 			Project projectFromDb = projectService.findByProjectName(projectName);
 			if (projectFromDb != null) {
@@ -342,7 +342,8 @@ public class JiraIntegrationService {
 				for (BasicProject project : projects.claim()) {
 					Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
 
-					SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), pageSize, 0, null).claim();
+					SearchResult issueResult = searchRestClient
+							.searchJql("project=" + project.getKey(), pageSize, 0, null).claim();
 					for (Issue issue : issueResult.getIssues()) {
 						if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
 							continue;
@@ -383,7 +384,8 @@ public class JiraIntegrationService {
 	 * @throws PurpleIntegrationException
 	 * @throws PurpleException
 	 */
-	public void syncProjectToJiraUser(Integration integration, User user) throws PurpleIntegrationException, PurpleException {
+	public void syncProjectToJiraUser(Integration integration, User user)
+			throws PurpleIntegrationException, PurpleException {
 		Map<String, List<User>> projectToUsersMap = getJiraProjectWithUserList(integration);
 		// iterating project to users map
 		for (Map.Entry<String, List<User>> entry : projectToUsersMap.entrySet()) {
@@ -414,22 +416,6 @@ public class JiraIntegrationService {
 							// added to project
 							projectFromDb.addUser(savedUser);
 							projectService.save(projectFromDb);
-
-							// since user is getting created, sending
-							// invitation
-							// email to activate account
-							final String xauthToken = tokenAuthenticationProvider.getAuthTokenForUser(savedUser.getEmail(), 720);
-							String postDate = dateFormat.format(new Date());
-							List<String> emailList = new ArrayList<String>();
-							emailList.add(savedUser.getEmail());
-
-							Map<String, Object> emailBody = new HashMap<>();
-							emailBody.put(GlobalConstants.USER_NAME, savedUser.getName());
-							emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
-							emailBody.put(GlobalConstants.PASSWORD, generatePassword);
-							emailBody.put(GlobalConstants.ACTIVATION_LINK, baseUrl + GlobalConstants.TOKEN_URL + xauthToken);
-
-							notificationService.sendTemplateEmail(emailList, inviteSubject, template, emailBody);
 						}
 					}
 
@@ -438,7 +424,8 @@ public class JiraIntegrationService {
 		}
 	}
 
-	private Map<String, List<User>> getJiraProjectWithUserList(Integration integration) throws PurpleIntegrationException {
+	private Map<String, List<User>> getJiraProjectWithUserList(Integration integration)
+			throws PurpleIntegrationException {
 		Map<String, List<User>> projectNameToUserList = new LinkedHashMap<String, List<User>>();
 
 		if (integration == null)
@@ -466,7 +453,8 @@ public class JiraIntegrationService {
 								// ignore : The user does not exist exception
 							}
 							if (jiraUser != null) {
-								User user = new User(jiraUser.getDisplayName(), jiraUser.getEmailAddress().toLowerCase());
+								User user = new User(jiraUser.getDisplayName(),
+										jiraUser.getEmailAddress().toLowerCase());
 								projectUserList.add(user);
 							}
 
@@ -507,7 +495,8 @@ public class JiraIntegrationService {
 
 			RestTemplate restTemplate = new RestTemplate();
 			HttpEntity<String> request = new HttpEntity<String>(headers);
-			ResponseEntity<Map> response = restTemplate.exchange(uriBuilder.build().toURL().toURI(), HttpMethod.GET, request, Map.class);
+			ResponseEntity<Map> response = restTemplate.exchange(uriBuilder.build().toURL().toURI(), HttpMethod.GET,
+					request, Map.class);
 			Map<String, Map<String, Object>> map = response.getBody();
 
 			if (map != null) {
@@ -518,7 +507,8 @@ public class JiraIntegrationService {
 					if (userList != null) {
 						for (Map<String, Object> userData : userMapList) {
 							if ("true".equals(userData.get("active").toString())) {
-								User user = new User(userData.get("displayName").toString(), userData.get("emailAddress").toString());
+								User user = new User(userData.get("displayName").toString(),
+										userData.get("emailAddress").toString());
 								userList.add(user);
 							}
 
