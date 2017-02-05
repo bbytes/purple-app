@@ -10,6 +10,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.social.bitbucket.api.BitBucket;
 import org.springframework.social.bitbucket.api.BitBucketChangeset;
 import org.springframework.social.bitbucket.api.BitBucketChangesets;
@@ -19,7 +20,7 @@ import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubCommit;
 import org.springframework.social.github.api.GitHubRepo;
 import org.springframework.social.slack.api.Slack;
-import org.springframework.social.slack.api.impl.model.SlackUser;
+import org.springframework.social.slack.api.impl.SlackTemplate;
 import org.springframework.stereotype.Service;
 
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
@@ -55,6 +56,9 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	@Autowired
 	protected TokenAuthenticationProvider tokenAuthenticationProvider;
+
+	@Value("${slack.api.token}")
+	private String slackApiToken;
 
 	@Autowired
 	public IntegrationService(IntegrationRepository integrationRepository) {
@@ -100,54 +104,56 @@ public class IntegrationService extends AbstractService<Integration, String> {
 		}
 		return integration;
 	}
-	
+
 	public boolean integrationExist(User user) {
 		boolean state = integrationRepository.findByUser(user) == null ? false : true;
 		return state;
 	}
-
-	public String getSlackUserName() {
-		Slack slack = getSlackApi();
-		if (slack == null)
-			return null;
-
-		SlackUser user = slack.userProfileOperations().getUserProfile();
-		if (user == null)
-			return null;
-
-		return user.getRealName();
-	}
-
-	// public Integration setSlackChannel(String slackChannelId) {
-	// Integration integration = getIntegrationForCurrentUser();
-	// integration.setSlackChannelId(slackChannelId);
-	// return save(integration);
-	// }
 
 	private Integration getIntegrationForCurrentUser() {
 		User loggedUser = userService.getLoggedInUser();
 		return integrationRepository.findByUser(loggedUser);
 	}
 
+	public String getSlackUserName() {
+		Integration integration = getIntegrationForCurrentUser();
+		if (integration == null)
+			return null;
+
+		String slackUserName = integration.getSlackUsername();
+		return slackUserName;
+	}
+
+	public void clearSlackUserName() {
+		Integration integration = getIntegrationForCurrentUser();
+		if (integration != null) {
+			integration.setSlackUsername(null);
+			integrationRepository.save(integration);
+		}
+	}
+
 	public void postURLToSlack(String linkText, String url) {
 		Slack slack = getSlackApi();
 		String textToBePosted = linkText + "<" + url + ">";
-		sendSlackMessage(textToBePosted, slack);
+		sendSlackMessage(textToBePosted, getSlackUserName(), slack);
 	}
 
 	public void postMessageToSlack(String message) {
 		Slack slack = getSlackApi();
-		sendSlackMessage(message, slack);
+		sendSlackMessage(message, getSlackUserName(), slack);
 	}
 
 	public void postMessageToSlack(User user, String message) {
 		Slack slack = getSlackApi(user);
-		sendSlackMessage(message, slack);
+		sendSlackMessage(message, getSlackUserName(), slack);
 	}
 
-	private void sendSlackMessage(String message, Slack slack) {
+	private void sendSlackMessage(String message, String slackUsername, Slack slack) {
 		if (slack != null) {
 			String userName = "@" + slack.userProfileOperations().getUserProfile().getName();
+			if (slackUsername != null && !slackUsername.trim().isEmpty())
+				userName = slackUsername;
+
 			slack.chatOperations().postMessage(message, userName, "Statusnap");
 		}
 	}
@@ -198,6 +204,11 @@ public class IntegrationService extends AbstractService<Integration, String> {
 	}
 
 	private Slack getSlackApi(User user) {
+		if (slackApiToken != null && !slackApiToken.trim().isEmpty()) {
+			Slack slack = new SlackTemplate(slackApiToken);
+			return slack;
+		}
+
 		if (user == null)
 			return null;
 		// SocialConnectionRepository socialConnectionRepository =

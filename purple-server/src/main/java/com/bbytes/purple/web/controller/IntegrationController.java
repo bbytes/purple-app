@@ -1,7 +1,6 @@
 package com.bbytes.purple.web.controller;
 
 import java.nio.charset.Charset;
-import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.domain.Integration;
-import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.rest.dto.models.IntegrationRequestDTO;
@@ -231,6 +229,7 @@ public class IntegrationController {
 	@RequestMapping(value = "/api/v1/integration/slack", method = RequestMethod.DELETE)
 	public RestResponse deleteSlackIntegration() throws PurpleException {
 		integrationService.deleteSlackConnection();
+		integrationService.clearSlackUserName();
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Slack connection deleted successfully");
 		return response;
 	}
