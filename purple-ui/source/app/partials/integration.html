@@ -5,9 +5,9 @@
         <ul class="nav nav-tabs tabs-left side-tab">
             <li ng-class="{ active: isActive('/integration?app=jira') }" ng-click="activeTab('jira')"><a href=""  data-toggle="tab"><img src="../../assets/img/jira-icon.png" /> JIRA</a></li>
             <li ng-class="{ active: isActive('/integration?app=slack') }" ng-click="activeTab('slack')"><a href="" data-toggle="tab"><img src="../../assets/img/slack-icon.png" /> SLACK</a></li>
-<!--            <li ng-class="{ active: isActive('/integration?app=hipchat') }" ng-click="activeTab('hipchat')"><a href="" data-toggle="tab"><img src="../../assets/img/hipchat-icon.png" /> HIPCHAT</a></li>
-            <li ng-class="{ active: isActive('/integration?app=github') }" ng-click="activeTab('github')"><a href="" data-toggle="tab"><img src="../../assets/img/github-icon.png" /> GITHUB</a></li>
-            <li ng-class="{ active: isActive('/integration?app=bit-bucket') }" ng-click="activeTab('bit-bucket')"><a href="" data-toggle="tab"><img src="../../assets/img/bitbucket-icon.png" /> BIT BUCKET</a></li>-->
+            <!--            <li ng-class="{ active: isActive('/integration?app=hipchat') }" ng-click="activeTab('hipchat')"><a href="" data-toggle="tab"><img src="../../assets/img/hipchat-icon.png" /> HIPCHAT</a></li>
+                        <li ng-class="{ active: isActive('/integration?app=github') }" ng-click="activeTab('github')"><a href="" data-toggle="tab"><img src="../../assets/img/github-icon.png" /> GITHUB</a></li>
+                        <li ng-class="{ active: isActive('/integration?app=bit-bucket') }" ng-click="activeTab('bit-bucket')"><a href="" data-toggle="tab"><img src="../../assets/img/bitbucket-icon.png" /> BIT BUCKET</a></li>-->
         </ul>
     </div>
 
@@ -24,9 +24,9 @@
                             <li ng-show="isConnected"><span style="color:green"> <!--<img src="assets/img/connect.png" style="width:18px;"> --> Connected </span></li>
                             <li>&nbsp;</li>
                             <li>&nbsp;</li>
-                            <li><a href="" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected" tooltips tooltip-template="Connect" tooltip-side="top"><img src="assets/img/disconnect.gif" style="width:18px;"> </a></li>
+                            <li><a href="" data-toggle="collapse" data-target="#intergration-form" ng-hide="isConnected" class="btn btn-default" tooltips tooltip-template="Connect" tooltip-side="top">Connect</a></li>
 
-                            <li><a href="" ng-click="disconnectJIRAConnection()" ng-show="isConnected" tooltips tooltip-template="Disconnect" tooltip-side="top"><img src="assets/img/connect.gif" style="width:18px;"> </a></li>
+                            <li><a href="" ng-click="disconnectJIRAConnection()" ng-show="isConnected" class="btn btn-default" tooltips tooltip-template="Disconnect" tooltip-side="top">Disconnect </a></li>
                         </ul>                       
 
                     </div>
@@ -39,7 +39,7 @@
                         <button class="btn btn-default status-submit after" ng-click="syncJiraProject()" ng-show="isConnected"><i class="fa fa-refresh" aria-hidden="true" ></i> Sync Project</button>
 
                         <button class="btn btn-default status-submit after" ng-click="syncJiraProjectAndUser()" ng-show="isConnected"><i class="fa fa-link" aria-hidden="true"></i> Link Users & Projects</button>
-                        
+
                         <button class="btn btn-default status-submit after" ng-click="syncJiraTasksAndIssues()" ng-show="isConnected"><i class="fa fa-link" aria-hidden="true"></i> Link Tasks & Issues to Projects</button>
                     </div>
 
@@ -88,12 +88,32 @@
                             <li ng-show="isSlackConnect"><span style="color:green"> <!--<img src="assets/img/connect.png" style="width:18px;"> --> Connected </span></li>
                             <li>&nbsp;</li>
                             <li>&nbsp;</li>
-                            <li><form action="{{slackUrl}}" method="post" ng-hide="isSlackConnect">
+                            <li ng-hide="isEnterPriseMode"><form action="{{slackUrl}}" method="post" ng-hide="isSlackConnect">
                                     <input type="hidden" name="scope" value="users.profile:read,users:read,channels:read,channels:write,im:read,im:write,chat:write:user,chat:write:bot" />
-                                    <button href="" tooltips tooltip-template="Connect" tooltip-side="top"><img src="assets/img/disconnect.gif" style="width:18px;"> </button>
+                                    <button href="" class="btn btn-default" tooltips tooltip-template="Connect" tooltip-side="top">Connect</button>
                                 </form></li>
-                            <li><a href="" ng-click="disconnectSlackConnection()" ng-show="isSlackConnect" tooltips tooltip-template="Disconnect" tooltip-side="top"><img src="assets/img/connect.gif" style="width:18px;"> </a></li>
-                        </ul>                       
+                            <li ng-show="isEnterPriseMode"><a href="" class="btn btn-default" data-toggle="collapse" data-target="#slack-form" ng-hide="isSlackConnect" tooltips tooltip-template="Connect" tooltip-side="top">Connect </a></li>
+                            <li><a href="" ng-click="disconnectSlackConnection()" class="btn btn-default" ng-show="isSlackConnect" tooltips tooltip-template="Disconnect" tooltip-side="top">Disconnect</a></li>
+                        </ul>
+
+                        <form name="form" style="margin-top:0px;">
+                            <div class="col-md-6">
+                                <div id="slack-form" class="collapse">
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-left: -12px;">
+                                            <label style="font-size: 13px;">Please enter your slack username &nbsp;&nbsp; @</label> 
+
+                                        </div>
+                                        <div class="col-md-6" style="margin-left: -46px;" >
+                                            <input type="text" class="form-control" ng-model="slackUserName" ng-required="true" />
+                                        </div>
+                                        <br />
+                                        <input type="submit" value="Save" class="btn btn-default" ng-click="saveSlackConnection()" data-toggle="collapse" data-target="#slack-form">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
 
                     </div>
                 </div>
@@ -131,31 +151,31 @@
         </div>
     </div>
 
-<!--    <div class="{{activeTabClass}}" ng-show="mode === 'hipchat'">
-        <div class="intergration-wrapper">
-            <img src="../../assets/img/coming-soon.png" />
+    <!--    <div class="{{activeTabClass}}" ng-show="mode === 'hipchat'">
+            <div class="intergration-wrapper">
+                <img src="../../assets/img/coming-soon.png" />
+            </div>
         </div>
-    </div>
-
-
-    <div class="{{activeTabClass}}" ng-show="mode === 'github'">
-        <div class="intergration-wrapper">
-            <img src="../../assets/img/coming-soon.png" />
-            		below code commented because from angular side integration is pending 	 
-            <form action="/social/github" method="post">
-                                            <button type="submit">Connect to Github</button>
-                                    </form>
+    
+    
+        <div class="{{activeTabClass}}" ng-show="mode === 'github'">
+            <div class="intergration-wrapper">
+                <img src="../../assets/img/coming-soon.png" />
+                            below code commented because from angular side integration is pending 	 
+                <form action="/social/github" method="post">
+                                                <button type="submit">Connect to Github</button>
+                                        </form>
+            </div>
         </div>
-    </div>
-
-
-    <div class="{{activeTabClass}}" ng-show="mode === 'bit-bucket'">
-        <div class="intergration-wrapper">
-            <img src="../../assets/img/coming-soon.png" />
-                        <img src="../../assets/img/coming-soon.png" />
-            <form action="/social/bitbucket" method="post">
-                            <button type="submit">Connect to Bitbucket</button>
-                        </form>
-        </div>
-    </div>-->
+    
+    
+        <div class="{{activeTabClass}}" ng-show="mode === 'bit-bucket'">
+            <div class="intergration-wrapper">
+                <img src="../../assets/img/coming-soon.png" />
+                            <img src="../../assets/img/coming-soon.png" />
+                <form action="/social/bitbucket" method="post">
+                                <button type="submit">Connect to Bitbucket</button>
+                            </form>
+            </div>
+        </div>-->
 </div>

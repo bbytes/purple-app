@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbytes.purple.domain.Integration;
@@ -85,7 +86,8 @@ public class IntegrationController {
 		}
 
 		logger.debug("User with email  '" + jiraUsername + "' is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
+				SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return response;
 	}
@@ -127,18 +129,21 @@ public class IntegrationController {
 
 		if (statusCode != 200) {
 			if (statusCode == 502) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.BAD_GATEWAY);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.BAD_GATEWAY);
 
 				return jiraRestResponse;
 			} else if (statusCode == 401) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.AUTH_FAILURE);
 
 				return jiraRestResponse;
 			}
 		}
 
 		logger.debug("User is connected to JIRA successfully");
-		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
+				SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return jiraRestResponse;
 	}
@@ -156,7 +161,8 @@ public class IntegrationController {
 		}
 
 		logger.debug("Jira Projects are sync successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG, SuccessHandler.JIRA_SYNC_PROJECTS_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
+				SuccessHandler.JIRA_SYNC_PROJECTS_SUCCESS);
 
 		return response;
 	}
@@ -191,7 +197,7 @@ public class IntegrationController {
 			// checking jira is connected or not
 			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
 
-			jiraIntegrationService.syncProjectToJiraUser(integration,loggedInUser);
+			jiraIntegrationService.syncProjectToJiraUser(integration, loggedInUser);
 
 		} catch (Throwable e) {
 			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_USER_SYNC_FAILED);
@@ -212,6 +218,21 @@ public class IntegrationController {
 			response = new RestResponse(RestResponse.FAILED, "Slack not connected", ErrorHandler.NOT_CONNECTED);
 			return response;
 		}
+		response = new RestResponse(RestResponse.SUCCESS, slackUserName);
+		return response;
+	}
+
+	@RequestMapping(value = "/api/v1/integration/slack/name", method = RequestMethod.PUT)
+	public RestResponse saveSlackConnection(@RequestParam("slackUserName") String slackUserName)
+			throws PurpleException {
+
+		RestResponse response;
+		if (slackUserName == null || slackUserName.isEmpty()) {
+			response = new RestResponse(RestResponse.FAILED, "Slack not connected", ErrorHandler.NOT_CONNECTED);
+			return response;
+		}
+		integrationService.saveSlackUserName(slackUserName);
+
 		response = new RestResponse(RestResponse.SUCCESS, slackUserName);
 		return response;
 	}

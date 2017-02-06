@@ -164,4 +164,26 @@ angular.module('rootApp').service('integrationService', function ($rootScope, $h
         return deferred.promise;
     };
 
+    // method is used to set the slack connection
+    this.setSlackConnection = function (slackUserName) {
+
+        var deferred = $q.defer();
+
+        $http({
+            method: 'PUT',
+            url: $rootScope.baseUrl + 'api/v1/integration/slack/name',
+            params: {"slackUserName": slackUserName},
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        }).success(function (response, status, headers, config) {
+            deferred.resolve(response);
+        }).error(function (response) {
+            deferred.reject(response);
+        });
+
+        return deferred.promise;
+    };
+
 });
