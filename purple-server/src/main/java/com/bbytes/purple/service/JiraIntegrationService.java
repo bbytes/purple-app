@@ -14,6 +14,9 @@ import java.util.Map;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +120,7 @@ public class JiraIntegrationService {
 
 			final URI jiraServerUri = new URI(integration.getJiraBaseURL());
 			final JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
+			HttpClient client = HttpClients.custom().setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build();
 			final JiraRestClient restClient = factory.create(jiraServerUri, new AuthenticationHandler() {
 
 				@Override

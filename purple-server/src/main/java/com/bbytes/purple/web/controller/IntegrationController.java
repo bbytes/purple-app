@@ -7,10 +7,13 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,6 +53,9 @@ public class IntegrationController {
 	@Autowired
 	private JiraIntegrationService jiraIntegrationService;
 
+	@Value("${ssl.cert.validation.disable}")
+	private String disableCertificateValidation;
+
 	@RequestMapping(value = "/api/v1/integration/jira/addAuthentication", method = RequestMethod.POST)
 	public RestResponse connectToJIRA(@RequestBody IntegrationRequestDTO integrationRequestDTO) throws PurpleException {
 
@@ -68,9 +74,15 @@ public class IntegrationController {
 			authHeader = BASIC + new String(encodedAuth);
 			request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
 
-			HttpClient client = HttpClientBuilder.create().build();
-			HttpResponse response = client.execute(request);
+			HttpClient client = null;
+			
+			if (disableCertificateValidation != null && Boolean.valueOf(disableCertificateValidation)) {
+				client = HttpClients.custom().setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build();
+			} else {
+				client = HttpClientBuilder.create().build();
+			}
 
+			HttpResponse response = client.execute(request);
 			statusCode = response.getStatusLine().getStatusCode();
 
 		} catch (Throwable e) {
@@ -86,8 +98,7 @@ public class IntegrationController {
 		}
 
 		logger.debug("User with email  '" + jiraUsername + "' is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
-				SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return response;
 	}
@@ -111,6 +122,7 @@ public class IntegrationController {
 
 			String basicAuthHeader = integration.getJiraBasicAuthHeader();
 			if (basicAuthHeader.isEmpty()) {
+				logger.debug("Jira basic auth exception ");
 				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
 						ErrorHandler.JIRA_CONNECTION_FAILED);
 				return jiraRestResponse;
@@ -119,31 +131,35 @@ public class IntegrationController {
 			HttpGet request = new HttpGet(integration.getJiraBaseURL());
 			request.setHeader(HttpHeaders.AUTHORIZATION, basicAuthHeader);
 
-			HttpClient client = HttpClientBuilder.create().build();
+			HttpClient client = null;
+			
+			if (disableCertificateValidation != null && Boolean.valueOf(disableCertificateValidation)) {
+				client = HttpClients.custom().setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build();
+			} else {
+				client = HttpClientBuilder.create().build();
+			}
+			
 			HttpResponse response = client.execute(request);
-
 			statusCode = response.getStatusLine().getStatusCode();
 		} catch (Throwable e) {
+			logger.debug(e.getMessage(), e);
 			throw new PurpleException("Failed : HTTP Connection ", ErrorHandler.JIRA_CONNECTION_FAILED);
 		}
 
 		if (statusCode != 200) {
 			if (statusCode == 502) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
-						ErrorHandler.BAD_GATEWAY);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.BAD_GATEWAY);
 
 				return jiraRestResponse;
 			} else if (statusCode == 401) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
-						ErrorHandler.AUTH_FAILURE);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
 
 				return jiraRestResponse;
 			}
 		}
 
 		logger.debug("User is connected to JIRA successfully");
-		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
-				SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return jiraRestResponse;
 	}
@@ -161,8 +177,7 @@ public class IntegrationController {
 		}
 
 		logger.debug("Jira Projects are sync successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
-				SuccessHandler.JIRA_SYNC_PROJECTS_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG, SuccessHandler.JIRA_SYNC_PROJECTS_SUCCESS);
 
 		return response;
 	}
@@ -223,8 +238,7 @@ public class IntegrationController {
 	}
 
 	@RequestMapping(value = "/api/v1/integration/slack/name", method = RequestMethod.PUT)
-	public RestResponse saveSlackConnection(@RequestParam("slackUserName") String slackUserName)
-			throws PurpleException {
+	public RestResponse saveSlackConnection(@RequestParam("slackUserName") String slackUserName) throws PurpleException {
 
 		RestResponse response;
 		if (slackUserName == null || slackUserName.isEmpty()) {
