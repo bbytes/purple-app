@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -24,6 +26,7 @@ import lombok.ToString;
  */
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(exclude = { "taskList", "owner", "users", "project" })
 @ToString(exclude = { "taskList", "owner", "users", "project" })
 @Document
@@ -33,6 +36,7 @@ public class TaskItem implements Comparable<TaskItem> {
 	private String taskItemId;
 
 	@Field("state")
+	@Indexed
 	private TaskState state = TaskState.YET_TO_START;
 
 	@Field("name")
@@ -49,22 +53,30 @@ public class TaskItem implements Comparable<TaskItem> {
 
 	@Field("due_date")
 	private Date dueDate;
-	
+
 	@Field("jira_issue_key")
+	@Indexed
 	private String jiraIssueKey;
 
 	@DBRef
+	@Indexed
 	private Project project;
 
 	@JsonBackReference
 	@DBRef
+	@Indexed
 	private TaskList taskList;
 
 	@DBRef
+	@Indexed
 	private User owner;
 
 	@DBRef
+	@Indexed
 	private Set<User> users;
+	
+	@Field("dirty")
+	private Boolean dirty = true;
 
 	@CreatedDate
 	private Date creationDate;
@@ -72,12 +84,17 @@ public class TaskItem implements Comparable<TaskItem> {
 	@LastModifiedDate
 	private Date lastModified;
 
-	public TaskItem(String name, String desc, double estimatedHours, Date dueDate) {
+	public TaskItem(String name, String desc) {
 		this.name = name;
 		this.desc = desc;
-		this.estimatedHours = estimatedHours;
-		this.dueDate = dueDate;
 	}
+	
+	public TaskItem(String name, String desc, double estimatedHours, Date dueDate) {
+		this(name, desc);
+		this.dueDate = dueDate;
+		this.estimatedHours = estimatedHours;
+	}
+	
 
 	public void addUsers(User user) {
 		if (users == null) {
@@ -94,7 +111,6 @@ public class TaskItem implements Comparable<TaskItem> {
 
 	public void setOwner(User owner) {
 		this.owner = owner;
-		addUsers(owner);
 	}
 
 	@Override
@@ -111,16 +127,26 @@ public class TaskItem implements Comparable<TaskItem> {
 
 	}
 
-	public void addSpendHours(double spendHours) {
-		this.spendHours = this.spendHours + spendHours;
+	public void setState(TaskState state){
+		this.state = state;
+		this.dirty = true;
+	}
+	public void setSpendHours(double spendHours){
+		this.spendHours =spendHours;
+		this.dirty = true;
 	}
 	
-	public void removeSpendHours(double spendHours) {
-
-		this.spendHours = this.spendHours - spendHours;
+	public void addSpendHours(double spendHours) {
+		this.spendHours = this.spendHours + spendHours;
+		this.dirty = true;
 	}
 
-		public boolean isJiraIssueTaskItem() {
+	public void removeSpendHours(double spendHours) {
+		this.spendHours = (this.spendHours - spendHours) <= 0 ? 0 : (this.spendHours - spendHours);
+		this.dirty = true;
+	}
+
+	public boolean isJiraIssueTaskItem() {
 		return jiraIssueKey == null ? false : true;
 	}
 

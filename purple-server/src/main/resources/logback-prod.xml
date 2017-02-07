@@ -31,15 +31,21 @@
 		</rollingPolicy>
 	</appender>
 
-	<appender name="ROLLBAR" class="com.tapstream.rollbar.RollbarAppender">
-		<apiKey>f8e91655105e4b5d9aa11420bc50caa2</apiKey>
-		<environment>prod</environment>
+
+	<appender name="SENTRY" class="com.getsentry.raven.logback.SentryAppender">
+		<dsn>https://292f8ab3eca24251bc9a7b510b6c6f42:15beebfb4c7a4e61a0f4b8c50a46b93e@sentry.io/132749?options
+		</dsn>
+		<tags>tag1:statusnap-prod,tag2:cloud</tags>
+		<!-- Optional, allows to select the ravenFactory -->
+		<!--<ravenFactory>com.getsentry.raven.DefaultRavenFactory</ravenFactory> -->
 	</appender>
 
 
+	<logger name="com.bbytes" level="INFO" />
+
 	<root level="ERROR">
 		<appender-ref ref="FILE" />
-		<appender-ref ref="ROLLBAR" />
+		<appender-ref ref="SENTRY" />
 		<!-- <appender-ref ref="STDOUT" /> -->
 	</root>
 

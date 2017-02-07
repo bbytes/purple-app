@@ -1,7 +1,7 @@
 /*
  * Sign Up Controller
  */
-angular.module('rootApp').controller('signupCtrl', function ($scope, $rootScope, $state, signupService, appNotifyService, $sessionStorage) {
+angular.module('rootApp').controller('signupCtrl', function ($scope, $rootScope, $state, signupService, appNotifyService, $localStorage) {
 
     $rootScope.bodyClass = 'body-standalone';
     $rootScope.feedbackClass = 'feedback-log';

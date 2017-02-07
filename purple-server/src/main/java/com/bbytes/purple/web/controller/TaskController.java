@@ -3,7 +3,6 @@ package com.bbytes.purple.web.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,8 +72,7 @@ public class TaskController {
 		List<BaseDTO> taskStates = dataModelToDTOConversionService.convertRolesToEntityDTOList(taskStateMap);
 
 		logger.debug("Getting taskStates successfully");
-		RestResponse taskStatesResponse = new RestResponse(RestResponse.SUCCESS, taskStates,
-				SuccessHandler.TASK_STATE_SUCCESS);
+		RestResponse taskStatesResponse = new RestResponse(RestResponse.SUCCESS, taskStates, SuccessHandler.TASK_STATE_SUCCESS);
 
 		return taskStatesResponse;
 	}
@@ -93,35 +91,50 @@ public class TaskController {
 	public RestResponse getTaskListForState(@PathVariable String state) throws PurpleException {
 		TaskState taskState = TaskState.valueOf(state);
 		User user = userService.getLoggedInUser();
-		List<TaskItem> taskItemList = taskItemService.findByStateAndUsers(taskState, user);
+		List<TaskItem> taskItemList = taskItemService.findByStateAndUsersOrOnwer(taskState, user, user);
+
 		Set<TaskList> result = new HashSet<>();
 		for (TaskItem taskItem : taskItemList) {
-			result.add(taskItem.getTaskList());
+			if (state.equals("All") || taskItem.getState().toString().equals(state))
+				result.add(taskItem.getTaskList());
 		}
-		if (taskState.equals(TaskState.YET_TO_START)) {
-			List<TaskList> taskLists = taskListService.findByStateAndUsers(taskState, user);
-			for (TaskList taskList : taskLists) {
-				if (taskList.getTaskItems() == null || taskList.getTaskItems().size() == 0)
-					result.add(taskList);
-			}
-		}
-		result.remove(null);
+
+		// if (taskState.equals(TaskState.YET_TO_START)) {
+		// List<TaskList> taskLists =
+		// taskListService.findByStateAndUsers(taskState, user);
+		// List<TaskList> taskListsOwner =
+		// taskListService.findByStateAndOwner(taskState, user);
+		// for (TaskList taskList : taskLists) {
+		// if (taskList.getTaskItems() == null || taskList.getTaskItems().size()
+		// == 0)
+		// result.add(taskList);
+		// }
+		// for (TaskList taskList : taskListsOwner) {
+		// if (taskList.getTaskItems() == null || taskList.getTaskItems().size()
+		// == 0)
+		// result.add(taskList);
+		// }
+		// }
+
+		result.removeAll(Collections.singleton(null));
 		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(new ArrayList<>(result));
-		filterItemsForGivenState(taskListDtos, taskState);
+		// filterItemsForGivenState(taskListDtos, taskState);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDtos);
 		return response;
 	}
 
-	private void filterItemsForGivenState(List<TaskListDTO> taskListDtos, TaskState taskState) {
-		for (TaskListDTO tList : taskListDtos) {
-			for (Iterator<TaskItemDTO> taskItemItr = tList.getTaskItems().iterator(); taskItemItr.hasNext();) {
-				TaskItemDTO tItem = taskItemItr.next();
-				if (tItem != null && tItem.getState() != taskState.getDisplayName()) {
-					taskItemItr.remove();
-				}
-			}
-		}
-	}
+	// private void filterItemsForGivenState(List<TaskListDTO> taskListDtos,
+	// TaskState taskState) {
+	// for (TaskListDTO tList : taskListDtos) {
+	// for (Iterator<TaskItemDTO> taskItemItr = tList.getTaskItems().iterator();
+	// taskItemItr.hasNext();) {
+	// TaskItemDTO tItem = taskItemItr.next();
+	// if (tItem != null && tItem.getState() != taskState.getDisplayName()) {
+	// taskItemItr.remove();
+	// }
+	// }
+	// }
+	// }
 
 	@RequestMapping(value = "/api/v1/task/taskList/project/{projectId}", method = RequestMethod.GET)
 	public RestResponse getTaskListForProject(@PathVariable String projectId) throws PurpleException {
@@ -131,52 +144,65 @@ public class TaskController {
 		states.add(TaskState.IN_PROGRESS);
 		states.add(TaskState.YET_TO_START);
 		List<TaskItem> taskItemList = taskItemService.findByProjectAndUsersAndStateIn(project, user, states);
-		List<TaskListResponseDTO> taskListResponseDTO = dataModelToDTOConversionService
-				.convertTaskListItem(taskItemList);
+
+		List<TaskListResponseDTO> taskListResponseDTO = dataModelToDTOConversionService.convertTaskListItem(taskItemList);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListResponseDTO);
 		return response;
 	}
 
 	@RequestMapping(value = "/api/v1/task/taskList/{projectId}/{state}", method = RequestMethod.GET)
-	public RestResponse getTaskListForProjectAndState(@PathVariable String projectId, @PathVariable String state)
-			throws PurpleException {
+	public RestResponse getTaskListForProjectAndState(@PathVariable String projectId, @PathVariable String state) throws PurpleException {
 
-		User user = userService.getLoggedInUser();
+		User loggedInUser = userService.getLoggedInUser();
 		List<TaskList> taskLists = null;
 		TaskState taskState = null;
 		Project project = null;
 		List<TaskItem> taskItemList = null;
-		if (projectId.equals("All") && state.equals("All"))
-			taskLists = taskListService.findByUsers(user);
-		else if (projectId.equals("All") && !state.equals("All")) {
+		// List<TaskItem> taskItemListOwner = null;
+		if (projectId.equals("All") && state.equals("All")) {
+			taskLists = taskListService.findByOwnerOrUsers(loggedInUser, loggedInUser);
+		} else if (projectId.equals("All") && !state.equals("All")) {
 			taskState = TaskState.valueOf(state);
-			taskItemList = taskItemService.findByStateAndUsers(taskState, user);
+			taskItemList = taskItemService.findByStateAndUsersOrOnwer(taskState, loggedInUser, loggedInUser);
 		} else if (state.equals("All") && !projectId.equals("All")) {
 			project = projectService.findByProjectId(projectId);
-			taskLists = taskListService.findByProjectAndUsers(project, user);
+			taskItemList = taskItemService.findByProjectAndUsersOrOwner(project, loggedInUser, loggedInUser);
 		} else if (!projectId.equals("All") && !state.equals("All")) {
 			taskState = TaskState.valueOf(state);
 			project = projectService.findByProjectId(projectId);
-			taskItemList = taskItemService.findByProjectAndStateAndUsers(project, taskState, user);
+			taskItemList = taskItemService.findByProjectAndStateAndUsersOrOwner(project, taskState, loggedInUser, loggedInUser);
 		}
 		if (taskLists == null && taskItemList != null) {
 			Set<TaskList> result = new HashSet<>();
 			for (TaskItem taskItem : taskItemList) {
-				result.add(taskItem.getTaskList());
+				if (state.equals("All") || taskItem.getState().toString().equals(state))
+					result.add(taskItem.getTaskList());
 			}
-			if (taskState.equals(TaskState.YET_TO_START)) {
-				List<TaskList> ytsTaskLists = taskListService.findByProjectAndStateAndUsers(project, taskState, user);
-				for (TaskList taskList : ytsTaskLists) {
-					if (taskList.getTaskItems() == null || taskList.getTaskItems().size() == 0)
-						result.add(taskList);
-				}
-			}
+
+			// if (TaskState.YET_TO_START.equals(taskState)) {
+			// List<TaskList> ytsTaskLists =
+			// taskListService.findByProjectAndStateAndUsers(project, taskState,
+			// loggedInUser);
+			// List<TaskList> ytsTaskListsOwner =
+			// taskListService.findByProjectAndStateAndOwner(project, taskState,
+			// loggedInUser);
+			// for (TaskList taskList : ytsTaskLists) {
+			// if (taskList.getTaskItems() == null ||
+			// taskList.getTaskItems().size() == 0)
+			// result.add(taskList);
+			// }
+			// for (TaskList taskList : ytsTaskListsOwner) {
+			// if (taskList.getTaskItems() == null ||
+			// taskList.getTaskItems().size() == 0)
+			// result.add(taskList);
+			// }
+			// }
 			taskLists = new ArrayList<>(result);
 		}
 		taskLists.removeAll(Collections.singleton(null));
 		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(taskLists);
-		if (taskState != null)
-			filterItemsForGivenState(taskListDtos, taskState);
+//		if (taskState != null)
+//			filterItemsForGivenState(taskListDtos, taskState);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDtos);
 		return response;
 	}
@@ -200,16 +226,15 @@ public class TaskController {
 		Project project = projectService.findOne(taskListDTO.getProjectId());
 
 		if (project == null)
-			throw new PurpleException("Project with id " + taskListDTO.getProjectId() + " not found",
-					ErrorHandler.PROJECT_NOT_FOUND);
+			throw new PurpleException("Project with id " + taskListDTO.getProjectId() + " not found", ErrorHandler.PROJECT_NOT_FOUND);
 
 		taskList.setProject(project);
 		taskItemService.save(taskList.getTaskItems());
 		taskList = taskListService.save(taskList);
 
 		logger.debug("Task list with name '" + taskList.getName() + "' added successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				dataModelToDTOConversionService.convertTaskList(taskList), SuccessHandler.ADD_TASK_LIST_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, dataModelToDTOConversionService.convertTaskList(taskList),
+				SuccessHandler.ADD_TASK_LIST_SUCCESS);
 
 		return response;
 	}
@@ -222,13 +247,11 @@ public class TaskController {
 			taskItemService.delete(taskList.getTaskItems());
 			taskListService.delete(taskList);
 		} else {
-			throw new PurpleException("Task list with id '" + taskListId + "' not found",
-					ErrorHandler.TASK_LIST_NOT_FOUND);
+			throw new PurpleException("Task list with id '" + taskListId + "' not found", ErrorHandler.TASK_LIST_NOT_FOUND);
 		}
 
 		logger.debug("Task list with id '" + taskListId + "' deleted successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				"Task list with id '" + taskListId + "' deleted successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Task list with id '" + taskListId + "' deleted successfully");
 
 		return response;
 	}
@@ -243,26 +266,22 @@ public class TaskController {
 		taskListService.save(taskList);
 
 		logger.debug("Task Item with id '" + taskItemId + "' deleted successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS,
-				"Task Item with id '" + taskItemId + "' deleted successfully");
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, "Task Item with id '" + taskItemId + "' deleted successfully");
 
 		return response;
 	}
 
 	@RequestMapping(value = "/api/v1/task/taskItem/{taskListId}", method = RequestMethod.POST)
-	public RestResponse addOrEditTaskItem(@PathVariable String taskListId, @RequestBody TaskItemDTO taskItemDTO)
-			throws PurpleException {
+	public RestResponse addOrEditTaskItem(@PathVariable String taskListId, @RequestBody TaskItemDTO taskItemDTO) throws PurpleException {
 
 		TaskItem taskItem = saveTaskItem(taskListId, taskItemDTO);
 		taskItemDTO = dataModelToDTOConversionService.convertTaskItem(taskItem);
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDTO,
-				SuccessHandler.ADD_TASK_ITEM_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDTO, SuccessHandler.ADD_TASK_ITEM_SUCCESS);
 		return response;
 	}
 
 	@RequestMapping(value = "/api/v1/task/taskItems/{taskListId}", method = RequestMethod.POST)
-	public RestResponse addTaskItems(@PathVariable String taskListId, @RequestBody List<TaskItemDTO> taskListDTOs)
-			throws PurpleException {
+	public RestResponse addTaskItems(@PathVariable String taskListId, @RequestBody List<TaskItemDTO> taskListDTOs) throws PurpleException {
 
 		List<TaskItem> taskItems = new ArrayList<>();
 
@@ -278,8 +297,7 @@ public class TaskController {
 	private TaskItem saveTaskItem(String taskListId, TaskItemDTO taskItemDTO) throws PurpleException {
 		TaskList taskList = taskListService.findOne(taskListId);
 		if (taskList == null)
-			throw new PurpleException("Task List with id " + taskListId + " not found",
-					ErrorHandler.TASK_LIST_NOT_FOUND);
+			throw new PurpleException("Task List with id " + taskListId + " not found", ErrorHandler.TASK_LIST_NOT_FOUND);
 		TaskItem taskItem = null;
 		if (taskItemDTO.getTaskItemId() != null) {
 			taskItem = taskItemService.findOne(taskItemDTO.getTaskItemId());
@@ -316,19 +334,23 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "/api/v1/task/taskItems/{taskListId}/{state}", method = RequestMethod.GET)
-	public RestResponse getTaskItems(@PathVariable String taskListId, @PathVariable String state)
-			throws PurpleException {
+	public RestResponse getTaskItems(@PathVariable String taskListId, @PathVariable String state) throws PurpleException {
 		User user = userService.getLoggedInUser();
 
 		List<TaskItem> taskItems;
+
 		TaskList taskList = taskListService.findOne(taskListId);
-		if (state.equals("All"))
-			taskItems = taskItemService.findByTaskListAndUsers(taskList, user);
-		else {
+		if (state.equals("All")) {
+			taskItems = taskItemService.findByTaskListAndUsersOrOwner(taskList, user, user);
+		} else {
 			TaskState taskState = TaskState.valueOf(state);
-			taskItems = taskItemService.findByTaskListAndStateAndUsers(taskList, taskState, user);
+			taskItems = taskItemService.findByTaskListAndStateAndUsersOrOwner(taskList, taskState, user, user);
 		}
-		List<TaskItemDTO> taskItemDtos = dataModelToDTOConversionService.convertTaskItem(taskItems);
+
+		Set<TaskItem> result = new HashSet<>();
+		result.addAll(taskItems);
+
+		List<TaskItemDTO> taskItemDtos = dataModelToDTOConversionService.convertTaskItem(result);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskItemDtos);
 		return response;
 	}

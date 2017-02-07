@@ -277,7 +277,7 @@ public class UserController {
 		User updatedUser = userService.markForDeleteUser(userId, markdeleteState, days);
 		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(updatedUser);
 
-		logger.debug("User with email  '" + updatedUser.getEmail() + "' is set mark for delete successfully");
+		logger.debug("User with email  '" + updatedUser.getEmail() + "' is marked for delete");
 		userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO);
 
 		return userReponse;
@@ -426,6 +426,26 @@ public class UserController {
 				SuccessHandler.GET_USER_SUCCESS);
 
 		return currentUserReponse;
+	}
+
+	/**
+	 * Method is used to set the view type for timeline
+	 * 
+	 * @param viewType
+	 * @return
+	 * @throws PurpleException
+	 */
+	@RequestMapping(value = "/api/v1/user/viewtype", method = RequestMethod.PUT)
+	public RestResponse setViewType(@RequestParam(value = "viewType") String viewType) throws PurpleException {
+
+		User loggedInUser = userService.getLoggedInUser();
+		loggedInUser = userService.setViewType(viewType, loggedInUser);
+		UserDTO responseDTO = dataModelToDTOConversionService.convertUser(loggedInUser);
+		logger.debug("View Type is updated successfully");
+		RestResponse userReponse = new RestResponse(RestResponse.SUCCESS, responseDTO,
+				SuccessHandler.UPDATE_USER_SUCCESS);
+
+		return userReponse;
 	}
 
 	/**

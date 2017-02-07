@@ -49,7 +49,10 @@ public class StatusDBEventListner extends AbstractMongoEventListener<Status> {
 		for (StatusTaskEvent statusTaskEvent : statusTaskEventList) {
 			// removing spend hours from taskItem when status is getting delete
 			TaskItem taskItem = taskItemService.findOne(statusTaskEvent.getTaskItem().getTaskItemId());
-			taskItem.removeSpendHours(statusTaskEvent.getSpendHours());
+			
+			if (statusTaskEvent.getSpendHours() > 0)
+				taskItem.removeSpendHours(statusTaskEvent.getSpendHours());
+			
 			taskItemService.save(taskItem);
 
 			// removing spend hours from taskList when status is getting delete

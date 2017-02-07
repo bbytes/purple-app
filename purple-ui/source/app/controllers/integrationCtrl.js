@@ -2,11 +2,16 @@
  * Integration Controller
  * @author - Akshay
  */
-angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootScope, appNotifyService, $state, $location, integrationService) {
+angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootScope, appNotifyService, signupService, $state, $location, integrationService) {
 
-    $rootScope.navClass = 'nav navbar-nav';
-    $rootScope.navstatusClass = 'right-nav-ct';
     $rootScope.bodyClass = 'body-standalone1';
+    $rootScope.navClass = 'nav-control';
+    $rootScope.navstatusClass = 'nav navbar-nav';
+
+    $rootScope.statusClass = 'status-current';
+    $rootScope.dashboardClass = 'dashboard-nav';
+    $rootScope.settingClass = 'setting-nav';
+    $rootScope.feedbackClass = 'feedback-log feedback-show';
 
     // this variable is used for slack url
     $scope.slackUrl = $rootScope.baseUrl + 'social/slack?emailId=' + $rootScope.loggedInUser;
@@ -16,6 +21,13 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
     // used to initialise mode on page load
     $scope.initIntegration = function () {
         $scope.activeTab($scope.mode);
+        $scope.enterpriseModeCheck();
+    };
+
+    $scope.enterpriseModeCheck = function () {
+        signupService.enterpriseModeCheck().then(function (response) {
+            $scope.isEnterPriseMode = response.data;
+        });
     };
 
     // checking active tab for given route param mode
@@ -138,6 +150,29 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
         integrationService.getSlackConnection().then(function (response) {
             if (response.success) {
                 $scope.isSlackConnect = true;
+            } else {
+                $scope.isSlackConnect = false;
+            }
+        }, function (error) {
+            appNotifyService.error('Error while Connecting Slack');
+        });
+    };
+
+    /*
+     * Save Slack Object
+     * @author - Akshay
+     */
+    $scope.saveSlackConnection = function () {
+
+        if (!$scope.slackUserName) {
+            appNotifyService.warning('Please enter your slack user name');
+
+            return false;
+        }
+        integrationService.setSlackConnection($scope.slackUserName).then(function (response) {
+            if (response.success) {
+                $scope.isSlackConnect = true;
+                appNotifyService.success('Slack connected successfully');
             } else {
                 $scope.isSlackConnect = false;
             }

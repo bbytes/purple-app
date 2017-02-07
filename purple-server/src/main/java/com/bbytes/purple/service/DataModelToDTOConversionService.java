@@ -111,6 +111,7 @@ public class DataModelToDTOConversionService {
 		userDTO.setTimeZone(user.getTimeZone());
 		userDTO.setDisableState(user.isDisableState());
 		userDTO.setMarkDeleteState(user.isMarkDelete());
+		userDTO.setViewType(user.getViewType());
 		return userDTO;
 	}
 
@@ -143,6 +144,7 @@ public class DataModelToDTOConversionService {
 
 	public StatusDTO convertStatus(Status status, String statusTime) {
 
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 		StatusDTO statusDTO = new StatusDTO();
 		statusDTO.setStatusId(status.getStatusId());
 		statusDTO.setProjectId(status.getProject().getProjectId());
@@ -155,6 +157,8 @@ public class DataModelToDTOConversionService {
 		statusDTO.setTime(statusTime);
 		statusDTO.setCommentCount(status.getCommentCount());
 		statusDTO.setTaskDataMap(status.getTaskDataMap());
+		statusDTO.setDateTime(simpleDateFormat.format(status.getDateTime()));
+
 		return statusDTO;
 	}
 
@@ -480,7 +484,7 @@ public class DataModelToDTOConversionService {
 		return statusResponseDTOList;
 	}
 
-	public List<TaskItemDTO> convertTaskItem(List<TaskItem> taskItems) {
+	public List<TaskItemDTO> convertTaskItem(Collection<TaskItem> taskItems) {
 		List<TaskItemDTO> taskItemDTOList = new LinkedList<TaskItemDTO>();
 		for (TaskItem item : taskItems) {
 			if (item != null) {
@@ -502,7 +506,7 @@ public class DataModelToDTOConversionService {
 		return taskItemDTOList;
 	}
 
-	public List<TaskListResponseDTO> convertTaskListItem(List<TaskItem> taskItemList) {
+	public List<TaskListResponseDTO> convertTaskListItem(Collection<TaskItem> taskItemList) {
 		List<TaskListResponseDTO> taskListDTOList = new LinkedList<TaskListResponseDTO>();
 		for (TaskItem taskItem : taskItemList) {
 			TaskListResponseDTO taskListResponseDTO = new TaskListResponseDTO();
@@ -514,6 +518,9 @@ public class DataModelToDTOConversionService {
 			taskListResponseDTO.setDueDate(taskItem.getDueDate());
 			taskListResponseDTO.setEstimatedHours(taskItem.getEstimatedHours());
 			taskListResponseDTO.setSpendHours(taskItem.getSpendHours());
+			if (taskItem.getLastModified() != null)
+				taskListResponseDTO.setCreationDate(
+						taskItem.getCreationDate() == null ? taskItem.getLastModified() : taskItem.getCreationDate());
 			taskListDTOList.add(taskListResponseDTO);
 		}
 		return taskListDTOList;

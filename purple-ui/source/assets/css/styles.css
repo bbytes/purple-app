@@ -4676,3 +4676,143 @@ tabs-left, .tabs-right {
     font-family: inherit !important;
     font-size: 100% !important;
 }
+.table-responsive {
+    min-height: .01%;
+    overflow-x: visible;
+	margin-top: 45px;
+}
+.switch-view #list, #grid{
+	background:#FFF !important;
+	color:#222;
+	border:1px solid #ccc !important;
+	font-size:12px;
+	padding:5px !important;
+}
+.switch-view .btn-default:hover{
+	color:#222 !important;
+}
+.table-responsive td{
+	border:1px solid #eeeeee;
+}
+.header-dashboard{
+	position: fixed !important;
+    overflow: visible;
+    box-sizing: border-box;
+    top: 43px;
+    right: 0;
+    z-index: 9;
+    background: #fff;
+    height: 50px;
+    width: 77.2%;
+	transition: all 0.5s linear;
+}
+.header-dashboard.activehead {
+     border-bottom:1px solid #eee !important;   
+}
+
+table.responsive-table {
+  display: table;
+  /* required for table-layout to be used (not normally necessary; included for completeness) */
+  table-layout: fixed;
+  /* this keeps your columns with fixed with exactly the right width */
+  width: 100%;
+  /* table must have width set for fixed layout to work as expected */
+  height: 100%;
+}
+
+table.responsive-table thead {
+    position: fixed;
+    top: 103px;
+    right: 0;
+    width: 77%;
+    height: 50px;
+    line-height: 3em;
+    background: #eee;
+    table-layout: fixed;
+    display: table;
+	z-index: 1;
+}
+
+table.responsive-table th {
+  background: #eee;
+}
+
+table.responsive-table td {
+  line-height: 2em;
+}
+
+table.responsive-table tr > td,
+table.responsive-table th {
+  text-align: left;
+}
+.responsive-table tbody{
+	margin-top: 48px;
+	position: absolute;
+	padding-bottom: 20px;
+	width: 77%;
+	right: 0;
+	top: 50px;
+	table-layout: fixed;
+    display: table;
+	margin-bottom: 20px;
+}
+
+.box > .table-responsive .table > tbody > tr th:first-child, .table-responsive .table > tbody > tr td:first-child {
+    width: auto !important;
+    text-align: left;
+}
+
+.columnsContainer{ position: relative; margin: 0em; }
+
+.leftColumn, .rightColumn{  border: 0px solid  #ccc; padding: 0em; }
+
+.rightColumn { margin-bottom: .5em; }
+
+@media screen and (min-width: 47.5em ) {
+  .rightColumn { margin-left: 22.5em; }
+
+	.leftColumn { 
+	position: fixed;
+    top: 53px;
+    left: 0;
+    width: 21.75em;
+    bottom: 0;
+	}   
+}
+
+.mCSB_container_wrapper {
+    position: absolute;
+    height: auto;
+    width: auto;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-right: 9px;
+    margin-bottom: 30px;
+}
+.mCSB_container_wrapper > .mCSB_container {
+    padding-right: 0px;
+    padding-bottom: 30px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.mCSB_scrollTools .mCSB_draggerRail {
+     background-color: transparent;
+     background-color:transparent;
+    filter: "alpha(opacity=40)";
+    -ms-filter: "alpha(opacity=40)";
+}
+.leftColumn:hover .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+	background:#7c6991;
+}
+.mCSB_dragger{
+    position: absolute;
+    min-height: 30px;
+    height: 350px;
+    top: 0px;
+    display: block;
+    max-height: 559px;
+}

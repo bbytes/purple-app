@@ -1,8 +1,17 @@
-
-angular.module('rootApp').controller('indexCtrl', function ($scope, $rootScope, $state, $window) {
+/*
+ * Index Controller
+ */
+angular.module('rootApp').controller('indexCtrl', function ($scope, $rootScope, $state, $window, $localStorage) {
     window.scrollTo(0, 0);
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.feedbackClass = 'feedback-log';
+
+    if ($localStorage.userInfo) {
+        var userInfo = $localStorage.userInfo;
+        $rootScope.authToken = userInfo.accessToken;
+        $state.go("status");
+    }
+
     $scope.toTheTop = function () {
         $document.scrollTop(0, 5000);
     }

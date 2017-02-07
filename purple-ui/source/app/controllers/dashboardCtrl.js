@@ -1,7 +1,7 @@
 /*
  * Dashboard controller
  */
-angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService, appNotifyService, $window, $location, statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
+angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, $localStorage, userService, projectService, appNotifyService, $window, $location, statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
     $scope.commentDesc = '';
     $scope.isActive = function (route) {
         return route === $location.path();
@@ -53,6 +53,12 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
         statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
             if (response.success) {
                 $scope.timelineData = response.data.gridData;
+                $scope.timelineTableData = [];
+                angular.forEach(response.data.gridData, function (value, key) {
+                    angular.forEach(value.statusList, function (value, key) {
+                        $scope.timelineTableData.push(value);
+                    });
+                });
 
                 $scope.isActive = true;
                 $scope.isProject = false;
@@ -228,8 +234,13 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
 
         statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
             if (response.success) {
-
                 $scope.timelineData = response.data.gridData;
+                $scope.timelineTableData = [];
+                angular.forEach(response.data.gridData, function (value, key) {
+                    angular.forEach(value.statusList, function (value, key) {
+                        $scope.timelineTableData.push(value);
+                    });
+                });
 
                 $scope.selected = project;
                 $scope.isProject = true;
@@ -250,8 +261,15 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
 
         statusService.getAllTimelineStatus($scope.updateData, time).then(function (response) {
             if (response.success) {
-
                 $scope.timelineData = response.data.gridData;
+
+                $scope.timelineTableData = [];
+                angular.forEach(response.data.gridData, function (value, key) {
+                    angular.forEach(value.statusList, function (value, key) {
+                        $scope.timelineTableData.push(value);
+                    });
+                });
+
                 $scope.selected = user;
                 $scope.isUser = true;
                 $scope.isProject = false;
@@ -330,6 +348,19 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
         });
     };
 
+    //setting view type for timeline
+    $scope.setViewType = function (viewType) {
+        if (viewType) {
+            userService.setViewType(viewType).then(function (response) {
+                if (response.success) {
+                    $rootScope.viewType = response.data.viewType;
+
+                    $localStorage.userInfo.viewType = $rootScope.viewType;
+                }
+            });
+        }
+    };
+
     $rootScope.isOpen = false;
     $rootScope.closeSideNavPanel;
     $scope.openSideNavPanel = function (timePeriod) {
@@ -347,5 +378,24 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
             $scope.timeChange(timePeriod);
         };
     };
+	
+	$(window).scroll(function() {     
+    var scroll = $(window).scrollTop();
+    if (scroll > 0) {
+        $(".header-dashboard").addClass("activehead");
+    }
+    else {
+        $(".header-dashboard").removeClass("activehead");
+    }
+});
+
+$('.leftColumn').on( 'mousewheel DOMMouseScroll', function (e) { 
+  
+  var e0 = e.originalEvent;
+  var delta = e0.wheelDelta || -e0.detail;
+
+  this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+  e.preventDefault();  
+});
 
 });

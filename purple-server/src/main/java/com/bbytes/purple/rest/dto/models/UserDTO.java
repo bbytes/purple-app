@@ -36,5 +36,7 @@ public class UserDTO implements Serializable {
 	private boolean markDeleteState;
 	
 	private String timeZone;
+	
+	private String viewType;
 
 }

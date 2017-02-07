@@ -1,7 +1,7 @@
 /*
  *  Login Controller
  */
-angular.module('rootApp').controller('loginCtrl', function ($scope, $rootScope, $state, loginService, appNotifyService, $sessionStorage, $window, $filter) {
+angular.module('rootApp').controller('loginCtrl', function ($scope, $rootScope, $state, loginService, appNotifyService, $localStorage, $window, $filter) {
 
     $rootScope.bodyClass = 'body-standalone';
     $rootScope.feedbackClass = 'feedback-log';
@@ -25,6 +25,7 @@ angular.module('rootApp').controller('loginCtrl', function ($scope, $rootScope, 
                 $rootScope.timePreference = response.data.timePreference;
                 $rootScope.switchState = response.data.emailNotificationState;
                 $rootScope.timeZone = response.data.timeZone;
+                $rootScope.viewType = response.data.viewType;
 
                 var userInfo = {
                     accessToken: response.headers["x-auth-token"],
@@ -33,10 +34,11 @@ angular.module('rootApp').controller('loginCtrl', function ($scope, $rootScope, 
                     userRoles: $rootScope.userRole,
                     timePreference: $rootScope.timePreference,
                     emailNotificationState: $rootScope.switchState,
-                    timeZone: $rootScope.timeZone
+                    timeZone: $rootScope.timeZone,
+                    viewType: $rootScope.viewType
                 };
 
-                $sessionStorage.userInfo = userInfo;
+                $localStorage.userInfo = userInfo;
                 $rootScope.showWelcomeMessage = true;
 
                 $state.go('status');
@@ -65,7 +67,7 @@ angular.module('rootApp').controller('loginCtrl', function ($scope, $rootScope, 
     $scope.logout = function () {
         delete $window.sessionStorage.token;
 
-        $sessionStorage.remove('userInfo');
+        $localStorage.remove('userInfo');
         loginService.logout().then(function (response) {
 
             $location.path("login");

@@ -35,7 +35,8 @@ var rootApp = angular.module('rootApp',
             'angular.chosen',
             'ui.bootstrap.datetimepicker',
             'angularUtils.directives.dirPagination',
-            'mentio'
+            'mentio',
+            'ngScrollbars'
         ]);
 
 // avoid the spacing while copy paste in text angular 
@@ -120,7 +121,7 @@ rootApp.config([
                 },
                 'main@home': {
                     templateUrl: 'app/partials/home-main.html',
-                    controller: 'indexCtrl',
+                    controller: 'indexCtrl'
                 },
                 'footer@home': {
                     templateUrl: 'app/partials/home-footer.html'
@@ -188,10 +189,6 @@ rootApp.config([
                 'footer@dashboard': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'dashboard',
-                redirectTo: 'login'
             }
         }).state('metrics', {
             url: '/metrics',
@@ -210,10 +207,6 @@ rootApp.config([
                 'footer@metrics': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'metrics',
-                redirectTo: 'login'
             }
         }).state('integration', {
             url: '/integration?app',
@@ -232,10 +225,6 @@ rootApp.config([
                 'footer@integration': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'integration',
-                redirectTo: 'login'
             }
         }).state('status', {
             url: '/status',
@@ -256,10 +245,6 @@ rootApp.config([
                 'footer@status': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'My Status',
-                redirectTo: 'login'
             }
         }).state('tasks', {
             url: '/tasks',
@@ -280,10 +265,6 @@ rootApp.config([
                 'footer@tasks': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'tasks',
-                redirectTo: 'login'
             }
         }).state('projects', {
             url: '/projects',
@@ -302,10 +283,6 @@ rootApp.config([
                 'footer@projects': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'projects',
-                redirectTo: 'login'
             }
         }).state('admin-settings', {
             url: '/admin-settings',
@@ -324,10 +301,6 @@ rootApp.config([
                 'footer@admin-settings': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'settings',
-                redirectTo: 'login'
             }
         }).state('settings', {
             url: '/settings',
@@ -345,10 +318,6 @@ rootApp.config([
                 'footer@settings': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'user settings',
-                redirectTo: 'login'
             }
         }).state('user-manager', {
             url: '/user-manager',
@@ -366,10 +335,6 @@ rootApp.config([
                 'footer@user-manager': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'User Manager',
-                redirectTo: 'login'
             }
         }).state('billing', {
             url: '/billing?app',
@@ -388,10 +353,6 @@ rootApp.config([
                 'footer@billing': {
                     templateUrl: 'app/partials/home-footer.html'
                 }
-            },
-            data: {
-                authorization: 'ADMIN',
-                redirectTo: 'login'
             }
         }).state('access-denied', {
             url: '/accessDenied',

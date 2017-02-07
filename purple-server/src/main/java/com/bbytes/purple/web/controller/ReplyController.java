@@ -101,13 +101,13 @@ public class ReplyController {
 		emailList.add(comment.getUser().getEmail());
 
 		Map<String, Object> emailBody = replyEmailBody(user, comment, status, replySize,
-				GlobalConstants.REPLY_EMAIL_TEXT);
+				GlobalConstants.REPLY_EMAIL_TEXT, comment.getUser().getName());
 
 		notificationService.sendTemplateEmail(emailList, replySubject, template, emailBody);
 
 		if (mentioneEmailList != null && !mentioneEmailList.isEmpty()) {
 			Map<String, Object> mentionEmailBody = replyEmailBody(user, comment, status, replySize,
-					GlobalConstants.MENTIONED_EMAIL_TEXT);
+					GlobalConstants.MENTIONED_EMAIL_TEXT, "");
 			notificationService.sendTemplateEmail(mentioneEmailList, subject, template, mentionEmailBody);
 		}
 
@@ -140,12 +140,12 @@ public class ReplyController {
 	 * @return
 	 */
 	private Map<String, Object> replyEmailBody(User user, Comment comment, Status status, int replySize,
-			String emailText) {
+			String emailText, String userName) {
 
 		DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 		String postDate = dateFormat.format(comment.getCreationDate());
 		Map<String, Object> emailBody = new HashMap<>();
-		emailBody.put(GlobalConstants.USER_NAME, user.getName());
+		emailBody.put(GlobalConstants.USER_NAME, userName);
 		emailBody.put(GlobalConstants.SUBSCRIPTION_DATE, postDate);
 		emailBody.put(GlobalConstants.REPLY_DESC, comment.getReplies().get(replySize - 1).getReplyDesc());
 		emailBody.put(GlobalConstants.COMMENT_DESC, comment.getCommentDesc());
@@ -153,6 +153,7 @@ public class ReplyController {
 		emailBody.put(GlobalConstants.WORKING_ON, status.getWorkingOn() == null ? "" : status.getWorkingOn());
 		emailBody.put(GlobalConstants.BLOCKERS, status.getBlockers() == null ? "" : status.getBlockers());
 		emailBody.put(GlobalConstants.EMAIL_STRING_TEXT, emailText);
+		emailBody.put("userName", user.getName());
 		return emailBody;
 	}
 

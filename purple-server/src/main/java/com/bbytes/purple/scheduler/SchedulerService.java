@@ -37,6 +37,7 @@ import com.bbytes.plutus.response.ProductStatsRestResponse;
 import com.bbytes.plutus.util.BillingConstant;
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.ConfigSetting;
+import com.bbytes.purple.domain.Integration;
 import com.bbytes.purple.domain.Organization;
 import com.bbytes.purple.domain.Project;
 import com.bbytes.purple.domain.TenantResolver;
@@ -45,6 +46,8 @@ import com.bbytes.purple.domain.UserRole;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.repository.TenantResolverRepository;
 import com.bbytes.purple.service.ConfigSettingService;
+import com.bbytes.purple.service.IntegrationService;
+import com.bbytes.purple.service.JiraIntegrationService;
 import com.bbytes.purple.service.NotificationService;
 import com.bbytes.purple.service.OrganizationService;
 import com.bbytes.purple.service.ProjectService;
@@ -76,7 +79,7 @@ public class SchedulerService {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private StatusService statusService;
 
@@ -91,6 +94,12 @@ public class SchedulerService {
 
 	@Autowired
 	private RegistrationService registrationService;
+
+	@Autowired
+	private IntegrationService integrationService;
+
+	@Autowired
+	private JiraIntegrationService jiraIntegrationService;
 
 	@Value("${base.url}")
 	private String baseUrl;
@@ -117,6 +126,31 @@ public class SchedulerService {
 	private void init() {
 		ScheduledExecutorService localExecutor = Executors.newScheduledThreadPool(25);
 		taskScheduler = new ConcurrentTaskScheduler(localExecutor);
+	}
+
+	/**
+	 * Initialize view type to user if not present
+	 */
+	@PostConstruct
+	private void initViewType() throws PurpleException {
+
+		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
+		// creating a hashset to store orgId's
+		Set<String> orgIdList = new LinkedHashSet<String>();
+		for (TenantResolver tr : tenantResolverList) {
+			orgIdList.add(tr.getOrgId());
+		}
+		for (String orgId : orgIdList) {
+			TenancyContextHolder.setTenant(orgId);
+			List<User> userList = userService.findAll();
+			for (User userFromDb : userList) {
+				if (userFromDb.getViewType() == null) {
+					userFromDb.setViewType(User.TIMELINE_VIEW);
+					userService.save(userFromDb);
+				}
+			}
+		}
+		TenancyContextHolder.clearContext();
 	}
 
 	/**
@@ -218,7 +252,7 @@ public class SchedulerService {
 
 							emailList.add(user.getEmail());
 							// this is to schedule task for particular time
-							taskScheduler.schedule(new EmailAndSlackSendJob(user, emailBody, emailList,
+							taskScheduler.schedule(new EmailAndSlackSendJob(orgId, user, emailBody, emailList,
 									notificationService, schedulerSubject), dateTime.toDate());
 
 						}
@@ -395,6 +429,47 @@ public class SchedulerService {
 						userService.delete(userFromDb);
 				}
 			}
+		}
+
+		TenancyContextHolder.clearContext();
+	}
+
+	/* Cron Runs every day at 6 am */
+	// @Scheduled(cron = " 0 0 6 * * ?")
+	// @Scheduled(cron = "0 0/2 * * * ?")
+	// @Scheduled(cron = "0 0/60 * * * ?") // every one hr
+	@Scheduled(cron = "0 0 0/6 * * ?") // every 4 hr
+	public void runJiraSync() {
+
+		List<TenantResolver> tenantResolverList = tenantResolverRepository.findAll();
+
+		// creating a hashset to store orgId's
+		Set<String> orgIdList = new LinkedHashSet<String>();
+		for (TenantResolver tr : tenantResolverList) {
+			orgIdList.add(tr.getOrgId());
+		}
+
+		for (String orgId : orgIdList) {
+			TenancyContextHolder.setTenant(orgId);
+			try {
+				List<User> allUsers = userService.getAllUsers();
+
+				for (User userFromDb : allUsers) {
+					// checking condition for mark delete
+					if (!userFromDb.isDisableState() && !userFromDb.isMarkDelete()) {
+						Integration integration = integrationService.getIntegrationForUser(userFromDb);
+
+						jiraIntegrationService.syncJiraProjects(integration, userFromDb);
+						jiraIntegrationService.syncProjectToJiraUser(integration, userFromDb);
+						jiraIntegrationService.updateProjectWithJiraTask(integration);
+						jiraIntegrationService.pushTaskUpdatesToJira(integration, userFromDb);
+
+					}
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+
 		}
 
 		TenancyContextHolder.clearContext();

@@ -2,7 +2,7 @@
  * Task View Modal Controller
  * @author - Akshay
  */
-angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, modalData, $uibModalInstance, dropdownListService, $uibModal) {
+angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, modalData, $uibModalInstance, dropdownListService, $uibModal, appNotifyService) {
 
     $scope.title = modalData.title;
     $scope.taskList = modalData.taskData;
@@ -15,6 +15,7 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
     var workingOnTaskMap = taskItemMap.workingOn;
     var blockersTaskMap = taskItemMap.blockers;
     var itemKey = modalData.itemKey;
+    var totalHrs = 0.0;
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
@@ -34,6 +35,7 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
                 }
                 workedOnTaskMap[genTaskKey] = "id:" + item.task.taskItemId;
                 $scope.addToWorkedOn = $scope.addToWorkedOn + "<p style='color:#3b73af;font-weight: bold;'> #{" + genTaskKey + "-" + item.task.taskListName + "-" + item.task.taskItemName + " - Hrs:" + item.hours + "}</p>";
+                totalHrs = totalHrs + parseFloat(item.hours);
             }
             itemKey++;
         });
@@ -68,8 +70,13 @@ angular.module('rootApp').controller('taskViewModalCtrl', function ($scope, moda
             "addToWorkingOn": $scope.addToWorkingOn,
             "addToBlockers": $scope.addToBlockers,
             "taskItemMap": taskItemMap,
-            "itemKey": itemKey
+            "itemKey": itemKey,
+            "totalHrs": totalHrs
         };
+        if (totalHrs > 12) {
+            appNotifyService.success('You will not allowed to add more than 12 hours');
+            return false;
+        }
         $uibModalInstance.close($scope.taskObject);
     };
     $scope.updateHours = function (selectedAction, index, taskItem, hours) {

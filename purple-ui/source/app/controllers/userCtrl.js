@@ -98,7 +98,7 @@ angular.module('rootApp').controller('userCtrl', function ($scope, $rootScope, u
                 $scope.allusers.splice(index, 1);
                 $scope.allusers.unshift($scope.updatedUser);
                 if ($scope.updatedUser.markDeleteState)
-                    appNotifyService.success('User has been sucessfully mark for delete');
+                    appNotifyService.success('User has been sucessfully marked for delete');
                 else
                     appNotifyService.success('All user information has been restored.');
             }

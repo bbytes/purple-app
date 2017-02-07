@@ -56,11 +56,9 @@
     </div>
 </div>
 
-
-
-<div class="leftSidebar">
-    <div class="theiaStickySidebar" >
-        <div class="panel-group" id="accordion">
+	<div class="columnsContainer">
+	  	<div class="leftColumn"  ng-scrollbars>
+		  <div class="panel-group" id="accordion">
             <div class="panel panel-default">
                 <div class="panel-heading project-active">
                     <h4 class="panel-title">
@@ -113,10 +111,8 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-
+  </div>
+		
 <md-sidenav md-component-id="right" class="md-sidenav-right md-whiteframe-z2">
     <md-content layout-padding=""> 
 
@@ -158,13 +154,13 @@
 
                         <label for="comment">Comment:</label>
 
-<!--                        <textarea class="form-control" name="formData[commentDesc]" rows="5" id="comment" ng-model="formData.commentDesc" placeholder="Your comment..." maxlength="200" 
-                                  mentio 
-                                  mentio-id="'commentTextArea'"
-                                  mentio-typed-term="typedTerm"
-                                  mentio-require-leading-space="true"
-                                  ng-trim="false"
-                                  required></textarea>-->
+                        <!--                        <textarea class="form-control" name="formData[commentDesc]" rows="5" id="comment" ng-model="formData.commentDesc" placeholder="Your comment..." maxlength="200" 
+                                                          mentio 
+                                                          mentio-id="'commentTextArea'"
+                                                          mentio-typed-term="typedTerm"
+                                                          mentio-require-leading-space="true"
+                                                          ng-trim="false"
+                                                          required></textarea>-->
                         <comment-text-angular-mentio ng-model="formData.commentDesc"></comment-text-angular-mentio>
 
                         <h6 class="pull-right">
@@ -193,12 +189,12 @@
                     <h4>{{comment.userName}}</h4>
                     <md-content class="example-3 md-accent">
                         <span ng-bind-html="comment.commentDesc"
-                            inline-edit="comment.commentDesc"
-                            ng-click="updateComment(comment.commentDesc, comment.commentId)"
-                            inline-edit-textarea
-                            inline-edit-validation="comment.commentDesc.validator(comment.commentDesc)"
-                            inline-edit-btn-save="Save"
-                            inline-edit-btn-cancel="Cancel"> </span>
+                              inline-edit="comment.commentDesc"
+                              ng-click="updateComment(comment.commentDesc, comment.commentId)"
+                              inline-edit-textarea
+                              inline-edit-validation="comment.commentDesc.validator(comment.commentDesc)"
+                              inline-edit-btn-save="Save"
+                              inline-edit-btn-cancel="Cancel"> </span>
                         <span ng-show="'{{userName}}' == '{{comment.userName}}'">
                             <a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deleteComment(comment.commentId, $index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a>
                         </span>
@@ -221,12 +217,12 @@
                             <h4>{{reply.userName}}</h4>
                             <md-content class="example-3 md-accent">
                                 <span ng-bind-html="reply.replyDesc"
-                                    inline-edit="reply.replyDesc"
-                                    ng-click="updateReply(reply.replyDesc, comment.commentId, reply.replyId)"
-                                    inline-edit-textarea
-                                    inline-edit-validation="reply.replyDesc.validator(reply.replyDesc)"
-                                    inline-edit-btn-save="Save"
-                                    inline-edit-btn-cancel="Cancel"></span>
+                                      inline-edit="reply.replyDesc"
+                                      ng-click="updateReply(reply.replyDesc, comment.commentId, reply.replyId)"
+                                      inline-edit-textarea
+                                      inline-edit-validation="reply.replyDesc.validator(reply.replyDesc)"
+                                      inline-edit-btn-save="Save"
+                                      inline-edit-btn-cancel="Cancel"></span>
                                 <span ng-show="'{{userName}}' == '{{reply.userName}}'"><a class="delete-comment" href="#" ng-confirm-click="Are you absolutely sure you want to delete?" ng-click="deletereplyComment(reply.replyId, commentId, $index)"><img src="../../assets/img/delete.png" style="width: 27px; margin-top: -19px;"></a></span>
                             </md-content>
 
@@ -272,13 +268,21 @@
 
     </md-content> 
 </md-sidenav> 
-
-<div class="col-md-9">
-    <div class="content">
-
-        <!-- Page Content -->
+		
+		
+	  	<div class="rightColumn">
+	  		<div class="content header-dashboard">
+   <!-- Page Content -->
         <div class="search-filter">
             <ul>
+			  <li> 
+			  <div class="switch-view">
+               <div class="btn-group">
+                 <a href="#" ng-click="setViewType('Timeline')" id="list" class="btn btn-default btn-sm"><i tooltips tooltip-template="Timeline View" tooltip-side="left"  class="fa fa-list" aria-hidden="true"></i></a> 
+			     <a href="#" ng-click="setViewType('Table')" id="grid" class="btn btn-default btn-sm"><i tooltips tooltip-template="Table View" tooltip-side="right" class="fa fa-th" aria-hidden="true"></i></a>
+                </div>
+              </div>
+	          </li>
                 <li>
                     <select ng-model="mytime" ng-options="timePeriod.value as timePeriod.id for timePeriod in timePeriod" ng-change="timeChange(mytime)">
                     </select>
@@ -286,8 +290,12 @@
 
                 <li><a href="#" ng-click="csvDownloadTimeline(mytime)" csv-download="options"><img src="../../assets/img/export_csv-32.png" class="cvg"tooltips tooltip-template="CSV Download" tooltip-side="bottom"></a></li>
             </ul>
+			<div class="clearfix"></div>
         </div>
-        <div class="wrapper">
+        </div>
+		
+    <div class="content">
+        <div class="wrapper"  ng-if="viewType === 'Timeline'" style="margin-top: 30px;">
             <div class="top-header">
                 <!--  <span class="project"><span class="hash"># </span>{{status.projectName}}</span> -->
 
@@ -357,9 +365,42 @@
                 <li class="clearfix no-float"></li>
             </ul>
 
-
         </div>
-    </div>
+		
+   </div>
+<div class="clearfix"></div>
+		
+	<div class="table-responsive" ng-if="viewType === 'Table'">
+
+    <table id="productSizes" class="responsive-table table" >	
+        <thead style="background:#cc95b5;">
+            <tr >
+                <th style="width:15%">Date & Time</th>
+                <th style="width:20%">User & Projects</th>
+				 <th style="width:20%">Worked On</th>
+                <th style="width:20%">Working On</th>
+                <th style="width:15%">Blocker</th>
+				<th style="width:10%">Comments</th>
+            </tr>
+        </thead>
+		 <tbody>
+        <tr ng-repeat="data in timelineTableData">
+           <td style="width:15%"><p>{{data.dateTime}}</p><p>{{data.hours}} Hrs.</p></td>
+		   <td style="width:20%"><p>@ {{data.userName}}</p><p># {{data.projectName}}</p></td>
+		   <td ng-bind-html="data.workedOn"  style="width:20%">{{data.workedOn}}</td>
+		   <td ng-bind-html="data.workingOn" style="width:20%">{{data.workingOn}}</td>
+		   <td ng-bind-html="data.blockers" style="width:15%">{{data.blockers}}</td>
+		   <td style="width:10%">{{data.commentCount}} <a role="button" ng-click="openCommentSideBar(data.statusId); openSideNavPanel(mytime)" tooltips tooltip-template="Comment"><img src="../../assets/img/comment.svg" style="width:20px;"></a></td>
+        </tr>
+		</tbody>
+		
+    </table>
+</div>	
+
+
+  	</div>
+ 
+</div>	
 
 
     <script>
@@ -378,4 +419,4 @@
         </li>
         </ul>
     </script>
-</div>
+
