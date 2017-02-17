@@ -7,9 +7,6 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +25,7 @@ import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.IntegrationService;
 import com.bbytes.purple.service.JiraIntegrationService;
 import com.bbytes.purple.service.UserService;
+import com.bbytes.purple.utils.ConnectioUtil;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.SuccessHandler;
 
@@ -75,17 +73,19 @@ public class IntegrationController {
 			request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
 
 			HttpClient client = null;
-			
+
 			if (disableCertificateValidation != null && Boolean.valueOf(disableCertificateValidation)) {
-				client = HttpClients.custom().setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build();
+				logger.warn("Came into http disable mode");
+				client = ConnectioUtil.getSeftSSLTrustHttpClient();
 			} else {
-				client = HttpClientBuilder.create().build();
+				client = ConnectioUtil.getDefaultHttpClient();
 			}
 
 			HttpResponse response = client.execute(request);
 			statusCode = response.getStatusLine().getStatusCode();
 
 		} catch (Throwable e) {
+			logger.error(e.getMessage(), e);
 			throw new PurpleException("Failed : HTTP Connection ", ErrorHandler.BAD_GATEWAY);
 		}
 		if (statusCode != 200) {
@@ -110,6 +110,8 @@ public class IntegrationController {
 		int statusCode;
 		final String JIRA_CONNECTION_MSG = "jira is connected successfully";
 		RestResponse jiraRestResponse;
+		HttpClient client = null;
+
 		try {
 
 			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
@@ -131,14 +133,13 @@ public class IntegrationController {
 			HttpGet request = new HttpGet(integration.getJiraBaseURL());
 			request.setHeader(HttpHeaders.AUTHORIZATION, basicAuthHeader);
 
-			HttpClient client = null;
-			
 			if (disableCertificateValidation != null && Boolean.valueOf(disableCertificateValidation)) {
-				client = HttpClients.custom().setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build();
+				logger.warn("Came into http disable mode");
+				client = ConnectioUtil.getSeftSSLTrustHttpClient();
 			} else {
-				client = HttpClientBuilder.create().build();
+				client = ConnectioUtil.getDefaultHttpClient();
 			}
-			
+
 			HttpResponse response = client.execute(request);
 			statusCode = response.getStatusLine().getStatusCode();
 		} catch (Throwable e) {

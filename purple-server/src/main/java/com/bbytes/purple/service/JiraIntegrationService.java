@@ -15,8 +15,6 @@ import java.util.Map;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,6 @@ import com.atlassian.httpclient.api.Request.Builder;
 import com.atlassian.jira.rest.client.api.AuthenticationHandler;
 import com.atlassian.jira.rest.client.api.IssueRestClient;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
-import com.atlassian.jira.rest.client.api.JiraRestClientFactory;
 import com.atlassian.jira.rest.client.api.ProjectRolesRestClient;
 import com.atlassian.jira.rest.client.api.RestClientException;
 import com.atlassian.jira.rest.client.api.SearchRestClient;
@@ -46,7 +43,8 @@ import com.atlassian.jira.rest.client.api.domain.RoleActor;
 import com.atlassian.jira.rest.client.api.domain.SearchResult;
 import com.atlassian.jira.rest.client.api.domain.Transition;
 import com.atlassian.jira.rest.client.api.domain.input.TransitionInput;
-import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
+import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClient;
+import com.atlassian.jira.rest.client.internal.async.DisposableHttpClient;
 import com.atlassian.util.concurrent.Promise;
 import com.bbytes.purple.auth.jwt.TokenAuthenticationProvider;
 import com.bbytes.purple.domain.Integration;
@@ -57,9 +55,10 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.exception.PurpleIntegrationException;
+import com.bbytes.purple.utils.ConnectioUtil;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
-import com.bbytes.purple.utils.SslUtil;
+import com.bbytes.purple.utils.JiraHttpClientFactory;
 import com.bbytes.purple.utils.StringUtils;
 
 @Service
@@ -115,13 +114,10 @@ public class JiraIntegrationService {
 	public JiraRestClient getJiraRestClient(final Integration integration) throws PurpleIntegrationException {
 		try {
 
-			if (disableCertificateValidation != null && Boolean.valueOf(disableCertificateValidation))
-				SslUtil.disableCertificateValidation();
-
 			final URI jiraServerUri = new URI(integration.getJiraBaseURL());
-			final JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
-			HttpClient client = HttpClients.custom().setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build();
-			final JiraRestClient restClient = factory.create(jiraServerUri, new AuthenticationHandler() {
+			final JiraHttpClientFactory factory = new JiraHttpClientFactory();
+				
+			final DisposableHttpClient httpClient = factory.createClient(jiraServerUri, new AuthenticationHandler() {
 
 				@Override
 				public void configure(Builder builder) {
@@ -130,8 +126,10 @@ public class JiraIntegrationService {
 				}
 			});
 
+			JiraRestClient restClient =  new AsynchronousJiraRestClient(jiraServerUri, httpClient);
 			return restClient;
 		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
 			throw new PurpleIntegrationException(e);
 		}
 
