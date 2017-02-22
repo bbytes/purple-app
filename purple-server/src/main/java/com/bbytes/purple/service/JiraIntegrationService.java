@@ -425,8 +425,10 @@ public class JiraIntegrationService {
 		emailBody.put(GlobalConstants.CURRENT_DATE, dateFormat.format(new Date()));
 		emailBody.put("string", "users");
 
-		executorService.execute(new SyncUserJobExecutor(loggedInUser, integrationService, this, emailBody, emailList,
-				notificationService));
+		// sending job to executor
+		if (loggedInUser != null)
+			executorService.execute(new SyncUserJobExecutor(loggedInUser, integrationService, this, emailBody,
+					emailList, notificationService));
 	}
 
 	/**
@@ -447,8 +449,10 @@ public class JiraIntegrationService {
 		emailBody.put(GlobalConstants.CURRENT_DATE, dateFormat.format(new Date()));
 		emailBody.put("string", "tasks");
 
-		executorService.execute(new SyncTasksJobExecutor(loggedInUser, integrationService, this, emailBody, emailList,
-				notificationService));
+		// sending job to executor
+		if (loggedInUser != null)
+			executorService.execute(new SyncTasksJobExecutor(loggedInUser, integrationService, this, emailBody,
+					emailList, notificationService));
 	}
 
 	/**
