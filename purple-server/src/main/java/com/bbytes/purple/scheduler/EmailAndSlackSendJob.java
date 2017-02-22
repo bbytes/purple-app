@@ -10,6 +10,12 @@ import com.bbytes.purple.utils.TenancyContextHolder;
 
 import lombok.Data;
 
+/**
+ * Email and slack send for daily reminder scheduler
+ * 
+ * @author Akshay
+ *
+ */
 @Data
 public class EmailAndSlackSendJob implements Runnable {
 

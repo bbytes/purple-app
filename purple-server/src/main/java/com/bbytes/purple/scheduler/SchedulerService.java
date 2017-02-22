@@ -58,7 +58,7 @@ import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
 /**
- * Scheduler Service for distributing email's.
+ * Scheduler Service for distributing email's and slack messages
  * 
  * @author Akshay
  *

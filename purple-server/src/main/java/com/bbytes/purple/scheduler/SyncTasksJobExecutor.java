@@ -15,6 +15,12 @@ import com.bbytes.purple.utils.TenancyContextHolder;
 
 import lombok.Data;
 
+/**
+ * Sync JIRA task and issue Job Executor
+ * 
+ * @author Akshay
+ *
+ */
 @Data
 public class SyncTasksJobExecutor implements Runnable {
 
