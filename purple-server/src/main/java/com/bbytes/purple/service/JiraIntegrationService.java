@@ -6,15 +6,19 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import javax.annotation.PostConstruct;
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +59,8 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.exception.PurpleIntegrationException;
-import com.bbytes.purple.utils.ConnectioUtil;
+import com.bbytes.purple.scheduler.SyncTasksJobExecutor;
+import com.bbytes.purple.scheduler.SyncUserJobExecutor;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.JiraHttpClientFactory;
@@ -73,6 +78,10 @@ public class JiraIntegrationService {
 	private static final String TYPE_ATLASSIAN_GROUP_ROLE = "atlassian-group-role-actor";
 
 	final String template = GlobalConstants.EMAIL_INVITE_TEMPLATE;
+
+	final static String SYNC_JIRA_USER_SUBJECT = "Statusnap - JIRA sync users";
+
+	final static String SYNC_JIRA_TASK_SUBJECT = "Statusnap - JIRA sync tasks";
 
 	final List<String> statesToIgnore = new ArrayList<String>(Arrays.asList("done", "closed", "resolved"));
 
@@ -103,20 +112,33 @@ public class JiraIntegrationService {
 	private UserService userService;
 
 	@Autowired
+	private IntegrationService integrationService;
+
+	@Autowired
 	private PasswordHashService passwordHashService;
 
 	@Autowired
 	private TenantResolverService tenantResolverService;
 
 	@Autowired
+	private NotificationService notificationService;
+
+	@Autowired
 	protected TokenAuthenticationProvider tokenAuthenticationProvider;
+
+	private ExecutorService executorService;
+
+	@PostConstruct
+	private void init() {
+		executorService = Executors.newSingleThreadExecutor();
+	}
 
 	public JiraRestClient getJiraRestClient(final Integration integration) throws PurpleIntegrationException {
 		try {
 
 			final URI jiraServerUri = new URI(integration.getJiraBaseURL());
 			final JiraHttpClientFactory factory = new JiraHttpClientFactory();
-				
+
 			final DisposableHttpClient httpClient = factory.createClient(jiraServerUri, new AuthenticationHandler() {
 
 				@Override
@@ -126,10 +148,10 @@ public class JiraIntegrationService {
 				}
 			});
 
-			JiraRestClient restClient =  new AsynchronousJiraRestClient(jiraServerUri, httpClient);
+			JiraRestClient restClient = new AsynchronousJiraRestClient(jiraServerUri, httpClient);
 			return restClient;
 		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
+			logger.error(e.getMessage(), e);
 			throw new PurpleIntegrationException(e);
 		}
 
@@ -143,7 +165,8 @@ public class JiraIntegrationService {
 	 * @throws PurpleIntegrationException
 	 * @throws PurpleException
 	 */
-	public void syncJiraProjects(final Integration integration, User loggedInUser) throws PurpleIntegrationException, PurpleException {
+	public void syncJiraProjects(final Integration integration, User loggedInUser)
+			throws PurpleIntegrationException, PurpleException {
 		List<Project> jiraProjects = getJiraProjects(integration);
 		List<String> jiraProjectList = new LinkedList<String>();
 		List<String> finalProjectListToBeSaved = new LinkedList<String>();
@@ -240,10 +263,12 @@ public class JiraIntegrationService {
 				// sync only when dirty means the user has updated the hrs from
 				// ui
 				// and it is marked as dirty to sync to jira
-				if (taskItem.getSpendHours() > 0 && taskItem.getDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
-					final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
-					final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey())
-							.path("worklog");
+				if (taskItem.getSpendHours() > 0 && taskItem.getDirty()
+						&& !TaskState.YET_TO_START.equals(taskItem.getState())) {
+					final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest")
+							.build();
+					final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue")
+							.path(taskItem.getJiraIssueKey()).path("worklog");
 
 					Issue issue = issueRestClient.getIssue(taskItem.getJiraIssueKey()).claim();
 
@@ -302,7 +327,8 @@ public class JiraIntegrationService {
 		if (integration == null)
 			return;
 
-		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
+		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(
+				integration);
 		for (String projectName : projectToIssueListMap.keySet()) {
 			Project projectFromDb = projectService.findByProjectName(projectName);
 			if (projectFromDb != null) {
@@ -348,7 +374,8 @@ public class JiraIntegrationService {
 				for (BasicProject project : projects.claim()) {
 					Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
 
-					SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), pageSize, 0, null).claim();
+					SearchResult issueResult = searchRestClient
+							.searchJql("project=" + project.getKey(), pageSize, 0, null).claim();
 					for (Issue issue : issueResult.getIssues()) {
 						if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
 							continue;
@@ -381,6 +408,50 @@ public class JiraIntegrationService {
 	}
 
 	/**
+	 * This method is used to send JIRA sync users job and send email for
+	 * success or failure
+	 * 
+	 * @param loggedInUser
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	public void syncJIRAUsers(User loggedInUser) throws InterruptedException, ExecutionException {
+
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(loggedInUser.getEmail());
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
+		emailBody.put(GlobalConstants.CURRENT_DATE, dateFormat.format(new Date()));
+		emailBody.put("string", "users");
+
+		executorService.execute(new SyncUserJobExecutor(loggedInUser, integrationService, this, emailBody, emailList,
+				notificationService));
+	}
+
+	/**
+	 * This method is used to send JIRA sync tasks job and send email for
+	 * success or failure
+	 * 
+	 * @param loggedInUser
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	public void syncJIRATasks(User loggedInUser) throws InterruptedException, ExecutionException {
+
+		List<String> emailList = new ArrayList<String>();
+		emailList.add(loggedInUser.getEmail());
+
+		Map<String, Object> emailBody = new HashMap<>();
+		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
+		emailBody.put(GlobalConstants.CURRENT_DATE, dateFormat.format(new Date()));
+		emailBody.put("string", "tasks");
+
+		executorService.execute(new SyncTasksJobExecutor(loggedInUser, integrationService, this, emailBody, emailList,
+				notificationService));
+	}
+
+	/**
 	 * Sync project and jira user in statusnap side. This adds new users if not
 	 * there and sends an invite to join the app
 	 * 
@@ -389,7 +460,7 @@ public class JiraIntegrationService {
 	 * @throws PurpleIntegrationException
 	 * @throws PurpleException
 	 */
-	public void syncProjectToJiraUser(Integration integration, User user) throws PurpleIntegrationException, PurpleException {
+	public void syncProjectToJiraUser(Integration integration, User user) throws Exception {
 		Map<String, List<User>> projectToUsersMap = getJiraProjectWithUserList(integration);
 		// iterating project to users map
 		for (Map.Entry<String, List<User>> entry : projectToUsersMap.entrySet()) {
@@ -428,7 +499,8 @@ public class JiraIntegrationService {
 		}
 	}
 
-	private Map<String, List<User>> getJiraProjectWithUserList(Integration integration) throws PurpleIntegrationException {
+	private Map<String, List<User>> getJiraProjectWithUserList(Integration integration)
+			throws PurpleIntegrationException {
 		Map<String, List<User>> projectNameToUserList = new LinkedHashMap<String, List<User>>();
 
 		if (integration == null)
@@ -456,7 +528,8 @@ public class JiraIntegrationService {
 								// ignore : The user does not exist exception
 							}
 							if (jiraUser != null) {
-								User user = new User(jiraUser.getDisplayName(), jiraUser.getEmailAddress().toLowerCase());
+								User user = new User(jiraUser.getDisplayName(),
+										jiraUser.getEmailAddress().toLowerCase());
 								projectUserList.add(user);
 							}
 
@@ -497,7 +570,8 @@ public class JiraIntegrationService {
 
 			RestTemplate restTemplate = new RestTemplate();
 			HttpEntity<String> request = new HttpEntity<String>(headers);
-			ResponseEntity<Map> response = restTemplate.exchange(uriBuilder.build().toURL().toURI(), HttpMethod.GET, request, Map.class);
+			ResponseEntity<Map> response = restTemplate.exchange(uriBuilder.build().toURL().toURI(), HttpMethod.GET,
+					request, Map.class);
 			Map<String, Map<String, Object>> map = response.getBody();
 
 			if (map != null) {
@@ -508,7 +582,8 @@ public class JiraIntegrationService {
 					if (userList != null) {
 						for (Map<String, Object> userData : userMapList) {
 							if ("true".equals(userData.get("active").toString())) {
-								User user = new User(userData.get("displayName").toString(), userData.get("emailAddress").toString());
+								User user = new User(userData.get("displayName").toString(),
+										userData.get("emailAddress").toString());
 								userList.add(user);
 							}
 

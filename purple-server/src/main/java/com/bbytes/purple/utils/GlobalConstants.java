@@ -40,6 +40,8 @@ public class GlobalConstants {
 
 	public static final String EMAIL_FORGOT_PASSWORD_TEMPLATE = "email-text-forgot-password.html";
 
+	public static final String EMAIL_JIRA_SYNC_TEMPLATE = "email-text-JIRA-sync.html";
+
 	public static final String USER_NAME = "name";
 
 	public static final String PROJECT_NAME = "projectName";
@@ -127,5 +129,21 @@ public class GlobalConstants {
 	public static final String TASKLIST_REGEX_PATTERN = "#\\{(.*?)\\}";
 
 	public static final String HOURS_PATTERN = "Hrs:";
+
+	public static final String JIRA_SYNC_USER_SUCCESS_SUBJECT = "Statusnap - JIRA users sync successful";
+
+	public static final String JIRA_SYNC_USER_FAILED_SUBJECT = "Statusnap - JIRA users sync failed";
+
+	public static final String JIRA_SYNC_TASKS_SUCCESS_SUBJECT = "Statusnap - JIRA task sync successful";
+
+	public static final String JIRA_SYNC_TASKS_FAILED_SUBJECT = "Statusnap - JIRA task sync failed";
+
+	public static final String JIRA_SYNC_FAILED_STRING = "failedReason";
+
+	public static final String JIRA_SYNC_RESULT = "syncResult";
+
+	public static final String JIRA_SYNC_USER_FAILED_REASON = "Reason - JIRA user sync permission denied";
+
+	public static final String JIRA_SYNC_TASKS_FAILED_REASON = "Reason - JIRA task sync permission denied";
 
 }

@@ -1,6 +1,8 @@
 package com.bbytes.purple.web.controller;
 
 import java.nio.charset.Charset;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bbytes.purple.domain.Integration;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.exception.PurpleException;
+import com.bbytes.purple.exception.PurpleIntegrationException;
 import com.bbytes.purple.rest.dto.models.IntegrationRequestDTO;
 import com.bbytes.purple.rest.dto.models.RestResponse;
 import com.bbytes.purple.service.IntegrationService;
@@ -98,7 +102,8 @@ public class IntegrationController {
 		}
 
 		logger.debug("User with email  '" + jiraUsername + "' is connected to JIRA successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
+				SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return response;
 	}
@@ -149,18 +154,21 @@ public class IntegrationController {
 
 		if (statusCode != 200) {
 			if (statusCode == 502) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.BAD_GATEWAY);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.BAD_GATEWAY);
 
 				return jiraRestResponse;
 			} else if (statusCode == 401) {
-				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ", ErrorHandler.AUTH_FAILURE);
+				jiraRestResponse = new RestResponse(RestResponse.FAILED, "Failed : HTTP Connection : ",
+						ErrorHandler.AUTH_FAILURE);
 
 				return jiraRestResponse;
 			}
 		}
 
 		logger.debug("User is connected to JIRA successfully");
-		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG, SuccessHandler.JIRA_CONNECTION_SUCCESS);
+		jiraRestResponse = new RestResponse(RestResponse.SUCCESS, JIRA_CONNECTION_MSG,
+				SuccessHandler.JIRA_CONNECTION_SUCCESS);
 
 		return jiraRestResponse;
 	}
@@ -178,49 +186,39 @@ public class IntegrationController {
 		}
 
 		logger.debug("Jira Projects are sync successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG, SuccessHandler.JIRA_SYNC_PROJECTS_SUCCESS);
+		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
+				SuccessHandler.JIRA_SYNC_PROJECTS_SUCCESS);
 
 		return response;
 	}
 
 	@RequestMapping(value = "/api/v1/integration/jira/syncTask", method = RequestMethod.GET)
-	public RestResponse syncJIRATask() throws PurpleException {
+	public RestResponse syncJIRATask() throws PurpleException, InterruptedException, ExecutionException {
 		final String JIRA_ADD_TASK_MSG = "Jira project to jira task sync successful";
+		RestResponse response = null;
 
 		User loggedInUser = userService.getLoggedInUser();
-		try {
-			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
-			jiraIntegrationService.updateProjectWithJiraTask(integration);
-		} catch (Throwable e) {
-			e.printStackTrace();
-			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_TASK_ISSUE_SYNC_FAILED);
-		}
+		jiraIntegrationService.syncJIRATasks(loggedInUser);
 
 		logger.debug("Jira Projects to task sync done successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_TASK_MSG,
+		response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_TASK_MSG,
 				SuccessHandler.JIRA_SYNC_PROJECTS_AND_USERS_SUCCESS);
 
 		return response;
 	}
 
 	@RequestMapping(value = "/api/v1/integration/jira/syncUsers", method = RequestMethod.GET)
-	public RestResponse syncJIRAUsers() throws PurpleException {
+	public RestResponse syncJIRAUsers()
+			throws PurpleException, PurpleIntegrationException, InterruptedException, ExecutionException {
 
 		final String JIRA_ADD_PROJECT_MSG = "Jira project to users are sync successfully";
+		RestResponse response = null;
 
 		User loggedInUser = userService.getLoggedInUser();
-		try {
-			// checking jira is connected or not
-			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
-
-			jiraIntegrationService.syncProjectToJiraUser(integration, loggedInUser);
-
-		} catch (Throwable e) {
-			throw new PurpleException(e.getMessage(), ErrorHandler.JIRA_USER_SYNC_FAILED);
-		}
+		jiraIntegrationService.syncJIRAUsers(loggedInUser);
 
 		logger.debug("Jira Projects to users are sync successfully");
-		RestResponse response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
+		response = new RestResponse(RestResponse.SUCCESS, JIRA_ADD_PROJECT_MSG,
 				SuccessHandler.JIRA_SYNC_PROJECTS_AND_USERS_SUCCESS);
 
 		return response;
@@ -239,7 +237,8 @@ public class IntegrationController {
 	}
 
 	@RequestMapping(value = "/api/v1/integration/slack/name", method = RequestMethod.PUT)
-	public RestResponse saveSlackConnection(@RequestParam("slackUserName") String slackUserName) throws PurpleException {
+	public RestResponse saveSlackConnection(@RequestParam("slackUserName") String slackUserName)
+			throws PurpleException {
 
 		RestResponse response;
 		if (slackUserName == null || slackUserName.isEmpty()) {

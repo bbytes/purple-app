@@ -98,7 +98,7 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
 
         integrationService.getJiraProjectAndUser().then(function (response) {
             if (response.success) {
-                appNotifyService.success('Users to projects synced successfully');
+                appNotifyService.success('JIRA users sync job initiated');
             }
         }, function (error) {
             appNotifyService.error('Error getting JIRA Connection');
@@ -110,7 +110,7 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
 
         integrationService.getJiraTasksAndIssues().then(function (response) {
             if (response.success) {
-                appNotifyService.success('Tasks and issues to projects synced successfully');
+                appNotifyService.success('JIRA task sync job initiated');
             }
         }, function (error) {
             appNotifyService.error('Error getting JIRA Connection');
