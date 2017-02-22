@@ -81,6 +81,8 @@ public class SyncUserJobExecutor implements Runnable {
 
 			notificationService.sendTemplateEmail(emailList, JiraSyncSubject, GlobalConstants.EMAIL_JIRA_SYNC_TEMPLATE,
 					emailBody);
+		} finally {
+			TenancyContextHolder.clearContext();
 		}
 	}
 }
