@@ -56,6 +56,7 @@ public class EmailAndSlackSendJob implements Runnable {
 			notificationService.sendTemplateEmail(emailList, subject, GlobalConstants.SCHEDULER_EMAIL_TEMPLATE,
 					emailBody);
 		} finally {
+			// clearing tenant for the current thread
 			TenancyContextHolder.clearContext();
 		}
 
