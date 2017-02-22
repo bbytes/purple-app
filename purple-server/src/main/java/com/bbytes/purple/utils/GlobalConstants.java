@@ -140,6 +140,8 @@ public class GlobalConstants {
 
 	public static final String JIRA_SYNC_FAILED_STRING = "failedReason";
 
+	public static final String STRING_TEXT = "stringText";
+
 	public static final String JIRA_SYNC_RESULT = "syncResult";
 
 	public static final String JIRA_SYNC_USER_FAILED_REASON = "Reason - JIRA user sync permission denied";

@@ -423,7 +423,7 @@ public class JiraIntegrationService {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
 		emailBody.put(GlobalConstants.CURRENT_DATE, dateFormat.format(new Date()));
-		emailBody.put("string", "users");
+		emailBody.put(GlobalConstants.STRING_TEXT, "users");
 
 		// sending job to executor
 		if (loggedInUser != null)
@@ -447,7 +447,7 @@ public class JiraIntegrationService {
 		Map<String, Object> emailBody = new HashMap<>();
 		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
 		emailBody.put(GlobalConstants.CURRENT_DATE, dateFormat.format(new Date()));
-		emailBody.put("string", "tasks");
+		emailBody.put(GlobalConstants.STRING_TEXT, "tasks");
 
 		// sending job to executor
 		if (loggedInUser != null)
