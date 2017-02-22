@@ -71,6 +71,7 @@ public class SyncTasksJobExecutor implements Runnable {
 			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
 			jiraIntegrationService.updateProjectWithJiraTask(integration);
 
+			// sending email once JIRA sync user for success
 			notificationService.sendTemplateEmail(emailList, JiraSyncSubject, GlobalConstants.EMAIL_JIRA_SYNC_TEMPLATE,
 					emailBody);
 		} catch (Throwable e) {
@@ -78,6 +79,7 @@ public class SyncTasksJobExecutor implements Runnable {
 			emailBody.put(GlobalConstants.JIRA_SYNC_RESULT, "failed");
 			emailBody.put(GlobalConstants.JIRA_SYNC_FAILED_STRING, GlobalConstants.JIRA_SYNC_TASKS_FAILED_REASON);
 
+			// sending email once JIRA sync user for failure
 			notificationService.sendTemplateEmail(emailList, JiraSyncSubject, GlobalConstants.EMAIL_JIRA_SYNC_TEMPLATE,
 					emailBody);
 		} finally {
