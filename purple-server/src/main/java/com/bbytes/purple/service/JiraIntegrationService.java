@@ -165,8 +165,7 @@ public class JiraIntegrationService {
 	 * @throws PurpleIntegrationException
 	 * @throws PurpleException
 	 */
-	public void syncJiraProjects(final Integration integration, User loggedInUser)
-			throws PurpleIntegrationException, PurpleException {
+	public void syncJiraProjects(final Integration integration, User loggedInUser) throws PurpleIntegrationException, PurpleException {
 		List<Project> jiraProjects = getJiraProjects(integration);
 		List<String> jiraProjectList = new LinkedList<String>();
 		List<String> finalProjectListToBeSaved = new LinkedList<String>();
@@ -263,12 +262,10 @@ public class JiraIntegrationService {
 				// sync only when dirty means the user has updated the hrs from
 				// ui
 				// and it is marked as dirty to sync to jira
-				if (taskItem.getSpendHours() > 0 && taskItem.getDirty()
-						&& !TaskState.YET_TO_START.equals(taskItem.getState())) {
-					final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest")
-							.build();
-					final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue")
-							.path(taskItem.getJiraIssueKey()).path("worklog");
+				if (taskItem.getSpendHours() > 0 && taskItem.getDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
+					final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
+					final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey())
+							.path("worklog");
 
 					Issue issue = issueRestClient.getIssue(taskItem.getJiraIssueKey()).claim();
 
@@ -327,8 +324,7 @@ public class JiraIntegrationService {
 		if (integration == null)
 			return;
 
-		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(
-				integration);
+		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
 		for (String projectName : projectToIssueListMap.keySet()) {
 			Project projectFromDb = projectService.findByProjectName(projectName);
 			if (projectFromDb != null) {
@@ -374,8 +370,7 @@ public class JiraIntegrationService {
 				for (BasicProject project : projects.claim()) {
 					Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
 
-					SearchResult issueResult = searchRestClient
-							.searchJql("project=" + project.getKey(), pageSize, 0, null).claim();
+					SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), pageSize, 0, null).claim();
 					for (Issue issue : issueResult.getIssues()) {
 						if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
 							continue;
@@ -427,8 +422,8 @@ public class JiraIntegrationService {
 
 		// sending job to executor
 		if (loggedInUser != null)
-			executorService.execute(new SyncUserJobExecutor(loggedInUser, integrationService, this, emailBody,
-					emailList, notificationService));
+			executorService
+					.execute(new SyncUserJobExecutor(loggedInUser, integrationService, this, emailBody, emailList, notificationService));
 	}
 
 	/**
@@ -451,8 +446,8 @@ public class JiraIntegrationService {
 
 		// sending job to executor
 		if (loggedInUser != null)
-			executorService.execute(new SyncTasksJobExecutor(loggedInUser, integrationService, this, emailBody,
-					emailList, notificationService));
+			executorService
+					.execute(new SyncTasksJobExecutor(loggedInUser, integrationService, this, emailBody, emailList, notificationService));
 	}
 
 	/**
@@ -503,8 +498,7 @@ public class JiraIntegrationService {
 		}
 	}
 
-	private Map<String, List<User>> getJiraProjectWithUserList(Integration integration)
-			throws PurpleIntegrationException {
+	private Map<String, List<User>> getJiraProjectWithUserList(Integration integration) throws PurpleIntegrationException {
 		Map<String, List<User>> projectNameToUserList = new LinkedHashMap<String, List<User>>();
 
 		if (integration == null)
@@ -518,29 +512,32 @@ public class JiraIntegrationService {
 			UserRestClient userClient = restClient.getUserClient();
 
 			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
-
+			List<User> projectUserList = new LinkedList<User>();
 			for (BasicProject project : projects.claim()) {
-				List<User> projectUserList = new LinkedList<User>();
-				Promise<Iterable<ProjectRole>> projectRoles = projectRolesRestClient.getRoles(project.getSelf());
-				for (ProjectRole projectRole : projectRoles.claim()) {
-					for (RoleActor roleActor : projectRole.getActors()) {
-						if (TYPE_ATLASSIAN_USER_ROLE.equals(roleActor.getType())) {
-							com.atlassian.jira.rest.client.api.domain.User jiraUser = null;
-							try {
-								jiraUser = userClient.getUser(roleActor.getName()).claim();
-							} catch (RestClientException e) {
-								// ignore : The user does not exist exception
-							}
-							if (jiraUser != null) {
-								User user = new User(jiraUser.getDisplayName(),
-										jiraUser.getEmailAddress().toLowerCase());
-								projectUserList.add(user);
-							}
+				try {
+					Promise<Iterable<ProjectRole>> projectRoles = projectRolesRestClient.getRoles(project.getSelf());
+					for (ProjectRole projectRole : projectRoles.claim()) {
+						for (RoleActor roleActor : projectRole.getActors()) {
+							if (TYPE_ATLASSIAN_USER_ROLE.equals(roleActor.getType())) {
+								com.atlassian.jira.rest.client.api.domain.User jiraUser = null;
+								try {
+									jiraUser = userClient.getUser(roleActor.getName()).claim();
+								} catch (RestClientException e) {
+									// ignore : The user does not exist
+									// exception
+								}
+								if (jiraUser != null) {
+									User user = new User(jiraUser.getDisplayName(), jiraUser.getEmailAddress().toLowerCase());
+									projectUserList.add(user);
+								}
 
-						} else if (TYPE_ATLASSIAN_GROUP_ROLE.equals(roleActor.getType())) {
-							projectUserList = getUserForJiraGroup(integration, roleActor.getName());
+							} else if (TYPE_ATLASSIAN_GROUP_ROLE.equals(roleActor.getType())) {
+								projectUserList = getUserForJiraGroup(integration, roleActor.getName());
+							}
 						}
 					}
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
 				}
 
 				projectNameToUserList.put(project.getName(), projectUserList);
@@ -574,8 +571,7 @@ public class JiraIntegrationService {
 
 			RestTemplate restTemplate = new RestTemplate();
 			HttpEntity<String> request = new HttpEntity<String>(headers);
-			ResponseEntity<Map> response = restTemplate.exchange(uriBuilder.build().toURL().toURI(), HttpMethod.GET,
-					request, Map.class);
+			ResponseEntity<Map> response = restTemplate.exchange(uriBuilder.build().toURL().toURI(), HttpMethod.GET, request, Map.class);
 			Map<String, Map<String, Object>> map = response.getBody();
 
 			if (map != null) {
@@ -586,8 +582,7 @@ public class JiraIntegrationService {
 					if (userList != null) {
 						for (Map<String, Object> userData : userMapList) {
 							if ("true".equals(userData.get("active").toString())) {
-								User user = new User(userData.get("displayName").toString(),
-										userData.get("emailAddress").toString());
+								User user = new User(userData.get("displayName").toString(), userData.get("emailAddress").toString());
 								userList.add(user);
 							}
 
