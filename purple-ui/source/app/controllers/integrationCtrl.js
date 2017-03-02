@@ -10,8 +10,9 @@ angular.module('rootApp').controller('integrationCtrl', function ($scope, $rootS
 
     $rootScope.statusClass = 'status-current';
     $rootScope.dashboardClass = 'dashboard-nav';
-    $rootScope.settingClass = 'setting-nav';
+    $rootScope.settingClass = 'intergration';
     $rootScope.feedbackClass = 'feedback-log feedback-show';
+    $rootScope.intergrationClass = 'intergration-class'
 
     // this variable is used for slack url
     $scope.slackUrl = $rootScope.baseUrl + 'social/slack?emailId=' + $rootScope.loggedInUser;

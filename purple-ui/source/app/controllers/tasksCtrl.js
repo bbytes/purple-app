@@ -11,6 +11,7 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
     $rootScope.dashboardClass = 'dashboard-nav';
     $rootScope.settingClass = 'setting-nav';
     $rootScope.feedbackClass = 'feedback-log feedback-show';
+    $rootScope.intergrationClass = 'intergration-class profile-class';
 
     $scope.taskList;
     $scope.taskItemsLists = new Array();
@@ -197,7 +198,11 @@ angular.module('rootApp').controller('tasksCtrl', function ($scope, $rootScope, 
                     };
                 }
             }
-        });
+        }).result.then(function (status) {
+                if (status) {
+                    
+                }
+            }); 
     };
     $scope.setClickedState = function (index) {
         $scope.selectedState = $scope.taskStates[index];

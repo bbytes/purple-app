@@ -11,6 +11,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
     $rootScope.dashboardClass = 'dashboard-nav';
     $rootScope.settingClass = 'setting-nav';
     $rootScope.feedbackClass = 'feedback-log feedback-show';
+    $rootScope.intergrationClass = 'intergration-class profile-class';
     $scope.isSubmit = true;
     $scope.selectables;
     // varibale to store all task list and task item list
@@ -349,7 +350,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
             }
         });
 
-        function showModal() {
+        function showModal(projectId) {
             var uibModalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'app/partials/taskView-modal.html',
@@ -363,7 +364,8 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                             "taskData": $scope.taskList,
                             "taskItemMap": taskItemMap,
                             "itemKey": itemKey,
-                            "hoursList": $scope.selectables
+                            "hoursList": $scope.selectables,
+                            "projectId": projectId
                         };
                     }
                 }

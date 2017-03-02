@@ -2264,6 +2264,18 @@ md-sidenav, md-backdrop {
 .nav-left .setting-nav{
     display:none;
 }
+.setting-current{
+    display:none;
+}
+.nav .profile-class{
+    display:none;
+}
+.intergration-class{
+    display:block;
+}
+.nav .intergration{
+    display:none;
+}
 .nav-left .setting-current{
     display:block;
 }

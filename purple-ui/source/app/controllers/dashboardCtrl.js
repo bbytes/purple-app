@@ -1,7 +1,7 @@
 /*
  * Dashboard controller
  */
-angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, $localStorage, userService, projectService, appNotifyService, $window, $location, statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
+angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootScope, $mdSidenav, dropdownListService, $localStorage, userService, projectService, appNotifyService, $location, statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
     $scope.commentDesc = '';
     $scope.isActive = function (route) {
         return route === $location.path();
@@ -13,6 +13,7 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
     $rootScope.statusClass = 'status-nav';
     $rootScope.dashboardClass = 'dashboard-current';
     $rootScope.settingClass = 'setting-nav';
+    $rootScope.intergrationClass = 'intergration-class profile-class';
 
     // variable to store the information about timeline data
     $scope.timelineData;
@@ -378,24 +379,23 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
             $scope.timeChange(timePeriod);
         };
     };
-	
-	$(window).scroll(function() {     
-    var scroll = $(window).scrollTop();
-    if (scroll > 0) {
-        $(".header-dashboard").addClass("activehead");
-    }
-    else {
-        $(".header-dashboard").removeClass("activehead");
-    }
-});
 
-$('.leftColumn').on( 'mousewheel DOMMouseScroll', function (e) { 
-  
-  var e0 = e.originalEvent;
-  var delta = e0.wheelDelta || -e0.detail;
+    $(window).scroll(function () {
+        var scroll = $(window).scrollTop();
+        if (scroll > 0) {
+            $(".header-dashboard").addClass("activehead");
+        } else {
+            $(".header-dashboard").removeClass("activehead");
+        }
+    });
 
-  this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-  e.preventDefault();  
-});
+    $('.leftColumn').on('mousewheel DOMMouseScroll', function (e) {
+
+        var e0 = e.originalEvent;
+        var delta = e0.wheelDelta || -e0.detail;
+
+        this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+        e.preventDefault();
+    });
 
 });

@@ -2,7 +2,7 @@
  * Metrics Controller
  * @author - Akshay
  */
-angular.module('rootApp').controller('metricsCtrl', function ($scope, $rootScope, $state, $mdSidenav, dropdownListService, projectService, appNotifyService, $window, $location, metricsService, commentService, editableOptions, $mdSidenav) {
+angular.module('rootApp').controller('metricsCtrl', function ($scope, $rootScope, $mdSidenav, dropdownListService, projectService, metricsService, editableOptions, $mdSidenav) {
 
     $rootScope.bodyClass = 'body-standalone1';
     $rootScope.navClass = 'nav-control';
@@ -11,6 +11,7 @@ angular.module('rootApp').controller('metricsCtrl', function ($scope, $rootScope
     $rootScope.statusClass = 'status-nav';
     $rootScope.dashboardClass = 'dashboard-current';
     $rootScope.settingClass = 'setting-nav';
+    $rootScope.intergrationClass = 'intergration-class profile-class';
 
     $scope.onClick = function (points, evt) {
     };

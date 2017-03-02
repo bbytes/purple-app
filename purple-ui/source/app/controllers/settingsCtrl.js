@@ -10,6 +10,7 @@ angular.module('rootApp').controller('settingsCtrl', function ($scope, $rootScop
     $rootScope.statusClass = 'status-nav';
     $rootScope.dashboardClass = 'dashboard-nav';
     $rootScope.settingClass = 'setting-current';
+    $rootScope.intergrationClass = 'intergration-class profile-class';
     // Reset password for user
     $scope.updatePassword = function (user, confirmPassword) {
 
