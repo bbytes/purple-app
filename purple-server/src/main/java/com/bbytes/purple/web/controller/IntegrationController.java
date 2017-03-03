@@ -79,7 +79,6 @@ public class IntegrationController {
 			HttpClient client = null;
 
 			if (disableCertificateValidation != null && Boolean.valueOf(disableCertificateValidation)) {
-				logger.warn("Came into http disable mode");
 				client = ConnectioUtil.getSeftSSLTrustHttpClient();
 			} else {
 				client = ConnectioUtil.getDefaultHttpClient();
@@ -139,7 +138,6 @@ public class IntegrationController {
 			request.setHeader(HttpHeaders.AUTHORIZATION, basicAuthHeader);
 
 			if (disableCertificateValidation != null && Boolean.valueOf(disableCertificateValidation)) {
-				logger.warn("Came into http disable mode");
 				client = ConnectioUtil.getSeftSSLTrustHttpClient();
 			} else {
 				client = ConnectioUtil.getDefaultHttpClient();

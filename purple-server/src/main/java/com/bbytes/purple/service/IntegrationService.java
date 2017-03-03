@@ -236,7 +236,7 @@ public class IntegrationService extends AbstractService<Integration, String> {
 
 	private Slack getSlackApi(User user) {
 		if (springProfileService.isEnterpriseMode() && slackApiToken != null && !slackApiToken.trim().isEmpty()) {
-			Slack slack = new SlackTemplate(slackApiToken);
+			Slack slack = new SlackTemplate(slackApiToken.trim());
 			return slack;
 		}
 

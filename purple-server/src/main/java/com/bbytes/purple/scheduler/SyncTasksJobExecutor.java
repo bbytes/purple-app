@@ -10,6 +10,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.service.IntegrationService;
 import com.bbytes.purple.service.JiraIntegrationService;
 import com.bbytes.purple.service.NotificationService;
+import com.bbytes.purple.service.SpringProfileService;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.TenancyContextHolder;
 
@@ -36,15 +37,17 @@ public class SyncTasksJobExecutor implements Runnable {
 
 	private NotificationService notificationService;
 
+	private SpringProfileService springProfileService;
+
 	private User user;
 
 	private List<String> emailList;
 
 	DateFormat dateFormat = new SimpleDateFormat(GlobalConstants.DATE_FORMAT);
 
-	public SyncTasksJobExecutor(User loggedInUser, IntegrationService integrationService,
-			JiraIntegrationService jiraIntegrationService, Map<String, Object> emailBody, List<String> emailList,
-			NotificationService notificationService) {
+	public SyncTasksJobExecutor(User loggedInUser, IntegrationService integrationService, JiraIntegrationService jiraIntegrationService,
+			Map<String, Object> emailBody, List<String> emailList, NotificationService notificationService,
+			SpringProfileService springProfileService) {
 
 		this.loggedInUser = loggedInUser;
 		this.integrationService = integrationService;
@@ -52,6 +55,7 @@ public class SyncTasksJobExecutor implements Runnable {
 		this.emailList = emailList;
 		this.notificationService = notificationService;
 		this.emailBody = emailBody;
+		this.springProfileService = springProfileService;
 	}
 
 	/**
@@ -67,24 +71,24 @@ public class SyncTasksJobExecutor implements Runnable {
 			emailBody.put(GlobalConstants.JIRA_SYNC_RESULT, "successful");
 			emailBody.put(GlobalConstants.JIRA_SYNC_FAILED_STRING, "");
 			// setting tenant for the current thread
-			TenancyContextHolder.setTenant(loggedInUser.getOrganization().getOrgId());
+			if (!springProfileService.isEnterpriseMode())
+				TenancyContextHolder.setTenant(loggedInUser.getOrganization().getOrgId());
 			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
 			jiraIntegrationService.updateProjectWithJiraTask(integration);
 
 			// sending email once JIRA sync user for success
-			notificationService.sendTemplateEmail(emailList, JiraSyncSubject, GlobalConstants.EMAIL_JIRA_SYNC_TEMPLATE,
-					emailBody);
+			notificationService.sendTemplateEmail(emailList, JiraSyncSubject, GlobalConstants.EMAIL_JIRA_SYNC_TEMPLATE, emailBody);
 		} catch (Throwable e) {
 			JiraSyncSubject = GlobalConstants.JIRA_SYNC_TASKS_FAILED_SUBJECT;
 			emailBody.put(GlobalConstants.JIRA_SYNC_RESULT, "failed");
 			emailBody.put(GlobalConstants.JIRA_SYNC_FAILED_STRING, GlobalConstants.JIRA_SYNC_TASKS_FAILED_REASON);
 
 			// sending email once JIRA sync user for failure
-			notificationService.sendTemplateEmail(emailList, JiraSyncSubject, GlobalConstants.EMAIL_JIRA_SYNC_TEMPLATE,
-					emailBody);
+			notificationService.sendTemplateEmail(emailList, JiraSyncSubject, GlobalConstants.EMAIL_JIRA_SYNC_TEMPLATE, emailBody);
 		} finally {
 			// clearing tenant for the current thread
-			TenancyContextHolder.clearContext();
+			if (!springProfileService.isEnterpriseMode())
+				TenancyContextHolder.clearContext();
 		}
 	}
 }

@@ -126,6 +126,9 @@ public class JiraIntegrationService {
 	@Autowired
 	protected TokenAuthenticationProvider tokenAuthenticationProvider;
 
+	@Autowired
+	protected SpringProfileService springProfileService;
+
 	private ExecutorService executorService;
 
 	@PostConstruct
@@ -422,8 +425,8 @@ public class JiraIntegrationService {
 
 		// sending job to executor
 		if (loggedInUser != null)
-			executorService
-					.execute(new SyncUserJobExecutor(loggedInUser, integrationService, this, emailBody, emailList, notificationService));
+			executorService.execute(new SyncUserJobExecutor(loggedInUser, integrationService, this, emailBody, emailList,
+					notificationService, springProfileService));
 	}
 
 	/**
@@ -446,8 +449,8 @@ public class JiraIntegrationService {
 
 		// sending job to executor
 		if (loggedInUser != null)
-			executorService
-					.execute(new SyncTasksJobExecutor(loggedInUser, integrationService, this, emailBody, emailList, notificationService));
+			executorService.execute(new SyncTasksJobExecutor(loggedInUser, integrationService, this, emailBody, emailList,
+					notificationService, springProfileService));
 	}
 
 	/**
