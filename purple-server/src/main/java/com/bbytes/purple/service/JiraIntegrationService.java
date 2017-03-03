@@ -64,6 +64,7 @@ import com.bbytes.purple.scheduler.SyncUserJobExecutor;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.JiraHttpClientFactory;
+import com.bbytes.purple.utils.RestTemplateUtil;
 import com.bbytes.purple.utils.StringUtils;
 
 @Service
@@ -572,7 +573,8 @@ public class JiraIntegrationService {
 			MultiValueMap<String, String> headers = new HttpHeaders();
 			headers.add(HttpHeaders.AUTHORIZATION, integration.getJiraBasicAuthHeader());
 
-			RestTemplate restTemplate = new RestTemplate();
+			;
+			RestTemplate restTemplate = RestTemplateUtil.getSSLNoCheckRestTemlate();
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			ResponseEntity<Map> response = restTemplate.exchange(uriBuilder.build().toURL().toURI(), HttpMethod.GET, request, Map.class);
 			Map<String, Map<String, Object>> map = response.getBody();
