@@ -1,7 +1,7 @@
 /*
  * Dashboard controller
  */
-angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootScope, $mdSidenav, dropdownListService, $localStorage, userService, projectService, appNotifyService, $location, statusService, commentService, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
+angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootScope, $mdSidenav, dropdownListService, $localStorage, userService, projectService, appNotifyService, $location, statusService, commentService, $filter, editableOptions, $mdSidenav, $mdMedia, cfpLoadingBar) {
     $scope.commentDesc = '';
     $scope.isActive = function (route) {
         return route === $location.path();
@@ -115,6 +115,11 @@ angular.module('rootApp').controller('dashboardCtrl', function ($scope, $rootSco
             }
             $scope.getAllComments(statusId);
         });
+    };
+
+    // avoid spacing while copy paste in text angular
+    $scope.stripFormat = function ($html) {
+        return $filter('htmlToPlaintext')($html);
     };
 
     /*

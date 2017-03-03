@@ -417,7 +417,7 @@ angular.module('rootApp').directive('chosen', function ($timeout) {
 });
 
 // text angular with @ mention for working on 
-angular.module('rootApp').directive('workingonTextAngularMentio', ['$rootScope', function ($rootScope) {
+angular.module('rootApp').directive('workingonTextAngularMentio', ['$rootScope', '$filter', function ($rootScope, $filter) {
         var directiveDefinitionObject = {
             restrict: 'E',
             templateUrl: "app/partials/textAngular-mention-template/workingonTextAngularWithMentio.html",
@@ -431,6 +431,11 @@ angular.module('rootApp').directive('workingonTextAngularMentio', ['$rootScope',
                         element.attr('mentio-typed-term', 'typedTerm');
                         element.attr('mentio-require-leading-space', 'true');
                         element.attr('mentio-id', "'content-editor+$id+1'");
+                    };
+
+                    // avoid spacing while copy paste in text angular
+                    $scope.stripFormat = function ($html) {
+                        return $filter('htmlToPlaintext')($html);
                     };
 
                     $scope.searchPeople = function (term) {
@@ -454,7 +459,7 @@ angular.module('rootApp').directive('workingonTextAngularMentio', ['$rootScope',
     }]);
 
 // text angular with @ mention for worked on 
-angular.module('rootApp').directive('workedonTextAngularMentio', ['$rootScope', function ($rootScope) {
+angular.module('rootApp').directive('workedonTextAngularMentio', ['$rootScope', '$filter', function ($rootScope, $filter) {
         var directiveDefinitionObject = {
             restrict: 'E',
             templateUrl: "app/partials/textAngular-mention-template/workedonTextAngularWithMentio.html",
@@ -468,6 +473,11 @@ angular.module('rootApp').directive('workedonTextAngularMentio', ['$rootScope', 
                         element.attr('mentio-typed-term', 'typedTerm');
                         element.attr('mentio-require-leading-space', 'true');
                         element.attr('mentio-id', "'content-editor-{{$id}}'");
+                    };
+
+                    // avoid spacing while copy paste in text angular
+                    $scope.stripFormat = function ($html) {
+                        return $filter('htmlToPlaintext')($html);
                     };
 
                     $scope.searchPeople = function (term) {
@@ -491,7 +501,7 @@ angular.module('rootApp').directive('workedonTextAngularMentio', ['$rootScope', 
     }]);
 
 // text angular with @ mention for blockers
-angular.module('rootApp').directive('blockersTextAngularMentio', ['$rootScope', function ($rootScope) {
+angular.module('rootApp').directive('blockersTextAngularMentio', ['$rootScope', '$filter', function ($rootScope, $filter) {
         var directiveDefinitionObject = {
             restrict: 'E',
             templateUrl: "app/partials/textAngular-mention-template/blockersTextAngularWithMentio.html",
@@ -505,6 +515,11 @@ angular.module('rootApp').directive('blockersTextAngularMentio', ['$rootScope', 
                         element.attr('mentio-typed-term', 'typedTerm');
                         element.attr('mentio-require-leading-space', 'true');
                         element.attr('mentio-id', "'content-editor+$id'");
+                    };
+
+                    // avoid spacing while copy paste in text angular
+                    $scope.stripFormat = function ($html) {
+                        return $filter('htmlToPlaintext')($html);
                     };
 
                     $scope.searchPeople = function (term) {
@@ -527,7 +542,7 @@ angular.module('rootApp').directive('blockersTextAngularMentio', ['$rootScope', 
     }]);
 
 // text angular with @ mention for comment
-angular.module('rootApp').directive('commentTextAngularMentio', ['$rootScope', function ($rootScope) {
+angular.module('rootApp').directive('commentTextAngularMentio', ['$rootScope', '$filter', function ($rootScope, $filter) {
         var directiveDefinitionObject = {
             restrict: 'E',
             templateUrl: "app/partials/textAngular-mention-template/commentTextAngularWithMentio.html",
@@ -541,6 +556,11 @@ angular.module('rootApp').directive('commentTextAngularMentio', ['$rootScope', f
                         element.attr('mentio-typed-term', 'typedTerm');
                         element.attr('mentio-require-leading-space', 'true');
                         element.attr('mentio-id', "'content-editor+$id'");
+                    };
+
+                    // avoid spacing while copy paste in text angular
+                    $scope.stripFormat = function ($html) {
+                        return $filter('htmlToPlaintext')($html);
                     };
 
                     $scope.searchPeople = function (term) {

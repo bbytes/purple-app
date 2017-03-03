@@ -326,11 +326,6 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         $scope.loadTasks();
     };
 
-    // avoid spacing while copy paste in text angular
-    $scope.stripFormat = function ($html) {
-        return $filter('htmlToPlaintext')($html);
-    };
-
     // this is to open task view modal
     $scope.openTaskModal = function (projectId) {
 
