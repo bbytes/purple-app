@@ -152,6 +152,7 @@ public class JiraIntegrationService {
 				}
 			});
 
+			
 			JiraRestClient restClient = new AsynchronousJiraRestClient(jiraServerUri, httpClient);
 			return restClient;
 		} catch (Exception e) {
@@ -343,8 +344,6 @@ public class JiraIntegrationService {
 				}
 			}
 		}
-
-		System.out.println("Done syncing project jira task items");
 	}
 
 	private Map<String, Map<String, List<Issue>>> getJiraProjectWithIssueTypeToIssueList(Integration integration)
@@ -359,7 +358,7 @@ public class JiraIntegrationService {
 			try {
 				pageSize = Integer.parseInt(jiraIssueQueryPageSize);
 			} catch (Exception e) {
-				// ignore exception
+				logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -573,8 +572,7 @@ public class JiraIntegrationService {
 			MultiValueMap<String, String> headers = new HttpHeaders();
 			headers.add(HttpHeaders.AUTHORIZATION, integration.getJiraBasicAuthHeader());
 
-			;
-			RestTemplate restTemplate = RestTemplateUtil.getSSLNoCheckRestTemlate();
+			RestTemplate restTemplate = RestTemplateUtil.getSSLNoCheckRestTemplate();
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			ResponseEntity<Map> response = restTemplate.exchange(uriBuilder.build().toURL().toURI(), HttpMethod.GET, request, Map.class);
 			Map<String, Map<String, Object>> map = response.getBody();

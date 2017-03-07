@@ -29,7 +29,7 @@ import lombok.Data;
 @Data
 public class SyncUserJobExecutor implements Runnable {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SyncUserJobExecutor.class);
+	private static final Logger logger = LoggerFactory.getLogger(SyncUserJobExecutor.class);
 
 	private IntegrationService integrationService;
 
@@ -86,7 +86,7 @@ public class SyncUserJobExecutor implements Runnable {
 			// sending email once JIRA sync user for success
 			notificationService.sendTemplateEmail(emailList, JiraSyncSubject, GlobalConstants.EMAIL_JIRA_SYNC_TEMPLATE, emailBody);
 		} catch (Throwable e) {
-			LOG.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			JiraSyncSubject = GlobalConstants.JIRA_SYNC_USER_FAILED_SUBJECT;
 			emailBody.put(GlobalConstants.JIRA_SYNC_RESULT, "failed");
 			emailBody.put(GlobalConstants.JIRA_SYNC_FAILED_STRING, GlobalConstants.JIRA_SYNC_USER_FAILED_REASON);

@@ -3,6 +3,8 @@ package com.bbytes.purple.service;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +15,13 @@ import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.repository.TaskListRepository;
+import com.bbytes.purple.scheduler.SyncUserJobExecutor;
 import com.bbytes.purple.utils.URLUtil;
 
 @Service
 public class TaskListService extends AbstractService<TaskList, String> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(TaskListService.class);
 
 	private TaskListRepository taskListRepository;
 
@@ -165,13 +170,15 @@ public class TaskListService extends AbstractService<TaskList, String> {
 		item.setDesc(issue.getDescription());
 
 		if (issue.getAssignee() != null && issue.getAssignee().getEmailAddress() != null) {
-			User userAssignee = userService.getUserByEmail(issue.getAssignee().getEmailAddress());
+			LOG.debug("email from jira : " +  issue.getAssignee().getEmailAddress() + "Jira issue key " + issue.getKey());
+			User userAssignee = userService.getUserByEmail(issue.getAssignee().getEmailAddress().toLowerCase());
 			project.addUser(userAssignee);
 			item.addUsers(userAssignee);
 		}
 
 		if (issue.getReporter() != null && issue.getReporter().getEmailAddress() != null) {
-			User userReporter = userService.getUserByEmail(issue.getReporter().getEmailAddress());
+			LOG.debug("email from jira : " +  issue.getReporter().getEmailAddress() + "Jira issue key " + issue.getKey());
+			User userReporter = userService.getUserByEmail(issue.getReporter().getEmailAddress().toLowerCase());
 			project.addUser(userReporter);
 			item.setOwner(userReporter);
 			taskList.setOwner(userReporter);

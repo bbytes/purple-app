@@ -20,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 public final class RestTemplateUtil {
 
-	public static RestTemplate getSSLNoCheckRestTemlate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+	public static RestTemplate getSSLNoCheckRestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
 		HttpClient httpClient = getHttpClient();
 

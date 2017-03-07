@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
@@ -34,6 +35,7 @@ public class JiraHttpClientFactory {
 	public DisposableHttpClient createClient(final URI serverUri, final AuthenticationHandler authenticationHandler) {
 		final HttpClientOptions options = new HttpClientOptions();
 		options.setTrustSelfSignedCertificates(true);
+		options.setRequestTimeout(120, TimeUnit.SECONDS);
 		
 		final DefaultHttpClientFactory defaultHttpClientFactory = new DefaultHttpClientFactory(new NoOpEventPublisher(),
 				new RestClientApplicationProperties(serverUri), new ThreadLocalContextManager() {
