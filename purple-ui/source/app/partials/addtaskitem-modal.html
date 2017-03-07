@@ -14,7 +14,7 @@
                     <div class="form-group">
                         <label for="comment" class="settings">TASK NAME *</label> <input
                             type="text" name="taskItem" ng-model="taskItem.name"
-                            class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required maxlength="100">
+                            class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/"  autocomplete="off" required maxlength="100">
                         <h6 class="pull-right">
                             {{100 - taskItem.name.length}} / 100
                         </h6>
