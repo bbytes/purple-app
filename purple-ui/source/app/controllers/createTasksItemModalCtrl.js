@@ -83,7 +83,7 @@ angular.module('rootApp').controller('createTasksItemModalCtrl', function ($scop
             return false;
         }
         if (!taskItem.name) {
-            appNotifyService.error("Please enter a name");
+            appNotifyService.error("Please enter task item name");
             return false;
         }
         if (!taskItem.desc) {

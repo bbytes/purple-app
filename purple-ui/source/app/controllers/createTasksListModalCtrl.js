@@ -49,7 +49,7 @@ angular.module('rootApp').controller('createTasksListModalCtrl',
 					return false;
 				}
 				if(taskList.name==null || taskList.name==""){
-					appNotifyService.error("Please enter a name");
+					appNotifyService.error("Please enter task name");
 					return false;
 				}
 				if(taskList.projectId==null || taskList.projectId==""){
