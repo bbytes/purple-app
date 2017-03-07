@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="form-group">
-                        <label for="comment" class="settings">TASK NAME</label> <input
+                        <label for="comment" class="settings">TASK NAME *</label> <input
                             type="text" name="taskItem" ng-model="taskItem.name"
                             class="form-control" ng-pattern="/[a-zA-Z0-9^ ]/" required maxlength="100">
                         <h6 class="pull-right">
@@ -33,7 +33,7 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="form-group">
-                        <label for="comment" class="settings">DESCRIPTION</label>
+                        <label for="comment" class="settings">DESCRIPTION *</label>
                         <div text-angular-toolbar class="toolbar button-toolbar" name="desc" ta-toolbar="[['h3','h4','p','quote'],['bold','italics', 'underline', 'undo','redo' ],['ul', 'ol','indent', 'outdent', 'insertLink']]">
                         </div>
 
@@ -63,7 +63,7 @@
             <div class="col-md-6">
                 <div class="row">
                     <div class="form-group date-picker-task">
-                        <label for="comment" class="settings">DUE DATE</label> <input
+                        <label for="comment" class="settings">DUE DATE *</label> <input
                             type="text" class="form-control"
                             uib-datepicker-popup="{{format}}" ng-model="taskItem.dueDate"
                             is-open="popup.opened" datepicker-options="dateOptions"
@@ -77,7 +77,7 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="form-group" ng-init="getAllUsersOfProject();">
-                        <label for="comment" class="settings">USERS</label> 
+                        <label for="comment" class="settings">USERS *</label> 
                         <select
                             chosen="projectUsers" ng-model="taskItem.userIds" data-placeholder="Add Users"
                             id="usersDropdown" multiple="multiple" style="height: 150px">
