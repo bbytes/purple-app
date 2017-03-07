@@ -389,7 +389,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                             updatedHours = 12;
                         }
                     } else {
-                        $scope.hours = 0;
+                        updatedHours = 0;
                     }
                     $scope.hours = updatedHours.toString();
                 }
