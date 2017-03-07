@@ -111,7 +111,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         if (!status.projectId) {
             appNotifyService.error('Please select a valid project');
             return false;
-        } else if (!status.hours) {
+        } else if (status.hours === "" || status.hours === undefined || status.hours === null) {
             appNotifyService.error('Please fill in the hours for the selected project.');
             return false;
         } else if (!status.workedOn && !status.workingOn) {
@@ -274,7 +274,7 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
         if (!newstatus.projectId) {
             appNotifyService.error('Please select a valid project');
             return false;
-        } else if (!newstatus.hours) {
+        } else if (newstatus.hours === "" || newstatus.hours === undefined || newstatus.hours === null) {
             appNotifyService.error('Please fill in the hours for the selected project.');
             return false;
         } else if (!newstatus.workedOn && !newstatus.workingOn) {
@@ -381,11 +381,15 @@ angular.module('rootApp').controller('statusCtrl', function ($scope, $rootScope,
                 if (taskObject.totalHrs > 0 && !$scope.hours)
                     $scope.hours = taskObject.totalHrs.toString();
                 else {
-                    var updatedHours = parseFloat($scope.hours);
-                    updatedHours = updatedHours + taskObject.totalHrs;
-                    if (updatedHours > 12) {
-                        appNotifyService.success('Maximum 12 hours allowed to add');
-                        updatedHours = 12;
+                    if ($scope.hours) {
+                        var updatedHours = parseFloat($scope.hours);
+                        updatedHours = updatedHours + taskObject.totalHrs;
+                        if (updatedHours > 12) {
+                            appNotifyService.warning('Maximum 12 hours allowed to add');
+                            updatedHours = 12;
+                        }
+                    } else {
+                        updatedHours = 0;
                     }
                     $scope.hours = updatedHours.toString();
                 }

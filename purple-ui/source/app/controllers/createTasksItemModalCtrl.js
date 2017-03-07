@@ -78,23 +78,23 @@ angular.module('rootApp').controller('createTasksItemModalCtrl', function ($scop
     };
 
     function validateTaskItem(taskItem) {
-        if (taskItem === null) {
+        if (!taskItem) {
             appNotifyService.error("Please enter valid values");
             return false;
         }
-        if (taskItem.name === null || taskItem.name === "") {
-            appNotifyService.error("Please enter a name");
+        if (!taskItem.name) {
+            appNotifyService.error("Please enter task item name");
             return false;
         }
-        if (taskItem.desc === null || taskItem.desc === "") {
+        if (!taskItem.desc) {
             appNotifyService.error("Please enter a description");
             return false;
         }
-        if (taskItem.dueDate === null || taskItem.dueDate === "") {
+        if (!taskItem.dueDate) {
             appNotifyService.error("Please enter dueDate");
             return false;
         }
-        if (taskItem.userIds === null || taskItem.userIds.length === 0) {
+        if (!taskItem.userIds || taskItem.userIds === null || taskItem.userIds.length === 0) {
             appNotifyService.error("Please select users");
             return false;
         }
