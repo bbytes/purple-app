@@ -371,6 +371,7 @@ public class TaskController {
 		TaskItem taskItem = taskItemService.findOne(taskItemId);
 		Iterable<User> users = userService.findAll(userIds);
 		for (User user : users) {
+			// check for null task item user list and then add 
 			if (taskItem != null && taskItem.getUsers() != null && !taskItem.getUsers().contains(user)) {
 				taskItem.addUsers(user);
 			}
