@@ -201,8 +201,8 @@ public class TaskController {
 		}
 		taskLists.removeAll(Collections.singleton(null));
 		List<TaskListDTO> taskListDtos = dataModelToDTOConversionService.convertTaskLists(taskLists);
-//		if (taskState != null)
-//			filterItemsForGivenState(taskListDtos, taskState);
+		// if (taskState != null)
+		// filterItemsForGivenState(taskListDtos, taskState);
 		RestResponse response = new RestResponse(RestResponse.SUCCESS, taskListDtos);
 		return response;
 	}
@@ -371,7 +371,7 @@ public class TaskController {
 		TaskItem taskItem = taskItemService.findOne(taskItemId);
 		Iterable<User> users = userService.findAll(userIds);
 		for (User user : users) {
-			if (!taskItem.getUsers().contains(user)) {
+			if (taskItem != null && taskItem.getUsers() != null && !taskItem.getUsers().contains(user)) {
 				taskItem.addUsers(user);
 			}
 		}
