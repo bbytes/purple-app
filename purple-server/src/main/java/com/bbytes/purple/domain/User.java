@@ -80,6 +80,9 @@ public class User {
 	public User(String name, String email) {
 		this.name = name;
 		this.email = email;
+		
+		if (this.email != null)
+			this.email = this.email.toLowerCase();
 	}
 
 	public static String PENDING = "Pending";

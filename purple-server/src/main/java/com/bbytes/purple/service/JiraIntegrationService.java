@@ -267,7 +267,7 @@ public class JiraIntegrationService {
 				// sync only when dirty means the user has updated the hrs from
 				// ui
 				// and it is marked as dirty to sync to jira
-				if (taskItem.getSpendHours() > 0 && taskItem.getDirty() && !TaskState.YET_TO_START.equals(taskItem.getState())) {
+				if (taskItem.getSpendHours() > 0 && taskItem.getDirty() /*&& !TaskState.YET_TO_START.equals(taskItem.getState())*/) {
 					final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
 					final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey())
 							.path("worklog");
@@ -479,7 +479,7 @@ public class JiraIntegrationService {
 			if (projectFromDb != null) {
 				// looping all user of project
 				for (User jiraUser : entry.getValue()) {
-					User userFromDB = userService.getUserByEmail(jiraUser.getEmail());
+					User userFromDB = userService.getUserByEmail(jiraUser.getEmail().toLowerCase());
 					if (userFromDB != null) {
 						// fetching user from db and adding to project
 						projectFromDb.addUser(userFromDB);
@@ -593,7 +593,7 @@ public class JiraIntegrationService {
 					if (userList != null) {
 						for (Map<String, Object> userData : userMapList) {
 							if ("true".equals(userData.get("active").toString())) {
-								User user = new User(userData.get("displayName").toString(), userData.get("emailAddress").toString());
+								User user = new User(userData.get("displayName").toString(), userData.get("emailAddress").toString().toLowerCase());
 								userList.add(user);
 							}
 
