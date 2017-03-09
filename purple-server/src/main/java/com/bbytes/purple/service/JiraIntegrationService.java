@@ -303,6 +303,7 @@ public class JiraIntegrationService {
 						taskItem.setDirty(false);
 						taskItemService.save(taskItem);
 					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
 						throw new PurpleIntegrationException(e);
 					}
 				}
@@ -373,19 +374,26 @@ public class JiraIntegrationService {
 				for (BasicProject project : projects.claim()) {
 					Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
 
-					SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), pageSize, 0, null).claim();
-					for (Issue issue : issueResult.getIssues()) {
-						if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
-							continue;
-						}
-						List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
-						if (issueList == null) {
-							issueList = new LinkedList<Issue>();
-							issueTypeToIssueList.put(issue.getIssueType().getName(), issueList);
-						}
-						issueList.add(issue);
-					}
+					int pageSizeChuck = 10 ;
+					int startAt = 0;
 
+					for (int i = 0; i < 200; i++) {
+						SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), pageSize, startAt, null).claim();
+						for (Issue issue : issueResult.getIssues()) {
+							if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
+								continue;
+							}
+							List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
+							if (issueList == null) {
+								issueList = new LinkedList<Issue>();
+								issueTypeToIssueList.put(issue.getIssueType().getName(), issueList);
+							}
+							issueList.add(issue);
+						}
+						
+						startAt = startAt + pageSizeChuck;
+					}
+					
 					projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
 				}
 			} catch (Exception e) {
