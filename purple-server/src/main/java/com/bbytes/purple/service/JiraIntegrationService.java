@@ -59,6 +59,7 @@ import com.bbytes.purple.domain.User;
 import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.exception.PurpleIntegrationException;
+import com.bbytes.purple.exception.PurpleNoResultException;
 import com.bbytes.purple.scheduler.SyncTasksJobExecutor;
 import com.bbytes.purple.scheduler.SyncUserJobExecutor;
 import com.bbytes.purple.utils.ErrorHandler;
@@ -152,7 +153,6 @@ public class JiraIntegrationService {
 				}
 			});
 
-			
 			JiraRestClient restClient = new AsynchronousJiraRestClient(jiraServerUri, httpClient);
 			return restClient;
 		} catch (Exception e) {
@@ -267,7 +267,11 @@ public class JiraIntegrationService {
 				// sync only when dirty means the user has updated the hrs from
 				// ui
 				// and it is marked as dirty to sync to jira
-				if (taskItem.getSpendHours() > 0 && taskItem.getDirty() /*&& !TaskState.YET_TO_START.equals(taskItem.getState())*/) {
+				if (taskItem.getSpendHours() > 0
+						&& taskItem.getDirty() /*
+												 * && !TaskState.YET_TO_START.
+												 * equals(taskItem.getState())
+												 */) {
 					final URI baseUri = UriBuilder.fromUri(integration.getJiraBaseURL()).path("/rest/api/latest").build();
 					final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri).path("issue").path(taskItem.getJiraIssueKey())
 							.path("worklog");
@@ -330,87 +334,151 @@ public class JiraIntegrationService {
 		if (integration == null)
 			return;
 
-		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
-		for (String projectName : projectToIssueListMap.keySet()) {
-			Project projectFromDb = projectService.findByProjectName(projectName);
-			if (projectFromDb != null) {
-				Map<String, List<Issue>> issueTypeToIssueList = projectToIssueListMap.get(projectName);
-
-				for (String issueType : issueTypeToIssueList.keySet()) {
-					String taskListName = projectFromDb.getProjectName() + JIRA_TASK + issueType.toLowerCase();
-					List<Issue> issues = issueTypeToIssueList.get(issueType);
-					for (Issue issue : issues) {
-						taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
-					}
-				}
-			}
-		}
-	}
-
-	private Map<String, Map<String, List<Issue>>> getJiraProjectWithIssueTypeToIssueList(Integration integration)
-			throws PurpleIntegrationException {
-		Map<String, Map<String, List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String, List<Issue>>>();
-
-		if (integration == null)
-			return projectNameToIssueList;
-
-		int pageSize = 1000;
-		if (jiraIssueQueryPageSize != null) {
-			try {
-				pageSize = Integer.parseInt(jiraIssueQueryPageSize);
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-
 		final JiraRestClient restClient = getJiraRestClient(integration);
-
-		try {
-			SearchRestClient searchRestClient = restClient.getSearchClient();
-
-			try {
-
-				Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
-				for (BasicProject project : projects.claim()) {
-					Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
-
-					int pageSizeChuck = 10 ;
-					int startAt = 0;
-
-					for (int i = 0; i < 200; i++) {
-						SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), pageSize, startAt, null).claim();
-						for (Issue issue : issueResult.getIssues()) {
-							if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
-								continue;
-							}
-							List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
-							if (issueList == null) {
-								issueList = new LinkedList<Issue>();
-								issueTypeToIssueList.put(issue.getIssueType().getName(), issueList);
-							}
-							issueList.add(issue);
-						}
-						
-						startAt = startAt + pageSizeChuck;
-					}
-					
-					projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
-				}
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-
-			return projectNameToIssueList;
-		} finally {
-			if (restClient != null) {
+		SearchRestClient searchRestClient = restClient.getSearchClient();
+		
+		int startAt = 0;
+		int pageSizeChuck = 20;
+		Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
+		for (BasicProject project : projects.claim()) {
+			
+			for (int i = 0; i < 50; i++) {
+				
+				Map<String, Map<String, List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String, List<Issue>>>();
+				Map<String, List<Issue>> issueTypeToIssueList;
 				try {
-					restClient.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
+					issueTypeToIssueList = getIssueListForProject(project,startAt,pageSizeChuck, searchRestClient);
+				} catch (PurpleNoResultException e) {
+					break;
 				}
+				projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
+			
+				Project projectFromDb = projectService.findByProjectName(project.getName());
+				if (projectFromDb != null) {
+					for (String issueType : issueTypeToIssueList.keySet()) {
+						String taskListName = projectFromDb.getProjectName() + JIRA_TASK + issueType.toLowerCase();
+						List<Issue> issues = issueTypeToIssueList.get(issueType);
+						for (Issue issue : issues) {
+							taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
+						}
+					}
+				}
+				
+				startAt = startAt + pageSizeChuck;
+				logger.debug("Current task sync page chuck start number : " + startAt);
 			}
+			
+			
 		}
+			
+	}
+//		Map<String, Map<String, List<Issue>>> projectToIssueListMap = getJiraProjectWithIssueTypeToIssueList(integration);
+//		for (String projectName : projectToIssueListMap.keySet()) {
+//			Project projectFromDb = projectService.findByProjectName(projectName);
+//			if (projectFromDb != null) {
+//				Map<String, List<Issue>> issueTypeToIssueList = projectToIssueListMap.get(projectName);
+//
+//				for (String issueType : issueTypeToIssueList.keySet()) {
+//					String taskListName = projectFromDb.getProjectName() + JIRA_TASK + issueType.toLowerCase();
+//					List<Issue> issues = issueTypeToIssueList.get(issueType);
+//					for (Issue issue : issues) {
+//						taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
+//					}
+//				}
+//			}
+//		}
+//	}
 
+//	private Map<String, Map<String, List<Issue>>> getJiraProjectWithIssueTypeToIssueList(Integration integration)
+//			throws PurpleIntegrationException {
+//		Map<String, Map<String, List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String, List<Issue>>>();
+//
+//		if (integration == null)
+//			return projectNameToIssueList;
+//
+//		int pageSize = 1000;
+//		if (jiraIssueQueryPageSize != null) {
+//			try {
+//				pageSize = Integer.parseInt(jiraIssueQueryPageSize);
+//			} catch (Exception e) {
+//				logger.error(e.getMessage(), e);
+//			}
+//		}
+//
+//		final JiraRestClient restClient = getJiraRestClient(integration);
+//
+//		try {
+//			SearchRestClient searchRestClient = restClient.getSearchClient();
+//
+//			try {
+//				Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
+//				for (BasicProject project : projects.claim()) {
+//					int startAt = 0;
+//					int pageSizeChuck = 10;
+//				
+//					for (int i = 0; i < 200; i++) {
+//						Map<String, List<Issue>> issueTypeToIssueList = getIssueListForProject(project,startAt,pageSizeChuck, searchRestClient);
+//						projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
+//						startAt = startAt + pageSizeChuck;
+//						logger.debug("Current task sync page chuck start number : " + startAt);
+//					}
+//					
+//					
+//				}
+//			} catch (Exception e) {
+//				logger.error(e.getMessage(), e);
+//			}
+//
+//			logger.debug("Jira issue sync almost done ...");
+//			logger.debug("Total project sync size " + projectNameToIssueList.size());
+//			return projectNameToIssueList;
+//		} finally {
+//			if (restClient != null) {
+//				try {
+//					restClient.close();
+//				} catch (IOException e) {
+//					logger.error(e.getMessage(), e);
+//				}
+//			}
+//		}
+//
+//	}
+
+	
+	/**
+	 * Get issue type to issue list for given project
+	 * @param project
+	 * @param startAt pag start point 
+	 * @param pageSize page size of pageable 
+	 * @param searchRestClient
+	 * @return
+	 * @throws PurpleNoResultException 
+	 */
+	private Map<String, List<Issue>> getIssueListForProject(BasicProject project,int startAt,int pageSize, SearchRestClient searchRestClient) throws PurpleNoResultException {
+		Map<String, List<Issue>> issueTypeToIssueList = new HashMap<>();
+
+			SearchResult issueResult = searchRestClient.searchJql("project=" + project.getKey(), pageSize, startAt, null).claim();
+			if(!issueResult.getIssues().iterator().hasNext())
+				throw new PurpleNoResultException();
+			
+			for (Issue issue : issueResult.getIssues()) {
+				logger.debug("Current issue no   : " + issue.getKey());
+				if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
+					continue;
+				}
+				logger.debug("Current issue added to statusnap   : " + issue.getKey());
+				List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
+				if (issueList == null) {
+					issueList = new LinkedList<Issue>();
+					issueTypeToIssueList.put(issue.getIssueType().getName(), issueList);
+				}
+				issueList.add(issue);
+			}
+
+			
+		
+
+		return issueTypeToIssueList;
 	}
 
 	/**
@@ -593,7 +661,8 @@ public class JiraIntegrationService {
 					if (userList != null) {
 						for (Map<String, Object> userData : userMapList) {
 							if ("true".equals(userData.get("active").toString())) {
-								User user = new User(userData.get("displayName").toString(), userData.get("emailAddress").toString().toLowerCase());
+								User user = new User(userData.get("displayName").toString(),
+										userData.get("emailAddress").toString().toLowerCase());
 								userList.add(user);
 							}
 
