@@ -83,7 +83,7 @@ public class SyncTasksJobExecutor implements Runnable {
 			Integration integration = integrationService.getIntegrationForUser(loggedInUser);
 			jiraIntegrationService.updateProjectWithJiraTask(integration);
 
-			// sending email once JIRA sync user for success
+			// sending email once JIRA task sync for success
 			notificationService.sendTemplateEmail(emailList, JiraSyncSubject, GlobalConstants.EMAIL_JIRA_SYNC_TEMPLATE, emailBody);
 		} catch (Throwable e) {
 			logger.error(e.getMessage(),e);
