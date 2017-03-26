@@ -172,12 +172,12 @@ public class JiraIntegrationService {
 	 */
 	public void syncJiraProjects(final Integration integration, User loggedInUser) throws PurpleIntegrationException, PurpleException {
 		List<Project> jiraProjects = getJiraProjects(integration);
-		List<String> jiraProjectList = new LinkedList<String>();
-		List<String> finalProjectListToBeSaved = new LinkedList<String>();
+		Map<String, String> jiraProjectKeyToName = new HashMap<String, String>();
+		Map<String, String> finaljiraProjectKeyToNameToBeSaved = new HashMap<String, String>();
 
 		try {
 			for (Project jiraProject : jiraProjects) {
-				jiraProjectList.add(jiraProject.getProjectName());
+				jiraProjectKeyToName.put(jiraProject.getProjectKey(),jiraProject.getProjectName());
 			}
 			List<Project> list = projectService.findAll();
 			List<String> projectListFromDB = new ArrayList<String>();
@@ -185,15 +185,15 @@ public class JiraIntegrationService {
 				projectListFromDB.add(project.getProjectName().toLowerCase());
 			}
 
-			for (String jiraProject : jiraProjectList) {
+			for (String jiraProjectKey : jiraProjectKeyToName.keySet()) {
 				// make sure we dont add project with same name but different
 				// case Eg : ReCruiz and recruiz are same
-				if (!projectListFromDB.contains(jiraProject.toLowerCase()))
-					finalProjectListToBeSaved.add(jiraProject);
+				if (!projectListFromDB.contains(jiraProjectKeyToName.get(jiraProjectKey).toLowerCase()))
+					finaljiraProjectKeyToNameToBeSaved.put(jiraProjectKey,jiraProjectKeyToName.get(jiraProjectKey));
 			}
 
-			for (String project : finalProjectListToBeSaved) {
-				Project addProject = new Project(project);
+			for (String projectKey : finaljiraProjectKeyToNameToBeSaved.keySet()) {
+				Project addProject = new Project(finaljiraProjectKeyToNameToBeSaved.get(projectKey),projectKey);
 				addProject.setOrganization(loggedInUser.getOrganization());
 				// added loggedIn user as owner of project
 				addProject.setProjectOwner(loggedInUser);
@@ -220,7 +220,7 @@ public class JiraIntegrationService {
 		try {
 			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
 			for (BasicProject project : projects.claim()) {
-				Project coreProject = new Project(project.getName());
+				Project coreProject = new Project(project.getName(), project.getKey());
 				jiraProjects.add(coreProject);
 			}
 
@@ -552,9 +552,9 @@ public class JiraIntegrationService {
 
 		for (BasicProject project : projects.claim()) {
 			// checking project from JIRA is present in db
-			Project projectFromDb = projectService.findByProjectName(project.getKey());
+			Project projectFromDb = projectService.findByProjectKey(project.getKey());
 			if (projectFromDb != null) {
-				List<User> projectUserList = getJiraUserListForProject(integration, projectFromDb.getProjectName());
+				List<User> projectUserList = getJiraUserListForProject(integration, projectFromDb.getProjectKey());
 				// looping all user of project
 				for (User jiraUser : projectUserList) {
 					User userFromDB = userService.getUserByEmail(jiraUser.getEmail().toLowerCase());

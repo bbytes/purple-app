@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Project Domain Object
@@ -23,6 +24,7 @@ import lombok.Data;
 
 @Data
 @Document
+@NoArgsConstructor
 public class Project {
 
 	@Id
@@ -31,6 +33,9 @@ public class Project {
 	@Field("project_name")
 	@Indexed(unique = true)
 	private String projectName;
+
+	@Field("project_key")
+	private String projectKey;
 
 	@Field("project_owner")
 	@DBRef
@@ -50,6 +55,12 @@ public class Project {
 
 	public Project(String projectName) {
 		this.projectName = projectName;
+		this.projectKey = projectName;
+	}
+
+	public Project(String projectName, String projectKey) {
+		this.projectName = projectName;
+		this.projectKey = projectKey;
 	}
 
 	public void addUser(User userToBeAdded) {

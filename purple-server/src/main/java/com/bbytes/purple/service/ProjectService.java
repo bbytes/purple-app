@@ -37,6 +37,10 @@ public class ProjectService extends AbstractService<Project, String> {
 	public Project findByProjectName(String name) {
 		return projectRepository.findOneByProjectName(name);
 	}
+	
+	public Project findByProjectKey(String key) {
+		return projectRepository.findOneByProjectKey(key);
+	}
 
 	public List<Project> findProjectByUser(User user) {
 		return projectRepository.findByUser(user);
