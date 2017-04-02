@@ -177,7 +177,7 @@ public class JiraIntegrationService {
 
 		try {
 			for (Project jiraProject : jiraProjects) {
-				jiraProjectKeyToName.put(jiraProject.getProjectKey(),jiraProject.getProjectName());
+				jiraProjectKeyToName.put(jiraProject.getProjectKey(), jiraProject.getProjectName());
 			}
 			List<Project> list = projectService.findAll();
 			List<String> projectListFromDB = new ArrayList<String>();
@@ -189,11 +189,11 @@ public class JiraIntegrationService {
 				// make sure we dont add project with same name but different
 				// case Eg : ReCruiz and recruiz are same
 				if (!projectListFromDB.contains(jiraProjectKeyToName.get(jiraProjectKey).toLowerCase()))
-					finaljiraProjectKeyToNameToBeSaved.put(jiraProjectKey,jiraProjectKeyToName.get(jiraProjectKey));
+					finaljiraProjectKeyToNameToBeSaved.put(jiraProjectKey, jiraProjectKeyToName.get(jiraProjectKey));
 			}
 
 			for (String projectKey : finaljiraProjectKeyToNameToBeSaved.keySet()) {
-				Project addProject = new Project(finaljiraProjectKeyToNameToBeSaved.get(projectKey),projectKey);
+				Project addProject = new Project(finaljiraProjectKeyToNameToBeSaved.get(projectKey), projectKey);
 				addProject.setOrganization(loggedInUser.getOrganization());
 				// added loggedIn user as owner of project
 				addProject.setProjectOwner(loggedInUser);
@@ -335,121 +335,52 @@ public class JiraIntegrationService {
 			return;
 
 		final JiraRestClient restClient = getJiraRestClient(integration);
-		SearchRestClient searchRestClient = restClient.getSearchClient();
+		try {
+			SearchRestClient searchRestClient = restClient.getSearchClient();
 
-		int startAt = 0;
-		int pageSizeChuck = 20;
-		Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
-		for (BasicProject project : projects.claim()) {
+			int startAt = 0;
+			int pageSizeChuck = 20;
+			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
+			for (BasicProject project : projects.claim()) {
 
-			for (int i = 0; i < 50; i++) {
+				for (int i = 0; i < 50; i++) {
 
-				Map<String, Map<String, List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String, List<Issue>>>();
-				Map<String, List<Issue>> issueTypeToIssueList;
-				try {
-					issueTypeToIssueList = getIssueListForProject(project, startAt, pageSizeChuck, searchRestClient);
-				} catch (PurpleNoResultException e) {
-					break;
-				}
-				projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
+					Map<String, Map<String, List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String, List<Issue>>>();
+					Map<String, List<Issue>> issueTypeToIssueList;
+					try {
+						issueTypeToIssueList = getIssueListForProject(project, startAt, pageSizeChuck, searchRestClient);
+					} catch (PurpleNoResultException e) {
+						break;
+					}
+					projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
 
-				Project projectFromDb = projectService.findByProjectName(project.getName());
-				if (projectFromDb != null) {
-					for (String issueType : issueTypeToIssueList.keySet()) {
-						String taskListName = projectFromDb.getProjectName() + JIRA_TASK + issueType.toLowerCase();
-						List<Issue> issues = issueTypeToIssueList.get(issueType);
-						for (Issue issue : issues) {
-							taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
+					Project projectFromDb = projectService.findByProjectName(project.getName());
+					if (projectFromDb != null) {
+						for (String issueType : issueTypeToIssueList.keySet()) {
+							String taskListName = projectFromDb.getProjectName() + JIRA_TASK + issueType.toLowerCase();
+							List<Issue> issues = issueTypeToIssueList.get(issueType);
+							for (Issue issue : issues) {
+								taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
+							}
 						}
 					}
+
+					startAt = startAt + pageSizeChuck;
+					logger.debug("Current task sync page chuck start number : " + startAt);
 				}
 
-				startAt = startAt + pageSizeChuck;
-				logger.debug("Current task sync page chuck start number : " + startAt);
 			}
-
+		} finally {
+			if (restClient != null) {
+				try {
+					restClient.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
 		}
 
 	}
-	// Map<String, Map<String, List<Issue>>> projectToIssueListMap =
-	// getJiraProjectWithIssueTypeToIssueList(integration);
-	// for (String projectName : projectToIssueListMap.keySet()) {
-	// Project projectFromDb = projectService.findByProjectName(projectName);
-	// if (projectFromDb != null) {
-	// Map<String, List<Issue>> issueTypeToIssueList =
-	// projectToIssueListMap.get(projectName);
-	//
-	// for (String issueType : issueTypeToIssueList.keySet()) {
-	// String taskListName = projectFromDb.getProjectName() + JIRA_TASK +
-	// issueType.toLowerCase();
-	// List<Issue> issues = issueTypeToIssueList.get(issueType);
-	// for (Issue issue : issues) {
-	// taskListService.addJiraIssueToTaskList(taskListName, projectFromDb,
-	// issue);
-	// }
-	// }
-	// }
-	// }
-	// }
-
-	// private Map<String, Map<String, List<Issue>>>
-	// getJiraProjectWithIssueTypeToIssueList(Integration integration)
-	// throws PurpleIntegrationException {
-	// Map<String, Map<String, List<Issue>>> projectNameToIssueList = new
-	// LinkedHashMap<String, Map<String, List<Issue>>>();
-	//
-	// if (integration == null)
-	// return projectNameToIssueList;
-	//
-	// int pageSize = 1000;
-	// if (jiraIssueQueryPageSize != null) {
-	// try {
-	// pageSize = Integer.parseInt(jiraIssueQueryPageSize);
-	// } catch (Exception e) {
-	// logger.error(e.getMessage(), e);
-	// }
-	// }
-	//
-	// final JiraRestClient restClient = getJiraRestClient(integration);
-	//
-	// try {
-	// SearchRestClient searchRestClient = restClient.getSearchClient();
-	//
-	// try {
-	// Promise<Iterable<BasicProject>> projects =
-	// restClient.getProjectClient().getAllProjects();
-	// for (BasicProject project : projects.claim()) {
-	// int startAt = 0;
-	// int pageSizeChuck = 10;
-	//
-	// for (int i = 0; i < 200; i++) {
-	// Map<String, List<Issue>> issueTypeToIssueList =
-	// getIssueListForProject(project,startAt,pageSizeChuck, searchRestClient);
-	// projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
-	// startAt = startAt + pageSizeChuck;
-	// logger.debug("Current task sync page chuck start number : " + startAt);
-	// }
-	//
-	//
-	// }
-	// } catch (Exception e) {
-	// logger.error(e.getMessage(), e);
-	// }
-	//
-	// logger.debug("Jira issue sync almost done ...");
-	// logger.debug("Total project sync size " + projectNameToIssueList.size());
-	// return projectNameToIssueList;
-	// } finally {
-	// if (restClient != null) {
-	// try {
-	// restClient.close();
-	// } catch (IOException e) {
-	// logger.error(e.getMessage(), e);
-	// }
-	// }
-	// }
-	//
-	// }
 
 	/**
 	 * Get issue type to issue list for given project
@@ -546,42 +477,54 @@ public class JiraIntegrationService {
 	 * @throws PurpleException
 	 */
 	public void syncProjectToJiraUser(Integration integration, User user) throws Exception {
-		JiraRestClient restClient = getJiraRestClient(integration);
+		final JiraRestClient restClient = getJiraRestClient(integration);
 
-		Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
+		try {
 
-		for (BasicProject project : projects.claim()) {
-			// checking project from JIRA is present in db
-			Project projectFromDb = projectService.findByProjectKey(project.getKey());
-			if (projectFromDb != null) {
-				List<User> projectUserList = getJiraUserListForProject(integration, projectFromDb.getProjectKey());
-				// looping all user of project
-				for (User jiraUser : projectUserList) {
-					User userFromDB = userService.getUserByEmail(jiraUser.getEmail().toLowerCase());
-					if (userFromDB != null) {
-						// fetching user from db and adding to project
-						projectFromDb.addUser(userFromDB);
-						projectService.save(projectFromDb);
-					} else {
+			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
 
-						// creating random generated password string
-						String generatePassword = StringUtils.nextSessionId();
-
-						// saving jira user to statusnap user list
-						Organization org = user.getOrganization();
-						jiraUser.setOrganization(org);
-						jiraUser.setPassword(passwordHashService.encodePassword(generatePassword));
-						jiraUser.setStatus(User.PENDING);
-						jiraUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
-						if (!tenantResolverService.emailExist(jiraUser.getEmail())) {
-							User savedUser = userService.addUsers(jiraUser);
-							// after saving user to db, this user is getting
-							// added to project
-							projectFromDb.addUser(savedUser);
+			for (BasicProject project : projects.claim()) {
+				// checking project from JIRA is present in db
+				Project projectFromDb = projectService.findByProjectKey(project.getKey());
+				if (projectFromDb != null) {
+					List<User> projectUserList = getJiraUserListForProject(integration, projectFromDb.getProjectKey());
+					// looping all user of project
+					for (User jiraUser : projectUserList) {
+						User userFromDB = userService.getUserByEmail(jiraUser.getEmail().toLowerCase());
+						if (userFromDB != null) {
+							// fetching user from db and adding to project
+							projectFromDb.addUser(userFromDB);
 							projectService.save(projectFromDb);
-						}
-					}
+						} else {
 
+							// creating random generated password string
+							String generatePassword = StringUtils.nextSessionId();
+
+							// saving jira user to statusnap user list
+							Organization org = user.getOrganization();
+							jiraUser.setOrganization(org);
+							jiraUser.setPassword(passwordHashService.encodePassword(generatePassword));
+							jiraUser.setStatus(User.PENDING);
+							jiraUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
+							if (!tenantResolverService.emailExist(jiraUser.getEmail())) {
+								User savedUser = userService.addUsers(jiraUser);
+								// after saving user to db, this user is getting
+								// added to project
+								projectFromDb.addUser(savedUser);
+								projectService.save(projectFromDb);
+							}
+						}
+
+					}
+				}
+			}
+
+		} finally {
+			if (restClient != null) {
+				try {
+					restClient.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -594,7 +537,7 @@ public class JiraIntegrationService {
 		if (integration == null)
 			return projectUserList;
 
-		JiraRestClient restClient = getJiraRestClient(integration);
+		final JiraRestClient restClient = getJiraRestClient(integration);
 
 		try {
 			ProjectRolesRestClient projectRolesRestClient = restClient.getProjectRolesRestClient();
@@ -627,6 +570,14 @@ public class JiraIntegrationService {
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+		} finally {
+			if (restClient != null) {
+				try {
+					restClient.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
 		}
 
 		return projectUserList;

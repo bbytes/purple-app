@@ -35,7 +35,10 @@ public class JiraHttpClientFactory {
 	public DisposableHttpClient createClient(final URI serverUri, final AuthenticationHandler authenticationHandler) {
 		final HttpClientOptions options = new HttpClientOptions();
 		options.setTrustSelfSignedCertificates(true);
-		options.setRequestTimeout(120, TimeUnit.SECONDS);
+		options.setRequestTimeout(30, TimeUnit.SECONDS);
+		options.setMaxConnectionsPerHost(500);
+		options.setMaxCallbackThreadPoolSize(200);
+		
 		
 		final DefaultHttpClientFactory defaultHttpClientFactory = new DefaultHttpClientFactory(new NoOpEventPublisher(),
 				new RestClientApplicationProperties(serverUri), new ThreadLocalContextManager() {
