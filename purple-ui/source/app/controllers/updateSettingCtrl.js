@@ -22,6 +22,7 @@ angular.module('rootApp').controller('updateSettingCtrl', function ($rootScope, 
         $rootScope.timePreference = response.data.timePreference;
         $rootScope.switchState = response.data.emailNotificationState;
         $rootScope.timeZone = response.data.timeZone;
+		$rootScope.viewType = response.data.viewType;
 
         var userInfo = {
             accessToken: $rootScope.authToken,
@@ -30,7 +31,8 @@ angular.module('rootApp').controller('updateSettingCtrl', function ($rootScope, 
             userRoles: $rootScope.userRole,
             timePreference: $rootScope.timePreference,
             timeZone: $rootScope.timeZone,
-            emailNotificationState: $rootScope.switchState
+            emailNotificationState: $rootScope.switchState,
+			viewType: $rootScope.viewType
         };
 
         $localStorage.userInfo = userInfo;

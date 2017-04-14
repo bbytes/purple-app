@@ -23,6 +23,7 @@ angular.module('rootApp').controller('updateStatusCtrl', function ($rootScope, $
         $rootScope.timePreference = response.data.timePreference;
         $rootScope.switchState = response.data.emailNotificationState;
         $rootScope.timeZone = response.data.timeZone;
+		$rootScope.viewType = response.data.viewType;
 
         var userInfo = {
             accessToken: $rootScope.authToken,
@@ -31,7 +32,8 @@ angular.module('rootApp').controller('updateStatusCtrl', function ($rootScope, $
             userRoles: $rootScope.userRole,
             timePreference: $rootScope.timePreference,
             emailNotificationState: $rootScope.switchState,
-            timeZone: $rootScope.timeZone
+            timeZone: $rootScope.timeZone,
+			viewType: $rootScope.viewType
         };
 
         $localStorage.userInfo = userInfo;
