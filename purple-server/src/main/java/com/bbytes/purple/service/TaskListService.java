@@ -15,7 +15,6 @@ import com.bbytes.purple.domain.TaskList;
 import com.bbytes.purple.domain.User;
 import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.repository.TaskListRepository;
-import com.bbytes.purple.scheduler.SyncUserJobExecutor;
 import com.bbytes.purple.utils.URLUtil;
 
 @Service
@@ -121,7 +120,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 		return taskListRepository.findByDueDateBetweenAndProjectInAndUsersIn(startDate, endDate, projects, users);
 	}
 
-	public void addJiraIssueToTaskList(String taskListName, Project project, Issue issue) {
+	public void addJiraIssueToTaskList(String taskListName, Project project, Issue issue, User loggedInUser) {
 
 		TaskList taskList = null;
 		List<TaskList> taskLists = findByNameAndProject(taskListName, project);
@@ -150,7 +149,7 @@ public class TaskListService extends AbstractService<TaskList, String> {
 				double estimatedHours = issue.getTimeTracking().getOriginalEstimateMinutes() / 60;
 				item.setEstimatedHours(estimatedHours);
 				double spentHours = issue.getTimeTracking().getTimeSpentMinutes() / 60;
-				
+
 				if (spentHours > 0)
 					item.setSpendHours(spentHours);
 			}
@@ -170,20 +169,31 @@ public class TaskListService extends AbstractService<TaskList, String> {
 		item.setDesc(issue.getDescription());
 
 		if (issue.getAssignee() != null && issue.getAssignee().getEmailAddress() != null) {
-			LOG.debug("email from jira : " +  issue.getAssignee().getEmailAddress() + "Jira issue key " + issue.getKey());
-			User userAssignee = userService.getUserByEmail(issue.getAssignee().getEmailAddress().toLowerCase());
-			project.addUser(userAssignee);
-			item.addUsers(userAssignee);
+			User userAssigneeFromDB = userService.saveJiraUser(issue.getAssignee().getEmailAddress().toLowerCase(), issue.getAssignee().getName(), loggedInUser.getOrganization());
+			LOG.debug("Email from jira : " + issue.getAssignee().getEmailAddress() + " , Jira issue key " + issue.getKey());
+//			User userAssignee = userService.getUserByEmail(issue.getAssignee().getEmailAddress().toLowerCase());
+			LOG.debug("Jira issue Assignee User : " + userAssigneeFromDB);
+			if (userAssigneeFromDB != null) {
+				project.addUser(userAssigneeFromDB);
+				item.addUsers(userAssigneeFromDB);
+			}
+
 		}
 
 		if (issue.getReporter() != null && issue.getReporter().getEmailAddress() != null) {
-			LOG.debug("email from jira : " +  issue.getReporter().getEmailAddress() + "Jira issue key " + issue.getKey());
-			User userReporter = userService.getUserByEmail(issue.getReporter().getEmailAddress().toLowerCase());
-			project.addUser(userReporter);
-			item.setOwner(userReporter);
-			taskList.setOwner(userReporter);
+			User userReporterFromDB = userService.saveJiraUser(issue.getReporter().getEmailAddress().toLowerCase(), issue.getReporter().getName(), loggedInUser.getOrganization());
+			LOG.debug("Email from jira : " + issue.getReporter().getEmailAddress() + "Jira issue key " + issue.getKey());
+//			User userReporter = userService.getUserByEmail(issue.getReporter().getEmailAddress().toLowerCase());
+			LOG.debug("Jira issue Reporter User : " + userReporterFromDB);
+			if (userReporterFromDB != null) {
+				project.addUser(userReporterFromDB);
+				item.setOwner(userReporterFromDB);
+				taskList.setOwner(userReporterFromDB);
+			}
+
 		}
 
+		LOG.debug("Add jira to task :- Task item name : " + item.getName());
 		projectService.save(project);
 		taskItemService.save(item);
 		save(taskList);

@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * User Domain Object
@@ -20,6 +21,7 @@ import lombok.Data;
 
 @Data
 @Document
+@ToString
 public class User {
 
 	@Id

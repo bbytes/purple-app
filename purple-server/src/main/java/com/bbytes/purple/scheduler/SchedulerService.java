@@ -459,10 +459,10 @@ public class SchedulerService {
 					if (!userFromDb.isDisableState() && !userFromDb.isMarkDelete()) {
 						Integration integration = integrationService.getIntegrationForUser(userFromDb);
 
-						jiraIntegrationService.syncJiraProjects(integration, userFromDb);
-						jiraIntegrationService.syncProjectToJiraUser(integration, userFromDb);
-						jiraIntegrationService.updateProjectWithJiraTask(integration);
-						jiraIntegrationService.pushTaskUpdatesToJira(integration, userFromDb);
+						jiraIntegrationService.syncJiraProjectsAndUserAndIssues(integration, userFromDb);
+//						jiraIntegrationService.syncProjectToJiraUser(integration, userFromDb);
+//						jiraIntegrationService.updateProjectWithJiraTask(integration,userFromDb);
+//						jiraIntegrationService.pushTaskUpdatesToJira(integration, userFromDb);
 
 					}
 				}

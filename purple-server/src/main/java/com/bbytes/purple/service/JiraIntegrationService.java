@@ -60,8 +60,7 @@ import com.bbytes.purple.enums.TaskState;
 import com.bbytes.purple.exception.PurpleException;
 import com.bbytes.purple.exception.PurpleIntegrationException;
 import com.bbytes.purple.exception.PurpleNoResultException;
-import com.bbytes.purple.scheduler.SyncTasksJobExecutor;
-import com.bbytes.purple.scheduler.SyncUserJobExecutor;
+import com.bbytes.purple.scheduler.SyncJiraProjectAndUserAndIssueExecutor;
 import com.bbytes.purple.utils.ErrorHandler;
 import com.bbytes.purple.utils.GlobalConstants;
 import com.bbytes.purple.utils.JiraHttpClientFactory;
@@ -162,6 +161,67 @@ public class JiraIntegrationService {
 
 	}
 
+	public void syncJiraProjectsAndUserAndIssues(final Integration integration, User loggedInUser)
+			throws PurpleIntegrationException, PurpleException {
+		List<Project> jiraProjects = getJiraProjects(integration);
+		for (Project projectFromJira : jiraProjects) {
+			Project projectFromDB = projectService.findByProjectKey(projectFromJira.getProjectKey());
+			// not there in db
+			if (projectFromDB == null) {
+				projectFromDB = projectService.save(projectFromJira);
+			}
+
+			final JiraRestClient restClient = getJiraRestClient(integration);
+			try {
+				SearchRestClient searchRestClient = restClient.getSearchClient();
+
+				int startAt = 0;
+				int pageSizeChuck = 20;
+				Promise<com.atlassian.jira.rest.client.api.domain.Project> jiraProjectPromise = restClient.getProjectClient()
+						.getProject(projectFromDB.getProjectKey());
+				com.atlassian.jira.rest.client.api.domain.Project jiraProject = jiraProjectPromise.claim();
+
+				logger.debug("Task Sync :- Current jira project  : " + jiraProject.getName());
+				// loop 50 time to cover totally 20 * 50 = 1000 issues form jira
+				for (int i = 0; i < 50; i++) {
+
+					Map<String, Map<String, List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String, List<Issue>>>();
+					Map<String, List<Issue>> issueTypeToIssueList;
+					try {
+						issueTypeToIssueList = getIssueListForProject(jiraProject, startAt, pageSizeChuck, searchRestClient);
+					} catch (PurpleNoResultException e) {
+						break;
+					}
+					projectNameToIssueList.put(jiraProject.getName(), issueTypeToIssueList);
+
+					logger.debug("Task Sync :- Current statusnap project  : " + projectFromDB.getProjectName());
+
+					for (String issueType : issueTypeToIssueList.keySet()) {
+						String taskListName = projectFromDB.getProjectName() + JIRA_TASK + issueType.toLowerCase();
+						List<Issue> issues = issueTypeToIssueList.get(issueType);
+						for (Issue issue : issues) {
+							taskListService.addJiraIssueToTaskList(taskListName, projectFromDB, issue,loggedInUser);
+						}
+					}
+
+					startAt = startAt + pageSizeChuck;
+					logger.debug("Task Sync :- Current task sync page chuck start number : " + startAt);
+				}
+
+			} finally {
+				if (restClient != null) {
+					try {
+						restClient.close();
+					} catch (IOException e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+			}
+
+		}
+
+	}
+
 	/**
 	 * Sync jira projects from jira to statusnap
 	 * 
@@ -220,7 +280,7 @@ public class JiraIntegrationService {
 		try {
 			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
 			for (BasicProject project : projects.claim()) {
-				Project coreProject = new Project(project.getName(), project.getKey());
+				Project coreProject = new Project(project.getName().toLowerCase(), project.getKey());
 				jiraProjects.add(coreProject);
 			}
 
@@ -330,7 +390,7 @@ public class JiraIntegrationService {
 	 * @param integration
 	 * @throws PurpleIntegrationException
 	 */
-	public void updateProjectWithJiraTask(Integration integration) throws PurpleIntegrationException {
+	public void updateProjectWithJiraTask(Integration integration, User loggedInUser) throws PurpleIntegrationException {
 		if (integration == null)
 			return;
 
@@ -342,7 +402,8 @@ public class JiraIntegrationService {
 			int pageSizeChuck = 20;
 			Promise<Iterable<BasicProject>> projects = restClient.getProjectClient().getAllProjects();
 			for (BasicProject project : projects.claim()) {
-
+				logger.debug("Task Sync :- Current jira project  : " + project.getName());
+				// loop 50 time to cover totally 20 * 50 = 1000 issues form jira
 				for (int i = 0; i < 50; i++) {
 
 					Map<String, Map<String, List<Issue>>> projectNameToIssueList = new LinkedHashMap<String, Map<String, List<Issue>>>();
@@ -355,18 +416,19 @@ public class JiraIntegrationService {
 					projectNameToIssueList.put(project.getName(), issueTypeToIssueList);
 
 					Project projectFromDb = projectService.findByProjectName(project.getName());
+					logger.debug("Task Sync :- Current statusnap project  : " + projectFromDb.getProjectName());
 					if (projectFromDb != null) {
 						for (String issueType : issueTypeToIssueList.keySet()) {
 							String taskListName = projectFromDb.getProjectName() + JIRA_TASK + issueType.toLowerCase();
 							List<Issue> issues = issueTypeToIssueList.get(issueType);
 							for (Issue issue : issues) {
-								taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue);
+								taskListService.addJiraIssueToTaskList(taskListName, projectFromDb, issue,loggedInUser);
 							}
 						}
 					}
 
 					startAt = startAt + pageSizeChuck;
-					logger.debug("Current task sync page chuck start number : " + startAt);
+					logger.debug("Task Sync :- Current task sync page chuck start number : " + startAt);
 				}
 
 			}
@@ -405,8 +467,10 @@ public class JiraIntegrationService {
 		for (Issue issue : issueResult.getIssues()) {
 			logger.debug("Current issue no   : " + issue.getKey());
 			if (statesToIgnore.contains(issue.getStatus().getName().toLowerCase())) {
+				logger.debug("Issue ignored because of status : " + issue.getStatus().getName());
 				continue;
 			}
+
 			logger.debug("Current issue added to statusnap   : " + issue.getKey());
 			List<Issue> issueList = issueTypeToIssueList.get(issue.getIssueType().getName());
 			if (issueList == null) {
@@ -429,18 +493,18 @@ public class JiraIntegrationService {
 	 */
 	public void syncJIRAUsers(User loggedInUser) throws InterruptedException, ExecutionException {
 
-		List<String> emailList = new ArrayList<String>();
-		emailList.add(loggedInUser.getEmail());
-
-		Map<String, Object> emailBody = new HashMap<>();
-		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
-		emailBody.put(GlobalConstants.CURRENT_DATE, dateFormat.format(new Date()));
-		emailBody.put(GlobalConstants.STRING_TEXT, "users");
-
-		// sending job to executor
-		if (loggedInUser != null)
-			executorService.execute(new SyncUserJobExecutor(loggedInUser, integrationService, this, emailBody, emailList,
-					notificationService, springProfileService));
+//		List<String> emailList = new ArrayList<String>();
+//		emailList.add(loggedInUser.getEmail());
+//
+//		Map<String, Object> emailBody = new HashMap<>();
+//		emailBody.put(GlobalConstants.USER_NAME, loggedInUser.getName());
+//		emailBody.put(GlobalConstants.CURRENT_DATE, dateFormat.format(new Date()));
+//		emailBody.put(GlobalConstants.STRING_TEXT, "users");
+//
+//		// sending job to executor
+//		if (loggedInUser != null)
+//			executorService.execute(new SyncUserJobExecutor(loggedInUser, integrationService, this, emailBody, emailList,
+//					notificationService, springProfileService));
 	}
 
 	/**
@@ -463,7 +527,7 @@ public class JiraIntegrationService {
 
 		// sending job to executor
 		if (loggedInUser != null)
-			executorService.execute(new SyncTasksJobExecutor(loggedInUser, integrationService, this, emailBody, emailList,
+			executorService.execute(new SyncJiraProjectAndUserAndIssueExecutor(loggedInUser, integrationService, this, emailBody, emailList,
 					notificationService, springProfileService));
 	}
 
@@ -488,15 +552,20 @@ public class JiraIntegrationService {
 				Project projectFromDb = projectService.findByProjectKey(project.getKey());
 				if (projectFromDb != null) {
 					List<User> projectUserList = getJiraUserListForProject(integration, projectFromDb.getProjectKey());
+					logger.debug("User sync :- Current project in loop : " + projectFromDb.getProjectName());
 					// looping all user of project
 					for (User jiraUser : projectUserList) {
+						logger.debug(
+								"User sync :- Jira user in loop, name and email : " + jiraUser.getName() + " , " + jiraUser.getEmail());
 						User userFromDB = userService.getUserByEmail(jiraUser.getEmail().toLowerCase());
 						if (userFromDB != null) {
+							logger.debug("User sync :- Statusnap user :  " + userFromDB.getName() + " , " + userFromDB.getEmail());
 							// fetching user from db and adding to project
 							projectFromDb.addUser(userFromDB);
 							projectService.save(projectFromDb);
 						} else {
-
+							logger.debug("User sync :- User not found so creating it in statusnap :  " + jiraUser.getName() + " , "
+									+ jiraUser.getEmail());
 							// creating random generated password string
 							String generatePassword = StringUtils.nextSessionId();
 
@@ -506,7 +575,7 @@ public class JiraIntegrationService {
 							jiraUser.setPassword(passwordHashService.encodePassword(generatePassword));
 							jiraUser.setStatus(User.PENDING);
 							jiraUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
-							if (!tenantResolverService.emailExist(jiraUser.getEmail())) {
+							if (!tenantResolverService.emailExist(jiraUser.getEmail().toLowerCase())) {
 								User savedUser = userService.addUsers(jiraUser);
 								// after saving user to db, this user is getting
 								// added to project
@@ -530,6 +599,8 @@ public class JiraIntegrationService {
 		}
 
 	}
+
+	
 
 	private List<User> getJiraUserListForProject(Integration integration, String projectKey) throws PurpleIntegrationException {
 		List<User> projectUserList = new ArrayList<>();

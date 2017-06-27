@@ -56,7 +56,10 @@ public class UserService extends AbstractService<User, String> {
 	}
 
 	public boolean userEmailExist(String email) {
-		boolean state = userRepository.findOneByEmail(email) == null ? false : true;
+		if(email==null)
+			return false;
+		
+		boolean state = userRepository.findOneByEmail(email.toLowerCase()) == null ? false : true;
 		return state;
 	}
 
@@ -78,7 +81,7 @@ public class UserService extends AbstractService<User, String> {
 	}
 
 	public User getUserByEmail(String email) {
-		return userRepository.findOneByEmail(email);
+		return userRepository.findOneByEmail(email.toLowerCase());
 	}
 
 	public void delete(User user) {
@@ -120,14 +123,14 @@ public class UserService extends AbstractService<User, String> {
 	}
 
 	public User create(String email, String name, Organization org) {
-		User user = new User(name, email);
+		User user = new User(name, email.toLowerCase());
 		user.setOrganization(org);
 		return userRepository.save(user);
 	}
 
 	public User create(String email, String name, String password, Organization org) {
 
-		User user = new User(name, email);
+		User user = new User(name, email.toLowerCase());
 		user.setOrganization(org);
 		user.setPassword(passwordHashService.encodePassword(password));
 		if (springProfileService.isEnterpriseMode()) {
@@ -143,7 +146,7 @@ public class UserService extends AbstractService<User, String> {
 	}
 
 	public boolean updatePassword(String password, String userEmail) {
-		User user = userRepository.findOneByEmail(userEmail);
+		User user = userRepository.findOneByEmail(userEmail.toLowerCase());
 		return updatePassword(password, user);
 	}
 
@@ -319,7 +322,7 @@ public class UserService extends AbstractService<User, String> {
 
 				boolean result = true;
 				try {
-					emailAddr = new InternetAddress(addUser.getEmail());
+					emailAddr = new InternetAddress(addUser.getEmail().toLowerCase());
 					emailAddr.validate();
 				} catch (AddressException e) {
 					result = false;
@@ -530,6 +533,25 @@ public class UserService extends AbstractService<User, String> {
 			return true;
 		else
 			return false;
+	}
+	
+	public User saveJiraUser(String email, String name, Organization organization) {
+		User userFromDB = getUserByEmail(email);
+		if (userFromDB != null) {
+			userFromDB.setName(name);
+			userFromDB.setOrganization(organization);
+			return save(userFromDB);
+		} else {
+			// creating random generated password string
+			String generatePassword = StringUtils.nextSessionId();
+			
+			User jiraNewUser = new User(name, email);
+			jiraNewUser.setOrganization(organization);
+			jiraNewUser.setPassword(passwordHashService.encodePassword(generatePassword));
+			jiraNewUser.setStatus(User.PENDING);
+			jiraNewUser.setTimePreference(User.DEFAULT_EMAIL_REMINDER_TIME);
+			return save(jiraNewUser);
+		}
 	}
 
 }

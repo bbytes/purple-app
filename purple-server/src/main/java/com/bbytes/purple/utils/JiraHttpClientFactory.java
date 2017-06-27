@@ -1,17 +1,11 @@
 package com.bbytes.purple.utils;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Date;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.atlassian.event.api.EventPublisher;
 import com.atlassian.httpclient.apache.httpcomponents.DefaultHttpClientFactory;
@@ -38,8 +32,7 @@ public class JiraHttpClientFactory {
 		options.setRequestTimeout(30, TimeUnit.SECONDS);
 		options.setMaxConnectionsPerHost(500);
 		options.setMaxCallbackThreadPoolSize(200);
-		
-		
+
 		final DefaultHttpClientFactory defaultHttpClientFactory = new DefaultHttpClientFactory(new NoOpEventPublisher(),
 				new RestClientApplicationProperties(serverUri), new ThreadLocalContextManager() {
 					@Override
@@ -144,7 +137,7 @@ public class JiraHttpClientFactory {
 		@Nonnull
 		@Override
 		public String getVersion() {
-			return MavenUtils.getVersion("com.atlassian.jira", "jira-rest-java-com.atlassian.jira.rest.client");
+			return "1.0.0";
 		}
 
 		@Nonnull
@@ -169,35 +162,6 @@ public class JiraHttpClientFactory {
 		@Override
 		public String getPropertyValue(final String s) {
 			throw new UnsupportedOperationException("Not implemented");
-		}
-	}
-
-	private static final class MavenUtils {
-		private static final Logger logger = LoggerFactory.getLogger(MavenUtils.class);
-
-		private static final String UNKNOWN_VERSION = "unknown";
-
-		static String getVersion(String groupId, String artifactId) {
-			final Properties props = new Properties();
-			InputStream resourceAsStream = null;
-			try {
-				resourceAsStream = MavenUtils.class
-						.getResourceAsStream(String.format("/META-INF/maven/%s/%s/pom.properties", groupId, artifactId));
-				props.load(resourceAsStream);
-				return props.getProperty("version", UNKNOWN_VERSION);
-			} catch (Exception e) {
-				logger.debug("Could not find version for maven artifact {}:{}", groupId, artifactId);
-				logger.debug("Got the following exception", e);
-				return UNKNOWN_VERSION;
-			} finally {
-				if (resourceAsStream != null) {
-					try {
-						resourceAsStream.close();
-					} catch (IOException ioe) {
-						// ignore
-					}
-				}
-			}
 		}
 	}
 
